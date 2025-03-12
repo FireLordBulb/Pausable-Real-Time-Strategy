@@ -633,6 +633,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""21e4c60f-cdec-4325-9812-98da68b60e1e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -767,6 +776,17 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""action"": ""DirectionalMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4e378b91-c372-4a61-a7e7-09581d84e394"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MousePosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -851,6 +871,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_Camera_ScrollWheel = m_Camera.FindAction("ScrollWheel", throwIfNotFound: true);
         m_Camera_MiddleClick = m_Camera.FindAction("MiddleClick", throwIfNotFound: true);
         m_Camera_DirectionalMovement = m_Camera.FindAction("DirectionalMovement", throwIfNotFound: true);
+        m_Camera_MousePosition = m_Camera.FindAction("MousePosition", throwIfNotFound: true);
     }
 
     ~@Input()
@@ -1130,6 +1151,7 @@ public partial class @Input: IInputActionCollection2, IDisposable
     private readonly InputAction m_Camera_ScrollWheel;
     private readonly InputAction m_Camera_MiddleClick;
     private readonly InputAction m_Camera_DirectionalMovement;
+    private readonly InputAction m_Camera_MousePosition;
     /// <summary>
     /// Provides access to input actions defined in input action map "Camera".
     /// </summary>
@@ -1153,6 +1175,10 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Camera/DirectionalMovement".
         /// </summary>
         public InputAction @DirectionalMovement => m_Wrapper.m_Camera_DirectionalMovement;
+        /// <summary>
+        /// Provides access to the underlying input action "Camera/MousePosition".
+        /// </summary>
+        public InputAction @MousePosition => m_Wrapper.m_Camera_MousePosition;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1188,6 +1214,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @DirectionalMovement.started += instance.OnDirectionalMovement;
             @DirectionalMovement.performed += instance.OnDirectionalMovement;
             @DirectionalMovement.canceled += instance.OnDirectionalMovement;
+            @MousePosition.started += instance.OnMousePosition;
+            @MousePosition.performed += instance.OnMousePosition;
+            @MousePosition.canceled += instance.OnMousePosition;
         }
 
         /// <summary>
@@ -1208,6 +1237,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @DirectionalMovement.started -= instance.OnDirectionalMovement;
             @DirectionalMovement.performed -= instance.OnDirectionalMovement;
             @DirectionalMovement.canceled -= instance.OnDirectionalMovement;
+            @MousePosition.started -= instance.OnMousePosition;
+            @MousePosition.performed -= instance.OnMousePosition;
+            @MousePosition.canceled -= instance.OnMousePosition;
         }
 
         /// <summary>
@@ -1412,5 +1444,12 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnDirectionalMovement(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MousePosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMousePosition(InputAction.CallbackContext context);
     }
 }

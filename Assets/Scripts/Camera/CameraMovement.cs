@@ -2,21 +2,31 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Camera))]
 public class CameraMovement : MonoBehaviour {
     [SerializeField] private float[] zoomLevels;
     [SerializeField] private float zoomChangeSeconds;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float stoppingSeconds;
-    
+
+    private new Camera camera;
     private Input.CameraActions input;
     
     private Vector2 movementDirection;
     private int targetZoom;
-
+    private bool isDragging;
+    
     private int previousZoom;
+    private Vector3 zoomStartMousePosition;
+    private Vector3 lockedMousePoint;
     private Vector2 movementVelocity;
+
+    private bool IsMouseLocked => isDragging || previousZoom != targetZoom;
+    private Ray MouseRay => camera.ScreenPointToRay(input.MousePosition.ReadValue<Vector2>());
+    private Vector3 MousePosition => input.MousePosition.ReadValue<Vector2>();
     
     private void Awake(){
+        camera = GetComponent<Camera>();
         input = new Input().Camera;
         input.Enable();
 
@@ -27,6 +37,11 @@ public class CameraMovement : MonoBehaviour {
         input.DirectionalMovement.canceled += directionalMovement;
 
         input.ScrollWheel.performed += context => {
+            zoomStartMousePosition = MousePosition;
+            if (Physics.Raycast(camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
+                lockedMousePoint = hit.point;
+            }
+            
             int targetZoomSaved = targetZoom;
             targetZoom += Mathf.RoundToInt(context.ReadValue<Vector2>().y);
             targetZoom = Mathf.Clamp(targetZoom, 0, zoomLevels.Length-1);
@@ -35,10 +50,22 @@ public class CameraMovement : MonoBehaviour {
                 previousZoom = targetZoomSaved;
             }
         };
+
+        input.MiddleClick.performed += _ => {
+            if (!Physics.Raycast(MouseRay, out RaycastHit hit)){
+                return;
+            }
+            isDragging = true;
+            lockedMousePoint = hit.point;
+        };
+        input.MiddleClick.canceled += _ => {
+            isDragging = false;
+            zoomStartMousePosition = MousePosition;
+        };
         
-        // TODO: middle-mouse click and drag
+        // TODO: Make zoom level start init based on starting y-position in scene.
         
-        // TODO: Make zoom centered around mouse position.
+        // TODO: Change rotation based on zoom level.
     }
     private void Update(){
        Vector3 position = transform.position;
@@ -63,9 +90,18 @@ public class CameraMovement : MonoBehaviour {
             }
         }
         // Scale the velocity with the y so that the movement speed is relative to the zoom.
-        Vector2 positionDelta = Time.deltaTime*transform.position.y*movementVelocity;
-        position += new Vector3(positionDelta.x, 0, positionDelta.y);
+        Vector3 positionDelta = ToXZPlane(Time.deltaTime*position.y*movementVelocity);
+        if (IsMouseLocked){
+            lockedMousePoint += positionDelta;
+            if (Physics.Raycast(isDragging ? MouseRay : camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
+                position += lockedMousePoint-hit.point;
+            }
+        } else {
+            position += positionDelta;
+        }
 
         transform.position = position;
     }
+    
+    private static Vector3 ToXZPlane(Vector2 vector) => new(vector.x, 0, vector.y);
 }
