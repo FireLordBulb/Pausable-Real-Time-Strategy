@@ -245,3 +245,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba6a4519b7b684045aa60d4509f9ff00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  zoomLevels:
+  - 100
+  - 50
+  - 25
+  - 10
+  zoomChangeSeconds: 0.6
+  movementSpeed: 0.75
+  stoppingSeconds: 0.15

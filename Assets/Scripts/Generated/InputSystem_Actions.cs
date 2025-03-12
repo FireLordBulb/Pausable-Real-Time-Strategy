@@ -609,18 +609,18 @@ public partial class @Input: IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""ScrollWheel"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""39c0b139-b89e-4bbe-a62f-decb4f760829"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 },
                 {
                     ""name"": ""MiddleClick"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Button"",
                     ""id"": ""2771ed2f-b5c7-4c92-b39f-785727bcd8e1"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
