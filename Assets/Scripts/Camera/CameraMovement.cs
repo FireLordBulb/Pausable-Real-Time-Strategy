@@ -9,7 +9,11 @@ public class CameraMovement : MonoBehaviour {
     [SerializeField] private float movementSpeed;
     [SerializeField] private float stoppingSeconds;
 
-    private new Camera camera;
+    private
+#if UNITY_EDITOR
+            new
+#endif
+                Camera camera;
     private Input.CameraActions input;
     
     private Vector2 movementDirection;
