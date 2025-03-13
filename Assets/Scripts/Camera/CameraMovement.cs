@@ -7,7 +7,7 @@ public class CameraMovement : MonoBehaviour {
     private static readonly Vector3 Center = new(0.5f, 0.5f);
     
     [Tooltip("In order of largest to smallest height above map.")]
-    [SerializeField] private float[] zoomLevels;
+    [SerializeField] private ZoomLevel[] zoomLevels;
     [SerializeField] private float zoomChangeSeconds;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float stoppingSeconds;
@@ -59,7 +59,7 @@ public class CameraMovement : MonoBehaviour {
             // Both of differences being negative or both being positive means y isn't between target and
             // previous, requiring previous to be changed to prevent a discontinuous jump.
             float y = transform.position.y;
-            if (Math.Sign(y-zoomLevels[previousZoom])*Math.Sign(y-zoomLevels[targetZoom]) != -1){
+            if (Math.Sign(y-zoomLevels[previousZoom].height)*Math.Sign(y-zoomLevels[targetZoom].height) != -1){
                 previousZoom = targetZoomSaved;
             }
         };
@@ -77,51 +77,57 @@ public class CameraMovement : MonoBehaviour {
         };
 
         Vector3 position = transform.position;
-        if (position.y < zoomLevels[^1]){
+        if (position.y < zoomLevels[^1].height){
             SetZoomLevel(zoomLevels.Length-1);
-        } else if (position.y > zoomLevels[0]){
+        } else if (position.y > zoomLevels[0].height){
             SetZoomLevel(0);
         } else for (int i = 0; i < zoomLevels.Length; i++){
-            if (position.y < zoomLevels[i]){
+            if (position.y < zoomLevels[i].height){
                 continue;
             }
-            targetZoom = i;
+            nearestSmallerZoom = targetZoom = i;
             previousZoom = Mathf.Max(i-1, 0);
             zoomStartMousePosition = camera.ViewportToScreenPoint(Center);
             break;
         }
-        
-        // TODO: Change rotation based on zoom level.
-
-        // TODO: Set starting rotation based on zoom level init.
     }
     private void SetZoomLevel(int index){
         Vector3 position = transform.position;
-        position.y = zoomLevels[index];
+        position.y = zoomLevels[index].height;
         transform.position = position;
         targetZoom = nearestSmallerZoom = previousZoom = index;
     }
     
     private void Update(){
-       Vector3 position = transform.position;
-        
-        float zoomStep = (zoomLevels[targetZoom]-zoomLevels[previousZoom])*Time.deltaTime/zoomChangeSeconds;
-        float newY = Mathf.MoveTowards(position.y, zoomLevels[targetZoom], Mathf.Abs(zoomStep));
+        Vector3 position = transform.position;
+        // Height --------------------------------------------------------------------------------
+        float targetHeight = zoomLevels[targetZoom].height;
+        float zoomStep = (targetHeight-zoomLevels[previousZoom].height)*Time.deltaTime/zoomChangeSeconds;
+        float newY = Mathf.MoveTowards(position.y, targetHeight, Mathf.Abs(zoomStep));
         float sign = Mathf.Sign(zoomStep);
-        if (newY*sign >= zoomLevels[targetZoom]*sign){
-            position.y = zoomLevels[targetZoom];
+        if (newY*sign >= targetHeight*sign){
+            position.y = targetHeight;
             nearestSmallerZoom = previousZoom = targetZoom;
         } else {
             position.y = newY;
-            if (newY < zoomLevels[nearestSmallerZoom]){
+            if (newY < zoomLevels[nearestSmallerZoom].height){
                 nearestSmallerZoom++;
             } else if (nearestSmallerZoom != 0){
-                if (newY >= zoomLevels[nearestSmallerZoom-1]){
+                if (newY >= zoomLevels[nearestSmallerZoom-1].height){
                     nearestSmallerZoom--;
                 }
             }
         }
-        
+        // Rotation -----------------------------------------------------------------------------
+        if (nearestSmallerZoom == 0){
+            transform.rotation = zoomLevels[nearestSmallerZoom].rotation;
+        } else {
+            ZoomLevel smallerZoom = zoomLevels[nearestSmallerZoom];
+            ZoomLevel largerZoom = zoomLevels[nearestSmallerZoom-1];
+            float slerpParameter = Mathf.InverseLerp(smallerZoom.height, largerZoom.height, position.y);
+            transform.rotation = Quaternion.Slerp(smallerZoom.rotation, largerZoom.rotation, slerpParameter);
+        }
+        // XZ-plane position --------------------------------------------------------------------
         if (movementDirection != Vector2.zero){
             movementVelocity = movementSpeed*movementDirection;
         } else if (movementVelocity != Vector2.zero){
@@ -147,4 +153,10 @@ public class CameraMovement : MonoBehaviour {
     }
     
     private static Vector3 ToXZPlane(Vector2 vector) => new(vector.x, 0, vector.y);
+
+    [Serializable]
+    private struct ZoomLevel {
+        public float height;
+        public Quaternion rotation;
+    }
 }
