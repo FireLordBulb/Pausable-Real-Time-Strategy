@@ -139,7 +139,7 @@ public class CameraMovement : MonoBehaviour {
             }
         }
         // Scale the velocity with the y so that the movement speed is relative to the zoom.
-        Vector3 positionDelta = ToXZPlane(Time.deltaTime*position.y*movementVelocity);
+        Vector3 positionDelta = VectorGeometry.ToXZPlane(Time.deltaTime*position.y*movementVelocity);
         if (IsMouseLocked){
             lockedMousePoint += positionDelta;
             if (Physics.Raycast(isDragging ? MouseRay : camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
@@ -152,8 +152,6 @@ public class CameraMovement : MonoBehaviour {
         transform.position = position;
     }
     
-    private static Vector3 ToXZPlane(Vector2 vector) => new(vector.x, 0, vector.y);
-
     [Serializable]
     private struct ZoomLevel {
         public float height;
