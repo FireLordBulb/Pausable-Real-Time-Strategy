@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using System.Text;
+using UnityEditor;
 using UnityEngine;
 
 public class MapGenerator : MonoBehaviour {
@@ -8,8 +8,9 @@ public class MapGenerator : MonoBehaviour {
     private static readonly Vector2Int[] CardinalDirections = {Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left};
 
     [SerializeField] private Texture2D mapImage;
+    [SerializeField] private Province provincePrefab;
 
-    private readonly Dictionary<Color, (List<Vector2Int>, HashSet<Color>)> provinceOutlines = new();
+    private readonly Dictionary<Color, ProvinceGenerator> provinceGenerators = new();
     private readonly Dictionary<Color, Province> provinces = new();
     private int width, height;
     private void Awake(){
@@ -18,41 +19,31 @@ public class MapGenerator : MonoBehaviour {
         for (int y = 0; y < height; y++){
             for (int x = 0; x < width; x++){
                 Color color = mapImage.GetPixel(x, y);
-                if (!provinceOutlines.ContainsKey(color)){
-                    FindProvinceOutline(new Vector2Int(x, y), color);
+                if (!provinceGenerators.ContainsKey(color)){
+                    FindProvinceOutline(color, new Vector2Int(x, y));
                 }
             }
         }
-        foreach ((Color color, (List<Vector2Int> outlinePixels, HashSet<Color> neighbors)) in provinceOutlines){
-            print("\n\n"+color);
-            StringBuilder outlineStringBuilder = new("Coordinates: ");
-            foreach (Vector2Int outlinePixel in outlinePixels){
-                outlineStringBuilder.Append(outlinePixel);
-                outlineStringBuilder.Append(", ");
-            }
-            print(outlineStringBuilder);
-            /*StringBuilder neighborStringBuilder = new("Neighbors: ");
-            foreach (Color neighbor in neighbors){
-                neighborStringBuilder.Append(neighbor);
-                neighborStringBuilder.Append(", ");
-            }
-            print(neighborStringBuilder);*/
-            // calculate center
+        
+        foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
+            provinceGenerator.GenerateData();
             // instantiate province prefab
-            // call province class init:
-            // generate vertex list
-            // generate shape mesh
-            // generate outline mesh
+            // call province class init and assign data from generator
         }
+        
         // create province graph
         foreach ((Color color, Province province) in provinces){
             // add province to graph
             // convert connections from color values to graph links
         }
         
-        // Destroy self
+        // Destroy this component after generation is done. Don't destroy the gameObject.
+        // Leave commented out until visual debugging becomes possible in the Province components instead.
+        //Destroy(this);
     }
-    private void FindProvinceOutline(Vector2Int startPosition, Color color){
+    
+    private void FindProvinceOutline(Color color, Vector2Int startPosition){
+        ProvinceGenerator province = new();
         List<Vector2Int> outlinePixels = new();
         HashSet<Color> neighbors = new();
         outlinePixels.Add(startPosition);
@@ -85,7 +76,23 @@ public class MapGenerator : MonoBehaviour {
             }
             steps++;
         } while (outlinePixels[^1] != startPosition && steps < MaxOutlineSteps);
+
+        // Remove the last pixel if it's a duplicate of the first.
+        if (outlinePixels[^1] == outlinePixels[0]){
+            outlinePixels.RemoveAt(outlinePixels.Count-1);
+        }
         
-        provinceOutlines.Add(color, (outlinePixels, neighbors));   
+        province.OutlinePixels.AddRange(outlinePixels);
+        province.Neighbors.UnionWith(neighbors);
+        provinceGenerators.Add(color, province);
     }
+#if UNITY_EDITOR
+    private void OnDrawGizmos(){
+        Vector2 scale2D = transform.lossyScale;
+        foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
+            Handles.color = color;
+            provinceGenerator.GizmosPolygon(-scale2D/2, scale2D.x/width);
+        }
+    }
+#endif
 }
