@@ -54,12 +54,13 @@ public class ProvinceGenerator {
 		// TODO
 	}
 #if UNITY_EDITOR
+	private static readonly Vector2 HalfPixel = new(0.5f, 0.5f);
 	public void GizmosPolygon(Vector2 offset, float scale){
 		for (int i = 0; i < vertices.Count; i++){
 			Handles.DrawLine(ConvertToWorldSpace(vertices[i]), ConvertToWorldSpace(vertices[(i+1)%vertices.Count]));
 		}
 		Vector3 ConvertToWorldSpace(Vector2 vector){
-			return VectorGeometry.ToXZPlane(vector*scale + offset);
+			return VectorGeometry.ToXZPlane((vector+HalfPixel)*scale + offset);
 		}
 	}
 #endif
