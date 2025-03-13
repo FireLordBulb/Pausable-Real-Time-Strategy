@@ -4,7 +4,7 @@ using UnityEngine;
 namespace ActionStackSystem {
 	public class ActionStack : ActionStack<IAction> {}
 	
-	public class ActionStack<T> : MonoBehaviour where T : class, IAction {
+	public class ActionStack<T> : MonoBehaviour, IReadOnlyActionStack<T> where T : class, IAction {
 		private readonly List<T> stackList = new();
 		private readonly HashSet<T> startedActions = new();
 		private T currentAction;
@@ -12,7 +12,7 @@ namespace ActionStackSystem {
 		#region Properties
 		
 		public T CurrentAction => currentAction;
-		public List<T> StackList => stackList;
+		public IEnumerable<T> Actions => stackList;
 
 		#endregion
 
@@ -77,7 +77,7 @@ namespace ActionStackSystem {
 		}
 #if UNITY_EDITOR
 		protected virtual void OnGUI(){
-			if (name != "UIStack"){
+			if (gameObject.name != "UI"){
 				return;
 			}
 			const float lineHeight = 32.0f;
@@ -93,6 +93,11 @@ namespace ActionStackSystem {
 			}
 		}
 #endif
+	}
+
+	public interface IReadOnlyActionStack<out T> where T : IAction {
+		public T CurrentAction {get;}
+		public IEnumerable<T> Actions {get;}
 	}
 	
 	public interface IAction {
