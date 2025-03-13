@@ -16,11 +16,11 @@ namespace ActionStackSystem {
 
 		#endregion
 
-		public void Clear(){
+		public virtual void Clear(){
 			stackList.Clear();
 			currentAction = null;
 		}
-		public void Push(T action){
+		public virtual void Push(T action){
 			if (action == null || action == currentAction){
 				return;
 			}
@@ -30,7 +30,7 @@ namespace ActionStackSystem {
 			stackList.Add(action);
 			currentAction = null;
 		}
-		public void Remove(T action){
+		public virtual void Remove(T action){
 			if (action == null || !stackList.Contains(action)){
 				return;
 			}
