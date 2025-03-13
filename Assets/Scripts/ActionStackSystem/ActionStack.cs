@@ -1,42 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace ActionStackSystem {
-	public class ActionStack : MonoBehaviour {
-		public interface IAction {
-			void OnBegin(bool isFirstTime);
-			void OnUpdate();
-			void OnEnd();
-			bool IsDone();
-		}
-
-		public abstract class ActionAdapter : IAction {
-			public virtual void OnBegin(bool isFirstTime){}
-			public virtual void OnUpdate(){}
-			public virtual void OnEnd(){}
-			public virtual bool IsDone(){
-				return true;
-			}
-		}
-
-		public abstract class ActionBehaviour : MonoBehaviour, IAction {
-			public virtual void OnBegin(bool isFirstTime){}
-			public virtual void OnUpdate(){}
-			public virtual void OnEnd(){}
-			public virtual bool IsDone(){
-				return true;
-			}
-		}
-
-		private readonly List<IAction> stackList = new();
-		private readonly HashSet<IAction> startedActions = new();
-		private IAction currentAction;
+	public class ActionStack : ActionStack<IAction> {}
+	
+	public class ActionStack<T> : MonoBehaviour where T : class, IAction {
+		private readonly List<T> stackList = new();
+		private readonly HashSet<T> startedActions = new();
+		private T currentAction;
 
 		#region Properties
 		
-		public IAction CurrentAction => currentAction;
-		public List<IAction> StackList => stackList;
+		public T CurrentAction => currentAction;
+		public List<T> StackList => stackList;
 
 		#endregion
 
@@ -44,7 +20,7 @@ namespace ActionStackSystem {
 			stackList.Clear();
 			currentAction = null;
 		}
-		public void Push(IAction action){
+		public void Push(T action){
 			if (action == null || action == currentAction){
 				return;
 			}
@@ -54,7 +30,7 @@ namespace ActionStackSystem {
 			stackList.Add(action);
 			currentAction = null;
 		}
-		public void Remove(IAction action){
+		public void Remove(T action){
 			if (action == null || !stackList.Contains(action)){
 				return;
 			}
@@ -117,5 +93,28 @@ namespace ActionStackSystem {
 			}
 		}
 #endif
+	}
+	
+	public interface IAction {
+		void OnBegin(bool isFirstTime);
+		void OnUpdate();
+		void OnEnd();
+		bool IsDone();
+	}
+	public abstract class ActionAdapter : IAction {
+		public virtual void OnBegin(bool isFirstTime){}
+		public virtual void OnUpdate(){}
+		public virtual void OnEnd(){}
+		public virtual bool IsDone(){
+			return true;
+		}
+	}
+	public abstract class ActionBehaviour : MonoBehaviour, IAction {
+		public virtual void OnBegin(bool isFirstTime){}
+		public virtual void OnUpdate(){}
+		public virtual void OnEnd(){}
+		public virtual bool IsDone(){
+			return true;
+		}
 	}
 }
