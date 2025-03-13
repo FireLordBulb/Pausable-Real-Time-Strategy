@@ -52,8 +52,12 @@ public class CameraMovement : MonoBehaviour {
             int targetZoomSaved = targetZoom;
             targetZoom += Mathf.RoundToInt(context.ReadValue<Vector2>().y);
             targetZoom = Mathf.Clamp(targetZoom, 0, zoomLevels.Length-1);
+            
             // Inverting the direction mid-zoom.
-            if (targetZoom == previousZoom){
+            // Both of differences being negative or both being positive means y isn't between target and
+            // previous, requiring previous to be changed to prevent a discontinuous jump.
+            float y = transform.position.y;
+            if (Math.Sign(y-zoomLevels[previousZoom])*Math.Sign(y-zoomLevels[targetZoom]) != -1){
                 previousZoom = targetZoomSaved;
             }
         };
@@ -84,8 +88,6 @@ public class CameraMovement : MonoBehaviour {
             zoomStartMousePosition = camera.ViewportToScreenPoint(Center);
             break;
         }
-        
-        // TODO: fix setting target when inverting direction while zooming multiple levels at once.
         
         // TODO: Change rotation based on zoom level.
 
