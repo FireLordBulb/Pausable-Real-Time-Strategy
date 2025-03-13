@@ -4,6 +4,9 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Camera))]
 public class CameraMovement : MonoBehaviour {
+    private static readonly Vector3 Center = new(0.5f, 0.5f);
+    
+    [Tooltip("In order of largest to smallest height above map.")]
     [SerializeField] private float[] zoomLevels;
     [SerializeField] private float zoomChangeSeconds;
     [SerializeField] private float movementSpeed;
@@ -66,11 +69,35 @@ public class CameraMovement : MonoBehaviour {
             isDragging = false;
             zoomStartMousePosition = MousePosition;
         };
+
+        Vector3 position = transform.position;
+        if (position.y < zoomLevels[^1]){
+            SetZoomLevel(zoomLevels.Length-1);
+        } else if (position.y > zoomLevels[0]){
+            SetZoomLevel(0);
+        } else for (int i = 0; i < zoomLevels.Length; i++){
+            if (position.y < zoomLevels[i]){
+                continue;
+            }
+            targetZoom = i;
+            previousZoom = Mathf.Max(i-1, 0);
+            zoomStartMousePosition = camera.ViewportToScreenPoint(Center);
+            break;
+        }
         
-        // TODO: Make zoom level start init based on starting y-position in scene.
+        // TODO: fix setting target when inverting direction while zooming multiple levels at once.
         
         // TODO: Change rotation based on zoom level.
+
+        // TODO: Set starting rotation based on zoom level init.
     }
+    private void SetZoomLevel(int index){
+        Vector3 position = transform.position;
+        position.y = zoomLevels[index];
+        transform.position = position;
+        targetZoom = previousZoom = index;
+    }
+    
     private void Update(){
        Vector3 position = transform.position;
         
@@ -78,6 +105,7 @@ public class CameraMovement : MonoBehaviour {
         float newY = Mathf.MoveTowards(position.y, zoomLevels[targetZoom], Mathf.Abs(zoomStep));
         float sign = Mathf.Sign(zoomStep);
         if (newY*sign >= zoomLevels[targetZoom]*sign){
+            position.y = zoomLevels[targetZoom];
             previousZoom = targetZoom;
         } else {
             position.y = newY;
