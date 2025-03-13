@@ -30,15 +30,22 @@ namespace ActionStackSystem {
 			stackList.Add(action);
 			currentAction = null;
 		}
-		public virtual void Remove(T action){
+		public virtual bool Remove(T action){
 			if (action == null || !stackList.Contains(action)){
-				return;
+				return false;
 			}
 			if (action == currentAction || startedActions.Contains(action)){
 				action.OnEnd();
 				currentAction = null;
 			}
-			stackList.Remove(action);
+			return stackList.Remove(action);
+		}
+		public void RemoveAndAbove(T action){
+			int index = stackList.FindIndex(a => a == action);
+			bool wasRemoved = stackList.Remove(action);
+			if (wasRemoved){
+				stackList.RemoveRange(index, stackList.Count-index);	
+			}
 		}
 		protected virtual void Update(){
 			UpdateActions();
