@@ -24,6 +24,8 @@ public class CameraMovement : MonoBehaviour {
     private bool isDragging;
     
     private int previousZoom;
+    // Well, smaller or equal.
+    private int nearestSmallerZoom;
     private Vector3 zoomStartMousePosition;
     private Vector3 lockedMousePoint;
     private Vector2 movementVelocity;
@@ -97,7 +99,7 @@ public class CameraMovement : MonoBehaviour {
         Vector3 position = transform.position;
         position.y = zoomLevels[index];
         transform.position = position;
-        targetZoom = previousZoom = index;
+        targetZoom = nearestSmallerZoom = previousZoom = index;
     }
     
     private void Update(){
@@ -108,9 +110,16 @@ public class CameraMovement : MonoBehaviour {
         float sign = Mathf.Sign(zoomStep);
         if (newY*sign >= zoomLevels[targetZoom]*sign){
             position.y = zoomLevels[targetZoom];
-            previousZoom = targetZoom;
+            nearestSmallerZoom = previousZoom = targetZoom;
         } else {
             position.y = newY;
+            if (newY < zoomLevels[nearestSmallerZoom]){
+                nearestSmallerZoom++;
+            } else if (nearestSmallerZoom != 0){
+                if (newY >= zoomLevels[nearestSmallerZoom-1]){
+                    nearestSmallerZoom--;
+                }
+            }
         }
         
         if (movementDirection != Vector2.zero){
