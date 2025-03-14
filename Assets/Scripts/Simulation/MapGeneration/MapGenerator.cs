@@ -12,6 +12,7 @@ public class MapGenerator : MonoBehaviour {
     // TODO: replace with mapWidth float
     [SerializeField] private Transform background;
     [SerializeField] private Transform provinceParent;
+    [SerializeField] private float borderWidth;
     
     private readonly Dictionary<Color, ProvinceGenerator> provinceGenerators = new();
     private readonly Dictionary<Color, Province> provinces = new();
@@ -59,7 +60,7 @@ public class MapGenerator : MonoBehaviour {
     }
     
     private void FindProvinceOutline(Color color, Vector2Int startPosition){
-        ProvinceGenerator province = new();
+        ProvinceGenerator province = new(borderWidth);
         List<Vector2Int> outlinePixels = new();
         HashSet<Color> neighbors = new();
         outlinePixels.Add(startPosition);

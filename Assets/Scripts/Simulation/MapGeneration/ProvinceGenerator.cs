@@ -40,6 +40,11 @@ public class ProvinceGenerator {
 	public Mesh ShapeMesh {get; private set;}
 	public Vector2 Center {get; private set;}
 
+	private float borderHalfWidth;
+	public ProvinceGenerator(float borderWidth){
+		borderHalfWidth = borderWidth;
+	}
+	
 	public void GenerateData(){
 		if (OutlinePixels.Count <= 1){
 			Debug.LogError("Too few pixels in province!");
@@ -98,17 +103,32 @@ public class ProvinceGenerator {
 	}
 	private void GenerateOutlineMesh(){
 		MeshData meshData = new("ProvinceOutline");
+		Vector2 beforeStart = vertices[^1];
+		Vector2 start = vertices[0];
+		Vector2 end = vertices[1];
 		for (int i = 0; i < vertices.Count; i++){
-			Vector2 start = vertices[i];
-			Vector2 end = vertices[(i+1)%vertices.Count];
+			Vector2 afterEnd = vertices[(i+2)%vertices.Count];
 
-			Vector2 perpendicular = VectorGeometry.LeftPerpendicular((end-start).normalized);
-			
-			AddQuadrilateral(meshData, start+perpendicular, start-perpendicular, end+perpendicular, end-perpendicular);
+			Vector2 beforePerpendicular = VectorGeometry.LeftPerpendicular(beforeStart, start).normalized;
+			Vector2 middlePerpendicular = VectorGeometry.LeftPerpendicular(start, end).normalized;
+			Vector2 afterPerpendicular = VectorGeometry.LeftPerpendicular(end, afterEnd).normalized;
+
+			Vector2 startOffset = CalculateCornerOffset(beforePerpendicular, middlePerpendicular);
+			Vector2 endOffset = CalculateCornerOffset(middlePerpendicular, afterPerpendicular);
+			AddBorderSection(meshData, start+startOffset, start-startOffset, end+endOffset, end-endOffset);
+
+			beforeStart = start;
+			start = end;
+			end = afterEnd;
 		}
 		OutlineMesh = meshData.ToMesh();
 	}
-	private void AddQuadrilateral(MeshData meshData, Vector2 startLeft, Vector2 startRight, Vector2 endLeft, Vector2 endRight){
+	private Vector2 CalculateCornerOffset(Vector2 perpendicularA, Vector2 perpendicularB){
+		Vector2 offset = (perpendicularA+perpendicularB).normalized;
+		offset *= borderHalfWidth/Vector2.Dot(offset, perpendicularA);
+		return offset;
+	}
+	private void AddBorderSection(MeshData meshData, Vector2 startLeft, Vector2 startRight, Vector2 endLeft, Vector2 endRight){
 		int startIndex = meshData.Vertices.Count;
 		meshData.Vertices.Add(VectorGeometry.ToXZPlane(startLeft));
 		meshData.Vertices.Add(VectorGeometry.ToXZPlane(startRight));

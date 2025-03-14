@@ -189,3 +189,4 @@ MonoBehaviour:
   provincePrefab: {fileID: 6360424470202932525, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
   background: {fileID: 5873974295140825457}
   provinceParent: {fileID: 9147229521150883095}
+  borderWidth: 0.4
