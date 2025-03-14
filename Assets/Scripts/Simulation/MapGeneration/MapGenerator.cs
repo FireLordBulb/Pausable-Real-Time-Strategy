@@ -9,13 +9,23 @@ public class MapGenerator : MonoBehaviour {
 
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Province provincePrefab;
-
+    [SerializeField] private Transform background;
+    [SerializeField] private Transform provinceParent;
+    
     private readonly Dictionary<Color, ProvinceGenerator> provinceGenerators = new();
     private readonly Dictionary<Color, Province> provinces = new();
     private int width, height;
+    private Vector2 worldSpaceOffset;
+    private float worldSpaceScale;
+    
     private void Awake(){
         width = mapImage.width;
         height = mapImage.height;
+        
+        Vector2 scale2D = background.transform.lossyScale;
+        worldSpaceScale = scale2D.x/width;
+        worldSpaceOffset = -scale2D/2;
+        
         for (int y = 0; y < height; y++){
             for (int x = 0; x < width; x++){
                 Color color = mapImage.GetPixel(x, y);
@@ -27,6 +37,9 @@ public class MapGenerator : MonoBehaviour {
         
         foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             provinceGenerator.GenerateData();
+            Province province = Instantiate(provincePrefab, ConvertToWorldSpace(provinceGenerator.Center), Quaternion.identity, provinceParent);
+            province.Init(color, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
+            provinces.Add(color, province);
             // instantiate province prefab
             // call province class init and assign data from generator
         }
@@ -86,12 +99,15 @@ public class MapGenerator : MonoBehaviour {
         province.Neighbors.UnionWith(neighbors);
         provinceGenerators.Add(color, province);
     }
+    
+    private Vector3 ConvertToWorldSpace(Vector2 vector){
+        return VectorGeometry.ToXZPlane(vector*worldSpaceScale + worldSpaceOffset);
+    }
 #if UNITY_EDITOR
     private void OnDrawGizmos(){
-        Vector2 scale2D = transform.lossyScale;
         foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             Handles.color = color;
-            provinceGenerator.GizmosPolygon(-scale2D/2, scale2D.x/width);
+            provinceGenerator.GizmosPolygon(ConvertToWorldSpace);
         }
     }
 #endif

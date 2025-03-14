@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -29,7 +30,6 @@ public class ProvinceGenerator {
 		
 		return outerEdgeOffsets;
 	}
-	
 	
 	public readonly List<Vector2Int> OutlinePixels = new();
 	public readonly HashSet<Color> Neighbors = new();
@@ -94,21 +94,43 @@ public class ProvinceGenerator {
 		// TODO
 	}
 	private void GenerateOutlineMesh(){
-		OutlineMesh = new Mesh();
-		// TODO
+		MeshData meshData = new("ProvinceOutline");
+		for (int i = 0; i < vertices.Count; i++){
+			AddQuadrilateral(meshData, vertices[i], vertices[i], vertices[i], vertices[i]);
+		}
+		
+		OutlineMesh = meshData.ToMesh();
+	}
+	private void AddQuadrilateral(MeshData meshData, Vector2 startLeft, Vector2 startRight, Vector2 endLeft, Vector2 endRight){
+		int startIndex = meshData.Vertices.Count;
+		meshData.Vertices.Add(startLeft);
+		meshData.Vertices.Add(startRight);
+		meshData.Vertices.Add(endLeft);
+		meshData.Vertices.Add(endRight);
+		meshData.Normals.Add(Vector3.up);
+		meshData.Normals.Add(Vector3.up);
+		meshData.Normals.Add(Vector3.up);
+		meshData.Normals.Add(Vector3.up);
+		meshData.UVs.Add(Vector2.up);
+		meshData.UVs.Add(Vector2.zero);
+		meshData.UVs.Add(Vector2.up);
+		meshData.UVs.Add(Vector2.zero);
+		meshData.Triangles.AddRange(new[]{
+			startIndex+0, startIndex+1, startIndex+2,
+			startIndex+1, startIndex+3, startIndex+2,
+		});
 	}
 	private void GenerateShapeMesh(){
-		ShapeMesh = new Mesh();
+		MeshData meshData = new MeshData("ProvinceShape");
 		// TODO
+		ShapeMesh = meshData.ToMesh();;
 	}
 #if UNITY_EDITOR
-	public void GizmosPolygon(Vector2 offset, float scale){
+	public void GizmosPolygon(Func<Vector2, Vector3> worldSpaceConverter){
 		for (int i = 0; i < vertices.Count; i++){
-			Handles.DrawLine(ConvertToWorldSpace(vertices[i]), ConvertToWorldSpace(vertices[(i+1)%vertices.Count]));
+			Handles.DrawLine(worldSpaceConverter(vertices[i]), worldSpaceConverter(vertices[(i+1)%vertices.Count]));
 		}
-		Vector3 ConvertToWorldSpace(Vector2 vector){
-			return VectorGeometry.ToXZPlane((vector)*scale + offset);
-		}
+		
 	}
 #endif
 }
