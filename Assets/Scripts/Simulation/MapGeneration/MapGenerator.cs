@@ -37,7 +37,8 @@ public class MapGenerator : MonoBehaviour {
         
         foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             provinceGenerator.GenerateData();
-            Province province = Instantiate(provincePrefab, ConvertToWorldSpace(provinceGenerator.Center), Quaternion.identity, provinceParent);
+            Vector3 position = ConvertToWorldSpace(provinceGenerator.Center)+Vector3.up;
+            Province province = Instantiate(provincePrefab, position, Quaternion.identity, provinceParent);
             province.Init(color, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
             provinces.Add(color, province);
             // instantiate province prefab

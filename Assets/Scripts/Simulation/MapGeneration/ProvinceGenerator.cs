@@ -92,21 +92,25 @@ public class ProvinceGenerator {
 	private void CalculateCenter(){
 		Center = vertices[0];
 		// TODO
+		for (int i = 0; i < vertices.Count; i++){
+			vertices[i] -= Center;
+		}
 	}
 	private void GenerateOutlineMesh(){
 		MeshData meshData = new("ProvinceOutline");
 		for (int i = 0; i < vertices.Count; i++){
-			AddQuadrilateral(meshData, vertices[i], vertices[i], vertices[i], vertices[i]);
+			int nextIndex = (i+1)%vertices.Count;
+			AddQuadrilateral(meshData, vertices[i], vertices[i]+2*Vector2.right, vertices[nextIndex], vertices[nextIndex]+2*Vector2.right);
 		}
 		
 		OutlineMesh = meshData.ToMesh();
 	}
 	private void AddQuadrilateral(MeshData meshData, Vector2 startLeft, Vector2 startRight, Vector2 endLeft, Vector2 endRight){
 		int startIndex = meshData.Vertices.Count;
-		meshData.Vertices.Add(startLeft);
-		meshData.Vertices.Add(startRight);
-		meshData.Vertices.Add(endLeft);
-		meshData.Vertices.Add(endRight);
+		meshData.Vertices.Add(VectorGeometry.ToXZPlane(startLeft));
+		meshData.Vertices.Add(VectorGeometry.ToXZPlane(startRight));
+		meshData.Vertices.Add(VectorGeometry.ToXZPlane(endLeft));
+		meshData.Vertices.Add(VectorGeometry.ToXZPlane(endRight));
 		meshData.Normals.Add(Vector3.up);
 		meshData.Normals.Add(Vector3.up);
 		meshData.Normals.Add(Vector3.up);
@@ -128,7 +132,7 @@ public class ProvinceGenerator {
 #if UNITY_EDITOR
 	public void GizmosPolygon(Func<Vector2, Vector3> worldSpaceConverter){
 		for (int i = 0; i < vertices.Count; i++){
-			Handles.DrawLine(worldSpaceConverter(vertices[i]), worldSpaceConverter(vertices[(i+1)%vertices.Count]));
+			Handles.DrawLine(worldSpaceConverter(Center+vertices[i]), worldSpaceConverter(Center+vertices[(i+1)%vertices.Count]));
 		}
 		
 	}
