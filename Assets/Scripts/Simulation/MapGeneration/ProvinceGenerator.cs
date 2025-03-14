@@ -3,7 +3,8 @@ using UnityEditor;
 using UnityEngine;
 
 public class ProvinceGenerator {
-	
+	private static readonly Vector2 HalfPixel = new(0.5f, 0.5f);
+
 	public readonly List<Vector2Int> OutlinePixels = new();
 	public readonly HashSet<Color> Neighbors = new();
 
@@ -34,7 +35,8 @@ public class ProvinceGenerator {
 
 			// Only add the current pixel if it's not on a straight line between the previous and next.
 			if (differenceFromPrevious-differenceToNext != Vector2Int.zero){
-				vertices.Add(currentPixel);
+				// Had a half pixel to make the vertex the center of the pixel, not the bottom left.
+				vertices.Add(currentPixel+HalfPixel);
 			}
 
 			previousPixel = currentPixel;
@@ -54,13 +56,12 @@ public class ProvinceGenerator {
 		// TODO
 	}
 #if UNITY_EDITOR
-	private static readonly Vector2 HalfPixel = new(0.5f, 0.5f);
 	public void GizmosPolygon(Vector2 offset, float scale){
 		for (int i = 0; i < vertices.Count; i++){
 			Handles.DrawLine(ConvertToWorldSpace(vertices[i]), ConvertToWorldSpace(vertices[(i+1)%vertices.Count]));
 		}
 		Vector3 ConvertToWorldSpace(Vector2 vector){
-			return VectorGeometry.ToXZPlane((vector+HalfPixel)*scale + offset);
+			return VectorGeometry.ToXZPlane((vector)*scale + offset);
 		}
 	}
 #endif
