@@ -99,10 +99,13 @@ public class ProvinceGenerator {
 	private void GenerateOutlineMesh(){
 		MeshData meshData = new("ProvinceOutline");
 		for (int i = 0; i < vertices.Count; i++){
-			int nextIndex = (i+1)%vertices.Count;
-			AddQuadrilateral(meshData, vertices[i], vertices[i]+2*Vector2.right, vertices[nextIndex], vertices[nextIndex]+2*Vector2.right);
+			Vector2 start = vertices[i];
+			Vector2 end = vertices[(i+1)%vertices.Count];
+
+			Vector2 perpendicular = VectorGeometry.LeftPerpendicular((end-start).normalized);
+			
+			AddQuadrilateral(meshData, start+perpendicular, start-perpendicular, end+perpendicular, end-perpendicular);
 		}
-		
 		OutlineMesh = meshData.ToMesh();
 	}
 	private void AddQuadrilateral(MeshData meshData, Vector2 startLeft, Vector2 startRight, Vector2 endLeft, Vector2 endRight){
@@ -120,21 +123,20 @@ public class ProvinceGenerator {
 		meshData.UVs.Add(Vector2.up);
 		meshData.UVs.Add(Vector2.zero);
 		meshData.Triangles.AddRange(new[]{
-			startIndex+0, startIndex+1, startIndex+2,
-			startIndex+1, startIndex+3, startIndex+2,
+			startIndex+1, startIndex+2, startIndex+3,
+			startIndex+0, startIndex+2, startIndex+1
 		});
 	}
 	private void GenerateShapeMesh(){
-		MeshData meshData = new MeshData("ProvinceShape");
+		MeshData meshData = new("ProvinceShape");
 		// TODO
-		ShapeMesh = meshData.ToMesh();;
+		ShapeMesh = meshData.ToMesh();
 	}
 #if UNITY_EDITOR
 	public void GizmosPolygon(Func<Vector2, Vector3> worldSpaceConverter){
 		for (int i = 0; i < vertices.Count; i++){
 			Handles.DrawLine(worldSpaceConverter(Center+vertices[i]), worldSpaceConverter(Center+vertices[(i+1)%vertices.Count]));
 		}
-		
 	}
 #endif
 }

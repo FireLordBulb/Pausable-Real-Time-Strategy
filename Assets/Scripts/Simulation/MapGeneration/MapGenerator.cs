@@ -9,6 +9,7 @@ public class MapGenerator : MonoBehaviour {
 
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Province provincePrefab;
+    // TODO: replace with mapWidth float
     [SerializeField] private Transform background;
     [SerializeField] private Transform provinceParent;
     
@@ -39,7 +40,7 @@ public class MapGenerator : MonoBehaviour {
             provinceGenerator.GenerateData();
             Vector3 position = ConvertToWorldSpace(provinceGenerator.Center);
             Province province = Instantiate(provincePrefab, position, Quaternion.identity, provinceParent);
-            province.transform.localScale = new Vector3(worldSpaceScale, 0, worldSpaceScale);
+            province.transform.localScale = new Vector3(worldSpaceScale, 1, worldSpaceScale);
             province.Init(color, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
             provinces.Add(color, province);
             // instantiate province prefab
