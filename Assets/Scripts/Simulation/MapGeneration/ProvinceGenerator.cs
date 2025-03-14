@@ -40,7 +40,7 @@ public class ProvinceGenerator {
 	public Mesh ShapeMesh {get; private set;}
 	public Vector2 Center {get; private set;}
 
-	private float borderHalfWidth;
+	private readonly float borderHalfWidth;
 	public ProvinceGenerator(float borderWidth){
 		borderHalfWidth = borderWidth;
 	}
@@ -55,6 +55,7 @@ public class ProvinceGenerator {
 		GenerateOutlineMesh();
 		GenerateShapeMesh();
 	}
+	
 	private void GenerateVertextList(){
 		Vector2Int previousPixel = OutlinePixels[^1];
 		Vector2Int currentPixel = OutlinePixels[0];
@@ -94,13 +95,26 @@ public class ProvinceGenerator {
 			directionToNext = VectorGeometry.LeftPerpendicular(directionToNext);
 		}
 	}
+	
 	private void CalculateCenter(){
-		Center = vertices[0];
-		// TODO
+		Vector2 min = Vector2.positiveInfinity;
+		Vector2 max = Vector2.negativeInfinity;
+		foreach (Vector2 vertex in vertices){
+			for (int i = 0; i < 2 /*The 2 of Vector2*/; i++){
+				if (max[i] < vertex[i]){
+					max[i] = vertex[i];
+				} else if (min[i] > vertex[i]){
+					min[i] = vertex[i];
+				}
+			}
+		}
+		Center = (min+max)/2;
+		// TODO: ensure center is within the convex polygon.
 		for (int i = 0; i < vertices.Count; i++){
 			vertices[i] -= Center;
 		}
 	}
+	
 	private void GenerateOutlineMesh(){
 		MeshData meshData = new("ProvinceOutline");
 		Vector2 beforeStart = vertices[^1];
@@ -110,8 +124,9 @@ public class ProvinceGenerator {
 
 			Vector2 beforePerpendicular = VectorGeometry.LeftPerpendicular(beforeStart, start).normalized;
 			Vector2 middlePerpendicular = VectorGeometry.LeftPerpendicular(start, end).normalized;
-
-			Vector2 offset = CalculateCornerOffset(beforePerpendicular, middlePerpendicular);
+			
+			Vector2 offset = (beforePerpendicular+middlePerpendicular).normalized;
+			offset *= borderHalfWidth/Vector2.Dot(offset, beforePerpendicular);
 			AddBorderSection(meshData, start+offset, start-offset);
 
 			beforeStart = start;
@@ -122,11 +137,6 @@ public class ProvinceGenerator {
 		meshData.Triangles[^2] %= meshData.Vertices.Count;
 		meshData.Triangles[^1] %= meshData.Vertices.Count;
 		OutlineMesh = meshData.ToMesh();
-	}
-	private Vector2 CalculateCornerOffset(Vector2 perpendicularA, Vector2 perpendicularB){
-		Vector2 offset = (perpendicularA+perpendicularB).normalized;
-		offset *= borderHalfWidth/Vector2.Dot(offset, perpendicularA);
-		return offset;
 	}
 	private void AddBorderSection(MeshData meshData, Vector2 left, Vector2 right){
 		int startIndex = meshData.Vertices.Count;
@@ -141,6 +151,7 @@ public class ProvinceGenerator {
 			startIndex+1, startIndex+2, startIndex+3
 		});
 	}
+	
 	private void GenerateShapeMesh(){
 		MeshData meshData = new("ProvinceShape");
 		// TODO
