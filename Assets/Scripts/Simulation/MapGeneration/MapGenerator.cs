@@ -5,7 +5,7 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour {
     private const int MaxOutlineSteps = 10000;
     // In clockwise order, starting with because that direction should be checked first when iterating over the texture.
-    private static readonly Vector2Int[] CardinalDirections = {Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left};
+    public static readonly Vector2Int[] CardinalDirections = {Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left};
 
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Province provincePrefab;
