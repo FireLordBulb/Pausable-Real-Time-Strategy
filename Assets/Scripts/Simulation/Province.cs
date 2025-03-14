@@ -3,6 +3,7 @@ using UnityEngine;
 public class Province : MonoBehaviour {
     [SerializeField] private MeshFilter outlineMeshFilter;
     [SerializeField] private MeshFilter shapeMeshFilter;
+    [SerializeField] private MeshRenderer shapeMeshRenderer;
     
     public Color Color {get; private set;}
 
@@ -10,5 +11,6 @@ public class Province : MonoBehaviour {
         Color = color;
         outlineMeshFilter.sharedMesh = outlineMesh;
         shapeMeshFilter.sharedMesh = shapeMesh;
+        shapeMeshRenderer.material.color = color;
     }
 }

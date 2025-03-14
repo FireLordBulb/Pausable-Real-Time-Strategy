@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 3ecac2d15c3a550498a6e468a53017e4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -151,7 +151,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: f195e0b8c4c2bea49b17c4c1ec5faa2f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -243,3 +243,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMeshFilter: {fileID: 566674900097680830}
   shapeMeshFilter: {fileID: 4224362148076781586}
+  shapeMeshRenderer: {fileID: 8482006392142652116}
