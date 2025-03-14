@@ -20,4 +20,8 @@ public class Province : MonoBehaviour {
         shapeMeshFilter.sharedMesh = shapeMesh;
         shapeMeshRenderer.material.color = color;
     }
+
+    public void OnClick(){
+        shapeMeshRenderer.material.color = Color.white;
+    }
 }

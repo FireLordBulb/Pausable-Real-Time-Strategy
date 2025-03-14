@@ -17,7 +17,7 @@ public class UILayer : ActionBehaviour {
 			return;
 		}
 		if (hit.collider.TryGetComponent(out Province province)){
-			print(province.Color);
+			province.OnClick();
 		}
 	}
 }
