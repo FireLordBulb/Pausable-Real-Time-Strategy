@@ -105,22 +105,22 @@ public class ProvinceGenerator {
 		MeshData meshData = new("ProvinceOutline");
 		Vector2 beforeStart = vertices[^1];
 		Vector2 start = vertices[0];
-		Vector2 end = vertices[1];
-		for (int i = 0; i < vertices.Count; i++){
-			Vector2 afterEnd = vertices[(i+2)%vertices.Count];
+		for (int i = 1; i <= vertices.Count; i++){
+			Vector2 end = vertices[i%vertices.Count];
 
 			Vector2 beforePerpendicular = VectorGeometry.LeftPerpendicular(beforeStart, start).normalized;
 			Vector2 middlePerpendicular = VectorGeometry.LeftPerpendicular(start, end).normalized;
-			Vector2 afterPerpendicular = VectorGeometry.LeftPerpendicular(end, afterEnd).normalized;
 
-			Vector2 startOffset = CalculateCornerOffset(beforePerpendicular, middlePerpendicular);
-			Vector2 endOffset = CalculateCornerOffset(middlePerpendicular, afterPerpendicular);
-			AddBorderSection(meshData, start+startOffset, start-startOffset, end+endOffset, end-endOffset);
+			Vector2 offset = CalculateCornerOffset(beforePerpendicular, middlePerpendicular);
+			AddBorderSection(meshData, start+offset, start-offset);
 
 			beforeStart = start;
 			start = end;
-			end = afterEnd;
 		}
+		// Make vertex indices in the last triangles point loop around to the first pair of vertices.
+		meshData.Triangles[^4] %= meshData.Vertices.Count;
+		meshData.Triangles[^2] %= meshData.Vertices.Count;
+		meshData.Triangles[^1] %= meshData.Vertices.Count;
 		OutlineMesh = meshData.ToMesh();
 	}
 	private Vector2 CalculateCornerOffset(Vector2 perpendicularA, Vector2 perpendicularB){
@@ -128,23 +128,17 @@ public class ProvinceGenerator {
 		offset *= borderHalfWidth/Vector2.Dot(offset, perpendicularA);
 		return offset;
 	}
-	private void AddBorderSection(MeshData meshData, Vector2 startLeft, Vector2 startRight, Vector2 endLeft, Vector2 endRight){
+	private void AddBorderSection(MeshData meshData, Vector2 left, Vector2 right){
 		int startIndex = meshData.Vertices.Count;
-		meshData.Vertices.Add(VectorGeometry.ToXZPlane(startLeft));
-		meshData.Vertices.Add(VectorGeometry.ToXZPlane(startRight));
-		meshData.Vertices.Add(VectorGeometry.ToXZPlane(endLeft));
-		meshData.Vertices.Add(VectorGeometry.ToXZPlane(endRight));
+		meshData.Vertices.Add(VectorGeometry.ToXZPlane(left));
+		meshData.Vertices.Add(VectorGeometry.ToXZPlane(right));
 		meshData.Normals.Add(Vector3.up);
 		meshData.Normals.Add(Vector3.up);
-		meshData.Normals.Add(Vector3.up);
-		meshData.Normals.Add(Vector3.up);
-		meshData.UVs.Add(Vector2.up);
-		meshData.UVs.Add(Vector2.zero);
 		meshData.UVs.Add(Vector2.up);
 		meshData.UVs.Add(Vector2.zero);
 		meshData.Triangles.AddRange(new[]{
-			startIndex+1, startIndex+2, startIndex+3,
-			startIndex+0, startIndex+2, startIndex+1
+			startIndex+1, startIndex+0, startIndex+2,
+			startIndex+1, startIndex+2, startIndex+3
 		});
 	}
 	private void GenerateShapeMesh(){
