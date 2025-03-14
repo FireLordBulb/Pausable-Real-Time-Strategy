@@ -107,12 +107,12 @@ public class MapGenerator : MonoBehaviour {
     private Vector3 ConvertToWorldSpace(Vector2 vector){
         return VectorGeometry.ToXZPlane(vector*worldSpaceScale + worldSpaceOffset);
     }
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
     private void OnDrawGizmos(){
         foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             Handles.color = color;
             provinceGenerator.GizmosPolygon(ConvertToWorldSpace);
         }
     }
-#endif
+#endif*/
 }

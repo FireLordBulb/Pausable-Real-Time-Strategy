@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class ProvinceGenerator {
@@ -41,6 +39,9 @@ public class ProvinceGenerator {
 	public Vector2 Center {get; private set;}
 
 	private readonly float borderHalfWidth;
+
+	private Vector2 min, max;
+	
 	public ProvinceGenerator(float borderWidth){
 		borderHalfWidth = borderWidth;
 	}
@@ -97,8 +98,8 @@ public class ProvinceGenerator {
 	}
 	
 	private void CalculateCenter(){
-		Vector2 min = Vector2.positiveInfinity;
-		Vector2 max = Vector2.negativeInfinity;
+		min = Vector2.positiveInfinity;
+		max = Vector2.negativeInfinity;
 		foreach (Vector2 vertex in vertices){
 			for (int i = 0; i < 2 /*The 2 of Vector2*/; i++){
 				if (max[i] < vertex[i]){
@@ -154,14 +155,34 @@ public class ProvinceGenerator {
 	
 	private void GenerateShapeMesh(){
 		MeshData meshData = new("ProvinceShape");
-		// TODO
+		
+		meshData.Vertices.Add(Vector3.zero);
+		meshData.Normals.Add(Vector3.up);
+		meshData.UVs.Add(GetBoundsUV(Center));
+
+		for (int i = 0; i < vertices.Count; i++){
+			meshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
+			meshData.Normals.Add(Vector3.up);
+			meshData.UVs.Add(GetBoundsUV(vertices[i]));
+			meshData.Triangles.AddRange(new[]{
+				0, i+1, i+2
+			});
+		}
+		// Make the last triangle's corner be the first non-center vertex.
+		meshData.Triangles[^1] = 1;
+		// TODO: handle concave meshes properly.
 		ShapeMesh = meshData.ToMesh();
 	}
-#if UNITY_EDITOR
+	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerp(position, X), InverseLerp(position, Y));
+	private const int X = 0, Y = 1;
+	private float InverseLerp(Vector2 vector, int dimension){
+		return Mathf.InverseLerp(min[dimension], max[dimension], vector[dimension]);
+	}
+/*#if UNITY_EDITOR
 	public void GizmosPolygon(Func<Vector2, Vector3> worldSpaceConverter){
 		for (int i = 0; i < vertices.Count; i++){
 			Handles.DrawLine(worldSpaceConverter(Center+vertices[i]), worldSpaceConverter(Center+vertices[(i+1)%vertices.Count]));
 		}
 	}
-#endif
+#endif*/
 }
