@@ -10,26 +10,25 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Province provincePrefab;
     // TODO: replace with mapWidth float
-    [SerializeField] private Transform background;
     [SerializeField] private Transform provinceParent;
     [SerializeField] private float borderWidth;
+    [SerializeField] private float mapWidth;
     
     private readonly Dictionary<Color, ProvinceGenerator> provinceGenerators = new();
     private readonly Dictionary<Color, Province> provinces = new();
-    private int width, height;
+    private int imageWidth, imageHeight;
     private Vector2 worldSpaceOffset;
     private float worldSpaceScale;
     
     private void Awake(){
-        width = mapImage.width;
-        height = mapImage.height;
+        imageWidth = mapImage.width;
+        imageHeight = mapImage.height;
         
-        Vector2 scale2D = background.transform.lossyScale;
-        worldSpaceScale = scale2D.x/width;
-        worldSpaceOffset = -scale2D/2;
+        worldSpaceScale = mapWidth/imageWidth;
+        worldSpaceOffset = -0.5f*new Vector2(mapWidth, mapWidth*imageHeight/imageWidth);
         
-        for (int y = 0; y < height; y++){
-            for (int x = 0; x < width; x++){
+        for (int y = 0; y < imageHeight; y++){
+            for (int x = 0; x < imageWidth; x++){
                 Color color = mapImage.GetPixel(x, y);
                 if (!provinceGenerators.ContainsKey(color)){
                     FindProvinceOutline(color, new Vector2Int(x, y));
@@ -72,7 +71,7 @@ public class MapGenerator : MonoBehaviour {
             for (int i = 0; i < CardinalDirections.Length; i++){
                 int directionIndex = (leftTurnIndex+i+CardinalDirections.Length) % CardinalDirections.Length;
                 Vector2Int newPosition = position+CardinalDirections[directionIndex];
-                if (newPosition.x < 0 || width <= newPosition.x || newPosition.y < 0 || height <= newPosition.y){
+                if (newPosition.x < 0 || imageWidth <= newPosition.x || newPosition.y < 0 || imageHeight <= newPosition.y){
                     continue;
                 }
                 Color newPixelColor = mapImage.GetPixel(newPosition.x, newPosition.y);
