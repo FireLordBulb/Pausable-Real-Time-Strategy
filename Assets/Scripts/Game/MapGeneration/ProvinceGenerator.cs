@@ -110,7 +110,7 @@ public class ProvinceGenerator {
 			Vector2 otherPoint = vertices[otherIndex];
 			// TODO: Name magic number as a const.
 			Vector2 difference = otherPoint-point;
-			if (difference.sqrMagnitude <= 2.1f){
+			if (Mathf.Abs(difference.sqrMagnitude-2f) + (point - Vector2Int.RoundToInt(point)).sqrMagnitude < Vector2.kEpsilon){
 				if (otherIndex < index){
 					(index, otherIndex) = (otherIndex, index);
 				}
@@ -253,9 +253,12 @@ public class ProvinceGenerator {
 				halfWayPoint = halfWayPoint.Next;
 				continue;
 			}
-			foreach (Node node in vertexLoop.First.Next.LoopFrom){
-				if (node.Next == vertexLoop.First || crossCheckCount > 10000){
+			foreach (Node node in start.Next.LoopFrom){
+				if (node.Next == start || crossCheckCount > 10000){
 					break;
+				}
+				if (node == halfWayPoint || node.Next == halfWayPoint){
+					continue;
 				}
 				if (!DoLineSegmentsCross((start.Value, halfWayPoint.Value), (node.Value, node.Next.Value))){
 					continue;
