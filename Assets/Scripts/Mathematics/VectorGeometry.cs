@@ -1,15 +1,17 @@
 using UnityEngine;
 
-public static class VectorGeometry {
-	public static Vector3 ToXZPlane(Vector2 vector) => new(vector.x, 0, vector.y);
+namespace Mathematics {
+	public static class VectorGeometry {
+		public static Vector3 ToXZPlane(Vector2 vector) => new(vector.x, 0, vector.y);
 
-	public static readonly Vector2Int UpRight   = new(+1, +1);
-	public static readonly Vector2Int DownRight = new(+1, -1);
-	public static readonly Vector2Int DownLeft  = new(-1, -1);
-	public static readonly Vector2Int UpLeft    = new(-1, +1);
-	public static Vector2Int LeftPerpendicular(Vector2Int vector) => new(-vector.y, vector.x);
-	public static Vector2Int RightPerpendicular(Vector2Int vector) => new(vector.y, -vector.x);
-	public static Vector2 LeftPerpendicular(Vector2 start, Vector2 end) => LeftPerpendicular((end-start));
-	public static Vector2 LeftPerpendicular(Vector2 vector) => new(-vector.y, vector.x);
-	public static Vector2 RightPerpendicular(Vector2 vector) => new(vector.y, -vector.x);
+		public static readonly Vector2Int UpRight = new(+1, +1);
+		public static readonly Vector2Int DownRight = new(+1, -1);
+		public static readonly Vector2Int DownLeft = new(-1, -1);
+		public static readonly Vector2Int UpLeft = new(-1, +1);
+		public static Vector2Int LeftPerpendicular(Vector2Int vector) => new(-vector.y, vector.x);
+		public static Vector2Int RightPerpendicular(Vector2Int vector) => new(vector.y, -vector.x);
+		public static Vector2 LeftPerpendicular(Vector2 start, Vector2 end) => LeftPerpendicular((end-start));
+		public static Vector2 LeftPerpendicular(Vector2 vector) => new(-vector.y, vector.x);
+		public static Vector2 RightPerpendicular(Vector2 vector) => new(vector.y, -vector.x);
+	}
 }
