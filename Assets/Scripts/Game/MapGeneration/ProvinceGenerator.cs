@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Collections;
 using LoopList = Collections.LinkedLoopList<UnityEngine.Vector2>;
 using Node = Collections.LinkedLoopList<UnityEngine.Vector2>.Node<UnityEngine.Vector2>;
 using Mathematics;
@@ -177,10 +176,6 @@ public class ProvinceGenerator {
 	}
 	
 	private void GenerateShapeMesh(){
-		(Vector2, Vector2) lineA = (new Vector2(-4, -3), new Vector2(24, 3));
-		(Vector2, Vector2) lineB = (new Vector2(11, 3), new Vector2(11, -15));
-		Debug.Log($"lineA: {lineA}, lineB: {lineB}, do they cross: {DoLineSegmentsCross(lineA, lineB)}");
-		
 		MeshData meshData = new("ProvinceShape");
 		
 		/*
@@ -208,27 +203,21 @@ public class ProvinceGenerator {
 		}
 		AddPolygon(new LoopList(vertices), vertices.Count, meshData, positionIndexMap);
 		ShapeMesh = meshData.ToMesh();
+		
+		Debug.Log(crossCheckCount);
 	}
 	private void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){
-		Debug.Log($"Polygon, length: {length}");
-		foreach (Node node in vertexLoop.First.LoopFrom){
-		//	Debug.Log($"{positionIndexMap[node.Value]}, {node.Value}");
-		}
 		if (length <= 3){
 			Node nodeA = vertexLoop.First;
 			Node nodeB = nodeA.Next;
 			Node nodeC = nodeB.Next;
-
 			// Swap B and C if triangle is facing down.
 			if (Vector3.Cross(VectorGeometry.ToXZPlane(nodeA.Value-nodeB.Value), VectorGeometry.ToXZPlane(nodeB.Value-nodeC.Value)).y < 0){
 				(nodeB, nodeC) = (nodeC, nodeB);
 			}
-			
 			meshData.Triangles.Add(positionIndexMap[nodeA.Value]);
 			meshData.Triangles.Add(positionIndexMap[nodeB.Value]);
 			meshData.Triangles.Add(positionIndexMap[nodeC.Value]);
-
-			
 			return;
 		}
 		
@@ -240,13 +229,13 @@ public class ProvinceGenerator {
 			beforeHalfWayPoint = halfWayPoint;
 			halfWayPoint = halfWayPoint.Next;
 		}
+		
 		bool isLineFullyInsidePolygon;
 		do {
 			Vector2 direction = halfWayPoint.Value - start.Value;
-			isLineFullyInsidePolygon = IsDirectionPointingInwards(direction, beforeStart, start, start.Next);
+			isLineFullyInsidePolygon  = IsDirectionPointingInwards(direction , beforeStart       , start       , start.Next       );
 			isLineFullyInsidePolygon &= IsDirectionPointingInwards(-direction, beforeHalfWayPoint, halfWayPoint, halfWayPoint.Next);
 			if (!isLineFullyInsidePolygon){
-				//Debug.Log($"Is not between directions, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
 				ToNextNodes();
 				continue;
 			}
@@ -264,16 +253,11 @@ public class ProvinceGenerator {
 				ToNextNodes();
 				break;
 			}
-			Debug.Log($"isLineFullyInsidePolygon: {isLineFullyInsidePolygon}, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
-	
 		} while (!isLineFullyInsidePolygon && halfWayPoint != vertexLoop.First);
-		(LoopList left, LinkedLoopList<Vector2> right) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
-		// Go ahead garbage collector.
-		vertexLoop = null;
-		AddPolygon(halfLoops.left , (length)/2+1, meshData, positionIndexMap);
-		// Collect away.
-		halfLoops.left = null;
-		AddPolygon(halfLoops.right, (length+1)/2+1  , meshData, positionIndexMap);
+		
+		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
+		AddPolygon(halfLoops.a , (length)/2+1, meshData, positionIndexMap);
+		AddPolygon(halfLoops.b, (length+1)/2+1  , meshData, positionIndexMap);
 		
 		void ToNextNodes(){
 			beforeStart = start;
@@ -283,18 +267,17 @@ public class ProvinceGenerator {
 		}
 	}
 	private int crossCheckCount;
-	private bool IsDirectionPointingInwards(Vector2 direction, Node before, Node middle, Node after){
+	private static bool IsDirectionPointingInwards(Vector2 direction, Node before, Node middle, Node after){
 		Vector2 leftDirection  = after.Value  - middle.Value;
 		Vector2 rightDirection = before.Value - middle.Value;
 		return VectorGeometry.IsBetweenDirections(direction, leftDirection, rightDirection);
 	}
 	private bool DoLineSegmentsCross((Vector2 a, Vector2 b) firstLine, (Vector2 a, Vector2 b) secondLine){
 		crossCheckCount++;
-		//Debug.Log($"firstLine: {firstLine}, secondLine: {secondLine}");
+		
 		Vector2 firstDifference = firstLine.b-firstLine.a;
 		Vector2 secondDifference = secondLine.b-secondLine.a;
 
-		// TODO: Handle firstDifference.x = 0 case.
 		bool isFirstVertical = Mathf.Abs(firstDifference.x) < Vector2.kEpsilon;
 		bool isSecondVertical = Mathf.Abs(secondDifference.x) < Vector2.kEpsilon;
 		if (isFirstVertical && isSecondVertical){
@@ -308,24 +291,20 @@ public class ProvinceGenerator {
 			secondLine.a = VectorGeometry.Swizzle(secondLine.a);
 			secondLine.b = VectorGeometry.Swizzle(secondLine.b);
 		}
+		
 		float firstEquationSlope = firstDifference.y/firstDifference.x;
 		float firstEquationConstant = firstLine.a.y-firstEquationSlope*firstLine.a.x;
-		
 		float secondEquationSlope = secondDifference.y/secondDifference.x;
 		float secondEquationConstant = secondLine.a.y-secondEquationSlope*secondLine.a.x;
 
 		if (Mathf.Abs(firstEquationSlope-secondEquationSlope) < Vector2.kEpsilon){
 			return false;
 		}
-		// secondEquationConstant+ x*secondEquationSlope =firstEquationConstant+ x*firstEquationSlope 
 		float intersectionX = (secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope);
 
-		bool val =
+		return
 			(firstLine .a.x < intersectionX && intersectionX < firstLine .b.x || firstLine .b.x < intersectionX && intersectionX < firstLine .a.x) &&
 			(secondLine.a.x < intersectionX && intersectionX < secondLine.b.x || secondLine.b.x < intersectionX && intersectionX < secondLine.a.x);
-	//	Debug.Log($"intersection: {intersectionX}, crossed: {val}");
-		int er = 5+6;
-		return val;
 	}
 	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerp(position, X), InverseLerp(position, Y));
 	private const int X = 0, Y = 1;
