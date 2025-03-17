@@ -177,8 +177,8 @@ public class ProvinceGenerator {
 	}
 	
 	private void GenerateShapeMesh(){
-		(Vector2, Vector2) lineA = (new Vector2(-2, 10), new Vector2(2, -10));
-		(Vector2, Vector2) lineB = (new Vector2(-3, 3), new Vector2(2, -3));
+		(Vector2, Vector2) lineA = (new Vector2(-4, -3), new Vector2(24, 3));
+		(Vector2, Vector2) lineB = (new Vector2(11, 3), new Vector2(11, -15));
 		Debug.Log($"lineA: {lineA}, lineB: {lineB}, do they cross: {DoLineSegmentsCross(lineA, lineB)}");
 		
 		MeshData meshData = new("ProvinceShape");
@@ -210,9 +210,9 @@ public class ProvinceGenerator {
 		ShapeMesh = meshData.ToMesh();
 	}
 	private void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){
-		Debug.Log("Polygon:");
+		Debug.Log($"Polygon, length: {length}");
 		foreach (Node node in vertexLoop.First.LoopFrom){
-			Debug.Log($"{positionIndexMap[node.Value]}, {node.Value}");
+		//	Debug.Log($"{positionIndexMap[node.Value]}, {node.Value}");
 		}
 		if (length <= 3){
 			Node nodeA = vertexLoop.First;
@@ -239,18 +239,21 @@ public class ProvinceGenerator {
 			halfWayPoint = halfWayPoint.Next;
 		}
 		bool isLineFullyInsidePolygon;
+		int uhh = 0;
 		do {
+			uhh++;
 			Vector2 middleDirection = halfWayPoint.Value - start.Value;
 			Vector2 leftDirection   = start.Next.Value   - start.Value;
 			Vector2 rightDirection  = beforeStart.Value  - start.Value;
 			isLineFullyInsidePolygon = VectorGeometry.IsBetweenDirections(middleDirection, leftDirection, rightDirection);
 			if (!isLineFullyInsidePolygon){
+				//Debug.Log($"Is not between directions, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
 				beforeStart = start;
 				start = start.Next;
 				halfWayPoint = halfWayPoint.Next;
 				continue;
 			}
-			foreach (Node node in vertexLoop.First.Next.Next.LoopFrom){
+			foreach (Node node in vertexLoop.First.Next.LoopFrom){
 				if (node.Next == vertexLoop.First || crossCheckCount > 10000){
 					break;
 				}
@@ -263,23 +266,33 @@ public class ProvinceGenerator {
 				halfWayPoint = halfWayPoint.Next;
 				break;
 			}
-		} while (!isLineFullyInsidePolygon && crossCheckCount > 10000);
+			Debug.Log($"isLineFullyInsidePolygon: {isLineFullyInsidePolygon}, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
+		} while (!isLineFullyInsidePolygon && crossCheckCount < 10000 && uhh < 99);
 	
 		(LoopList left, LinkedLoopList<Vector2> right) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
 		// Go ahead garbage collector.
 		vertexLoop = null;
-		AddPolygon(halfLoops.left , (length+1)/2+1, meshData, positionIndexMap);
+		AddPolygon(halfLoops.left , (length)/2+1, meshData, positionIndexMap);
 		// Collect away.
 		halfLoops.left = null;
-		AddPolygon(halfLoops.right, (length)/2+1  , meshData, positionIndexMap);
+		AddPolygon(halfLoops.right, (length+1)/2+1  , meshData, positionIndexMap);
 	}
 	private int crossCheckCount;
 	private bool DoLineSegmentsCross((Vector2 a, Vector2 b) firstLine, (Vector2 a, Vector2 b) secondLine){
 		crossCheckCount++;
+		//Debug.Log($"firstLine: {firstLine}, secondLine: {secondLine}");
 		Vector2 firstDifference = firstLine.b-firstLine.a;
+		Vector2 secondDifference = secondLine.b-secondLine.a;
+
 		// TODO: Handle firstDifference.x = 0 case.
-		if (Mathf.Abs(firstDifference.x) < Vector2.kEpsilon){
+		bool isFirstVertical = Mathf.Abs(firstDifference.x) < Vector2.kEpsilon;
+		bool isSecondVertical = Mathf.Abs(secondDifference.x) < Vector2.kEpsilon;
+		if (isFirstVertical && isSecondVertical){
+			return false;
+		}
+		if (isFirstVertical ^ isSecondVertical){
 			firstDifference = VectorGeometry.Swizzle(firstDifference);
+			secondDifference = VectorGeometry.Swizzle(secondDifference);
 			firstLine .a = VectorGeometry.Swizzle(firstLine .a);
 			firstLine .b = VectorGeometry.Swizzle(firstLine .b);
 			secondLine.a = VectorGeometry.Swizzle(secondLine.a);
@@ -288,7 +301,6 @@ public class ProvinceGenerator {
 		float firstEquationSlope = firstDifference.y/firstDifference.x;
 		float firstEquationConstant = firstLine.a.y-firstEquationSlope*firstLine.a.x;
 		
-		Vector2 secondDifference = secondLine.b-secondLine.a;
 		float secondEquationSlope = secondDifference.y/secondDifference.x;
 		float secondEquationConstant = secondLine.a.y-secondEquationSlope*secondLine.a.x;
 
@@ -296,14 +308,14 @@ public class ProvinceGenerator {
 			return false;
 		}
 		// secondEquationConstant+ x*secondEquationSlope =firstEquationConstant+ x*firstEquationSlope 
-		Vector2 intersection = new((secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope), 0);
-		intersection.y = firstEquationSlope*intersection.x + firstEquationConstant;
+		float intersectionX = (secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope);
 
-		Debug.Log($"intersection: {intersection}");
-		return (firstLine .a.x < intersection.x && intersection.x < firstLine .b.x || firstLine .b.x < intersection.x && intersection.x < firstLine .a.x) &&
-		       (secondLine.a.x < intersection.x && intersection.x < secondLine.b.x || secondLine.b.x < intersection.x && intersection.x < secondLine.a.x) &&
-		       (firstLine .a.y < intersection.y && intersection.y < firstLine .b.y || firstLine .b.y < intersection.y && intersection.y < firstLine .a.y) &&
-		       (secondLine.a.y < intersection.y && intersection.y < secondLine.b.y || secondLine.b.y < intersection.y && intersection.y < secondLine.a.y);
+		bool val =
+			(firstLine .a.x < intersectionX && intersectionX < firstLine .b.x || firstLine .b.x < intersectionX && intersectionX < firstLine .a.x) &&
+			(secondLine.a.x < intersectionX && intersectionX < secondLine.b.x || secondLine.b.x < intersectionX && intersectionX < secondLine.a.x);
+	//	Debug.Log($"intersection: {intersectionX}, crossed: {val}");
+		int er = 5+6;
+		return val;
 	}
 	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerp(position, X), InverseLerp(position, Y));
 	private const int X = 0, Y = 1;
