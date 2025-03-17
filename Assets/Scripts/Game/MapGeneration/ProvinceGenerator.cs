@@ -177,23 +177,6 @@ public class ProvinceGenerator {
 	
 	private void GenerateShapeMesh(){
 		MeshData meshData = new("ProvinceShape");
-		
-		/*
-		meshData.Vertices.Add(Vector3.zero);
-		meshData.Normals.Add(Vector3.up);
-		meshData.UVs.Add(GetBoundsUV(Center));
-
-		for (int i = 0; i < vertices.Count; i++){
-			meshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
-			meshData.Normals.Add(Vector3.up);
-			meshData.UVs.Add(GetBoundsUV(vertices[i]));
-			meshData.Triangles.AddRange(new[]{
-				0, i+1, i+2
-			});
-		}
-		// Make the last triangle's corner be the first non-center vertex.
-		meshData.Triangles[^1] = 1;
-		*/
 		Dictionary<Vector2, int> positionIndexMap = new();
 		for (int i = 0; i < vertices.Count; i++){
 			meshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
