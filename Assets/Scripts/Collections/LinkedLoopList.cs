@@ -43,11 +43,12 @@ namespace Collections {
 			public Node<TT> Copy => new(){Next = Next, Value = Value};
 
 			public IEnumerable<Node<TT>> LoopFrom { get {
-				Node<TT> node = Next;
-				while (node != this){
+				Node<TT> node = this;
+				while (node.Next != this){
 					yield return node;
 					node = node.Next;
 				}
+				yield return node;
 			}}
 		}
 	}
