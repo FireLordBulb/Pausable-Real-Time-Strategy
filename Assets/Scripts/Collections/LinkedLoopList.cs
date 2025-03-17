@@ -37,13 +37,13 @@ namespace Collections {
 			return (left, right);
 		}
 
-		public class Node<T> {
-			public Node<T> Next {get; internal set;}
-			public T Value {get; internal set;}
-			public Node<T> Copy => new(){Next = Next, Value = Value};
+		public class Node<TT> {
+			public Node<TT> Next {get; internal set;}
+			public TT Value {get; internal set;}
+			public Node<TT> Copy => new(){Next = Next, Value = Value};
 
-			public IEnumerator<Node<T>> LoopFrom { get {
-				Node<T> node = Next;
+			public IEnumerable<Node<TT>> LoopFrom { get {
+				Node<TT> node = Next;
 				while (node != this){
 					yield return node;
 					node = node.Next;

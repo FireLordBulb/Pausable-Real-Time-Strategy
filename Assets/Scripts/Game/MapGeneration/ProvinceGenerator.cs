@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using Collections;
+using LoopList = Collections.LinkedLoopList<UnityEngine.Vector2>;
+using Node = Collections.LinkedLoopList<UnityEngine.Vector2>.Node<UnityEngine.Vector2>;
 using Mathematics;
 using UnityEngine;
 
@@ -157,6 +160,7 @@ public class ProvinceGenerator {
 	private void GenerateShapeMesh(){
 		MeshData meshData = new("ProvinceShape");
 		
+		/*
 		meshData.Vertices.Add(Vector3.zero);
 		meshData.Normals.Add(Vector3.up);
 		meshData.UVs.Add(GetBoundsUV(Center));
@@ -171,8 +175,66 @@ public class ProvinceGenerator {
 		}
 		// Make the last triangle's corner be the first non-center vertex.
 		meshData.Triangles[^1] = 1;
-		// TODO: handle concave meshes properly.
+		*/
+		Dictionary<Vector2, int> positionIndexMap = new();
+		for (int i = 0; i < vertices.Count; i++){
+			meshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
+			meshData.Normals.Add(Vector3.up);
+			meshData.UVs.Add(GetBoundsUV(vertices[i]));
+			positionIndexMap.Add(vertices[i], i);
+		}
+		AddPolygon(new LoopList(vertices), vertices.Count, meshData, positionIndexMap);
 		ShapeMesh = meshData.ToMesh();
+	}
+	private void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){
+		if (length <= 3){
+			Node nodeA = vertexLoop.First;
+			Node nodeB = nodeA.Next;
+			Node nodeC = nodeB.Next;
+
+			// Swap B and C if triangle is facing down.
+			if (Vector3.Cross(VectorGeometry.ToXZPlane(nodeA.Value-nodeB.Value), VectorGeometry.ToXZPlane(nodeB.Value-nodeC.Value)).y < 0){
+				(nodeB, nodeC) = (nodeC, nodeB);
+			}
+			
+			meshData.Triangles.Add(positionIndexMap[nodeA.Value]);
+			meshData.Triangles.Add(positionIndexMap[nodeB.Value]);
+			meshData.Triangles.Add(positionIndexMap[nodeC.Value]);
+
+			
+			return;
+		}
+		
+		Node beforeStart = vertexLoop.Last;
+		Node start = vertexLoop.First;
+		Node halfWayPoint = start;
+		for (int i = length/2; i > 0; i--){
+			halfWayPoint = halfWayPoint.Next;
+		}
+		bool isCrossingEdge;
+		do {
+			isCrossingEdge = false;
+			foreach (Node node in vertexLoop.First.Next.LoopFrom){
+				/*if (doLineSegmentsCross(start to halfWayPoint, node to node.next)){
+					isCrossingEdge = true;
+					beforeStart = start;
+					start = start.next;
+					halfWayPoint = halfWayPoint.next;
+					break;												
+				}*/			
+
+				// break if node.next is First
+			}
+		
+		} while (isCrossingEdge);
+	
+		(LoopList left, LinkedLoopList<Vector2> right) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
+		// Go ahead garbage collector.
+		vertexLoop = null;
+		AddPolygon(halfLoops.left , (length+1)/2+1, meshData, positionIndexMap);
+		// Collect away.
+		halfLoops.left = null;
+		AddPolygon(halfLoops.right, (length)/2+1  , meshData, positionIndexMap);
 	}
 	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerp(position, X), InverseLerp(position, Y));
 	private const int X = 0, Y = 1;
