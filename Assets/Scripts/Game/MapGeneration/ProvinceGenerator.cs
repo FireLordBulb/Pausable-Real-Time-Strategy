@@ -234,27 +234,24 @@ public class ProvinceGenerator {
 		
 		Node beforeStart = vertexLoop.Last;
 		Node start = vertexLoop.First;
+		Node beforeHalfWayPoint = beforeStart;
 		Node halfWayPoint = start;
 		for (int i = length/2; i > 0; i--){
+			beforeHalfWayPoint = halfWayPoint;
 			halfWayPoint = halfWayPoint.Next;
 		}
 		bool isLineFullyInsidePolygon;
-		int uhh = 0;
 		do {
-			uhh++;
-			Vector2 middleDirection = halfWayPoint.Value - start.Value;
-			Vector2 leftDirection   = start.Next.Value   - start.Value;
-			Vector2 rightDirection  = beforeStart.Value  - start.Value;
-			isLineFullyInsidePolygon = VectorGeometry.IsBetweenDirections(middleDirection, leftDirection, rightDirection);
+			Vector2 direction = halfWayPoint.Value - start.Value;
+			isLineFullyInsidePolygon = IsDirectionPointingInwards(direction, beforeStart, start, start.Next);
+			isLineFullyInsidePolygon &= IsDirectionPointingInwards(-direction, beforeHalfWayPoint, halfWayPoint, halfWayPoint.Next);
 			if (!isLineFullyInsidePolygon){
 				//Debug.Log($"Is not between directions, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
-				beforeStart = start;
-				start = start.Next;
-				halfWayPoint = halfWayPoint.Next;
+				ToNextNodes();
 				continue;
 			}
 			foreach (Node node in start.Next.LoopFrom){
-				if (node.Next == start || crossCheckCount > 10000){
+				if (node.Next == start){
 					break;
 				}
 				if (node == halfWayPoint || node.Next == halfWayPoint){
@@ -264,14 +261,12 @@ public class ProvinceGenerator {
 					continue;
 				}
 				isLineFullyInsidePolygon = false;
-				beforeStart = start;
-				start = start.Next;
-				halfWayPoint = halfWayPoint.Next;
+				ToNextNodes();
 				break;
 			}
 			Debug.Log($"isLineFullyInsidePolygon: {isLineFullyInsidePolygon}, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
-		} while (!isLineFullyInsidePolygon && crossCheckCount < 10000 && uhh < 99);
 	
+		} while (!isLineFullyInsidePolygon && halfWayPoint != vertexLoop.First);
 		(LoopList left, LinkedLoopList<Vector2> right) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
 		// Go ahead garbage collector.
 		vertexLoop = null;
@@ -279,8 +274,20 @@ public class ProvinceGenerator {
 		// Collect away.
 		halfLoops.left = null;
 		AddPolygon(halfLoops.right, (length+1)/2+1  , meshData, positionIndexMap);
+		
+		void ToNextNodes(){
+			beforeStart = start;
+			start = start.Next;
+			beforeHalfWayPoint = halfWayPoint;
+			halfWayPoint = halfWayPoint.Next;
+		}
 	}
 	private int crossCheckCount;
+	private bool IsDirectionPointingInwards(Vector2 direction, Node before, Node middle, Node after){
+		Vector2 leftDirection  = after.Value  - middle.Value;
+		Vector2 rightDirection = before.Value - middle.Value;
+		return VectorGeometry.IsBetweenDirections(direction, leftDirection, rightDirection);
+	}
 	private bool DoLineSegmentsCross((Vector2 a, Vector2 b) firstLine, (Vector2 a, Vector2 b) secondLine){
 		crossCheckCount++;
 		//Debug.Log($"firstLine: {firstLine}, secondLine: {secondLine}");
