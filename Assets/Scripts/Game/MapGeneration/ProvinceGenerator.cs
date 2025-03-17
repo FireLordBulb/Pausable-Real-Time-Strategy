@@ -56,6 +56,7 @@ public class ProvinceGenerator {
 			return;
 		}
 		GenerateVertextList();
+		RemoveDoubleCorners();
 		CalculateCenter();
 		GenerateOutlineMesh();
 		GenerateShapeMesh();
@@ -98,6 +99,24 @@ public class ProvinceGenerator {
 			// Rotates both directions by 90 degrees counter-clockwise.
 			directionFromPrevious = VectorGeometry.LeftPerpendicular(directionFromPrevious);
 			directionToNext = VectorGeometry.LeftPerpendicular(directionToNext);
+		}
+	}
+
+	private void RemoveDoubleCorners(){
+		for (int i = vertices.Count-1; i >= 0; i--){
+			int index = i;
+			int otherIndex = (i+1)%vertices.Count;
+			Vector2 point = vertices[index];
+			Vector2 otherPoint = vertices[otherIndex];
+			// TODO: Name magic number as a const.
+			Vector2 difference = otherPoint-point;
+			if (difference.sqrMagnitude <= 2.1f){
+				if (otherIndex < index){
+					(index, otherIndex) = (otherIndex, index);
+				}
+				vertices.RemoveAt(otherIndex);
+				vertices[index] = 0.5f*(point+otherPoint)+0.5f*VectorGeometry.RightPerpendicular(difference);
+			}
 		}
 	}
 	
@@ -180,22 +199,6 @@ public class ProvinceGenerator {
 		// Make the last triangle's corner be the first non-center vertex.
 		meshData.Triangles[^1] = 1;
 		*/
-		for (int i = vertices.Count-1; i >= 0; i--){
-			int index = i;
-			int otherIndex = (i+1)%vertices.Count;
-			Debug.Log(index);
-			Vector2 point = vertices[index];
-			Vector2 otherPoint = vertices[otherIndex];
-			// TODO: Name magic number as a const.
-			Vector2 difference = otherPoint-point;
-			if (difference.sqrMagnitude <= 2.1f){
-				if (otherIndex < index){
-					(index, otherIndex) = (otherIndex, index);
-				}
-				vertices.RemoveAt(otherIndex);
-				vertices[index] = 0.5f*(point+otherPoint)+0.5f*VectorGeometry.RightPerpendicular(difference);
-			}
-		}
 		Dictionary<Vector2, int> positionIndexMap = new();
 		for (int i = 0; i < vertices.Count; i++){
 			meshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
