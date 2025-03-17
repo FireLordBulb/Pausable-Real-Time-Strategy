@@ -109,7 +109,7 @@ public class ProvinceGenerator {
 			Vector2 otherPoint = vertices[otherIndex];
 			// TODO: Name magic number as a const.
 			Vector2 difference = otherPoint-point;
-			if (Mathf.Abs(difference.sqrMagnitude-2f) + (point - Vector2Int.RoundToInt(point)).sqrMagnitude < Vector2.kEpsilon){
+			if (Mathf.Abs(difference.sqrMagnitude-VectorGeometry.UpRight.sqrMagnitude) + (point - Vector2Int.RoundToInt(point)).sqrMagnitude < Vector2.kEpsilon){
 				if (otherIndex < index){
 					(index, otherIndex) = (otherIndex, index);
 				}
@@ -203,8 +203,6 @@ public class ProvinceGenerator {
 		}
 		AddPolygon(new LoopList(vertices), vertices.Count, meshData, positionIndexMap);
 		ShapeMesh = meshData.ToMesh();
-		
-		Debug.Log(crossCheckCount);
 	}
 	private void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){
 		if (length <= 3){
@@ -266,15 +264,12 @@ public class ProvinceGenerator {
 			halfWayPoint = halfWayPoint.Next;
 		}
 	}
-	private int crossCheckCount;
 	private static bool IsDirectionPointingInwards(Vector2 direction, Node before, Node middle, Node after){
 		Vector2 leftDirection  = after.Value  - middle.Value;
 		Vector2 rightDirection = before.Value - middle.Value;
 		return VectorGeometry.IsBetweenDirections(direction, leftDirection, rightDirection);
 	}
 	private bool DoLineSegmentsCross((Vector2 a, Vector2 b) firstLine, (Vector2 a, Vector2 b) secondLine){
-		crossCheckCount++;
-		
 		Vector2 firstDifference = firstLine.b-firstLine.a;
 		Vector2 secondDifference = secondLine.b-secondLine.a;
 
@@ -293,18 +288,17 @@ public class ProvinceGenerator {
 		}
 		
 		float firstEquationSlope = firstDifference.y/firstDifference.x;
-		float firstEquationConstant = firstLine.a.y-firstEquationSlope*firstLine.a.x;
 		float secondEquationSlope = secondDifference.y/secondDifference.x;
-		float secondEquationConstant = secondLine.a.y-secondEquationSlope*secondLine.a.x;
-
 		if (Mathf.Abs(firstEquationSlope-secondEquationSlope) < Vector2.kEpsilon){
 			return false;
 		}
-		float intersectionX = (secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope);
+		
+		float firstEquationConstant = firstLine.a.y-firstEquationSlope*firstLine.a.x;
+		float secondEquationConstant = secondLine.a.y-secondEquationSlope*secondLine.a.x;
 
-		return
-			(firstLine .a.x < intersectionX && intersectionX < firstLine .b.x || firstLine .b.x < intersectionX && intersectionX < firstLine .a.x) &&
-			(secondLine.a.x < intersectionX && intersectionX < secondLine.b.x || secondLine.b.x < intersectionX && intersectionX < secondLine.a.x);
+		float intersectionX = (secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope);
+		return (firstLine .a.x < intersectionX && intersectionX < firstLine .b.x || firstLine .b.x < intersectionX && intersectionX < firstLine .a.x) &&
+		       (secondLine.a.x < intersectionX && intersectionX < secondLine.b.x || secondLine.b.x < intersectionX && intersectionX < secondLine.a.x);
 	}
 	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerp(position, X), InverseLerp(position, Y));
 	private const int X = 0, Y = 1;
