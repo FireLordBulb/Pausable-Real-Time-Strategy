@@ -12,14 +12,16 @@ namespace Mathematics {
 		public static Vector2Int RightPerpendicular(Vector2Int vector) => new(vector.y, -vector.x);
 
 		public static bool IsBetweenDirections(Vector2 middleDirection, Vector2 leftDirection, Vector2 rightDirection){
-			bool isOuterAngleReflex = Vector2.Dot(leftDirection, LeftPerpendicular(rightDirection)) > 0;
-			if (isOuterAngleReflex){
-				return Vector2.Dot(middleDirection, RightPerpendicular(leftDirection)) > 0 &&
-				       Vector2.Dot(middleDirection, LeftPerpendicular(rightDirection)) > 0;
+			if (IsClockwise(leftDirection, rightDirection)){
+				return IsClockwise(leftDirection, middleDirection) &&
+				       IsClockwise(middleDirection, rightDirection);
 			}
-			return Vector2.Dot(middleDirection, RightPerpendicular(leftDirection)) > 0 ||
-			       Vector2.Dot(middleDirection, LeftPerpendicular(rightDirection)) > 0;
+			return IsClockwise(leftDirection, middleDirection) ||
+			       IsClockwise(middleDirection, rightDirection);
 			
+		}
+		public static bool IsClockwise(Vector2 leftDirection, Vector2 rightDirection){
+			return Vector2.Dot(leftDirection, LeftPerpendicular(rightDirection)) > 0;
 		}
 
 		public static Vector2 LeftPerpendicular(Vector2 start, Vector2 end) => LeftPerpendicular((end-start));
