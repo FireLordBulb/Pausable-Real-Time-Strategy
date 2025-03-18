@@ -42,14 +42,13 @@ namespace Collections {
 			public TT Value {get; internal set;}
 			public Node<TT> Copy => new(){Next = Next, Value = Value};
 
-			public IEnumerable<Node<TT>> LoopFrom { get {
+			public IEnumerable<Node<TT>> LoopUntilNextIs(Node<TT> disallowedNext){
 				Node<TT> node = this;
-				while (node.Next != this){
+				while (node.Next != disallowedNext){
 					yield return node;
 					node = node.Next;
 				}
-				yield return node;
-			}}
+			}
 		}
 	}
 }

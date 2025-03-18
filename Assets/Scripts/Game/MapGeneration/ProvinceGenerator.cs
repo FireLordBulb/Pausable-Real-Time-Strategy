@@ -218,37 +218,14 @@ public class ProvinceGenerator {
 		}
 		
 		int halfLoopSizeOffset = 0;
-		bool isLineFullyInsidePolygon;
-		do {
+		while (true){
 			Vector2 direction = halfWayPoint.Value - start.Value;
-			isLineFullyInsidePolygon  = IsDirectionPointingInwards(direction , beforeStart       , start       , start.Next       );
-			isLineFullyInsidePolygon &= IsDirectionPointingInwards(-direction, beforeHalfWayPoint, halfWayPoint, halfWayPoint.Next);
-			if (!isLineFullyInsidePolygon){
-				ToNextNodes();
-				//Debug.Log($"Is not between directions, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
-				continue;
-			}
-			foreach (Node node in start.Next.LoopFrom){
-				if (node.Next == start){
-					break;
-				}
-				if (node == halfWayPoint || node.Next == halfWayPoint){
-					continue;
-				}
-				if (!DoLineSegmentsCross((start.Value, halfWayPoint.Value), (node.Value, node.Next.Value))){
-					continue;
-				}
-				isLineFullyInsidePolygon = false;
-				ToNextNodes();
+			bool isLineValid = IsDirectionPointingInwards( direction, beforeStart       , start       , start.Next       ) &&
+			                   IsDirectionPointingInwards(-direction, beforeHalfWayPoint, halfWayPoint, halfWayPoint.Next) &&
+			                   DoesLineCrossNoEdge((start.Value, halfWayPoint.Value), halfWayPoint, start.Next.LoopUntilNextIs(beforeStart));
+			if (isLineValid){
 				break;
 			}
-		} while (!isLineFullyInsidePolygon);
-		
-		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
-		AddPolygon(halfLoops.a, (length  )/2+1-halfLoopSizeOffset, meshData, positionIndexMap);
-		AddPolygon(halfLoops.b, (length+1)/2+1+halfLoopSizeOffset, meshData, positionIndexMap);
-		
-		void ToNextNodes(){
 			beforeStart = start;
 			start = start.Next;
 			beforeHalfWayPoint = halfWayPoint;
@@ -263,13 +240,28 @@ public class ProvinceGenerator {
 				}
 			}
 		}
+		
+		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
+		AddPolygon(halfLoops.a, (length  )/2+1-halfLoopSizeOffset, meshData, positionIndexMap);
+		AddPolygon(halfLoops.b, (length+1)/2+1+halfLoopSizeOffset, meshData, positionIndexMap);
 	}
 	private static bool IsDirectionPointingInwards(Vector2 direction, Node before, Node middle, Node after){
 		Vector2 leftDirection  = after.Value  - middle.Value;
 		Vector2 rightDirection = before.Value - middle.Value;
 		return VectorGeometry.IsBetweenDirections(direction, leftDirection, rightDirection);
 	}
-	private bool DoLineSegmentsCross((Vector2 a, Vector2 b) firstLine, (Vector2 a, Vector2 b) secondLine){
+	private static bool DoesLineCrossNoEdge((Vector2, Vector2) line, Node halfWayPoint, IEnumerable<Node> edgeNodes){
+		foreach (Node node in edgeNodes){
+			if (node == halfWayPoint || node.Next == halfWayPoint){
+				continue;
+			}
+			if (DoLineSegmentsCross(line, (node.Value, node.Next.Value))){
+				return false;
+			}
+		}
+		return true;
+	}
+	private static bool DoLineSegmentsCross((Vector2 a, Vector2 b) firstLine, (Vector2 a, Vector2 b) secondLine){
 		Vector2 firstDifference  = firstLine .b-firstLine .a;
 		Vector2 secondDifference = secondLine.b-secondLine.a;
 
@@ -297,7 +289,7 @@ public class ProvinceGenerator {
 		float secondEquationConstant = secondLine.a.y - secondEquationSlope*secondLine.a.x;
 
 		float intersectionX = (secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope);
-		float intersectionMarginUp = intersectionX+Vector2.kEpsilon;
+		float intersectionMarginUp   = intersectionX+Vector2.kEpsilon;
 		float intersectionMarginDown = intersectionX-Vector2.kEpsilon;
 		return IsIntersectionOnSegment(firstLine) && IsIntersectionOnSegment(secondLine);
 
@@ -308,9 +300,9 @@ public class ProvinceGenerator {
 			return lower <= intersectionMarginUp && intersectionMarginDown <= upper;
 		}
 	}
-	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerp(position, X), InverseLerp(position, Y));
+	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerpWithinBounds(position, X), InverseLerpWithinBounds(position, Y));
 	private const int X = 0, Y = 1;
-	private float InverseLerp(Vector2 vector, int dimension){
+	private float InverseLerpWithinBounds(Vector2 vector, int dimension){
 		return Mathf.InverseLerp(min[dimension], max[dimension], vector[dimension]);
 	}
 /*#if UNITY_EDITOR
