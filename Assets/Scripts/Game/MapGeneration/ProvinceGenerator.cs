@@ -189,14 +189,17 @@ public class ProvinceGenerator {
 			meshData.Normals.Add(Vector3.up);
 			meshData.UVs.Add(GetBoundsUV(vertices[i]));
 			positionIndexMap.Add(vertices[i], i);
-			/*var v = new GameObject();
+			var v = new GameObject();
 			v.name = i.ToString();
-			v.transform.position = VectorGeometry.ToXZPlane(vertices[i]);*/
+			v.transform.position = VectorGeometry.ToXZPlane(vertices[i]);
 		}
 		AddPolygon(new LoopList(vertices), vertices.Count, meshData, positionIndexMap);
 		ShapeMesh = meshData.ToMesh();
 	}
 	private void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){
+		Debug.Log($"Polygon, length: {length}");
+		Debug.Log($"{positionIndexMap[vertexLoop.First.Value]}, {vertexLoop.First.Value}");
+		Debug.Log($"{positionIndexMap[vertexLoop.Last.Value]}, {vertexLoop.Last.Value}");
 		if (length <= 3){
 			Node nodeA = vertexLoop.First;
 			Node nodeB = nodeA.Next;
@@ -227,6 +230,7 @@ public class ProvinceGenerator {
 			isLineFullyInsidePolygon &= IsDirectionPointingInwards(-direction, beforeHalfWayPoint, halfWayPoint, halfWayPoint.Next);
 			if (!isLineFullyInsidePolygon){
 				ToNextNodes();
+				Debug.Log($"Is not between directions, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
 				continue;
 			}
 			foreach (Node node in start.Next.LoopFrom){
@@ -243,6 +247,7 @@ public class ProvinceGenerator {
 				ToNextNodes();
 				break;
 			}
+			Debug.Log($"Do Line segments cross {!isLineFullyInsidePolygon}, start: {start.Value}, {positionIndexMap[start.Value]}, halfWayPoint: {halfWayPoint.Value}, {positionIndexMap[halfWayPoint.Value]}");
 		} while (!isLineFullyInsidePolygon && start != vertexLoop.First);
 		
 		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
