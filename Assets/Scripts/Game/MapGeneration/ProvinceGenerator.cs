@@ -107,15 +107,20 @@ public class ProvinceGenerator {
 			int otherIndex = (i+1)%vertices.Count;
 			Vector2 point = vertices[index];
 			Vector2 otherPoint = vertices[otherIndex];
-			// TODO: Name magic number as a const.
 			Vector2 difference = otherPoint-point;
-			if (Mathf.Abs(difference.sqrMagnitude-VectorGeometry.UpRight.sqrMagnitude) + (point - Vector2Int.RoundToInt(point)).sqrMagnitude < Vector2.kEpsilon){
-				if (otherIndex < index){
-					(index, otherIndex) = (otherIndex, index);
-				}
-				vertices.RemoveAt(otherIndex);
-				vertices[index] = 0.5f*(point+otherPoint)+0.5f*VectorGeometry.RightPerpendicular(difference);
+			if (Vector2.kEpsilon < Mathf.Abs(difference.sqrMagnitude-HalfPixel.sqrMagnitude)){
+				continue;
 			}
+			Vector2 beforePoint = vertices[(i-1+vertices.Count)%vertices.Count];
+			Vector2 afterPoint = vertices[(i+2)%vertices.Count];
+			if (Vector2.kEpsilon < Mathf.Abs(Vector2.Dot(beforePoint-point, otherPoint-afterPoint))){
+				continue;
+			}
+			if (otherIndex < index){
+				(index, otherIndex) = (otherIndex, index);
+			}
+			vertices.RemoveAt(otherIndex);
+			vertices[index] = 0.5f*(point+otherPoint+VectorGeometry.RightPerpendicular(difference));
 		}
 	}
 	
@@ -184,6 +189,9 @@ public class ProvinceGenerator {
 			meshData.Normals.Add(Vector3.up);
 			meshData.UVs.Add(GetBoundsUV(vertices[i]));
 			positionIndexMap.Add(vertices[i], i);
+			/*var v = new GameObject();
+			v.name = i.ToString();
+			v.transform.position = VectorGeometry.ToXZPlane(vertices[i]);*/
 		}
 		AddPolygon(new LoopList(vertices), vertices.Count, meshData, positionIndexMap);
 		ShapeMesh = meshData.ToMesh();
@@ -235,11 +243,11 @@ public class ProvinceGenerator {
 				ToNextNodes();
 				break;
 			}
-		} while (!isLineFullyInsidePolygon && halfWayPoint != vertexLoop.First);
+		} while (!isLineFullyInsidePolygon && start != vertexLoop.First);
 		
 		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
-		AddPolygon(halfLoops.a , (length)/2+1, meshData, positionIndexMap);
-		AddPolygon(halfLoops.b, (length+1)/2+1  , meshData, positionIndexMap);
+		AddPolygon(halfLoops.a, (length  )/2+1, meshData, positionIndexMap);
+		AddPolygon(halfLoops.b, (length+1)/2+1, meshData, positionIndexMap);
 		
 		void ToNextNodes(){
 			beforeStart = start;
@@ -254,16 +262,16 @@ public class ProvinceGenerator {
 		return VectorGeometry.IsBetweenDirections(direction, leftDirection, rightDirection);
 	}
 	private bool DoLineSegmentsCross((Vector2 a, Vector2 b) firstLine, (Vector2 a, Vector2 b) secondLine){
-		Vector2 firstDifference = firstLine.b-firstLine.a;
+		Vector2 firstDifference  = firstLine .b-firstLine .a;
 		Vector2 secondDifference = secondLine.b-secondLine.a;
 
-		bool isFirstVertical = Mathf.Abs(firstDifference.x) < Vector2.kEpsilon;
+		bool isFirstVertical  = Mathf.Abs(firstDifference .x) < Vector2.kEpsilon;
 		bool isSecondVertical = Mathf.Abs(secondDifference.x) < Vector2.kEpsilon;
 		if (isFirstVertical && isSecondVertical){
 			return false;
 		}
 		if (isFirstVertical ^ isSecondVertical){
-			firstDifference = VectorGeometry.Swizzle(firstDifference);
+			firstDifference  = VectorGeometry.Swizzle(firstDifference );
 			secondDifference = VectorGeometry.Swizzle(secondDifference);
 			firstLine .a = VectorGeometry.Swizzle(firstLine .a);
 			firstLine .b = VectorGeometry.Swizzle(firstLine .b);
@@ -271,18 +279,26 @@ public class ProvinceGenerator {
 			secondLine.b = VectorGeometry.Swizzle(secondLine.b);
 		}
 		
-		float firstEquationSlope = firstDifference.y/firstDifference.x;
+		float firstEquationSlope  = firstDifference .y/firstDifference .x;
 		float secondEquationSlope = secondDifference.y/secondDifference.x;
 		if (Mathf.Abs(firstEquationSlope-secondEquationSlope) < Vector2.kEpsilon){
 			return false;
 		}
 		
-		float firstEquationConstant = firstLine.a.y-firstEquationSlope*firstLine.a.x;
-		float secondEquationConstant = secondLine.a.y-secondEquationSlope*secondLine.a.x;
+		float firstEquationConstant  = firstLine .a.y -   firstEquationSlope*firstLine.a.x;
+		float secondEquationConstant = secondLine.a.y - secondEquationSlope*secondLine.a.x;
 
 		float intersectionX = (secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope);
-		return (firstLine .a.x < intersectionX && intersectionX < firstLine .b.x || firstLine .b.x < intersectionX && intersectionX < firstLine .a.x) &&
-		       (secondLine.a.x < intersectionX && intersectionX < secondLine.b.x || secondLine.b.x < intersectionX && intersectionX < secondLine.a.x);
+		float intersectionMarginUp = intersectionX+Vector2.kEpsilon;
+		float intersectionMarginDown = intersectionX-Vector2.kEpsilon;
+		return IsIntersectionOnSegment(firstLine) && IsIntersectionOnSegment(secondLine);
+
+		bool IsIntersectionOnSegment((Vector2 a, Vector2 b) lineSegment){
+			return IsIntersectionInRange(lineSegment.a.x, lineSegment.b.x) || IsIntersectionInRange(lineSegment.b.x, lineSegment.a.x);
+		}
+		bool IsIntersectionInRange(float lower, float upper){
+			return lower <= intersectionMarginUp && intersectionMarginDown <= upper;
+		}
 	}
 	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerp(position, X), InverseLerp(position, Y));
 	private const int X = 0, Y = 1;
