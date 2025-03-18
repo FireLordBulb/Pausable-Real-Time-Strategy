@@ -126,7 +126,8 @@ public class ProvinceGenerator {
 			for (int i = 0; i < 2 /*The 2 of Vector2*/; i++){
 				if (max[i] < vertex[i]){
 					max[i] = vertex[i];
-				} else if (min[i] > vertex[i]){
+				}
+				if (min[i] > vertex[i]){
 					min[i] = vertex[i];
 				}
 			}
