@@ -251,50 +251,11 @@ public class ProvinceGenerator {
 			if (node == halfWayPoint || node.Next == halfWayPoint){
 				continue;
 			}
-			if (DoLineSegmentsCross(line, (node.Value, node.Next.Value))){
+			if (VectorGeometry.DoLineSegmentsCross(line, (node.Value, node.Next.Value))){
 				return false;
 			}
 		}
 		return true;
-	}
-	private static bool DoLineSegmentsCross((Vector2 a, Vector2 b) firstLine, (Vector2 a, Vector2 b) secondLine){
-		Vector2 firstDifference  = firstLine .b-firstLine .a;
-		Vector2 secondDifference = secondLine.b-secondLine.a;
-
-		bool isFirstVertical  = Mathf.Abs(firstDifference .x) < Vector2.kEpsilon;
-		bool isSecondVertical = Mathf.Abs(secondDifference.x) < Vector2.kEpsilon;
-		if (isFirstVertical && isSecondVertical){
-			return false;
-		}
-		if (isFirstVertical ^ isSecondVertical){
-			firstDifference  = VectorGeometry.Swizzle(firstDifference );
-			secondDifference = VectorGeometry.Swizzle(secondDifference);
-			firstLine .a = VectorGeometry.Swizzle(firstLine .a);
-			firstLine .b = VectorGeometry.Swizzle(firstLine .b);
-			secondLine.a = VectorGeometry.Swizzle(secondLine.a);
-			secondLine.b = VectorGeometry.Swizzle(secondLine.b);
-		}
-		
-		float firstEquationSlope  = firstDifference .y/firstDifference .x;
-		float secondEquationSlope = secondDifference.y/secondDifference.x;
-		if (Mathf.Abs(firstEquationSlope-secondEquationSlope) < Vector2.kEpsilon){
-			return false;
-		}
-		
-		float firstEquationConstant  = firstLine .a.y -   firstEquationSlope*firstLine.a.x;
-		float secondEquationConstant = secondLine.a.y - secondEquationSlope*secondLine.a.x;
-
-		float intersectionX = (secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope);
-		float intersectionMarginUp   = intersectionX+Vector2.kEpsilon;
-		float intersectionMarginDown = intersectionX-Vector2.kEpsilon;
-		return IsIntersectionOnSegment(firstLine) && IsIntersectionOnSegment(secondLine);
-
-		bool IsIntersectionOnSegment((Vector2 a, Vector2 b) lineSegment){
-			return IsIntersectionInRange(lineSegment.a.x, lineSegment.b.x) || IsIntersectionInRange(lineSegment.b.x, lineSegment.a.x);
-		}
-		bool IsIntersectionInRange(float lower, float upper){
-			return lower <= intersectionMarginUp && intersectionMarginDown <= upper;
-		}
 	}
 	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerpWithinBounds(position, X), InverseLerpWithinBounds(position, Y));
 	private const int X = 0, Y = 1;
