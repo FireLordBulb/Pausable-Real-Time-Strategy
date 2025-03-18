@@ -193,15 +193,11 @@ public class ProvinceGenerator {
 		AddPolygon(new LoopList(vertices), vertices.Count, meshData, positionIndexMap);
 		ShapeMesh = meshData.ToMesh();
 	}
-	private void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){
+	private static void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){
 		if (length <= 3){
 			Node nodeA = vertexLoop.First;
 			Node nodeB = nodeA.Next;
 			Node nodeC = nodeB.Next;
-			// Swap B and C if triangle is facing down.
-			if (Vector3.Cross(VectorGeometry.ToXZPlane(nodeA.Value-nodeB.Value), VectorGeometry.ToXZPlane(nodeB.Value-nodeC.Value)).y < 0){
-				(nodeB, nodeC) = (nodeC, nodeB);
-			}
 			meshData.Triangles.Add(positionIndexMap[nodeA.Value]);
 			meshData.Triangles.Add(positionIndexMap[nodeB.Value]);
 			meshData.Triangles.Add(positionIndexMap[nodeC.Value]);
