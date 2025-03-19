@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class UILayer : ActionBehaviour {
 	protected UIStack Stack;
+	private Province savedProvince;
 
 	public void Init(UIStack uiStack){
 		Stack = uiStack;
@@ -16,8 +17,13 @@ public class UILayer : ActionBehaviour {
 		if (!Physics.Raycast(Stack.Camera.ScreenPointToRay(mousePosition), out RaycastHit hit, float.MaxValue, Stack.MapClickMask)){
 			return;
 		}
-		if (hit.collider.TryGetComponent(out Province province)){
-			province.OnClick();
+		if (!hit.collider.TryGetComponent(out Province province)){
+			return;
 		}
+		if (savedProvince){
+			savedProvince.OnHoverEnd();
+		} 
+		savedProvince = province;
+		savedProvince.OnHover();
 	}
 }

@@ -9,6 +9,6 @@
 			provinces.Add(color, province);
 		}
 		public float Heuristic(Province start, Province goal){
-			return (goal.MapPosition-start.MapPosition).magnitude;
+			return Vector2.Distance(goal.MapPosition, start.MapPosition);
 		}
 	}

@@ -3,6 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Canvas))]
 public class UIStack : ActionStack<UILayer> {
+	private const float ActivationThreshold = 0.5f;
 
 	[SerializeField] private LayerMask mapClickMask;
 	public Camera Camera {get; private set;}
@@ -13,11 +14,18 @@ public class UIStack : ActionStack<UILayer> {
 	private void Awake(){
 		input = new Input().UI;
 		input.Enable();
-		input.Click.performed += _ => {
-			CurrentAction.ReceiveClick(input.MousePosition.ReadValue<Vector2>());
+		input.Click.performed += context => {
+			if (context.ReadValue<float>() < ActivationThreshold){
+				CurrentAction.ReceiveClick(input.MousePosition.ReadValue<Vector2>());
+			}
 		};
-		
-		Push(new GameObject().AddComponent<UILayer>());
+
+		GameObject defaultLayer = new(){
+			transform = {
+				parent = transform
+			}
+		};
+		Push(defaultLayer.AddComponent<UILayer>());
 	}
 	private void Start(){
 		Camera = Camera.main;
