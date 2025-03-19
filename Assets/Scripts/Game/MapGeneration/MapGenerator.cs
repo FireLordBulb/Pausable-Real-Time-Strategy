@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using Mathematics;
-using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(MapGraph))]
 public class MapGenerator : MonoBehaviour {
     private const int MaxOutlineSteps = 10000;
     // In clockwise order, starting with because that direction should be checked first when iterating over the texture.
@@ -10,10 +10,10 @@ public class MapGenerator : MonoBehaviour {
 
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Province provincePrefab;
-    // TODO: replace with mapWidth float
     [SerializeField] private Transform provinceParent;
     [SerializeField] private float borderWidth;
     [SerializeField] private float mapWidth;
+    private MapGraph mapGraph;
     
     private readonly Dictionary<Color, ProvinceGenerator> provinceGenerators = new();
     private readonly Dictionary<Color, Province> provinces = new();
@@ -42,19 +42,20 @@ public class MapGenerator : MonoBehaviour {
             Vector3 position = ConvertToWorldSpace(provinceGenerator.Pivot);
             Province province = Instantiate(provincePrefab, position, Quaternion.identity, provinceParent);
             province.transform.localScale = new Vector3(worldSpaceScale, 1, worldSpaceScale);
-            province.Init(color, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
+            province.Init(color, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
             provinces.Add(color, province);
         }
-        
-        // create province graph
+
+        mapGraph = GetComponent<MapGraph>();
         foreach ((Color color, Province province) in provinces){
-            // add province to graph
-            // convert connections from color values to graph links
+            mapGraph.Add(color, province);
+            foreach (Color neighborColor in provinceGenerators[color].Neighbors){
+                province.AddNeighbor(provinces[neighborColor]);
+            }
         }
         
         // Destroy this component after generation is done. Don't destroy the gameObject.
-        // Leave commented out until visual debugging becomes possible in the Province components instead.
-        //Destroy(this);
+        Destroy(this);
     }
     
     private void FindProvinceOutline(Color color, Vector2Int startPosition){

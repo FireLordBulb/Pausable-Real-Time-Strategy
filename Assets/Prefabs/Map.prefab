@@ -180,6 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 226529578172400171}
   - component: {fileID: 2459728176038450656}
+  - component: {fileID: 4043457066114492380}
   m_Layer: 0
   m_Name: Map
   m_TagString: Untagged
@@ -222,3 +223,15 @@ MonoBehaviour:
   provinceParent: {fileID: 9147229521150883095}
   borderWidth: 0.4
   mapWidth: 200
+--- !u!114 &4043457066114492380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8630361481532568066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 188725f724624ee981f83e7305c86bbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
