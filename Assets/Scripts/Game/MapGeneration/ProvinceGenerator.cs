@@ -204,51 +204,47 @@ public class ProvinceGenerator {
 			return;
 		}
 		
-		Node beforeStart = vertexLoop.Last;
-		Node start = vertexLoop.First;
-		Node beforeHalfWayPoint = beforeStart;
-		Node halfWayPoint = start;
+		NodePair start = new(vertexLoop.Last);
+		NodePair end = start;
 		for (int i = length/2; i > 0; i--){
-			beforeHalfWayPoint = halfWayPoint;
-			halfWayPoint = halfWayPoint.Next;
+			end.ToNext();
 		}
 		
 		int halfLoopSizeOffset = 0;
 		while (true){
-			Vector2 direction = halfWayPoint.Value - start.Value;
-			bool isLineValid = IsDirectionPointingInwards( direction, beforeStart       , start       , start.Next       ) &&
-			                   IsDirectionPointingInwards(-direction, beforeHalfWayPoint, halfWayPoint, halfWayPoint.Next) &&
-			                   DoesLineCrossNoEdge((start.Value, halfWayPoint.Value), halfWayPoint, start.Next.LoopUntilNextIs(beforeStart));
+			Vector2 direction = end.Main.Value - start.Main.Value;
+			bool isLineValid = IsDirectionPointingInwards(direction, start) && IsDirectionPointingInwards(-direction, end) &&
+			                   DoesLineCrossNoEdge((start.Main.Value, end.Main.Value), end.Main, start.Next.LoopUntilNextIs(start.Previous));
 			if (isLineValid){
 				break;
 			}
-			beforeStart = start;
-			start = start.Next;
-			beforeHalfWayPoint = halfWayPoint;
-			halfWayPoint = halfWayPoint.Next;
+			start.ToNext();
+			end.ToNext();
 			// If all split lines have been checked with no luck, check the split lines with a vertex less between start and "half"WayPoint.
-			if (start == vertexLoop.First){
-				halfLoopSizeOffset++;
-				beforeStart = start;
-				start = start.Next;
-				if (start.Next == halfWayPoint){
-					Debug.LogError("Couldn't split loop properly!");
-				}
+			if (start.Main != vertexLoop.First){
+				continue;
+			}
+			halfLoopSizeOffset++;
+			start.ToNext();
+			if (start.Next == end.Main){
+				Debug.LogError("Couldn't split loop properly!");
+				return;
 			}
 		}
 		
-		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(beforeStart, start, halfWayPoint);
+		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(start.Previous, start.Main, end.Main);
 		AddPolygon(halfLoops.a, (length  )/2+1-halfLoopSizeOffset, meshData, positionIndexMap);
 		AddPolygon(halfLoops.b, (length+1)/2+1+halfLoopSizeOffset, meshData, positionIndexMap);
 	}
-	private static bool IsDirectionPointingInwards(Vector2 direction, Node before, Node middle, Node after){
-		Vector2 leftDirection  = after.Value  - middle.Value;
-		Vector2 rightDirection = before.Value - middle.Value;
+	private static bool IsDirectionPointingInwards(Vector2 direction, NodePair nodePair){
+		Vector2 leftDirection  = nodePair.Next.Value     - nodePair.Main.Value;
+		Vector2 rightDirection = nodePair.Previous.Value - nodePair.Main.Value;
 		return VectorGeometry.IsBetweenDirections(direction, leftDirection, rightDirection);
 	}
-	private static bool DoesLineCrossNoEdge((Vector2, Vector2) line, Node halfWayPoint, IEnumerable<Node> edgeNodes){
+	private static bool DoesLineCrossNoEdge((Vector2, Vector2) line, Node endNode, IEnumerable<Node> edgeNodes){
 		foreach (Node node in edgeNodes){
-			if (node == halfWayPoint || node.Next == halfWayPoint){
+			// The edges that share a vertex with the line will always "cross" it exactly at that vertex, so those edges are skipped.
+			if (node == endNode || node.Next == endNode){
 				continue;
 			}
 			if (VectorGeometry.DoLineSegmentsCross(line, (node.Value, node.Next.Value))){
@@ -262,11 +258,28 @@ public class ProvinceGenerator {
 	private float InverseLerpWithinBounds(Vector2 vector, int dimension){
 		return Mathf.InverseLerp(min[dimension], max[dimension], vector[dimension]);
 	}
-/*#if UNITY_EDITOR
+/*
+#if UNITY_EDITOR
 	public void GizmosPolygon(Func<Vector2, Vector3> worldSpaceConverter){
 		for (int i = 0; i < vertices.Count; i++){
 			Handles.DrawLine(worldSpaceConverter(Center+vertices[i]), worldSpaceConverter(Center+vertices[(i+1)%vertices.Count]));
 		}
 	}
 #endif*/
+
+	// Essentially a wrapper around Node that allows a node to keep track of its previous node in the LinkedLoopList.
+	// This allows the previous node to be accessed without having to make the entire LinkedLoopList bi-directional.
+	private struct NodePair {
+		public Node Previous {get; private set;}
+		public Node Main {get; private set;}
+		public Node Next => Main.Next;
+		public NodePair(Node previous){
+			Previous = previous;
+			Main = previous.Next;
+		}
+		public void ToNext(){
+			Previous = Main;
+			Main = Main.Next;
+		}
+	}
 }
