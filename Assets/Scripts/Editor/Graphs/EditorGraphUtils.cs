@@ -5,26 +5,23 @@ using UnityEditor;
 
 namespace Graphs
 {
-    public static class EditorGraphUtils<TNode, TLink> where TLink : ILink<TNode, TLink> where TNode : class, INode<TLink, TNode>
+    public static class EditorGraphUtils<TNode, TLink> where TLink : ILink<TNode, TLink> where TNode : class, IPositionNode<TLink, TNode>
     {
-        public static void DrawGraph(IGraph<TNode, TLink> graph)
+        public static void DrawGraph(IEnumerable<TNode> nodes)
         {
-            foreach (TNode node in graph.Nodes)
+            foreach (TNode node in nodes)
             {
-                if (node is IPositionNode<TLink, TNode> source)
+                // draw node position
+                Handles.color = Color.yellow;
+                Handles.CubeHandleCap(0, node.WorldPosition, Quaternion.identity, 0.3f, EventType.Repaint);
+
+                // draw node links
+                foreach (TLink link in node.Links)
                 {
-                    // draw node position
-                    Handles.color = Color.yellow;
-                    Handles.CubeHandleCap(0, source.WorldPosition, Quaternion.identity, 0.1f, EventType.Repaint);
-    
-                    // draw node links
-                    foreach (TLink link in source.Links)
+                    if (link.Target is IPositionNode<TLink, TNode> target)
                     {
-                        if (link.Target is IPositionNode<TLink, TNode> target)
-                        {
-                            Handles.color = Color.blue;
-                            Handles.DrawLine(source.WorldPosition, target.WorldPosition);
-                        }
+                        Handles.color = Color.magenta;
+                        Handles.DrawLine(node.WorldPosition, target.WorldPosition);
                     }
                 }
             }
