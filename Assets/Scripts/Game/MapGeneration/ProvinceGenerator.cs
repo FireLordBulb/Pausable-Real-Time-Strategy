@@ -39,11 +39,12 @@ public class ProvinceGenerator {
 	
 	public Mesh OutlineMesh {get; private set;}
 	public Mesh ShapeMesh {get; private set;}
-	public Vector2 Center {get; private set;}
+	public Vector2 Pivot {get; private set;}
 
 	private readonly float borderHalfWidth;
 
 	private Vector2 min, max;
+	private LoopList fullVertexLoop;
 	
 	public ProvinceGenerator(float borderWidth){
 		borderHalfWidth = borderWidth;
@@ -56,6 +57,7 @@ public class ProvinceGenerator {
 		}
 		GenerateVertextList();
 		RemoveDoubleCorners();
+		CalculateBounds();
 		CalculateCenter();
 		GenerateOutlineMesh();
 		GenerateShapeMesh();
@@ -124,7 +126,7 @@ public class ProvinceGenerator {
 		}
 	}
 	
-	private void CalculateCenter(){
+	private void CalculateBounds(){
 		min = Vector2.positiveInfinity;
 		max = Vector2.negativeInfinity;
 		foreach (Vector2 vertex in vertices){
@@ -137,10 +139,20 @@ public class ProvinceGenerator {
 				}
 			}
 		}
-		Center = (min+max)/2;
-		// TODO: ensure center is within the convex polygon.
+	}
+	
+	private void CalculateCenter(){
+		fullVertexLoop = new LoopList(vertices);
+		
+		(NodePair start, NodePair end, int _, bool wasSuccess) = GetLoopSplittingLine(fullVertexLoop, vertices.Count);
+		Debug.Assert(wasSuccess);
+		Pivot = (start.Main.Value+end.Main.Value)*0.5f;
+		
 		for (int i = 0; i < vertices.Count; i++){
-			vertices[i] -= Center;
+			vertices[i] -= Pivot;
+		}
+		foreach (Node node in fullVertexLoop.First.LoopFrom()){
+			node.Value -= Pivot;
 		}
 	}
 	
@@ -190,7 +202,7 @@ public class ProvinceGenerator {
 			meshData.UVs.Add(GetBoundsUV(vertices[i]));
 			positionIndexMap.Add(vertices[i], i);
 		}
-		AddPolygon(new LoopList(vertices), vertices.Count, meshData, positionIndexMap);
+		AddPolygon(fullVertexLoop, vertices.Count, meshData, positionIndexMap);
 		ShapeMesh = meshData.ToMesh();
 	}
 	private static void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){

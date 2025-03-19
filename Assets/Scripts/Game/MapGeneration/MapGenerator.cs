@@ -39,13 +39,11 @@ public class MapGenerator : MonoBehaviour {
         
         foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             provinceGenerator.GenerateData();
-            Vector3 position = ConvertToWorldSpace(provinceGenerator.Center);
+            Vector3 position = ConvertToWorldSpace(provinceGenerator.Pivot);
             Province province = Instantiate(provincePrefab, position, Quaternion.identity, provinceParent);
             province.transform.localScale = new Vector3(worldSpaceScale, 1, worldSpaceScale);
             province.Init(color, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
             provinces.Add(color, province);
-            // instantiate province prefab
-            // call province class init and assign data from generator
         }
         
         // create province graph
