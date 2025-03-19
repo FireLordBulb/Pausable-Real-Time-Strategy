@@ -385,7 +385,7 @@ namespace Graphs
                     }
 
                     NodeWrapper<TNode> neighbor = GetNode(target, wrapperLookup);
-                    float fNewDistance = current.m_fDistance + GetNodeDistance(current.m_node, neighbor.m_node);
+                    float fNewDistance = current.m_fDistance + GetNodeDistance(graph, current.m_node, neighbor.m_node);
                     float fNewRemainingDistance = fNewDistance + GetNodeDistance(graph, target, goal);
 
                     // investigate neighbor?
