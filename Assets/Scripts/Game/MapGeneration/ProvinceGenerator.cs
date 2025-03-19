@@ -203,7 +203,17 @@ public class ProvinceGenerator {
 			meshData.Triangles.Add(positionIndexMap[nodeC.Value]);
 			return;
 		}
+
+		(NodePair start, NodePair end, int halfLoopSizeOffset, bool wasSuccess) = GetLoopSplittingLine(vertexLoop, length);
+		if (!wasSuccess){
+			return;
+		}
 		
+		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(start.Previous, start.Main, end.Main);
+		AddPolygon(halfLoops.a, (length  )/2+1-halfLoopSizeOffset, meshData, positionIndexMap);
+		AddPolygon(halfLoops.b, (length+1)/2+1+halfLoopSizeOffset, meshData, positionIndexMap);
+	}
+	private static (NodePair start, NodePair end, int halfLoopSizeOffset, bool wasSuccess) GetLoopSplittingLine(LoopList vertexLoop, int length){
 		NodePair start = new(vertexLoop.Last);
 		NodePair end = start;
 		for (int i = length/2; i > 0; i--){
@@ -228,13 +238,10 @@ public class ProvinceGenerator {
 			start.ToNext();
 			if (start.Next == end.Main){
 				Debug.LogError("Couldn't split loop properly!");
-				return;
+				return (start, end, halfLoopSizeOffset, false);
 			}
 		}
-		
-		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(start.Previous, start.Main, end.Main);
-		AddPolygon(halfLoops.a, (length  )/2+1-halfLoopSizeOffset, meshData, positionIndexMap);
-		AddPolygon(halfLoops.b, (length+1)/2+1+halfLoopSizeOffset, meshData, positionIndexMap);
+		return (start, end, halfLoopSizeOffset, true);
 	}
 	private static bool IsDirectionPointingInwards(Vector2 direction, NodePair nodePair){
 		Vector2 leftDirection  = nodePair.Next.Value     - nodePair.Main.Value;
