@@ -8,14 +8,18 @@ public class UIStack : ActionStack<UILayer> {
 	public static UIStack Instance;
 	
 	[SerializeField] private UILayer hud;
+	[SerializeField] private ProvinceWindow provinceWindow;
 	[SerializeField] private LayerMask mapClickMask;
-	public Camera Camera {get; private set;}
 
-	public LayerMask MapClickMask => mapClickMask;
-	public Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
-	
 	private Input.UIActions input;
 	private Province hoveredProvince;
+	private Province mouseDownProvince;
+	
+	public Camera Camera {get; private set;}
+	public Province SelectedProvince {get; private set;}
+	
+	public LayerMask MapClickMask => mapClickMask;
+	public Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
 	
 	private void Awake(){
 		if (Instance != null){
@@ -26,7 +30,25 @@ public class UIStack : ActionStack<UILayer> {
 		input = new Input().UI;
 		input.Enable();
 		input.Click.performed += context => {
-			CurrentAction.ReceiveClick(MousePosition,  ActivationThreshold < context.ReadValue<float>());
+			bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
+			if (!hoveredProvince){
+				return;
+			}
+			if (isMouseDown){
+				mouseDownProvince = hoveredProvince;
+				return;
+			}
+			if (SelectedProvince != null){
+				SelectedProvince = null;
+				return;
+			}
+			if (mouseDownProvince == hoveredProvince){
+				SelectedProvince = mouseDownProvince;
+				Push(provinceWindow);
+			} else {
+				SelectedProvince = null;
+			}
+			mouseDownProvince = null;
 		};
 		
 		Push(hud);
@@ -36,7 +58,7 @@ public class UIStack : ActionStack<UILayer> {
 	}
 
 	// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
-	public override void Push(UILayer layer){
+	public override void Push(UILayer layer) {
 		if (!layer.gameObject.scene.IsValid()){
 			layer = Instantiate(layer, transform);
 		}
@@ -47,7 +69,7 @@ public class UIStack : ActionStack<UILayer> {
 		base.Update();
 	}
 	private void UpdateHover(){
-		if (!Physics.Raycast(Camera.ScreenPointToRay(MousePosition), out RaycastHit hit, float.MaxValue, MapClickMask)){
+		if (!MouseRaycast(out RaycastHit hit)){
 			EndHover();
 			return;
 		}
@@ -60,14 +82,17 @@ public class UIStack : ActionStack<UILayer> {
 			return;
 		}
 		EndHover();
-		province.OnHover();
+		province.OnHoverEnter();
 		hoveredProvince = province;
+	}
+	private bool MouseRaycast(out RaycastHit hit){
+		return Physics.Raycast(Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, MapClickMask);
 	}
 	private void EndHover(){
 		if (!hoveredProvince){
 			return;
 		}
-		hoveredProvince.OnHoverEnd();
+		hoveredProvince.OnHoverLeave();
 		hoveredProvince = null;
 	}
 }

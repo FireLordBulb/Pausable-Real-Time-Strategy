@@ -195,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hud: {fileID: 1117888496859181619, guid: 87b19940fd39f214895f33b0c49279b2, type: 3}
+  provinceWindow: {fileID: -7138890633483812799, guid: 7f98c94f4eef91347a5d5a705bc6e926, type: 3}
   mapClickMask:
     serializedVersion: 2
     m_Bits: 51
