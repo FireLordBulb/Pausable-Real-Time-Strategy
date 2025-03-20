@@ -7,6 +7,7 @@ public class UIStack : ActionStack<UILayer> {
 
 	public static UIStack Instance;
 	
+	[SerializeField] private UILayer hud;
 	[SerializeField] private LayerMask mapClickMask;
 	public Camera Camera {get; private set;}
 
@@ -27,13 +28,8 @@ public class UIStack : ActionStack<UILayer> {
 		input.Click.performed += context => {
 			CurrentAction.ReceiveClick(MousePosition,  ActivationThreshold < context.ReadValue<float>());
 		};
-
-		GameObject defaultLayer = new(){
-			transform = {
-				parent = transform
-			}
-		};
-		Push(defaultLayer.AddComponent<UILayer>());
+		
+		Push(hud);
 	}
 	private void Start(){
 		Camera = Camera.main;
