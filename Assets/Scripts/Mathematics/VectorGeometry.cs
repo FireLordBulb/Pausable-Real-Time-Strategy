@@ -40,8 +40,8 @@ namespace Mathematics {
 			float secondEquationConstant = secondLine.a.y - secondEquationSlope*secondLine.a.x;
 
 			float intersectionX = (secondEquationConstant-firstEquationConstant)/(firstEquationSlope-secondEquationSlope);
-			float intersectionMarginUp   = intersectionX+2*Vector2.kEpsilon;
-			float intersectionMarginDown = intersectionX-2*Vector2.kEpsilon;
+			float intersectionMarginUp   = intersectionX+4*Vector2.kEpsilon;
+			float intersectionMarginDown = intersectionX-4*Vector2.kEpsilon;
 			return IsIntersectionOnSegment(firstLine) && IsIntersectionOnSegment(secondLine);
 
 			bool IsIntersectionOnSegment((Vector2 a, Vector2 b) lineSegment){
