@@ -16,11 +16,8 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField] private Transform provinceParent;
     [SerializeField] private float borderWidth;
     [SerializeField] private float mapWidth;
-    private MapGraph mapGraph;
     
-    private readonly Dictionary<Color, ProvinceGenerator> provinceGenerators = new();
-    private readonly Dictionary<Color, Province> provinces = new();
-    private Color[] mapPixels;
+    private Color32[] mapPixels;
     private int imageWidth, imageHeight;
     private Vector2 worldSpaceOffset;
     private float worldSpaceScale;
@@ -32,24 +29,29 @@ public class MapGenerator : MonoBehaviour {
         worldSpaceScale = mapWidth/imageWidth;
         worldSpaceOffset = -0.5f*new Vector2(mapWidth, mapWidth*imageHeight/imageWidth);
         
-        mapPixels = mapImage.GetPixels();
+        mapPixels = mapImage.GetPixels32();
+        Dictionary<Color32, Vector2Int> provincePositions = new();
         for (int y = 0; y < imageHeight; y++){
             for (int x = 0; x < imageWidth; x++){
-                Color color = GetPixel(x, y);
-                if (!provinceGenerators.ContainsKey(color)){
-                    FindProvinceOutline(color, new Vector2Int(x, y));
+                Color32 color = GetPixel(x, y);
+                if (!provincePositions.ContainsKey(color)){
+                    provincePositions.Add(color, new Vector2Int(x, y));
                 }
             }
         }
         
-        int threadCount = Environment.ProcessorCount;
-        ProvinceGenerator[] provinceGeneratorArray = provinceGenerators.Values.ToArray();
-        Thread[] threads = new Thread[threadCount];
+        // Multithreading reduced time from 18ms to 11ms when tested on March 20th's provinces.png file.
+        Thread[] threads = new Thread[Environment.ProcessorCount];
+        KeyValuePair<Color32, Vector2Int>[] provincePositionArray = provincePositions.ToArray();
+        (Color32, ProvinceGenerator)[] provinceGenerators = new(Color32, ProvinceGenerator)[provincePositionArray.Length];
         for (int i = 0; i < threads.Length; i++){
             int startIndex = i;
-            threads[startIndex] = new Thread(() => {
-                for (int j = startIndex; j < provinceGeneratorArray.Length; j += threadCount){
-                    provinceGeneratorArray[j].GenerateData();
+            threads[i] = new Thread(() => {
+                for (int j = startIndex; j < provincePositionArray.Length; j += threads.Length){
+                    Color32 color = provincePositionArray[j].Key;
+                    ProvinceGenerator provinceGenerator = FindProvinceOutline(color, provincePositionArray[j].Value);
+                    provinceGenerator.GenerateData();
+                    provinceGenerators[j] = (color, provinceGenerator);
                 }
             });
             threads[i].Start();
@@ -58,30 +60,32 @@ public class MapGenerator : MonoBehaviour {
             thread.Join();
         }
         
-        foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
+        Vector3 provinceScale = new(worldSpaceScale, 1, worldSpaceScale);
+        Dictionary<Color32, (Province province, HashSet<Color32>)> provinceNeighbors = new();
+        foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             Vector3 position = ConvertToWorldSpace(provinceGenerator.Pivot);
             Province province = Instantiate(provincePrefab, position, Quaternion.identity, provinceParent);
-            province.transform.localScale = new Vector3(worldSpaceScale, 1, worldSpaceScale);
+            province.transform.localScale = provinceScale;
             province.Init(color, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
-            provinces.Add(color, province);
+            provinceNeighbors.Add(color, (province, provinceGenerator.Neighbors));
         }
         
-        mapGraph = GetComponent<MapGraph>();
-        foreach ((Color color, Province province) in provinces){
-            mapGraph.Add(color, province);
-            foreach (Color neighborColor in provinceGenerators[color].Neighbors){
-                province.AddNeighbor(provinces[neighborColor]);
+        MapGraph mapGraph = GetComponent<MapGraph>();
+        foreach ((Province province, HashSet<Color32> neighbors) in provinceNeighbors.Values){
+            mapGraph.Add(province);
+            foreach (Color32 neighborColor in neighbors){
+                province.AddNeighbor(provinceNeighbors[neighborColor].province);
             }
         }
         
-        // Destroy this component after generation is done. Don't destroy the gameObject.
+        // Destroy this component after generation is done since it's purpose has been achieved. Don't destroy the gameObject.
         Destroy(this);
     }
     
-    private void FindProvinceOutline(Color color, Vector2Int startPosition){
+    private ProvinceGenerator FindProvinceOutline(Color32 color, Vector2Int startPosition){
         ProvinceGenerator province = new(borderWidth);
         List<Vector2Int> outlinePixels = new();
-        HashSet<Color> neighbors = new();
+        HashSet<Color32> neighbors = new();
         outlinePixels.Add(startPosition);
         Vector2Int position = startPosition;
         // You're moving right during the full mapImage iteration, so the up direction (with index 0) is a turn to the left.
@@ -94,8 +98,8 @@ public class MapGenerator : MonoBehaviour {
                 if (newPosition.x < 0 || imageWidth <= newPosition.x || newPosition.y < 0 || imageHeight <= newPosition.y){
                     continue;
                 }
-                Color newPixelColor = GetPixel(newPosition.x, newPosition.y);
-                if (newPixelColor != color){
+                Color32 newPixelColor = GetPixel(newPosition.x, newPosition.y);
+                if (!color.Equals(newPixelColor)){
                     neighbors.Add(newPixelColor);
                     continue;
                 }
@@ -120,10 +124,10 @@ public class MapGenerator : MonoBehaviour {
         
         province.OutlinePixels.AddRange(outlinePixels);
         province.Neighbors.UnionWith(neighbors);
-        provinceGenerators.Add(color, province);
+        return province;
     }
 
-    private Color GetPixel(int x, int y){
+    private Color32 GetPixel(int x, int y){
         return mapPixels[x+y*imageWidth];
     }
     

@@ -33,7 +33,7 @@ public class ProvinceGenerator {
 	}
 	
 	public readonly List<Vector2Int> OutlinePixels = new();
-	public readonly HashSet<Color> Neighbors = new();
+	public readonly HashSet<Color32> Neighbors = new();
 
 	private readonly List<Vector2> vertices = new();
 	private MeshData outlineMeshData;
