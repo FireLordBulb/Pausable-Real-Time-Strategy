@@ -64,6 +64,12 @@ namespace Mathematics {
 		public static bool IsClockwise(Vector2 leftDirection, Vector2 rightDirection){
 			return Vector2.Dot(leftDirection, LeftPerpendicular(rightDirection)) > 0;
 		}
+		
+		public static bool IsRightTurn(Vector2 before, Vector2 after) => Mathf.Abs(Vector2.Dot(before, after)) < Vector2.kEpsilon;
+		public static bool DoTurnSameDirection(Vector2 before, Vector2 between, Vector2 after) => IsClockwise(before, between) == IsClockwise(between, after);
+		
+		public static Vector2 InnerCorner(Vector2 point, Vector2 otherPoint) => 0.5f*(point+otherPoint+RightPerpendicular(otherPoint-point));
+		public static Vector2 MiddlePoint(Vector2 point, Vector2 otherPoint) => 0.5f*(point+otherPoint);
 
 		public static Vector2 LeftPerpendicular(Vector2 start, Vector2 end) => LeftPerpendicular((end-start));
 		public static Vector2 LeftPerpendicular(Vector2 vector) => new(-vector.y, vector.x);

@@ -56,7 +56,7 @@ public class ProvinceGenerator {
 			return;
 		}
 		GenerateVertextList();
-		RemoveDoubleCorners();
+		CleanupVertextList();
 		CalculateBounds();
 		CalculateCenter();
 		GenerateOutlineMesh();
@@ -103,28 +103,43 @@ public class ProvinceGenerator {
 		}
 	}
 
-	private void RemoveDoubleCorners(){
+	private void CleanupVertextList(){
+		// Remove double corners.
+		CombineAdjacentVertices(HalfPixel, IsNotRightTurn, VectorGeometry.InnerCorner);
+		// Make non-45 degree diagonals smoother.
+		CombineAdjacentVertices(Vector2.one, VectorGeometry.DoTurnSameDirection, VectorGeometry.MiddlePoint);
+	}
+	private static bool IsNotRightTurn(Vector2 before, Vector2 _, Vector2 after) => !VectorGeometry.IsRightTurn(before, after);
+
+	private void CombineAdjacentVertices(Vector2 maxDistance, SkipPredicate skipPredicate, PositionCombiner positionCombiner){
+		float maxDistanceSqr = maxDistance.sqrMagnitude+Vector2.kEpsilon;
 		for (int i = vertices.Count-1; i >= 0; i--){
 			int index = i;
 			int otherIndex = (i+1)%vertices.Count;
 			Vector2 point = vertices[index];
 			Vector2 otherPoint = vertices[otherIndex];
 			Vector2 difference = otherPoint-point;
-			if (Vector2.kEpsilon < Mathf.Abs(difference.sqrMagnitude-HalfPixel.sqrMagnitude)){
+			if (maxDistanceSqr < difference.sqrMagnitude){
 				continue;
 			}
 			Vector2 beforePoint = vertices[(i-1+vertices.Count)%vertices.Count];
 			Vector2 afterPoint = vertices[(i+2)%vertices.Count];
-			if (Vector2.kEpsilon < Mathf.Abs(Vector2.Dot(beforePoint-point, otherPoint-afterPoint))){
+
+			Vector2 before = point-beforePoint;
+			Vector2 between = otherPoint-point;
+			Vector2 after = afterPoint-otherPoint;
+			if (skipPredicate(before, between, after)){
 				continue;
 			}
 			if (otherIndex < index){
 				(index, otherIndex) = (otherIndex, index);
 			}
 			vertices.RemoveAt(otherIndex);
-			vertices[index] = 0.5f*(point+otherPoint+VectorGeometry.RightPerpendicular(difference));
+			vertices[index] = positionCombiner(point, otherPoint);
 		}
 	}
+	private delegate bool SkipPredicate(Vector2 before, Vector2 between, Vector2 after);
+	private delegate Vector2 PositionCombiner(Vector2 point, Vector2 otherPoint);
 	
 	private void CalculateBounds(){
 		min = Vector2.positiveInfinity;
