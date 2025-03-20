@@ -1,5 +1,6 @@
 using ActionStackSystem;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(Canvas))]
 public class UIStack : ActionStack<UILayer> {
@@ -86,6 +87,10 @@ public class UIStack : ActionStack<UILayer> {
 		hoveredProvince = province;
 	}
 	private bool MouseRaycast(out RaycastHit hit){
+		if (EventSystem.current.IsPointerOverGameObject()){
+			hit = new RaycastHit();
+			return false;
+		}
 		return Physics.Raycast(Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, MapClickMask);
 	}
 	private void EndHover(){
