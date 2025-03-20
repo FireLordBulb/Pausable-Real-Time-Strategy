@@ -44,20 +44,20 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
 
     public void OnHoverEnter(){
         if (!isSelected){
-            shapeMeshRenderer.material.color = hoverColor;
+            shapeMeshRenderer.sharedMaterial.color = hoverColor;
         }
     }
     public void OnHoverLeave(){
         if (!isSelected){
-            shapeMeshRenderer.material.color = Color;
+            shapeMeshRenderer.sharedMaterial.color = Color;
         }
     }
     public void OnSelect(){
         isSelected = true;
-        shapeMeshRenderer.material.color = selectedColor;
+        shapeMeshRenderer.sharedMaterial.color = selectedColor;
     }
     public void OnDeselect(){
         isSelected = false;
-        shapeMeshRenderer.material.color = Color;
+        shapeMeshRenderer.sharedMaterial.color = Color;
     }
 }
