@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using Mathematics;
 using UnityEngine;
 
@@ -37,15 +40,30 @@ public class MapGenerator : MonoBehaviour {
             }
         }
         
+        int threadCount = Environment.ProcessorCount;
+        ProvinceGenerator[] provinceGeneratorArray = provinceGenerators.Values.ToArray();
+        Thread[] threads = new Thread[threadCount];
+        for (int i = 0; i < threads.Length; i++){
+            int startIndex = i;
+            threads[startIndex] = new Thread(() => {
+                for (int j = startIndex; j < provinceGeneratorArray.Length; j += threadCount){
+                    provinceGeneratorArray[j].GenerateData();
+                }
+            });
+            threads[i].Start();
+        }
+        foreach (Thread thread in threads){
+            thread.Join();
+        }
+        
         foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
-            provinceGenerator.GenerateData();
             Vector3 position = ConvertToWorldSpace(provinceGenerator.Pivot);
             Province province = Instantiate(provincePrefab, position, Quaternion.identity, provinceParent);
             province.transform.localScale = new Vector3(worldSpaceScale, 1, worldSpaceScale);
             province.Init(color, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
             provinces.Add(color, province);
         }
-
+        
         mapGraph = GetComponent<MapGraph>();
         foreach ((Color color, Province province) in provinces){
             mapGraph.Add(color, province);

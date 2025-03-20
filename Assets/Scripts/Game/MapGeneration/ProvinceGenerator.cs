@@ -9,25 +9,25 @@ public class ProvinceGenerator {
 	// Only handles one quadrant. Rotate the input so it matches the quadrant and then rotate the output offset the same amount in reverse.
 	private static readonly Dictionary<(bool isDiagonal, Vector2Int directionToNext), Vector2> OuterEdgeOffsets = GetOuterEdgeOffsets();
 	private static Dictionary<(bool, Vector2Int), Vector2> GetOuterEdgeOffsets(){
-		Dictionary<(bool, Vector2Int), Vector2> outerEdgeOffsets = new();
-		
-		outerEdgeOffsets.Add((false, Vector2Int.left         ), new Vector2(+0.5f, 0    ));
-		outerEdgeOffsets.Add((false, VectorGeometry.UpLeft   ), new Vector2(+0.5f, -0.5f));
-		// No 90 degree left turns, so Vector2Int.up is skipped
-		outerEdgeOffsets.Add((false, VectorGeometry.UpRight  ), new Vector2(0    , +0.5f));
-		// No vertices along 180 degree straight lines, so Vector2Int.right is skipped
-		outerEdgeOffsets.Add((false, VectorGeometry.DownRight), new Vector2(0    , +0.5f));
-		outerEdgeOffsets.Add((false, Vector2Int.down         ), new Vector2(+0.5f, +0.5f));
-		outerEdgeOffsets.Add((false, VectorGeometry.DownLeft ), new Vector2(+1.0f, +0.5f));
-
-		outerEdgeOffsets.Add((true , Vector2Int.left         ), new Vector2(+0.5f, +0.5f));
-		outerEdgeOffsets.Add((true , VectorGeometry.UpLeft   ), new Vector2(-0.5f, 0    ));
-		outerEdgeOffsets.Add((true , Vector2Int.up           ), new Vector2(-0.5f, 0    ));
-		// No vertices along 180 degree straight lines, so VectorGeometry.UpRight is skipped
-		outerEdgeOffsets.Add((true , Vector2Int.right        ), new Vector2(0    , +0.5f));
-		outerEdgeOffsets.Add((true , VectorGeometry.DownRight), new Vector2(0    , +0.5f));
-		outerEdgeOffsets.Add((true , Vector2Int.down         ), new Vector2(+0.5f, +1.0f));
-		// The outline can not reach a dead end along diagonals, VectorGeometry.DownLeft is skipped.
+		Dictionary<(bool, Vector2Int), Vector2> outerEdgeOffsets = new(){
+			{(false, Vector2Int.left), new Vector2(+0.5f, 0)},
+			{(false, VectorGeometry.UpLeft), new Vector2(+0.5f, -0.5f)},
+			// No 90 degree left turns, so Vector2Int.up is skipped
+			{(false, VectorGeometry.UpRight  ), new Vector2(0    , +0.5f)},
+			// No vertices along 180 degree straight lines, so Vector2Int.right is skipped
+			{(false, VectorGeometry.DownRight), new Vector2(0    , +0.5f)},
+			{(false, Vector2Int.down         ), new Vector2(+0.5f, +0.5f)},
+			{(false, VectorGeometry.DownLeft ), new Vector2(+1.0f, +0.5f)},
+			
+			{(true , Vector2Int.left         ), new Vector2(+0.5f, +0.5f)},
+			{(true , VectorGeometry.UpLeft   ), new Vector2(-0.5f, 0    )},
+			{(true , Vector2Int.up           ), new Vector2(-0.5f, 0    )},
+			// No vertices along 180 degree straight lines, so VectorGeometry.UpRight is skipped
+			{(true , Vector2Int.right        ), new Vector2(0    , +0.5f)},
+			{(true , VectorGeometry.DownRight), new Vector2(0    , +0.5f)},
+			{(true , Vector2Int.down         ), new Vector2(+0.5f, +1.0f)}
+			// The outline can not reach a dead end along diagonals, VectorGeometry.DownLeft is skipped.
+		};
 		
 		return outerEdgeOffsets;
 	}
@@ -36,9 +36,11 @@ public class ProvinceGenerator {
 	public readonly HashSet<Color> Neighbors = new();
 
 	private readonly List<Vector2> vertices = new();
+	private MeshData outlineMeshData;
+	private MeshData shapeMeshData;
 	
-	public Mesh OutlineMesh {get; private set;}
-	public Mesh ShapeMesh {get; private set;}
+	public Mesh OutlineMesh => outlineMeshData.ToMesh();
+	public Mesh ShapeMesh => shapeMeshData.ToMesh();
 	public Vector2 Pivot {get; private set;}
 
 	private readonly float borderHalfWidth;
@@ -55,15 +57,15 @@ public class ProvinceGenerator {
 			Debug.LogError("Too few pixels in province!");
 			return;
 		}
-		GenerateVertextList();
-		CleanupVertextList();
+		GenerateVertexList();
+		CleanupVertexList();
 		CalculateBounds();
 		CalculateCenter();
 		GenerateOutlineMesh();
 		GenerateShapeMesh();
 	}
 	
-	private void GenerateVertextList(){
+	private void GenerateVertexList(){
 		Vector2Int previousPixel = OutlinePixels[^1];
 		Vector2Int currentPixel = OutlinePixels[0];
 		for (int i = 0; i < OutlinePixels.Count; i++){
@@ -103,7 +105,7 @@ public class ProvinceGenerator {
 		}
 	}
 
-	private void CleanupVertextList(){
+	private void CleanupVertexList(){
 		// Remove double corners.
 		CombineAdjacentVertices(HalfPixel, IsNotRightTurn, VectorGeometry.InnerCorner);
 		// Make non-45 degree diagonals smoother.
@@ -172,7 +174,7 @@ public class ProvinceGenerator {
 	}
 	
 	private void GenerateOutlineMesh(){
-		MeshData meshData = new("ProvinceOutline");
+		outlineMeshData = new("ProvinceOutline");
 		Vector2 beforeStart = vertices[^1];
 		Vector2 start = vertices[0];
 		for (int i = 1; i <= vertices.Count; i++){
@@ -183,51 +185,49 @@ public class ProvinceGenerator {
 			
 			Vector2 offset = (beforePerpendicular+middlePerpendicular).normalized;
 			offset *= borderHalfWidth/Vector2.Dot(offset, beforePerpendicular);
-			AddBorderSection(meshData, start+offset, start-offset);
+			AddBorderSection(start+offset, start-offset);
 
 			beforeStart = start;
 			start = end;
 		}
 		// Make vertex indices in the last triangles point loop around to the first pair of vertices.
-		meshData.Triangles[^4] %= meshData.Vertices.Count;
-		meshData.Triangles[^2] %= meshData.Vertices.Count;
-		meshData.Triangles[^1] %= meshData.Vertices.Count;
-		OutlineMesh = meshData.ToMesh();
+		outlineMeshData.Triangles[^4] %= outlineMeshData.Vertices.Count;
+		outlineMeshData.Triangles[^2] %= outlineMeshData.Vertices.Count;
+		outlineMeshData.Triangles[^1] %= outlineMeshData.Vertices.Count;
 	}
-	private void AddBorderSection(MeshData meshData, Vector2 left, Vector2 right){
-		int startIndex = meshData.Vertices.Count;
-		meshData.Vertices.Add(VectorGeometry.ToXZPlane(left));
-		meshData.Vertices.Add(VectorGeometry.ToXZPlane(right));
-		meshData.Normals.Add(Vector3.up);
-		meshData.Normals.Add(Vector3.up);
-		meshData.UVs.Add(Vector2.up);
-		meshData.UVs.Add(Vector2.zero);
-		meshData.Triangles.AddRange(new[]{
+	private void AddBorderSection(Vector2 left, Vector2 right){
+		int startIndex = outlineMeshData.Vertices.Count;
+		outlineMeshData.Vertices.Add(VectorGeometry.ToXZPlane(left));
+		outlineMeshData.Vertices.Add(VectorGeometry.ToXZPlane(right));
+		outlineMeshData.Normals.Add(Vector3.up);
+		outlineMeshData.Normals.Add(Vector3.up);
+		outlineMeshData.UVs.Add(Vector2.up);
+		outlineMeshData.UVs.Add(Vector2.zero);
+		outlineMeshData.Triangles.AddRange(new[]{
 			startIndex+1, startIndex+0, startIndex+2,
 			startIndex+1, startIndex+2, startIndex+3
 		});
 	}
 	
 	private void GenerateShapeMesh(){
-		MeshData meshData = new("ProvinceShape");
+		shapeMeshData = new("ProvinceShape");
 		Dictionary<Vector2, int> positionIndexMap = new();
 		for (int i = 0; i < vertices.Count; i++){
-			meshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
-			meshData.Normals.Add(Vector3.up);
-			meshData.UVs.Add(GetBoundsUV(vertices[i]));
+			shapeMeshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
+			shapeMeshData.Normals.Add(Vector3.up);
+			shapeMeshData.UVs.Add(GetBoundsUV(vertices[i]));
 			positionIndexMap.Add(vertices[i], i);
 		}
-		AddPolygon(fullVertexLoop, vertices.Count, meshData, positionIndexMap);
-		ShapeMesh = meshData.ToMesh();
+		AddPolygon(fullVertexLoop, vertices.Count, positionIndexMap);
 	}
-	private static void AddPolygon(LoopList vertexLoop, int length, MeshData meshData, Dictionary<Vector2, int> positionIndexMap){
+	private void AddPolygon(LoopList vertexLoop, int length, Dictionary<Vector2, int> positionIndexMap){
 		if (length <= 3){
 			Node nodeA = vertexLoop.First;
 			Node nodeB = nodeA.Next;
 			Node nodeC = nodeB.Next;
-			meshData.Triangles.Add(positionIndexMap[nodeA.Value]);
-			meshData.Triangles.Add(positionIndexMap[nodeB.Value]);
-			meshData.Triangles.Add(positionIndexMap[nodeC.Value]);
+			shapeMeshData.Triangles.Add(positionIndexMap[nodeA.Value]);
+			shapeMeshData.Triangles.Add(positionIndexMap[nodeB.Value]);
+			shapeMeshData.Triangles.Add(positionIndexMap[nodeC.Value]);
 			return;
 		}
 
@@ -237,8 +237,8 @@ public class ProvinceGenerator {
 		}
 		
 		(LoopList a, LoopList b) halfLoops = vertexLoop.Split(start.Previous, start.Main, end.Main);
-		AddPolygon(halfLoops.a, (length  )/2+1-halfLoopSizeOffset, meshData, positionIndexMap);
-		AddPolygon(halfLoops.b, (length+1)/2+1+halfLoopSizeOffset, meshData, positionIndexMap);
+		AddPolygon(halfLoops.a, (length  )/2+1-halfLoopSizeOffset, positionIndexMap);
+		AddPolygon(halfLoops.b, (length+1)/2+1+halfLoopSizeOffset, positionIndexMap);
 	}
 	private static (NodePair start, NodePair end, int halfLoopSizeOffset, bool wasSuccess) GetLoopSplittingLine(LoopList vertexLoop, int length){
 		NodePair start = new(vertexLoop.Last);
