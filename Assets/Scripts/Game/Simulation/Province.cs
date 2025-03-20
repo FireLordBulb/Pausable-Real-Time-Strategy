@@ -4,6 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshCollider))]
 public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
+    private const float OneThird = 1/3f;
     [SerializeField] private MeshFilter outlineMeshFilter;
     [SerializeField] private MeshFilter shapeMeshFilter;
     [SerializeField] private MeshRenderer shapeMeshRenderer;
@@ -24,7 +25,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     }
     public void Init(Color color, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
         Color = color;
-        float increasedBrightness = 0.5f*(color.maxColorComponent+1);
+        float increasedBrightness = OneThird*(color.grayscale+2);
         hoverColor = 0.5f*(color+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
         Color32 color32 = color;
         gameObject.name = $"R: {color32.r}, G: {color32.g}, B: {color32.b}";
