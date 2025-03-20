@@ -20,6 +20,7 @@ public class MapGenerator : MonoBehaviour {
     
     private readonly Dictionary<Color, ProvinceGenerator> provinceGenerators = new();
     private readonly Dictionary<Color, Province> provinces = new();
+    private Color[] mapPixels;
     private int imageWidth, imageHeight;
     private Vector2 worldSpaceOffset;
     private float worldSpaceScale;
@@ -31,9 +32,10 @@ public class MapGenerator : MonoBehaviour {
         worldSpaceScale = mapWidth/imageWidth;
         worldSpaceOffset = -0.5f*new Vector2(mapWidth, mapWidth*imageHeight/imageWidth);
         
+        mapPixels = mapImage.GetPixels();
         for (int y = 0; y < imageHeight; y++){
             for (int x = 0; x < imageWidth; x++){
-                Color color = mapImage.GetPixel(x, y);
+                Color color = GetPixel(x, y);
                 if (!provinceGenerators.ContainsKey(color)){
                     FindProvinceOutline(color, new Vector2Int(x, y));
                 }
@@ -92,7 +94,7 @@ public class MapGenerator : MonoBehaviour {
                 if (newPosition.x < 0 || imageWidth <= newPosition.x || newPosition.y < 0 || imageHeight <= newPosition.y){
                     continue;
                 }
-                Color newPixelColor = mapImage.GetPixel(newPosition.x, newPosition.y);
+                Color newPixelColor = GetPixel(newPosition.x, newPosition.y);
                 if (newPixelColor != color){
                     neighbors.Add(newPixelColor);
                     continue;
@@ -119,6 +121,10 @@ public class MapGenerator : MonoBehaviour {
         province.OutlinePixels.AddRange(outlinePixels);
         province.Neighbors.UnionWith(neighbors);
         provinceGenerators.Add(color, province);
+    }
+
+    private Color GetPixel(int x, int y){
+        return mapPixels[x+y*imageWidth];
     }
     
     private Vector3 ConvertToWorldSpace(Vector2 vector){
