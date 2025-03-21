@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc434a890ec4bb6bf38bf6e797b5c02, type: 3}
   m_Name: Countries
   m_EditorClassIdentifier: 
-  data: []
+  countries: []

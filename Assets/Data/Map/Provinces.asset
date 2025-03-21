@@ -12,4 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c198195dd667ea747be30ec602b026f7, type: 3}
   m_Name: Provinces
   m_EditorClassIdentifier: 
-  data: []
+  provinces:
+  - color:
+      serializedVersion: 2
+      rgba: 4280262130
+  - color:
+      serializedVersion: 2
+      rgba: 4281309231
+  - color:
+      serializedVersion: 2
+      rgba: 4293199600
+  - color:
+      serializedVersion: 2
+      rgba: 4284023552
+  - color:
+      serializedVersion: 2
+      rgba: 4278448843
+  - color:
+      serializedVersion: 2
+      rgba: 4282371797
+  - color:
+      serializedVersion: 2
+      rgba: 4289455764
+  - color:
+      serializedVersion: 2
+      rgba: 4290396864
+  - color:
+      serializedVersion: 2
+      rgba: 4278649975
