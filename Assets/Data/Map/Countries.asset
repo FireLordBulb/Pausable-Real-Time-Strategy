@@ -12,4 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc434a890ec4bb6bf38bf6e797b5c02, type: 3}
   m_Name: Countries
   m_EditorClassIdentifier: 
-  countries: []
+  countries:
+  - name: France
+    mapColor: {r: 0.23529412, g: 0.73941463, b: 0.8784314, a: 1}
+    provinces:
+    - serializedVersion: 2
+      rgba: 4280262130
+    - serializedVersion: 2
+      rgba: 4281309231
+    - serializedVersion: 2
+      rgba: 4293199600
+  - name: England
+    mapColor: {r: 0.8773585, g: 0.23589355, b: 0.23589355, a: 1}
+    provinces:
+    - serializedVersion: 2
+      rgba: 4282371797
+  - name: China
+    mapColor: {r: 0.7622455, g: 0.7924528, b: 0.22054112, a: 1}
+    provinces:
+    - serializedVersion: 2
+      rgba: 4289455764
+    - serializedVersion: 2
+      rgba: 4290396864
+    - serializedVersion: 2
+      rgba: 4278649975
+  - name: Persia
+    mapColor: {r: 0.3523051, g: 0.8584906, b: 0.66982114, a: 1}
+    provinces:
+    - serializedVersion: 2
+      rgba: 4284023552
+    - serializedVersion: 2
+      rgba: 4278448843

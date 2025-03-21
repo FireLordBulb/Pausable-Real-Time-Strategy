@@ -9,12 +9,15 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     [SerializeField] private MeshFilter outlineMeshFilter;
     [SerializeField] private MeshFilter shapeMeshFilter;
     [SerializeField] private MeshRenderer shapeMeshRenderer;
+    [SerializeField] private Color seaColor;
     
     private MeshCollider meshCollider;
     private readonly Dictionary<Color, ProvinceLink> links = new();
+    private Country owner = null;
     private Color baseColor;
     private Color hoverColor;
     private Color selectedColor;
+    private bool isHovered;
     private bool isSelected;
     
     public Color32 Color {get; private set;}
@@ -29,30 +32,54 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     }
     public void Init(Color32 color, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
         Color = color;
-        baseColor = (Color?)data?.Color ?? UnityEngine.Color.blue;
-        float increasedBrightness = OneThird*(baseColor.grayscale+2);
-        selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
-        hoverColor = 0.5f*(baseColor+UnityEngine.Color.gray);
         gameObject.name = $"R: {color.r}, G: {color.g}, B: {color.b}";
+
+        baseColor = (Color?)data?.Color ?? seaColor;
+        shapeMeshRenderer.material.color = baseColor;
+        UpdateColors();
+
         MapPosition = mapPosition;
         outlineMeshFilter.sharedMesh = outlineMesh;
         meshCollider.sharedMesh = shapeMesh;
         shapeMeshFilter.sharedMesh = shapeMesh;
-        shapeMeshRenderer.material.color = baseColor;
     }
     public void AddNeighbor(Province neighbor){
         links.Add(neighbor.Color, new ProvinceLink(this, neighbor));
     }
 
-    public void OnHoverEnter(){
-        if (!isSelected){
-            shapeMeshRenderer.sharedMaterial.color = hoverColor;
+    public void SetOwner(Country newOwner){
+        if (owner == newOwner){
+            return;
         }
+        if (owner != null){
+            owner.LoseProvince(this);
+        }
+        owner = newOwner;
+        owner.GainProvince(this);
+        baseColor = owner.MapColor;
+        UpdateColors();
+    }
+
+    private void UpdateColors(){
+        float increasedBrightness = OneThird*(baseColor.grayscale+2);
+        selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
+        hoverColor = 0.5f*(baseColor+UnityEngine.Color.gray);
+        shapeMeshRenderer.sharedMaterial.color = isSelected ? selectedColor : isHovered ? hoverColor : baseColor;
+    }
+    
+    public void OnHoverEnter(){
+        if (isSelected){
+            return;
+        }
+        shapeMeshRenderer.sharedMaterial.color = hoverColor;
+        isHovered = true;
     }
     public void OnHoverLeave(){
-        if (!isSelected){
-            shapeMeshRenderer.sharedMaterial.color = baseColor;
+        if (isSelected){
+            return;
         }
+        shapeMeshRenderer.sharedMaterial.color = baseColor;
+        isHovered = false;
     }
     public void OnSelect(){
         isSelected = true;

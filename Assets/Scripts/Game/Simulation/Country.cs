@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Country : MonoBehaviour {
-	private Color mapColor;
 	private readonly List<Province> provinces = new();
+	
+	public Color MapColor {get; private set;}
 	public void Init(CountryData data, MapGraph map){
-		gameObject.name = name = data.Name;
+		gameObject.name = data.Name;
+		MapColor = data.MapColor;
 		foreach (Color32 province in data.Provinces){
-			provinces.Add(map[province]);
+			map[province].SetOwner(this);
 		}
 	}
+	
+	public bool LoseProvince(Province province) => provinces.Remove(province);
+	public void GainProvince(Province province) => provinces.Add(province);
+	//private readonly List<Province> provinces = new();
 }
 
 [Serializable]
