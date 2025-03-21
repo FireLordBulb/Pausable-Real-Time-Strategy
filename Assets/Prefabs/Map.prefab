@@ -223,6 +223,7 @@ MonoBehaviour:
   provinceParent: {fileID: 9147229521150883095}
   borderWidth: 0.4
   mapWidth: 200
+  provinceData: {fileID: 11400000, guid: 49664c321a7f91643883464af29549e3, type: 2}
 --- !u!114 &4043457066114492380
 MonoBehaviour:
   m_ObjectHideFlags: 0

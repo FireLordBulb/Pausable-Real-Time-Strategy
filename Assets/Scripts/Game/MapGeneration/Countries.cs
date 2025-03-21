@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Countries", menuName = "ScriptableObjects/MapSetup/Countries")]
 public class Countries : ScriptableObject {
 	[SerializeField] private CountryData[] countries;
-	public CountryData this[int index] => countries[index];
+	public IEnumerable<CountryData> List => countries;
 }
 
 [Serializable]

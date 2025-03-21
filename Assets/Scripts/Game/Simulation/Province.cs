@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Graphs;
 using UnityEngine;
@@ -26,9 +27,9 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     private void Awake(){
         meshCollider = GetComponent<MeshCollider>();
     }
-    public void Init(Color32 color, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
+    public void Init(Color32 color, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
         Color = color;
-        baseColor = color;
+        baseColor = (Color?)data?.Color ?? UnityEngine.Color.blue;
         float increasedBrightness = OneThird*(baseColor.grayscale+2);
         selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
         hoverColor = 0.5f*(baseColor+UnityEngine.Color.gray);
@@ -50,7 +51,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     }
     public void OnHoverLeave(){
         if (!isSelected){
-            shapeMeshRenderer.sharedMaterial.color = Color;
+            shapeMeshRenderer.sharedMaterial.color = baseColor;
         }
     }
     public void OnSelect(){
@@ -59,6 +60,12 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     }
     public void OnDeselect(){
         isSelected = false;
-        shapeMeshRenderer.sharedMaterial.color = Color;
+        shapeMeshRenderer.sharedMaterial.color = baseColor;
     }
+}
+
+[Serializable]
+public class ProvinceData {
+    [SerializeField] private Color32 color;
+    public Color32 Color => color;
 }

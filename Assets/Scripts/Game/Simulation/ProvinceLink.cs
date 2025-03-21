@@ -2,7 +2,7 @@ using Graphs;
 using UnityEngine;
 
 public class ProvinceLink : IDistanceLink<Province, ProvinceLink> {
-	public float Distance {get; private set;}
+	public float Distance {get;}
 	public Province Source {get;}
 	public Province Target {get;}
 	

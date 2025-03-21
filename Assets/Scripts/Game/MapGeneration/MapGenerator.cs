@@ -16,12 +16,14 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField] private Transform provinceParent;
     [SerializeField] private float borderWidth;
     [SerializeField] private float mapWidth;
-
+    [SerializeField] private Provinces provinceData;
+    
     private MapGraph mapGraph;
     
     private Color32[] mapPixels;
     private readonly Dictionary<Color32, Vector2Int> provincePositions = new();
     private (Color32, ProvinceGenerator)[] provinceGenerators;
+    private readonly Dictionary<Color32, ProvinceData> provinceDataDictionary = new();
     private readonly HashSet<(Province province, HashSet<Color32>)> provinceNeighbors = new();
     
     private int imageWidth, imageHeight;
@@ -39,7 +41,8 @@ public class MapGenerator : MonoBehaviour {
         worldSpaceOffset = -0.5f*new Vector2(mapWidth, mapWidth*imageHeight/imageWidth);
         
         FindProvincePositions();
-        GenerateProvinceDataParallel();
+        GenerateProvinceMeshDataParallel();
+        PutSerializedProvinceDataInDictionary();
         SpawnProvinceGameObjects();
         LinkNeighboringProvinces();
         
@@ -59,7 +62,7 @@ public class MapGenerator : MonoBehaviour {
     }
     
     // Multithreading reduced time from 18ms to 11ms when tested on March 20th's provinces.png file.
-    private void GenerateProvinceDataParallel(){
+    private void GenerateProvinceMeshDataParallel(){
         Thread[] threads = new Thread[Environment.ProcessorCount];
         KeyValuePair<Color32, Vector2Int>[] provincePositionArray = provincePositions.ToArray();
         provinceGenerators = new (Color32, ProvinceGenerator)[provincePositionArray.Length];
@@ -124,13 +127,20 @@ public class MapGenerator : MonoBehaviour {
         return province;
     }
 
+    private void PutSerializedProvinceDataInDictionary(){
+        foreach (ProvinceData province in provinceData.List){
+            provinceDataDictionary.Add(province.Color, province);
+        }
+    }
+    
     private void SpawnProvinceGameObjects(){
         Vector3 provinceScale = new(worldSpaceScale, 1, worldSpaceScale);
         foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             Vector3 worldPosition = ConvertToWorldSpace(provinceGenerator.Pivot);
             Province province = Instantiate(provincePrefab, worldPosition, Quaternion.identity, provinceParent);
             province.transform.localScale = provinceScale;
-            province.Init(color, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
+            provinceDataDictionary.TryGetValue(color, out ProvinceData data);
+            province.Init(color, data, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
             provinceNeighbors.Add((province, provinceGenerator.Neighbors));
             mapGraph.Add(province);
         }
