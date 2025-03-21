@@ -16,21 +16,38 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField] private Transform provinceParent;
     [SerializeField] private float borderWidth;
     [SerializeField] private float mapWidth;
+
+    private MapGraph mapGraph;
     
     private Color32[] mapPixels;
+    private readonly Dictionary<Color32, Vector2Int> provincePositions = new();
+    private (Color32, ProvinceGenerator)[] provinceGenerators;
+    private readonly HashSet<(Province province, HashSet<Color32>)> provinceNeighbors = new();
+    
     private int imageWidth, imageHeight;
     private Vector2 worldSpaceOffset;
     private float worldSpaceScale;
     
     private void Awake(){
+        mapGraph = GetComponent<MapGraph>();
+        mapPixels = mapImage.GetPixels32();
+        
         imageWidth = mapImage.width;
         imageHeight = mapImage.height;
         
         worldSpaceScale = mapWidth/imageWidth;
         worldSpaceOffset = -0.5f*new Vector2(mapWidth, mapWidth*imageHeight/imageWidth);
         
-        mapPixels = mapImage.GetPixels32();
-        Dictionary<Color32, Vector2Int> provincePositions = new();
+        FindProvincePositions();
+        GenerateProvinceDataParallel();
+        SpawnProvinceGameObjects();
+        LinkNeighboringProvinces();
+        
+        // Destroy this component after generation is done since it's purpose has been achieved. Don't destroy the gameObject.
+        Destroy(this);
+    }
+    
+    private void FindProvincePositions(){
         for (int y = 0; y < imageHeight; y++){
             for (int x = 0; x < imageWidth; x++){
                 Color32 color = GetPixel(x, y);
@@ -39,11 +56,13 @@ public class MapGenerator : MonoBehaviour {
                 }
             }
         }
-        
-        // Multithreading reduced time from 18ms to 11ms when tested on March 20th's provinces.png file.
+    }
+    
+    // Multithreading reduced time from 18ms to 11ms when tested on March 20th's provinces.png file.
+    private void GenerateProvinceDataParallel(){
         Thread[] threads = new Thread[Environment.ProcessorCount];
         KeyValuePair<Color32, Vector2Int>[] provincePositionArray = provincePositions.ToArray();
-        (Color32, ProvinceGenerator)[] provinceGenerators = new(Color32, ProvinceGenerator)[provincePositionArray.Length];
+        provinceGenerators = new (Color32, ProvinceGenerator)[provincePositionArray.Length];
         for (int i = 0; i < threads.Length; i++){
             int startIndex = i;
             threads[i] = new Thread(() => {
@@ -59,29 +78,7 @@ public class MapGenerator : MonoBehaviour {
         foreach (Thread thread in threads){
             thread.Join();
         }
-        
-        Vector3 provinceScale = new(worldSpaceScale, 1, worldSpaceScale);
-        HashSet<(Province province, HashSet<Color32>)> provinceNeighbors = new();
-        MapGraph mapGraph = GetComponent<MapGraph>();
-        foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
-            Vector3 worldPosition = ConvertToWorldSpace(provinceGenerator.Pivot);
-            Province province = Instantiate(provincePrefab, worldPosition, Quaternion.identity, provinceParent);
-            province.transform.localScale = provinceScale;
-            province.Init(color, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
-            provinceNeighbors.Add((province, provinceGenerator.Neighbors));
-            mapGraph.Add(province);
-        }
-        
-        foreach ((Province province, HashSet<Color32> neighbors) in provinceNeighbors){
-            foreach (Color32 neighborColor in neighbors){
-                province.AddNeighbor(mapGraph[neighborColor]);
-            }
-        }
-        
-        // Destroy this component after generation is done since it's purpose has been achieved. Don't destroy the gameObject.
-        Destroy(this);
     }
-    
     private ProvinceGenerator FindProvinceOutline(Color32 color, Vector2Int startPosition){
         ProvinceGenerator province = new(borderWidth);
         List<Vector2Int> outlinePixels = new();
@@ -127,6 +124,26 @@ public class MapGenerator : MonoBehaviour {
         return province;
     }
 
+    private void SpawnProvinceGameObjects(){
+        Vector3 provinceScale = new(worldSpaceScale, 1, worldSpaceScale);
+        foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
+            Vector3 worldPosition = ConvertToWorldSpace(provinceGenerator.Pivot);
+            Province province = Instantiate(provincePrefab, worldPosition, Quaternion.identity, provinceParent);
+            province.transform.localScale = provinceScale;
+            province.Init(color, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
+            provinceNeighbors.Add((province, provinceGenerator.Neighbors));
+            mapGraph.Add(province);
+        }
+    }
+
+    private void LinkNeighboringProvinces(){
+        foreach ((Province province, HashSet<Color32> neighbors) in provinceNeighbors){
+            foreach (Color32 neighborColor in neighbors){
+                province.AddNeighbor(mapGraph[neighborColor]);
+            }
+        }
+    }
+    
     private Color32 GetPixel(int x, int y){
         return mapPixels[x+y*imageWidth];
     }
