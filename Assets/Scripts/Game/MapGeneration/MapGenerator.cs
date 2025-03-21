@@ -14,9 +14,12 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Province provincePrefab;
     [SerializeField] private Transform provinceParent;
+    [SerializeField] private Country countryPrefab;
+    [SerializeField] private Transform countryParent;
     [SerializeField] private float borderWidth;
     [SerializeField] private float mapWidth;
     [SerializeField] private Provinces provinceData;
+    [SerializeField] private Countries countryData;
     
     private MapGraph mapGraph;
     
@@ -45,6 +48,7 @@ public class MapGenerator : MonoBehaviour {
         PutSerializedProvinceDataInDictionary();
         SpawnProvinceGameObjects();
         LinkNeighboringProvinces();
+        InitializeCountries();
         
         // Destroy this component after generation is done since it's purpose has been achieved. Don't destroy the gameObject.
         Destroy(this);
@@ -160,6 +164,13 @@ public class MapGenerator : MonoBehaviour {
     
     private Vector3 ConvertToWorldSpace(Vector2 vector){
         return VectorGeometry.ToXZPlane(vector*worldSpaceScale + worldSpaceOffset);
+    }
+
+    private void InitializeCountries(){
+        foreach (CountryData data in countryData.List){
+            Country country = Instantiate(countryPrefab, countryParent);
+            country.Init(data, mapGraph);
+        }
     }
 /*#if UNITY_EDITOR
     private void OnDrawGizmos(){
