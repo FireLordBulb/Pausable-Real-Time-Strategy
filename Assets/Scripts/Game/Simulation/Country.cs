@@ -6,6 +6,8 @@ public class Country : MonoBehaviour {
 	private readonly List<Province> provinces = new();
 	
 	public Color MapColor {get; private set;}
+	public IEnumerable<Province> Provinces => provinces;
+	
 	public void Init(CountryData data, MapGraph map){
 		gameObject.name = data.Name;
 		MapColor = data.MapColor;
@@ -16,7 +18,6 @@ public class Country : MonoBehaviour {
 	
 	public bool LoseProvince(Province province) => provinces.Remove(province);
 	public void GainProvince(Province province) => provinces.Add(province);
-	//private readonly List<Province> provinces = new();
 }
 
 [Serializable]

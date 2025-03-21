@@ -3,13 +3,8 @@ using Graphs;
 using UnityEditor;
 
 [CustomEditor(typeof(MapGraph), true)]
-public class MapEditor : Editor {
-	private IEnumerable<Province> nodes;
+public class MapEditor : MapGraphEditor {
 	private void OnEnable(){
-		nodes = ((MapGraph)target).Nodes;
-	}
-	
-	private void OnSceneGUI(){
-		EditorGraphUtils<Province, ProvinceLink>.DrawGraph(nodes);
+		Nodes = ((MapGraph)target).Nodes;
 	}
 }
