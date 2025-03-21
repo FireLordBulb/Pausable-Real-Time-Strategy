@@ -13,7 +13,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     
     private MeshCollider meshCollider;
     private readonly Dictionary<Color, ProvinceLink> links = new();
-    private bool isSea;
+    private Type type;
     private Country owner;
     private Color baseColor;
     private Color hoverColor;
@@ -24,7 +24,9 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     public Color32 Color {get; private set;}
     public Vector2 MapPosition {get; private set;}
     public Vector3 WorldPosition => transform.position;
-    public bool IsSea => isSea;
+    public bool IsSea => type == Type.Sea;
+    public bool IsCoast => type == Type.Coast;
+    public bool IsLand => type is Type.LandLocked or Type.Coast;
     
     public IEnumerable<ProvinceLink> Links => links.Values;
     public ProvinceLink this[Color color] => links[color];
@@ -36,8 +38,13 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         Color = color;
         gameObject.name = $"R: {color.r}, G: {color.g}, B: {color.b}";
 
-        isSea = data == null;
-        baseColor = isSea ? seaColor : data.Color;
+        if (data == null){
+            baseColor = seaColor;
+            type = Type.Sea;
+        } else {
+            baseColor = data.Color;
+            type = Type.LandLocked;
+        }
         shapeMeshRenderer.material.color = baseColor;
         UpdateColors();
 
@@ -47,6 +54,9 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         shapeMeshFilter.sharedMesh = shapeMesh;
     }
     public void AddNeighbor(Province neighbor){
+        if (type == Type.LandLocked && neighbor.type == Type.Sea){
+            type = Type.Coast;
+        }
         links.Add(neighbor.Color, new ProvinceLink(this, neighbor));
     }
 
@@ -96,6 +106,12 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     public void OnDeselect(){
         isSelected = false;
         shapeMeshRenderer.sharedMaterial.color = baseColor;
+    }
+
+    public enum Type {
+        Sea,
+        LandLocked,
+        Coast
     }
 }
 
