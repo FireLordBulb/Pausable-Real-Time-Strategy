@@ -1,11 +1,14 @@
 using Graphs;
+using UnityEngine;
 
-public class ProvinceLink : ILink<Province, ProvinceLink> {
+public class ProvinceLink : IDistanceLink<Province, ProvinceLink> {
+	public float Distance {get; private set;}
 	public Province Source {get;}
 	public Province Target {get;}
-    
+	
 	public ProvinceLink(Province source, Province target){
 		Source = source;
 		Target = target;
+		Distance = Vector2.Distance(source.MapPosition, target.MapPosition);
 	}
 }
