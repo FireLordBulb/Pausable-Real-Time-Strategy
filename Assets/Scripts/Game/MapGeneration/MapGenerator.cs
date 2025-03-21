@@ -61,20 +61,20 @@ public class MapGenerator : MonoBehaviour {
         }
         
         Vector3 provinceScale = new(worldSpaceScale, 1, worldSpaceScale);
-        Dictionary<Color32, (Province province, HashSet<Color32>)> provinceNeighbors = new();
+        HashSet<(Province province, HashSet<Color32>)> provinceNeighbors = new();
+        MapGraph mapGraph = GetComponent<MapGraph>();
         foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
-            Vector3 position = ConvertToWorldSpace(provinceGenerator.Pivot);
-            Province province = Instantiate(provincePrefab, position, Quaternion.identity, provinceParent);
+            Vector3 worldPosition = ConvertToWorldSpace(provinceGenerator.Pivot);
+            Province province = Instantiate(provincePrefab, worldPosition, Quaternion.identity, provinceParent);
             province.transform.localScale = provinceScale;
             province.Init(color, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
-            provinceNeighbors.Add(color, (province, provinceGenerator.Neighbors));
+            provinceNeighbors.Add((province, provinceGenerator.Neighbors));
+            mapGraph.Add(province);
         }
         
-        MapGraph mapGraph = GetComponent<MapGraph>();
-        foreach ((Province province, HashSet<Color32> neighbors) in provinceNeighbors.Values){
-            mapGraph.Add(province);
+        foreach ((Province province, HashSet<Color32> neighbors) in provinceNeighbors){
             foreach (Color32 neighborColor in neighbors){
-                province.AddNeighbor(provinceNeighbors[neighborColor].province);
+                province.AddNeighbor(mapGraph[neighborColor]);
             }
         }
         

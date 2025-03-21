@@ -5,6 +5,7 @@
 	public class MapGraph : MonoBehaviour, ISearchableGraph<Province, ProvinceLink> {
 		private readonly Dictionary<Color32, Province> provinces = new();
 		public IEnumerable<Province> Nodes => provinces.Values;
+		public Province this[Color32 color] => provinces[color];
 		public void Add(Province province){
 			provinces.Add(province.Color, province);
 		}
