@@ -173,18 +173,16 @@ namespace Graphs
             return wrapper;
         }
 
-        static float GetNodeDistance(TNode A, TNode B)
+        static float GetNodeDistance(TLink link)
         {
-            
-            if (A is IPositionNode<TLink, TNode> nA && B is IPositionNode<TLink, TNode> nB)
+            if (link is IDistanceLink<TNode, TLink> distanceLink)
             {
-                return Vector3.Distance(nA.WorldPosition, nB.WorldPosition);
+                return distanceLink.Distance;
             }
 
-            return A != B ? 1.0f : 0.0f;
+            return GetNodeDistance(link.Source, link.Target);
         }
-
-        static float GetNodeDistance(IGraph<TNode, TLink> graph, TNode A, TNode B)
+        static float GetNodeDistanceEstimate(IGraph<TNode, TLink> graph, TNode A, TNode B)
         {
             if (graph is ISearchableGraph<TNode, TLink> searchableGraph)
             {
@@ -192,6 +190,15 @@ namespace Graphs
             }
 
             return GetNodeDistance(A, B);
+        }
+        static float GetNodeDistance(TNode A, TNode B)
+        {
+            if (A is IPositionNode<TLink, TNode> nA && B is IPositionNode<TLink, TNode> nB)
+            {
+                return Vector3.Distance(nA.WorldPosition, nB.WorldPosition);
+            }
+
+            return A != B ? 1.0f : 0.0f;
         }
 
         public static List<TNode> FindShortestPath_Dijkstra(TNode start, TNode goal)
@@ -234,12 +241,12 @@ namespace Graphs
                 }
 
                 // search the neighbors
-                foreach (ILink<TNode, TLink> link in current.m_node.Links)
+                foreach (TLink link in current.m_node.Links)
                 {
                     TNode target = link.Target;
                     {
                         NodeWrapper<TNode> neighbor = GetNode(target, wrapperLookup);
-                        float fNewDistance = current.m_fDistance + GetNodeDistance(current.m_node, neighbor.m_node);
+                        float fNewDistance = current.m_fDistance + GetNodeDistance(link);
 
                         // investigate neighbor?
                         if (!open.Contains(neighbor) &&
@@ -289,12 +296,12 @@ namespace Graphs
                 closed.Add(current);
 
                 // search the neighbors
-                foreach (var link in current.m_node.Links)
+                foreach (TLink link in current.m_node.Links)
                 {
                     if (link.Target is TNode target)
                     {
                         NodeWrapper<TNode> neighbor = GetNode(target, wrapperLookup);
-                        float fNewDistance = current.m_fDistance + GetNodeDistance(current.m_node, neighbor.m_node);
+                        float fNewDistance = current.m_fDistance + GetNodeDistance(link);
 
                         // investigate neighbor?
                         if (!open.Contains(neighbor) &&
@@ -335,7 +342,7 @@ namespace Graphs
             HashSet<NodeWrapper<TNode>> closed = new HashSet<NodeWrapper<TNode>>();
             NodeWrapper<TNode> startNode = GetNode(start, wrapperLookup);
             startNode.m_fDistance = 0.0f;
-            startNode.m_fRemainingDistance = GetNodeDistance(graph, start, goal);
+            startNode.m_fRemainingDistance = GetNodeDistanceEstimate(graph, start, goal);
             open.Add(startNode);
 
             // search / iteration
@@ -385,8 +392,8 @@ namespace Graphs
                     }
 
                     NodeWrapper<TNode> neighbor = GetNode(target, wrapperLookup);
-                    float fNewDistance = current.m_fDistance + GetNodeDistance(graph, current.m_node, neighbor.m_node);
-                    float fNewRemainingDistance = fNewDistance + GetNodeDistance(graph, target, goal);
+                    float fNewDistance = current.m_fDistance + GetNodeDistance(link);
+                    float fNewRemainingDistance = fNewDistance + GetNodeDistanceEstimate(graph, target, goal);
 
                     // investigate neighbor?
                     if (!open.Contains(neighbor) &&

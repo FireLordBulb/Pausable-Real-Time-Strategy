@@ -19,6 +19,10 @@ namespace Graphs
 
          TNode Target { get; }
     }
+    public interface IDistanceLink<out TNode, TLink> : ILink<TNode, TLink> where TNode : INode<TLink, TNode> where TLink : ILink<TNode, TLink>
+    {
+        float Distance { get; }
+    }
     public interface IGraph<out TNode, TLink> where TNode : INode<TLink, TNode> where TLink : ILink<TNode, TLink>
     {
         IEnumerable<TNode> Nodes { get; }
