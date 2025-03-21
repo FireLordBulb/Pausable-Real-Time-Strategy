@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Mathematics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(MapGraph))]
 public class MapGenerator : MonoBehaviour {
@@ -13,13 +14,14 @@ public class MapGenerator : MonoBehaviour {
 
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Province provincePrefab;
-    [SerializeField] private Transform provinceParent;
     [SerializeField] private Country countryPrefab;
+    [SerializeField] private Provinces provinceData;
+    [SerializeField] private Countries countryData;
+    [SerializeField] private bool doRandomizeCountries;
+    [SerializeField] private Transform provinceParent;
     [SerializeField] private Transform countryParent;
     [SerializeField] private float borderWidth;
     [SerializeField] private float mapWidth;
-    [SerializeField] private Provinces provinceData;
-    [SerializeField] private Countries countryData;
     
     private MapGraph mapGraph;
     
@@ -171,13 +173,71 @@ public class MapGenerator : MonoBehaviour {
             Country country = Instantiate(countryPrefab, countryParent);
             country.Init(data, mapGraph);
         }
+#if UNITY_EDITOR
+        if (doRandomizeCountries){
+            RandomizeCountries();
+        }
+#endif
     }
-/*#if UNITY_EDITOR
+#if UNITY_EDITOR
+    
+    private void RandomizeCountries(){
+        Country[] countries = countryParent.GetComponentsInChildren<Country>();
+        int maxProvinces = -1;
+        foreach (Country country in countries){
+            int provinceCount = country.Provinces.Count();
+            if (maxProvinces < provinceCount){
+                maxProvinces = provinceCount;
+            }
+        }
+        int landProvincesLeft = provinceData.List.Count();
+        HashSet<Province> unownedLandProvinces = new();
+        foreach (ProvinceData data in provinceData.List){
+            Province landProvince = mapGraph[data.Color];
+            landProvince.SetOwner(null);
+            unownedLandProvinces.Add(landProvince);
+        }
+        Queue<Province> provinceCrawl = new();
+        provinceCrawl.Enqueue(RandomUnownedProvince());
+        for (int i = countries.Length-1; i >= 0; i--){
+            int countryProvinceCount = Mathf.Max(Mathf.Min(Random.Range(1, maxProvinces+1), landProvincesLeft-i), (landProvincesLeft-i)/(i+1));
+            for (int j = 0; j < countryProvinceCount; j++){
+                Province province = provinceCrawl.Dequeue();
+                province.SetOwner(countries[i]);
+                unownedLandProvinces.Remove(province);
+                landProvincesLeft--;
+                if (provinceCrawl.Count != 0 || landProvincesLeft == 0){
+                    continue;
+                }
+                List<Province> unownedNeighbors = new();
+                foreach (ProvinceLink link in province.Links){
+                    Province neighbor = link.Target;
+                    if (!neighbor.HasOwner && !neighbor.IsSea){
+                        unownedNeighbors.Add(neighbor);
+                    }
+                }
+                for (int k = unownedNeighbors.Count-1; k > 0; k--){
+                    int randomIndex = Random.Range(0, k+1);
+                    (unownedNeighbors[k], unownedNeighbors[randomIndex]) = (unownedNeighbors[randomIndex], unownedNeighbors[k]);
+                }
+                if (unownedNeighbors.Count == 0){
+                    provinceCrawl.Enqueue(RandomUnownedProvince());
+                } else {
+                    foreach (Province neighbor in unownedNeighbors){
+                        provinceCrawl.Enqueue(neighbor);
+                    }
+                }
+            }
+        }
+        // TODO: Prefer coast
+        Province RandomUnownedProvince() => unownedLandProvinces.ElementAt(Random.Range(0, unownedLandProvinces.Count));
+    }
+/*
     private void OnDrawGizmos(){
         foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             Handles.color = color;
             provinceGenerator.GizmosPolygon(ConvertToWorldSpace);
         }
-    }
-#endif*/
+    }*/
+#endif
 }

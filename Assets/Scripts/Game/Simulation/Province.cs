@@ -13,7 +13,8 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     
     private MeshCollider meshCollider;
     private readonly Dictionary<Color, ProvinceLink> links = new();
-    private Country owner = null;
+    private bool isSea;
+    private Country owner;
     private Color baseColor;
     private Color hoverColor;
     private Color selectedColor;
@@ -23,6 +24,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     public Color32 Color {get; private set;}
     public Vector2 MapPosition {get; private set;}
     public Vector3 WorldPosition => transform.position;
+    public bool IsSea => isSea;
     
     public IEnumerable<ProvinceLink> Links => links.Values;
     public ProvinceLink this[Color color] => links[color];
@@ -34,7 +36,8 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         Color = color;
         gameObject.name = $"R: {color.r}, G: {color.g}, B: {color.b}";
 
-        baseColor = (Color?)data?.Color ?? seaColor;
+        isSea = data == null;
+        baseColor = isSea ? seaColor : data.Color;
         shapeMeshRenderer.material.color = baseColor;
         UpdateColors();
 
@@ -55,10 +58,15 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
             owner.LoseProvince(this);
         }
         owner = newOwner;
-        owner.GainProvince(this);
-        baseColor = owner.MapColor;
+        if (owner != null){
+            owner.GainProvince(this);
+            baseColor = owner.MapColor;
+        } else {
+            baseColor = UnityEngine.Color.black;
+        }
         UpdateColors();
     }
+    public bool HasOwner => owner != null;
 
     private void UpdateColors(){
         float increasedBrightness = OneThird*(baseColor.grayscale+2);
