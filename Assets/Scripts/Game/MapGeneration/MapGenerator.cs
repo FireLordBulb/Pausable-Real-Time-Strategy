@@ -15,7 +15,7 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Province provincePrefab;
     [SerializeField] private Country countryPrefab;
-    [SerializeField] private Provinces provinceData;
+    [SerializeField] private Provinces[] provinceData;
     [SerializeField] private Countries countryData;
     [SerializeField] private bool doRandomizeCountries;
     [SerializeField] private Transform provinceParent;
@@ -134,8 +134,10 @@ public class MapGenerator : MonoBehaviour {
     }
 
     private void PutSerializedProvinceDataInDictionary(){
-        foreach (ProvinceData province in provinceData.List){
-            provinceDataDictionary.Add(province.Color, province);
+        foreach (Provinces provinces in provinceData){
+            foreach (ProvinceData province in provinces.List){
+                provinceDataDictionary.Add(province.Color, province);
+            }
         }
     }
     
@@ -190,9 +192,9 @@ public class MapGenerator : MonoBehaviour {
                 maxProvinces = provinceCount;
             }
         }
-        int landProvincesLeft = provinceData.List.Count();
+        int landProvincesLeft = provinceDataDictionary.Count;
         HashSet<Province> unownedLandProvinces = new();
-        foreach (ProvinceData data in provinceData.List){
+        foreach (ProvinceData data in provinceDataDictionary.Values){
             Province landProvince = mapGraph[data.Color];
             landProvince.SetOwner(null);
             unownedLandProvinces.Add(landProvince);
