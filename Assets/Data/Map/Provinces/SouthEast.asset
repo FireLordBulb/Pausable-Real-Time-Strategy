@@ -10,30 +10,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c198195dd667ea747be30ec602b026f7, type: 3}
-  m_Name: Provinces
+  m_Name: SouthEast
   m_EditorClassIdentifier: 
   provinces:
   - color:
       serializedVersion: 2
-      rgba: 4280262130
-  - color:
-      serializedVersion: 2
-      rgba: 4281309231
-  - color:
-      serializedVersion: 2
-      rgba: 4293199600
+      rgba: 4288175668
   - color:
       serializedVersion: 2
       rgba: 4284023552
   - color:
       serializedVersion: 2
-      rgba: 4282371797
-  - color:
-      serializedVersion: 2
-      rgba: 4289455764
-  - color:
-      serializedVersion: 2
-      rgba: 4290396864
+      rgba: 4280442236
   - color:
       serializedVersion: 2
       rgba: 4278649975
+  - color:
+      serializedVersion: 2
+      rgba: 4281263810
+  - color:
+      serializedVersion: 2
+      rgba: 4293314606

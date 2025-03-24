@@ -125,6 +125,9 @@ public class MapGenerator : MonoBehaviour {
 
         // Remove the last pixel if it's a duplicate of the first.
         if (outlinePixels[^1] == outlinePixels[0]){
+            if (outlinePixels.Count < 5){
+                print(outlinePixels[0]);
+            }
             outlinePixels.RemoveAt(outlinePixels.Count-1);
         }
         

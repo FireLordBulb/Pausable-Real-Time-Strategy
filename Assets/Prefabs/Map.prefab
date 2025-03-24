@@ -254,8 +254,14 @@ MonoBehaviour:
   provincePrefab: {fileID: 6360424470202932525, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
   countryPrefab: {fileID: 4722946147297777824, guid: e8161f236f3c6da48bf66ca2bc644b09, type: 3}
   provinceData:
-  - {fileID: 11400000, guid: 49664c321a7f91643883464af29549e3, type: 2}
   - {fileID: 11400000, guid: 934f4978fad6250448a408bbffc6ef9f, type: 2}
+  - {fileID: 11400000, guid: 4ad911dded63a0c42a3a201e163f8b3b, type: 2}
+  - {fileID: 11400000, guid: b609555f70c6bca459589ef1255bca0e, type: 2}
+  - {fileID: 11400000, guid: c26eaa5ef8df264469c9b4fd02d29a35, type: 2}
+  - {fileID: 11400000, guid: 68e0f8473fd7a9647980dabe206c0ea8, type: 2}
+  - {fileID: 11400000, guid: f944c3ce6dcbfdc43af43dd6eac1a43e, type: 2}
+  - {fileID: 11400000, guid: 82be1d5608cbdcd459b0b73a4595875b, type: 2}
+  - {fileID: 11400000, guid: 6576a70eac00d6749b85ac2112c12bbd, type: 2}
   countryData: {fileID: 11400000, guid: 8360e8b44c345d4489fce937849dd8b1, type: 2}
   doRandomizeCountries: 0
   provinceParent: {fileID: 9147229521150883095}

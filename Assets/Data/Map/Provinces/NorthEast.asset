@@ -10,9 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c198195dd667ea747be30ec602b026f7, type: 3}
-  m_Name: SouthWest
+  m_Name: NorthEast
   m_EditorClassIdentifier: 
   provinces:
   - color:
       serializedVersion: 2
-      rgba: 4278448843
+      rgba: 4290396864
+  - color:
+      serializedVersion: 2
+      rgba: 4289455764
