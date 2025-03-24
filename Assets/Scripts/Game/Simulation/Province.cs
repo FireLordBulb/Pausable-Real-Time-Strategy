@@ -22,6 +22,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     private bool isSelected;
     
     public Color32 Color {get; private set;}
+    public Terrain Terrain {get; private set;}
     public Vector2 MapPosition {get; private set;}
     public Vector3 WorldPosition => transform.position;
     public bool IsSea => type == Type.Sea;
@@ -41,8 +42,10 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         if (data == null){
             baseColor = seaColor;
             type = Type.Sea;
+            Terrain = Terrain.Sea;
         } else {
             baseColor = data.Color;
+            Terrain = data.Terrain;
             type = Type.LandLocked;
         }
         shapeMeshRenderer.material.color = baseColor;
@@ -118,5 +121,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
 [Serializable]
 public class ProvinceData {
     [SerializeField] private Color32 color;
+    [SerializeField] private Terrain terrain;
     public Color32 Color => color;
+    public Terrain Terrain => terrain;
 }
