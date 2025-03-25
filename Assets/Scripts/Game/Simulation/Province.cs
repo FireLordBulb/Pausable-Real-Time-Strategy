@@ -10,6 +10,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     [SerializeField] private MeshFilter shapeMeshFilter;
     [SerializeField] private MeshRenderer shapeMeshRenderer;
     [SerializeField] private Color seaColor;
+    [SerializeField] private Terrain sea;
     
     private MeshCollider meshCollider;
     private readonly Dictionary<Color, ProvinceLink> links = new();
@@ -42,7 +43,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         if (data == null){
             baseColor = seaColor;
             type = Type.Sea;
-            Terrain = Terrain.Sea;
+            Terrain = sea;
         } else {
             baseColor = data.Color;
             Terrain = data.Terrain;
