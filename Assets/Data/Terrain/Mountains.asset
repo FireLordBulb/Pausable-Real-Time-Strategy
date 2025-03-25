@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 854008a403e1474da685e16b51059dd7, type: 3}
   m_Name: Mountains
   m_EditorClassIdentifier: 
-  name: Plains
-  material: {fileID: 2100000, guid: 7d31edb6f35771e4594832e99412f2bc, type: 2}
-  developmentModifier: 0
-  defenderAdvantage: 0
+  name: Mountains
+  material: {fileID: 2100000, guid: 8c94c63417cd45c4ba9c92b234f8fe77, type: 2}
+  developmentModifier: -0.4
+  defenderAdvantage: 0.5

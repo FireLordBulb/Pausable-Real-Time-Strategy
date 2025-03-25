@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Plains
   material: {fileID: 2100000, guid: 7d31edb6f35771e4594832e99412f2bc, type: 2}
-  developmentModifier: 0
+  developmentModifier: 0.2
   defenderAdvantage: 0
