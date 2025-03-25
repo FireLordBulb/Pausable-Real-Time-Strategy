@@ -108,4 +108,10 @@ public class UIStack : ActionStack<UILayer> {
 		hoveredProvince.OnHoverLeave();
 		hoveredProvince = null;
 	}
+
+	public void DeselectProvince(Province province){
+		if (SelectedProvince == province){
+			SelectedProvince = null;
+		}
+	}
 }

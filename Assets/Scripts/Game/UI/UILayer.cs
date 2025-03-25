@@ -1,5 +1,4 @@
 using ActionStackSystem;
-using UnityEngine;
 
 public class UILayer : ActionBehaviour {
 	protected UIStack Stack {get; private set;}

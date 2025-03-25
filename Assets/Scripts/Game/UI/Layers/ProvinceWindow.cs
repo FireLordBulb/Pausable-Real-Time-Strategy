@@ -8,6 +8,7 @@ public class ProvinceWindow : UILayer {
 	[SerializeField] private TextMeshProUGUI terrain;
 	[SerializeField] private TextMeshProUGUI neighbors;
 	[SerializeField] private Image terrainImage;
+	[SerializeField] private Button button;
 	
 	private Province province;
 	private bool isDone;
@@ -25,6 +26,11 @@ public class ProvinceWindow : UILayer {
 		}
 		neighbors.text = neighborsString.ToString();
 		province.OnSelect();
+		
+		button.onClick.AddListener(() => {
+			isDone = true;
+			Stack.DeselectProvince(province);
+		});
 	}
 	public override void OnUpdate(){
 		// TODO: When a tick passes or an action was taken on the province, update window info.
