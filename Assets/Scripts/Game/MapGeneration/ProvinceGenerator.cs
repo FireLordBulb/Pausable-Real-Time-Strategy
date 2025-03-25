@@ -166,6 +166,8 @@ public class ProvinceGenerator {
 		Debug.Assert(wasSuccess);
 		Pivot = (start.Main.Value+end.Main.Value)*0.5f;
 		
+		min -= Pivot;
+		max -= Pivot;
 		for (int i = 0; i < vertices.Count; i++){
 			vertices[i] -= Pivot;
 		}
@@ -241,7 +243,7 @@ public class ProvinceGenerator {
 		AddPolygon(halfLoops.a, (length  )/2+1-halfLoopSizeOffset, positionIndexMap);
 		AddPolygon(halfLoops.b, (length+1)/2+1+halfLoopSizeOffset, positionIndexMap);
 	}
-	private (NodePair start, NodePair end, int halfLoopSizeOffset, bool wasSuccess) GetLoopSplittingLine(LoopList vertexLoop, int length){
+	private static (NodePair start, NodePair end, int halfLoopSizeOffset, bool wasSuccess) GetLoopSplittingLine(LoopList vertexLoop, int length){
 		NodePair start = new(vertexLoop.Last);
 		NodePair end = start;
 		for (int i = length/2; i > 0; i--){
@@ -266,8 +268,6 @@ public class ProvinceGenerator {
 			start.ToNext();
 			if (start.Next == end.Main){
 				Debug.LogError("Couldn't split loop properly!");
-				Debug.Log(Pivot+start.Main.Value);
-				Debug.Log(Pivot);
 				return (start, end, halfLoopSizeOffset, false);
 			}
 		}
