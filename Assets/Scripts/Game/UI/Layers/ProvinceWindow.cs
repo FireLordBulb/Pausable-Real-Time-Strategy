@@ -11,9 +11,8 @@ public class ProvinceWindow : UILayer {
 	
 	private Province province;
 	private bool isDone;
-	public override void OnBegin(bool isFirstTime){
-		base.OnBegin(isFirstTime);
-		province = Stack.SelectedProvince;
+	private void Awake(){
+		province = UIStack.Instance.SelectedProvince;
 		color.text = $"Color: {province.gameObject.name}";
 		if (province.Terrain != null){
 			terrain.text = $"Terrain: {province.Terrain.Name}";
@@ -29,9 +28,10 @@ public class ProvinceWindow : UILayer {
 	}
 	public override void OnUpdate(){
 		// TODO: When a tick passes or an action was taken on the province, update window info.
-		if (Stack.SelectedProvince != province){
-			isDone = true;
+		if (Stack.SelectedProvince == province){
+			return;
 		}
+		isDone = true;
 	}
 	public override void OnEnd(){
 		province.OnDeselect();

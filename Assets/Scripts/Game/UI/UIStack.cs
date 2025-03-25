@@ -13,6 +13,7 @@ public class UIStack : ActionStack<UILayer> {
 	[SerializeField] private LayerMask mapClickMask;
 
 	private Input.UIActions input;
+	private UILayer layerToPush;
 	private Province hoveredProvince;
 	private Province mouseDownProvince;
 	
@@ -39,13 +40,10 @@ public class UIStack : ActionStack<UILayer> {
 				mouseDownProvince = hoveredProvince;
 				return;
 			}
-			if (SelectedProvince != null){
-				SelectedProvince = null;
-				return;
-			}
-			if (mouseDownProvince == hoveredProvince){
+			if (mouseDownProvince == hoveredProvince && mouseDownProvince != SelectedProvince){
 				SelectedProvince = mouseDownProvince;
-				Push(provinceWindow);
+				// Delay the push until the end of Update so the current layer can remove itself.
+				DelayedPush(provinceWindow);
 			} else {
 				SelectedProvince = null;
 			}
@@ -59,6 +57,12 @@ public class UIStack : ActionStack<UILayer> {
 	}
 
 	// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
+	public void DelayedPush(UILayer layer) {
+		if (!layer.gameObject.scene.IsValid()){
+			layer = Instantiate(layer, transform);
+		}
+		layerToPush = layer;
+	}
 	public override void Push(UILayer layer) {
 		if (!layer.gameObject.scene.IsValid()){
 			layer = Instantiate(layer, transform);
@@ -68,6 +72,10 @@ public class UIStack : ActionStack<UILayer> {
 	protected override void Update(){
 		UpdateHover();
 		base.Update();
+		if (layerToPush != null){
+			base.Push(layerToPush);
+			layerToPush = null;
+		}
 	}
 	private void UpdateHover(){
 		if (!MouseRaycast(out RaycastHit hit)){
