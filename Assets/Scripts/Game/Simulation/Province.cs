@@ -38,7 +38,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     }
     public void Init(Color32 color, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
         Color = color;
-        gameObject.name = $"R: {color.r}, G: {color.g}, B: {color.b}";
+        gameObject.name = $"R:{color.r}, G:{color.g}, B:{color.b}";
 
         if (data == null){
             baseColor = seaColor;
