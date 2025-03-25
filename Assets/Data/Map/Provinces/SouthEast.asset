@@ -21,13 +21,88 @@ MonoBehaviour:
       rgba: 4284023552
   - color:
       serializedVersion: 2
+      rgba: 4285518270
+  - color:
+      serializedVersion: 2
+      rgba: 4285306943
+  - color:
+      serializedVersion: 2
+      rgba: 4281807790
+  - color:
+      serializedVersion: 2
+      rgba: 4282619097
+  - color:
+      serializedVersion: 2
+      rgba: 4286274852
+  - color:
+      serializedVersion: 2
       rgba: 4280442236
   - color:
       serializedVersion: 2
       rgba: 4278649975
   - color:
       serializedVersion: 2
+      rgba: 4286433385
+  - color:
+      serializedVersion: 2
+      rgba: 4283582257
+  - color:
+      serializedVersion: 2
+      rgba: 4284105043
+  - color:
+      serializedVersion: 2
+      rgba: 4281430925
+  - color:
+      serializedVersion: 2
+      rgba: 4280961051
+  - color:
+      serializedVersion: 2
+      rgba: 4282573264
+  - color:
+      serializedVersion: 2
+      rgba: 4282137771
+  - color:
+      serializedVersion: 2
+      rgba: 4285189712
+  - color:
+      serializedVersion: 2
+      rgba: 4285753941
+  - color:
+      serializedVersion: 2
+      rgba: 4280768643
+  - color:
+      serializedVersion: 2
+      rgba: 4285613514
+  - color:
+      serializedVersion: 2
       rgba: 4281263810
   - color:
       serializedVersion: 2
+      rgba: 4287507850
+  - color:
+      serializedVersion: 2
+      rgba: 4278255482
+  - color:
+      serializedVersion: 2
+      rgba: 4290280019
+  - color:
+      serializedVersion: 2
+      rgba: 4278233087
+  - color:
+      serializedVersion: 2
       rgba: 4293314606
+  - color:
+      serializedVersion: 2
+      rgba: 4286699670
+  - color:
+      serializedVersion: 2
+      rgba: 4282933814
+  - color:
+      serializedVersion: 2
+      rgba: 4287078702
+  - color:
+      serializedVersion: 2
+      rgba: 4293610690
+  - color:
+      serializedVersion: 2
+      rgba: 4281753692
