@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Graphs;
 using UnityEngine;
@@ -9,8 +8,6 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     [SerializeField] private MeshFilter outlineMeshFilter;
     [SerializeField] private MeshFilter shapeMeshFilter;
     [SerializeField] private MeshRenderer shapeMeshRenderer;
-    [SerializeField] private Color seaColor;
-    [SerializeField] private Terrain sea;
     
     private MeshCollider meshCollider;
     private readonly Dictionary<Color, ProvinceLink> links = new();
@@ -22,7 +19,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     private bool isHovered;
     private bool isSelected;
     
-    public Color32 Color {get; private set;}
+    public Color32 ColorKey {get; private set;}
     public Terrain Terrain {get; private set;}
     public Vector2 MapPosition {get; private set;}
     public Vector3 WorldPosition => transform.position;
@@ -36,19 +33,14 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     private void Awake(){
         meshCollider = GetComponent<MeshCollider>();
     }
-    public void Init(Color32 color, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
-        Color = color;
-        gameObject.name = $"R:{color.r}, G:{color.g}, B:{color.b}";
+    public void Init(Color32 colorKey, Type provinceType, Terrain terrain, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
+        ColorKey = colorKey;
+        gameObject.name = $"R:{colorKey.r}, G:{colorKey.g}, B:{colorKey.b}";
 
-        if (data == null){
-            baseColor = seaColor;
-            type = Type.Sea;
-            Terrain = sea;
-        } else {
-            baseColor = data.Color;
-            Terrain = data.Terrain;
-            type = Type.LandLocked;
-        }
+        type = provinceType;
+        Terrain = terrain;
+        baseColor = mapColor;
+        
         shapeMeshRenderer.material.color = baseColor;
         UpdateColors();
 
@@ -61,7 +53,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         if (type == Type.LandLocked && neighbor.type == Type.Sea){
             type = Type.Coast;
         }
-        links.Add(neighbor.Color, new ProvinceLink(this, neighbor));
+        links.Add(neighbor.ColorKey, new ProvinceLink(this, neighbor));
     }
 
     public void SetOwner(Country newOwner){
@@ -117,12 +109,4 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         LandLocked,
         Coast
     }
-}
-
-[Serializable]
-public class ProvinceData {
-    [SerializeField] private Color32 color;
-    [SerializeField] private Terrain terrain;
-    public Color32 Color => color;
-    public Terrain Terrain => terrain;
 }

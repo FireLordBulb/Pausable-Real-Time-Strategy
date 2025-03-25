@@ -251,7 +251,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapImage: {fileID: 2800000, guid: 9daaf2f07e173a44b9c076bcb7d450d7, type: 3}
-  provincePrefab: {fileID: 6360424470202932525, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
+  landPrefab: {fileID: 4014595420839746837, guid: 8d2f0292c98a3b243b7cdaa28b52682a, type: 3}
+  seaPrefab: {fileID: 5616547816516488508, guid: c72e7e6be8631ae41954e93f3848d6a9, type: 3}
   countryPrefab: {fileID: 4722946147297777824, guid: e8161f236f3c6da48bf66ca2bc644b09, type: 3}
   provinceData:
   - {fileID: 11400000, guid: 934f4978fad6250448a408bbffc6ef9f, type: 2}

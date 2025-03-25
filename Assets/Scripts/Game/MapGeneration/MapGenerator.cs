@@ -13,7 +13,8 @@ public class MapGenerator : MonoBehaviour {
     public static readonly Vector2Int[] CardinalDirections = {Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left};
 
     [SerializeField] private Texture2D mapImage;
-    [SerializeField] private Province provincePrefab;
+    [SerializeField] private Land landPrefab;
+    [SerializeField] private Sea seaPrefab;
     [SerializeField] private Country countryPrefab;
     [SerializeField] private Provinces[] provinceData;
     [SerializeField] private Countries countryData;
@@ -148,10 +149,17 @@ public class MapGenerator : MonoBehaviour {
         Vector3 provinceScale = new(worldSpaceScale, 1, worldSpaceScale);
         foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             Vector3 worldPosition = ConvertToWorldSpace(provinceGenerator.Pivot);
-            Province province = Instantiate(provincePrefab, worldPosition, Quaternion.identity, provinceParent);
+            Province province;
+            if (provinceDataDictionary.TryGetValue(color, out ProvinceData data)){
+                Land land = Instantiate(landPrefab, worldPosition, Quaternion.identity, provinceParent);
+                land.Init(color, data, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
+                province = land.Province;
+            } else {
+                Sea sea = Instantiate(seaPrefab, worldPosition, Quaternion.identity, provinceParent);
+                sea.Init(color, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
+                province = sea.Province;
+            }
             province.transform.localScale = provinceScale;
-            provinceDataDictionary.TryGetValue(color, out ProvinceData data);
-            province.Init(color, data, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh);
             provinceNeighbors.Add((province, provinceGenerator.Neighbors));
             mapGraph.Add(province);
         }

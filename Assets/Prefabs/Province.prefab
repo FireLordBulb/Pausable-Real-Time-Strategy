@@ -212,5 +212,3 @@ MonoBehaviour:
   outlineMeshFilter: {fileID: 566674900097680830}
   shapeMeshFilter: {fileID: 7108387632059249651}
   shapeMeshRenderer: {fileID: 2668536342427610513}
-  seaColor: {r: 0.13408199, g: 0.31352103, b: 0.70199996, a: 1}
-  sea: {fileID: 11400000, guid: db49aab6b8124e749b02e9349db891bd, type: 2}
