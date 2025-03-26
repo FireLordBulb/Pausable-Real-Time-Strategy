@@ -132,10 +132,6 @@ MonoBehaviour:
     mapColor: {r: 0.38047257, g: 0.12967247, b: 0.8867924, a: 1}
     provinces:
     - serializedVersion: 2
-      rgba: 4289712473
-    - serializedVersion: 2
-      rgba: 4291910067
-    - serializedVersion: 2
       rgba: 4282211462
     - serializedVersion: 2
       rgba: 4289306404
@@ -267,6 +263,10 @@ MonoBehaviour:
       rgba: 4282601959
     - serializedVersion: 2
       rgba: 4281317542
+    - serializedVersion: 2
+      rgba: 4289712473
+    - serializedVersion: 2
+      rgba: 4291910067
   - name: Garkularen
     mapColor: {r: 0.21568628, g: 1, b: 0.61960787, a: 1}
     provinces:
