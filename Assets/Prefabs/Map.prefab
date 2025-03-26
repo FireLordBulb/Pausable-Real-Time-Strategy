@@ -267,7 +267,7 @@ MonoBehaviour:
   doRandomizeCountries: 0
   provinceParent: {fileID: 9147229521150883095}
   countryParent: {fileID: 1756637957935687588}
-  borderWidth: 0.4
+  borderWidth: 0.3
   mapWidth: 200
 --- !u!114 &4043457066114492380
 MonoBehaviour:
