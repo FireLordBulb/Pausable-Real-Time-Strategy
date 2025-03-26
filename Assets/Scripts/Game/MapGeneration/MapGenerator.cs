@@ -209,8 +209,9 @@ public class MapGenerator : MonoBehaviour {
     }
 
     private void InitializeCountries(){
+        Vector3 worldPosition = ConvertToWorldSpace(Vector2.zero);
         foreach (CountryData data in countryData.List){
-            Country country = Instantiate(countryPrefab, countryParent);
+            Country country = Instantiate(countryPrefab, worldPosition, Quaternion.identity, countryParent);
             country.Init(data, mapGraph);
             country.transform.localScale = provinceScale;
         }

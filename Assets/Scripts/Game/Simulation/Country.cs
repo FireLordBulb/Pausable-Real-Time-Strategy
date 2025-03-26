@@ -31,9 +31,18 @@ public class Country : MonoBehaviour {
 	private void RegenerateBorder(){
 		DestroyImmediate(borderMeshFilter.sharedMesh);
 		MeshData borderMeshData = new($"{gameObject.name}BorderMesh");
-		List<Vector2> borderVertices = new();
-		// TODO: Add vertices to borderVertices.
-		PolygonOutline.GenerateMeshData(borderMeshData, borderVertices, borderHalfWidth);
+		// TODO: Only add the sections of vertices between outer border tri-points.
+		foreach (Province province in provinces){
+			List<Vector2> borderVertices = new();
+			for (int i = 0; i < province.TriPointIndices.Count; i++){
+				int startIndex = province.TriPointIndices[i];
+				int endIndex = province.TriPointIndices[(i+1)%province.TriPointIndices.Count];
+				for (int j = startIndex; j != endIndex; j = (j+1)%province.Vertices.Count){
+					borderVertices.Add(province.MapPosition+province.Vertices[j]);
+				}
+			}
+			PolygonOutline.GenerateMeshData(borderMeshData, borderVertices, borderHalfWidth);
+		}
 		borderMeshFilter.mesh = borderMeshData.ToMesh();
 		wasBorderChanged = false;
 	}
