@@ -105,12 +105,14 @@ public class MapGenerator : MonoBehaviour {
         // You're moving right during the full mapImage iteration, so the up direction (with index 0) is a turn to the left.
         int leftTurnIndex = 0;
         Color32? previousNeighborColor = null;
+        Color32? firstNeighborColor = null;
         int steps = 0;
         do {
             for (int i = 0; i < CardinalDirections.Length; i++){
                 int directionIndex = (leftTurnIndex+i+CardinalDirections.Length) % CardinalDirections.Length;
                 Vector2Int newPosition = position+CardinalDirections[directionIndex];
                 if (newPosition.x < 0 || imageWidth <= newPosition.x || newPosition.y < 0 || imageHeight <= newPosition.y){
+                    firstNeighborColor ??= OffMapColorKey;
                     if (previousNeighborColor != null && !previousNeighborColor.Equals(OffMapColorKey)){
                         triPointIndices.Add(outlinePixels.Count-1);
                     }
@@ -119,6 +121,7 @@ public class MapGenerator : MonoBehaviour {
                 }
                 Color32 newPixelColor = GetPixel(newPosition.x, newPosition.y);
                 if (!color.Equals(newPixelColor)){
+                    firstNeighborColor ??= newPixelColor;
                     // TODO Fix to remove linear search for FindIndex
                     if (neighbors.FindIndex(c => c.Equals(newPixelColor)) == -1){
                         neighbors.Add(newPixelColor);
@@ -148,7 +151,7 @@ public class MapGenerator : MonoBehaviour {
             outlinePixels.RemoveAt(outlinePixels.Count-1);
         }
         // Checking for a tri-point exactly where the loop connects.
-        if (!neighbors[0].Equals(previousNeighborColor)){
+        if (!firstNeighborColor.Equals(previousNeighborColor)){
             triPointIndices.Add(outlinePixels.Count-1);
             //triPointIndices.Insert(0, 0);
         }
