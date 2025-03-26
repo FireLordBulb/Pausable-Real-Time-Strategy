@@ -8,6 +8,7 @@ namespace ProceduralMeshes {
 			if (vertices.Count == 0){
 				return;
 			}
+			int startIndex = meshData.Vertices.Count;
 			Vector2 beforeStart = vertices[^1];
 			Vector2 start = vertices[0];
 			for (int i = 1; i <= vertices.Count; i++){
@@ -24,9 +25,9 @@ namespace ProceduralMeshes {
 				start = end;
 			}
 			// Make vertex indices in the last triangles point loop around to the first pair of vertices.
-			meshData.Triangles[^4] %= meshData.Vertices.Count;
-			meshData.Triangles[^2] %= meshData.Vertices.Count;
-			meshData.Triangles[^1] %= meshData.Vertices.Count;
+			meshData.Triangles[^4] = startIndex+0;
+			meshData.Triangles[^2] = startIndex+0;
+			meshData.Triangles[^1] = startIndex+1;
 		}
 		private static void AddBorderSection(MeshData meshData, Vector2 left, Vector2 right){
 			int startIndex = meshData.Vertices.Count;
