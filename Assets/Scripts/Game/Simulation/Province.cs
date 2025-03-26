@@ -8,6 +8,8 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     [SerializeField] private MeshFilter outlineMeshFilter;
     [SerializeField] private MeshFilter shapeMeshFilter;
     [SerializeField] private MeshRenderer shapeMeshRenderer;
+    [SerializeField] private MeshFilter terrainMeshFilter;
+    [SerializeField] private MeshRenderer terrainMeshRenderer;
     
     private MeshCollider meshCollider;
     private readonly Dictionary<Color, ProvinceLink> links = new();
@@ -39,6 +41,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
 
         type = provinceType;
         Terrain = terrain;
+        mapColor.a = 0.3f;
         baseColor = mapColor;
         
         shapeMeshRenderer.material.color = baseColor;
@@ -48,6 +51,8 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         outlineMeshFilter.sharedMesh = outlineMesh;
         meshCollider.sharedMesh = shapeMesh;
         shapeMeshFilter.sharedMesh = shapeMesh;
+        terrainMeshFilter.sharedMesh = shapeMesh;
+        terrainMeshRenderer.sharedMaterial = terrain.Material;
     }
     public void AddNeighbor(Province neighbor){
         if (type == Type.LandLocked && neighbor.type == Type.Sea){
@@ -64,12 +69,15 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
             owner.LoseProvince(this);
         }
         owner = newOwner;
+        float alpha = baseColor.a;
         if (owner != null){
             owner.GainProvince(this);
             baseColor = owner.MapColor;
         } else {
-            baseColor = UnityEngine.Color.black;
+            baseColor = Color.black;
         }
+        baseColor.a = alpha;
+
         UpdateColors();
     }
     public bool HasOwner => owner != null;

@@ -8,37 +8,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2668536342427610513, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2720611508413707290, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
       propertyPath: m_Name
       value: SeaProvince
-      objectReference: {fileID: 0}
-    - target: {fileID: 8351136529669875758, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8351136529669875758, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8351136529669875758, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8351136529669875758, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8351136529669875758, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8351136529669875758, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8351136529669875758, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8351136529669875758, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
