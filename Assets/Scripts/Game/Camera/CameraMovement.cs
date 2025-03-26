@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Camera))]
 public class CameraMovement : MonoBehaviour {
+    private const float Opaque = 1;
     private static readonly Vector3 Center = new(0.5f, 0.5f);
     
     [Tooltip("In order of largest to smallest height above map.")]
@@ -12,6 +13,7 @@ public class CameraMovement : MonoBehaviour {
     [SerializeField] private float zoomChangeSeconds;
     [SerializeField] private float movementSpeed;
     [SerializeField] private float stoppingSeconds;
+    [SerializeField] private float terrainMapModeAlpha;
 
     private
 #if UNITY_EDITOR
@@ -30,7 +32,8 @@ public class CameraMovement : MonoBehaviour {
     private Vector3 zoomStartMousePosition;
     private Vector3 lockedMousePoint;
     private Vector2 movementVelocity;
-
+    private float currentAlpha;
+    
     private bool IsMouseLocked => isDragging || previousZoom != targetZoom;
     private Ray MouseRay => camera.ScreenPointToRay(input.MousePosition.ReadValue<Vector2>());
     private Vector3 MousePosition => input.MousePosition.ReadValue<Vector2>();
@@ -97,9 +100,11 @@ public class CameraMovement : MonoBehaviour {
         position.y = zoomLevels[index].height;
         transform.position = position;
         targetZoom = nearestSmallerZoom = previousZoom = index;
+        currentAlpha = zoomLevels[index].doUseTerrainMapMode ? terrainMapModeAlpha : Opaque;
     }
     
     private void Update(){
+        float previousAlpha = currentAlpha;
         Vector3 position = transform.position;
         // Height --------------------------------------------------------------------------------
         float targetHeight = zoomLevels[targetZoom].height;
@@ -119,14 +124,21 @@ public class CameraMovement : MonoBehaviour {
                 }
             }
         }
-        // Rotation -----------------------------------------------------------------------------
+        // Rotation & Map Opacity setting --------------------------------------------------------
         if (nearestSmallerZoom == 0){
             transform.rotation = zoomLevels[nearestSmallerZoom].rotation;
-        } else {
+            currentAlpha = Opaque;
+        } else{
             ZoomLevel smallerZoom = zoomLevels[nearestSmallerZoom];
             ZoomLevel largerZoom = zoomLevels[nearestSmallerZoom-1];
             float slerpParameter = Mathf.InverseLerp(smallerZoom.height, largerZoom.height, position.y);
             transform.rotation = Quaternion.Slerp(smallerZoom.rotation, largerZoom.rotation, slerpParameter);
+
+            if (smallerZoom.doUseTerrainMapMode && !largerZoom.doUseTerrainMapMode){
+                currentAlpha = Mathf.Lerp(terrainMapModeAlpha, Opaque, slerpParameter);
+            } else {
+                currentAlpha = Opaque;
+            }
         }
         // XZ-plane position --------------------------------------------------------------------
         if (movementDirection != Vector2.zero){
@@ -149,13 +161,20 @@ public class CameraMovement : MonoBehaviour {
         } else {
             position += positionDelta;
         }
-
         transform.position = position;
+        // Switching between political and terrain map modes by applying opacity to provinces. -----------------
+        if (Mathf.Abs(currentAlpha-previousAlpha) < Vector2.kEpsilon){
+            return;
+        }
+        foreach (Province province in Land.AllProvinces){
+            province.SetAlpha(currentAlpha);
+        }
     }
     
     [Serializable]
     private struct ZoomLevel {
         public float height;
         public Quaternion rotation;
+        public bool doUseTerrainMapMode;
     }
 }

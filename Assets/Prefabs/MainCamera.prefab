@@ -248,12 +248,20 @@ MonoBehaviour:
   zoomLevels:
   - height: 100
     rotation: {x: 0.70710677, y: 0, z: 0, w: 0.70710677}
+    doUseTerrainMapMode: 0
   - height: 50
     rotation: {x: 0.67559016, y: 0, z: 0, w: 0.7372773}
+    doUseTerrainMapMode: 0
   - height: 25
     rotation: {x: 0.6427876, y: 0, z: 0, w: 0.76604444}
-  - height: 10
+    doUseTerrainMapMode: 0
+  - height: 12
     rotation: {x: 0.57357645, y: 0, z: 0, w: 0.81915206}
+    doUseTerrainMapMode: 0
+  - height: 5
+    rotation: {x: 0.57357657, y: 0, z: 0, w: 0.81915194}
+    doUseTerrainMapMode: 1
   zoomChangeSeconds: 0.6
   movementSpeed: 0.75
   stoppingSeconds: 0.15
+  terrainMapModeAlpha: 0.3

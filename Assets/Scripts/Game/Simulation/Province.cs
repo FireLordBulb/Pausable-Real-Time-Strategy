@@ -28,6 +28,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     public bool IsSea => type == Type.Sea;
     public bool IsCoast => type == Type.Coast;
     public bool IsLand => type is Type.LandLocked or Type.Coast;
+    public bool HasOwner => owner != null;
     
     public IEnumerable<ProvinceLink> Links => links.Values;
     public ProvinceLink this[Color color] => links[color];
@@ -41,7 +42,6 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
 
         type = provinceType;
         Terrain = terrain;
-        mapColor.a = 0.3f;
         baseColor = mapColor;
         
         shapeMeshRenderer.material.color = baseColor;
@@ -80,12 +80,15 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
 
         UpdateColors();
     }
-    public bool HasOwner => owner != null;
-
+    
+    public void SetAlpha(float alpha){
+        baseColor.a = alpha;
+        UpdateColors();
+    }
     private void UpdateColors(){
         float increasedBrightness = OneThird*(baseColor.grayscale+2);
         selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
-        hoverColor = 0.5f*(baseColor+UnityEngine.Color.gray);
+        hoverColor = 0.5f*(baseColor+Color.gray);
         shapeMeshRenderer.sharedMaterial.color = isSelected ? selectedColor : isHovered ? hoverColor : baseColor;
     }
     

@@ -8,10 +8,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2668536342427610513, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2720611508413707290, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
       propertyPath: m_Name
       value: SeaProvince
@@ -53,5 +49,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bfedaf7c2d194b4a833f1019290dff7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  color: {r: 0.13333334, g: 0.3137255, b: 0.7019608, a: 1}
+  color: {r: 0.13333334, g: 0.3137255, b: 0.7019608, a: 0}
   terrain: {fileID: 11400000, guid: db49aab6b8124e749b02e9349db891bd, type: 2}
