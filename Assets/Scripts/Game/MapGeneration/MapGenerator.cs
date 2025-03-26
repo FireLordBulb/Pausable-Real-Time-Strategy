@@ -188,7 +188,7 @@ public class MapGenerator : MonoBehaviour {
             mapGraph.Add(province);
 
             province.TriPointIndices = provinceGenerator.TriPointIndices;
-            province.Vertices = provinceGenerator.vertices;
+            province.Vertices = provinceGenerator.Vertices;
         }
     }
 

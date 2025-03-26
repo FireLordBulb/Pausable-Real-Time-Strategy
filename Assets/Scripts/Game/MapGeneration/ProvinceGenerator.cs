@@ -36,7 +36,7 @@ public class ProvinceGenerator {
 	public readonly List<Vector2Int> OutlinePixels = new();
 	public readonly List<Color32> Neighbors = new();
 	public readonly List<int> TriPointIndices = new();
-	public readonly List<Vector2> vertices = new();
+	public readonly List<Vector2> Vertices = new();
 	
 	private MeshData outlineMeshData;
 	private MeshData shapeMeshData;
@@ -85,7 +85,7 @@ public class ProvinceGenerator {
 					
 				// Convert each value in TriPointIndices from a OutlinePixels index to a Vertices index.
 				if (triPointIndexIndex < TriPointIndices.Count && i >= TriPointIndices[triPointIndexIndex]){
-					TriPointIndices[triPointIndexIndex] = vertices.Count-1;
+					TriPointIndices[triPointIndexIndex] = Vertices.Count-1;
 					triPointIndexIndex++;
 				}
 			}
@@ -107,7 +107,7 @@ public class ProvinceGenerator {
 				for (int j = i; j > 0; j--){
 					outerEdgeOffset = VectorGeometry.RightPerpendicular(outerEdgeOffset);
 				}
-				vertices.Add(pixelCenter+outerEdgeOffset);
+				Vertices.Add(pixelCenter+outerEdgeOffset);
 				return;
 			}
 			// Rotates both directions by 90 degrees counter-clockwise.
@@ -127,17 +127,17 @@ public class ProvinceGenerator {
 	private void CombineAdjacentVertices(Vector2 maxDistance, SkipPredicate skipPredicate, PositionCombiner positionCombiner){
 		float maxDistanceSqr = maxDistance.sqrMagnitude+Vector2.kEpsilon;
 		int triPointIndexIndex = TriPointIndices.Count-1;
-		for (int i = vertices.Count-1; i >= 0; i--){
+		for (int i = Vertices.Count-1; i >= 0; i--){
 			int index = i;
-			int otherIndex = (i+1)%vertices.Count;
-			Vector2 point = vertices[index];
-			Vector2 otherPoint = vertices[otherIndex];
+			int otherIndex = (i+1)%Vertices.Count;
+			Vector2 point = Vertices[index];
+			Vector2 otherPoint = Vertices[otherIndex];
 			Vector2 difference = otherPoint-point;
 			if (maxDistanceSqr < difference.sqrMagnitude){
 				continue;
 			}
-			Vector2 beforePoint = vertices[(i-1+vertices.Count)%vertices.Count];
-			Vector2 afterPoint = vertices[(i+2)%vertices.Count];
+			Vector2 beforePoint = Vertices[(i-1+Vertices.Count)%Vertices.Count];
+			Vector2 afterPoint = Vertices[(i+2)%Vertices.Count];
 
 			Vector2 before = point-beforePoint;
 			Vector2 between = otherPoint-point;
@@ -148,8 +148,8 @@ public class ProvinceGenerator {
 			if (otherIndex < index){
 				(index, otherIndex) = (otherIndex, index);
 			}
-			vertices.RemoveAt(otherIndex);
-			vertices[index] = positionCombiner(point, otherPoint);
+			Vertices.RemoveAt(otherIndex);
+			Vertices[index] = positionCombiner(point, otherPoint);
 			
 			if (0 <= triPointIndexIndex && otherIndex <= TriPointIndices[triPointIndexIndex]){
 				triPointIndexIndex--;
@@ -165,7 +165,7 @@ public class ProvinceGenerator {
 	private void CalculateBounds(){
 		min = Vector2.positiveInfinity;
 		max = Vector2.negativeInfinity;
-		foreach (Vector2 vertex in vertices){
+		foreach (Vector2 vertex in Vertices){
 			for (int i = 0; i < 2 /*The 2 of Vector2*/; i++){
 				if (max[i] < vertex[i]){
 					max[i] = vertex[i];
@@ -178,16 +178,16 @@ public class ProvinceGenerator {
 	}
 	
 	private void CalculateCenter(){
-		fullVertexLoop = new LoopList(vertices);
+		fullVertexLoop = new LoopList(Vertices);
 		
-		(NodePair start, NodePair end, int _, bool wasSuccess) = GetLoopSplittingLine(fullVertexLoop, vertices.Count);
+		(NodePair start, NodePair end, int _, bool wasSuccess) = GetLoopSplittingLine(fullVertexLoop, Vertices.Count);
 		Debug.Assert(wasSuccess);
 		Pivot = (start.Main.Value+end.Main.Value)*0.5f;
 		
 		min -= Pivot;
 		max -= Pivot;
-		for (int i = 0; i < vertices.Count; i++){
-			vertices[i] -= Pivot;
+		for (int i = 0; i < Vertices.Count; i++){
+			Vertices[i] -= Pivot;
 		}
 		foreach (Node node in fullVertexLoop.First.LoopFrom()){
 			node.Value -= Pivot;
@@ -196,19 +196,19 @@ public class ProvinceGenerator {
 	
 	private void GenerateOutlineMesh(){
 		outlineMeshData = new MeshData("ProvinceOutline");
-		PolygonOutline.GenerateMeshData(outlineMeshData, vertices, borderHalfWidth);
+		PolygonOutline.GenerateMeshData(outlineMeshData, Vertices, borderHalfWidth);
 	}
 	
 	private void GenerateShapeMesh(){
 		shapeMeshData = new("ProvinceShape");
 		Dictionary<Vector2, int> positionIndexMap = new();
-		for (int i = 0; i < vertices.Count; i++){
-			shapeMeshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
+		for (int i = 0; i < Vertices.Count; i++){
+			shapeMeshData.Vertices.Add(VectorGeometry.ToXZPlane(Vertices[i]));
 			shapeMeshData.Normals.Add(Vector3.up);
-			shapeMeshData.UVs.Add((vertices[i]+Pivot)/textureScale);
-			positionIndexMap.Add(vertices[i], i);
+			shapeMeshData.UVs.Add((Vertices[i]+Pivot)/textureScale);
+			positionIndexMap.Add(Vertices[i], i);
 		}
-		AddPolygon(fullVertexLoop, vertices.Count, positionIndexMap);
+		AddPolygon(fullVertexLoop, Vertices.Count, positionIndexMap);
 	}
 	private void AddPolygon(LoopList vertexLoop, int length, Dictionary<Vector2, int> positionIndexMap){
 		if (length <= 3){
