@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class ProvinceWindow : UILayer {
 	[SerializeField] private TextMeshProUGUI color;
 	[SerializeField] private TextMeshProUGUI terrain;
+	[SerializeField] private TextMeshProUGUI developmentModifier;
+	[SerializeField] private TextMeshProUGUI defenderAdvantage;
 	[SerializeField] private TextMeshProUGUI neighbors;
 	[SerializeField] private Image terrainImage;
 	[SerializeField] private Button button;
@@ -17,6 +19,8 @@ public class ProvinceWindow : UILayer {
 		color.text = $"Color: {province.gameObject.name}";
 		if (province.Terrain != null){
 			terrain.text = $"Terrain: {province.Terrain.Name}";
+			developmentModifier.text = Format.SignedPercent(province.Terrain.DevelopmentModifier);
+			defenderAdvantage.text = Format.SignedPercent(province.Terrain.DefenderAdvantage);
 			Texture2D texture = (Texture2D)province.Terrain.Material.mainTexture;
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 		}
