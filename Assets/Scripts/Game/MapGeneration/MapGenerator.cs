@@ -11,7 +11,8 @@ public class MapGenerator : MonoBehaviour {
     private const int MaxOutlineSteps = 10000;
     // In clockwise order, starting with because that direction should be checked first when iterating over the texture.
     public static readonly Vector2Int[] CardinalDirections = {Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left};
-
+    public static Color32 OffMapColorKey = new(0, 0, 0, 0);
+    
     [SerializeField] private Texture2D mapImage;
     [SerializeField] private Land landPrefab;
     [SerializeField] private Sea seaPrefab;
@@ -31,7 +32,7 @@ public class MapGenerator : MonoBehaviour {
     private readonly Dictionary<Color32, Vector2Int> provincePositions = new();
     private (Color32, ProvinceGenerator)[] provinceGenerators;
     private readonly Dictionary<Color32, ProvinceData> provinceDataDictionary = new();
-    private readonly HashSet<(Province province, HashSet<Color32>)> provinceNeighbors = new();
+    private readonly HashSet<(Province province, List<Color32>)> provinceNeighbors = new();
     
     private int imageWidth, imageHeight;
     private Vector2 worldSpaceOffset;
@@ -97,22 +98,35 @@ public class MapGenerator : MonoBehaviour {
     private ProvinceGenerator FindProvinceOutline(Color32 color, Vector2Int startPosition){
         ProvinceGenerator province = new(borderWidth, textureScale);
         List<Vector2Int> outlinePixels = new();
-        HashSet<Color32> neighbors = new();
+        List<int> triPointIndices = new();
+        List<Color32> neighbors = new();
         outlinePixels.Add(startPosition);
         Vector2Int position = startPosition;
         // You're moving right during the full mapImage iteration, so the up direction (with index 0) is a turn to the left.
         int leftTurnIndex = 0;
+        Color32? previousNeighborColor = null;
         int steps = 0;
         do {
             for (int i = 0; i < CardinalDirections.Length; i++){
                 int directionIndex = (leftTurnIndex+i+CardinalDirections.Length) % CardinalDirections.Length;
                 Vector2Int newPosition = position+CardinalDirections[directionIndex];
                 if (newPosition.x < 0 || imageWidth <= newPosition.x || newPosition.y < 0 || imageHeight <= newPosition.y){
+                    if (previousNeighborColor != null && !previousNeighborColor.Equals(OffMapColorKey)){
+                        triPointIndices.Add(outlinePixels.Count-1);
+                    }
+                    previousNeighborColor = OffMapColorKey;
                     continue;
                 }
                 Color32 newPixelColor = GetPixel(newPosition.x, newPosition.y);
                 if (!color.Equals(newPixelColor)){
-                    neighbors.Add(newPixelColor);
+                    // TODO Fix to remove linear search for FindIndex
+                    if (neighbors.FindIndex(c => c.Equals(newPixelColor)) == -1){
+                        neighbors.Add(newPixelColor);
+                    }
+                    if (previousNeighborColor != null && !previousNeighborColor.Equals(newPixelColor)){
+                        triPointIndices.Add(outlinePixels.Count-1);
+                    }
+                    previousNeighborColor = newPixelColor;
                     continue;
                 }
                 if (i != 0){
@@ -131,14 +145,17 @@ public class MapGenerator : MonoBehaviour {
 
         // Remove the last pixel if it's a duplicate of the first.
         if (outlinePixels[^1] == outlinePixels[0]){
-            if (outlinePixels.Count < 5){
-                print(outlinePixels[0]);
-            }
             outlinePixels.RemoveAt(outlinePixels.Count-1);
+        }
+        // Checking for a tri-point exactly where the loop connects.
+        if (!neighbors[0].Equals(previousNeighborColor)){
+            triPointIndices.Add(outlinePixels.Count-1);
+            //triPointIndices.Insert(0, 0);
         }
         
         province.OutlinePixels.AddRange(outlinePixels);
-        province.Neighbors.UnionWith(neighbors);
+        province.Neighbors.AddRange(neighbors);
+        province.TriPointIndices.AddRange(triPointIndices);
         return province;
     }
 
@@ -166,11 +183,13 @@ public class MapGenerator : MonoBehaviour {
             province.transform.localScale = provinceScale;
             provinceNeighbors.Add((province, provinceGenerator.Neighbors));
             mapGraph.Add(province);
+
+            province.TriPointIndices = provinceGenerator.TriPointIndices;
         }
     }
 
     private void LinkNeighboringProvinces(){
-        foreach ((Province province, HashSet<Color32> neighbors) in provinceNeighbors){
+        foreach ((Province province, List<Color32> neighbors) in provinceNeighbors){
             foreach (Color32 neighborColor in neighbors){
                 province.AddNeighbor(mapGraph[neighborColor]);
             }

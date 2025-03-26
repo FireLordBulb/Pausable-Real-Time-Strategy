@@ -12,7 +12,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     [SerializeField] private MeshRenderer terrainMeshRenderer;
     
     private MeshCollider meshCollider;
-    private readonly Dictionary<Color, ProvinceLink> links = new();
+    private readonly Dictionary<Color32, ProvinceLink> links = new();
     private Type type;
     private Country owner;
     private Color baseColor;
@@ -20,6 +20,10 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     private Color selectedColor;
     private bool isHovered;
     private bool isSelected;
+    
+    
+    public List<int> TriPointIndices;
+    public List<Color32> neighbors = new();
     
     public Color32 ColorKey {get; private set;}
     public Terrain Terrain {get; private set;}
@@ -31,7 +35,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     public bool HasOwner => owner != null;
     
     public IEnumerable<ProvinceLink> Links => links.Values;
-    public ProvinceLink this[Color color] => links[color];
+    public ProvinceLink this[Color32 color] => links[color];
     
     private void Awake(){
         meshCollider = GetComponent<MeshCollider>();
@@ -59,6 +63,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
             type = Type.Coast;
         }
         links.Add(neighbor.ColorKey, new ProvinceLink(this, neighbor));
+        neighbors.Add(neighbor.ColorKey);
     }
 
     public void SetOwner(Country newOwner){
