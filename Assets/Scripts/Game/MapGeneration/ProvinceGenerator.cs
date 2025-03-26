@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using LoopList = Collections.LinkedLoopList<UnityEngine.Vector2>;
 using Node = Collections.LinkedLoopList<UnityEngine.Vector2>.Node<UnityEngine.Vector2>;
 using Mathematics;
-using Unity.VisualScripting.FullSerializer;
+using ProceduralMeshes;
 using UnityEngine;
 
 public class ProvinceGenerator {
@@ -179,39 +179,8 @@ public class ProvinceGenerator {
 	}
 	
 	private void GenerateOutlineMesh(){
-		outlineMeshData = new("ProvinceOutline");
-		Vector2 beforeStart = vertices[^1];
-		Vector2 start = vertices[0];
-		for (int i = 1; i <= vertices.Count; i++){
-			Vector2 end = vertices[i%vertices.Count];
-
-			Vector2 beforePerpendicular = VectorGeometry.LeftPerpendicular(beforeStart, start).normalized;
-			Vector2 middlePerpendicular = VectorGeometry.LeftPerpendicular(start, end).normalized;
-			
-			Vector2 offset = (beforePerpendicular+middlePerpendicular).normalized;
-			offset *= borderHalfWidth/Vector2.Dot(offset, beforePerpendicular);
-			AddBorderSection(start+offset, start-offset);
-
-			beforeStart = start;
-			start = end;
-		}
-		// Make vertex indices in the last triangles point loop around to the first pair of vertices.
-		outlineMeshData.Triangles[^4] %= outlineMeshData.Vertices.Count;
-		outlineMeshData.Triangles[^2] %= outlineMeshData.Vertices.Count;
-		outlineMeshData.Triangles[^1] %= outlineMeshData.Vertices.Count;
-	}
-	private void AddBorderSection(Vector2 left, Vector2 right){
-		int startIndex = outlineMeshData.Vertices.Count;
-		outlineMeshData.Vertices.Add(VectorGeometry.ToXZPlane(left));
-		outlineMeshData.Vertices.Add(VectorGeometry.ToXZPlane(right));
-		outlineMeshData.Normals.Add(Vector3.up);
-		outlineMeshData.Normals.Add(Vector3.up);
-		outlineMeshData.UVs.Add(Vector2.up);
-		outlineMeshData.UVs.Add(Vector2.zero);
-		outlineMeshData.Triangles.AddRange(new[]{
-			startIndex+1, startIndex+0, startIndex+2,
-			startIndex+1, startIndex+2, startIndex+3
-		});
+		outlineMeshData = new MeshData("ProvinceOutline");
+		PolygonOutline.GenerateMeshData(outlineMeshData, vertices, borderHalfWidth);
 	}
 	
 	private void GenerateShapeMesh(){
