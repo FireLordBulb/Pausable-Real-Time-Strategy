@@ -13,33 +13,491 @@ MonoBehaviour:
   m_Name: Countries
   m_EditorClassIdentifier: 
   countries:
-  - name: France
-    mapColor: {r: 0.23529412, g: 0.73941463, b: 0.8784314, a: 1}
+  - name: Asutrum
+    mapColor: {r: 0.064661965, g: 0.8207547, b: 0.042586334, a: 1}
     provinces:
+    - serializedVersion: 2
+      rgba: 4286538982
+    - serializedVersion: 2
+      rgba: 4281031276
+    - serializedVersion: 2
+      rgba: 4282682925
+    - serializedVersion: 2
+      rgba: 4285100818
+    - serializedVersion: 2
+      rgba: 4284010139
+    - serializedVersion: 2
+      rgba: 4290296158
+    - serializedVersion: 2
+      rgba: 4284554148
+    - serializedVersion: 2
+      rgba: 4284789846
+    - serializedVersion: 2
+      rgba: 4293030601
+    - serializedVersion: 2
+      rgba: 4286656799
+    - serializedVersion: 2
+      rgba: 4285413993
+    - serializedVersion: 2
+      rgba: 4284433820
+    - serializedVersion: 2
+      rgba: 4287380005
+    - serializedVersion: 2
+      rgba: 4281808854
+    - serializedVersion: 2
+      rgba: 4279887832
+    - serializedVersion: 2
+      rgba: 4279998408
+    - serializedVersion: 2
+      rgba: 4285903414
+    - serializedVersion: 2
+      rgba: 4282606995
+    - serializedVersion: 2
+      rgba: 4289871765
+    - serializedVersion: 2
+      rgba: 4290064958
+    - serializedVersion: 2
+      rgba: 4291481486
+    - serializedVersion: 2
+      rgba: 4290091058
+    - serializedVersion: 2
+      rgba: 4292693128
+    - serializedVersion: 2
+      rgba: 4280566123
+    - serializedVersion: 2
+      rgba: 4284736332
+    - serializedVersion: 2
+      rgba: 4278448843
+    - serializedVersion: 2
+      rgba: 4281246173
+  - name: Etor
+    mapColor: {r: 0.23529412, g: 0.7411765, b: 0.8784314, a: 1}
+    provinces:
+    - serializedVersion: 2
+      rgba: 4280180506
+    - serializedVersion: 2
+      rgba: 4286342488
+    - serializedVersion: 2
+      rgba: 4283397665
+    - serializedVersion: 2
+      rgba: 4290611803
+    - serializedVersion: 2
+      rgba: 4281845915
+    - serializedVersion: 2
+      rgba: 4285179704
+    - serializedVersion: 2
+      rgba: 4287726136
+    - serializedVersion: 2
+      rgba: 4292095860
+    - serializedVersion: 2
+      rgba: 4293360696
+    - serializedVersion: 2
+      rgba: 4289319049
+    - serializedVersion: 2
+      rgba: 4281109816
+    - serializedVersion: 2
+      rgba: 4290670763
+    - serializedVersion: 2
+      rgba: 4292692694
+    - serializedVersion: 2
+      rgba: 4285396716
+    - serializedVersion: 2
+      rgba: 4290537327
+    - serializedVersion: 2
+      rgba: 4283021968
+    - serializedVersion: 2
+      rgba: 4288366377
+    - serializedVersion: 2
+      rgba: 4280449551
+    - serializedVersion: 2
+      rgba: 4284732299
+    - serializedVersion: 2
+      rgba: 4290017615
+    - serializedVersion: 2
+      rgba: 4283507684
+  - name: Skalquia
+    mapColor: {r: 0.38047257, g: 0.12967247, b: 0.8867924, a: 1}
+    provinces:
+    - serializedVersion: 2
+      rgba: 4292265110
+    - serializedVersion: 2
+      rgba: 4281916367
+    - serializedVersion: 2
+      rgba: 4289712473
+    - serializedVersion: 2
+      rgba: 4291910067
+    - serializedVersion: 2
+      rgba: 4282211462
+    - serializedVersion: 2
+      rgba: 4289306404
+    - serializedVersion: 2
+      rgba: 4280164043
+    - serializedVersion: 2
+      rgba: 4287354300
+    - serializedVersion: 2
+      rgba: 4286078670
+    - serializedVersion: 2
+      rgba: 4281895102
+    - serializedVersion: 2
+      rgba: 4281637467
+    - serializedVersion: 2
+      rgba: 4280448991
+    - serializedVersion: 2
+      rgba: 4292963405
+    - serializedVersion: 2
+      rgba: 4279813539
+    - serializedVersion: 2
+      rgba: 4291842691
+    - serializedVersion: 2
+      rgba: 4284605611
+    - serializedVersion: 2
+      rgba: 4285044431
+    - serializedVersion: 2
+      rgba: 4282299785
+    - serializedVersion: 2
+      rgba: 4279512477
+    - serializedVersion: 2
+      rgba: 4287276853
     - serializedVersion: 2
       rgba: 4280262130
     - serializedVersion: 2
+      rgba: 4283763215
+    - serializedVersion: 2
+      rgba: 4281507138
+    - serializedVersion: 2
+      rgba: 4287614952
+    - serializedVersion: 2
+      rgba: 4284902981
+    - serializedVersion: 2
+      rgba: 4279598138
+    - serializedVersion: 2
+      rgba: 4283204648
+    - serializedVersion: 2
+      rgba: 4282283847
+    - serializedVersion: 2
+      rgba: 4286669913
+    - serializedVersion: 2
+      rgba: 4281379152
+    - serializedVersion: 2
+      rgba: 4286324195
+    - serializedVersion: 2
+      rgba: 4280973221
+    - serializedVersion: 2
+      rgba: 4282606057
+    - serializedVersion: 2
+      rgba: 4283404523
+    - serializedVersion: 2
+      rgba: 4282942369
+    - serializedVersion: 2
+      rgba: 4283317703
+    - serializedVersion: 2
+      rgba: 4279743473
+    - serializedVersion: 2
+      rgba: 4281872492
+    - serializedVersion: 2
+      rgba: 4291750268
+    - serializedVersion: 2
+      rgba: 4287533501
+    - serializedVersion: 2
+      rgba: 4284337058
+    - serializedVersion: 2
+      rgba: 4281225686
+    - serializedVersion: 2
+      rgba: 4294241065
+  - name: Morilum
+    mapColor: {r: 0.028390888, g: 0.5471698, b: 0.4457419, a: 1}
+    provinces:
+    - serializedVersion: 2
+      rgba: 4280582423
+    - serializedVersion: 2
+      rgba: 4278190335
+    - serializedVersion: 2
+      rgba: 4288590912
+    - serializedVersion: 2
+      rgba: 4286898901
+    - serializedVersion: 2
+      rgba: 4291531086
+    - serializedVersion: 2
+      rgba: 4287848178
+    - serializedVersion: 2
+      rgba: 4284103403
+    - serializedVersion: 2
+      rgba: 4286199853
+    - serializedVersion: 2
+      rgba: 4280722021
+    - serializedVersion: 2
+      rgba: 4287543505
+    - serializedVersion: 2
+      rgba: 4283419198
+    - serializedVersion: 2
+      rgba: 4291151301
+    - serializedVersion: 2
+      rgba: 4288683119
+    - serializedVersion: 2
+      rgba: 4288596716
+    - serializedVersion: 2
+      rgba: 4284503810
+    - serializedVersion: 2
+      rgba: 4291121814
+    - serializedVersion: 2
+      rgba: 4290341648
+    - serializedVersion: 2
+      rgba: 4286100544
+    - serializedVersion: 2
+      rgba: 4283867064
+    - serializedVersion: 2
+      rgba: 4285598807
+    - serializedVersion: 2
+      rgba: 4290921008
+    - serializedVersion: 2
+      rgba: 4282510580
+    - serializedVersion: 2
+      rgba: 4292944799
+    - serializedVersion: 2
+      rgba: 4285872863
+    - serializedVersion: 2
+      rgba: 4284435738
+    - serializedVersion: 2
+      rgba: 4279004477
+    - serializedVersion: 2
+      rgba: 4282601959
+    - serializedVersion: 2
+      rgba: 4289891617
+    - serializedVersion: 2
+      rgba: 4281317542
+    - serializedVersion: 2
       rgba: 4281309231
     - serializedVersion: 2
+      rgba: 4283797442
+    - serializedVersion: 2
+      rgba: 4291844661
+    - serializedVersion: 2
+      rgba: 4290568092
+    - serializedVersion: 2
+      rgba: 4282696662
+  - name: Konjala
+    mapColor: {r: 0.9056604, g: 0.5842922, b: 0.14097545, a: 1}
+    provinces:
+    - serializedVersion: 2
+      rgba: 4282826143
+    - serializedVersion: 2
+      rgba: 4279374484
+    - serializedVersion: 2
+      rgba: 4282486747
+    - serializedVersion: 2
+      rgba: 4291316634
+    - serializedVersion: 2
+      rgba: 4282299852
+    - serializedVersion: 2
+      rgba: 4286634905
+    - serializedVersion: 2
+      rgba: 4289418899
+    - serializedVersion: 2
+      rgba: 4284321100
+    - serializedVersion: 2
+      rgba: 4291875190
+    - serializedVersion: 2
       rgba: 4293199600
-  - name: England
+    - serializedVersion: 2
+      rgba: 4290882188
+    - serializedVersion: 2
+      rgba: 4280915530
+    - serializedVersion: 2
+      rgba: 4283203197
+    - serializedVersion: 2
+      rgba: 4288856626
+    - serializedVersion: 2
+      rgba: 4283527498
+    - serializedVersion: 2
+      rgba: 4282810600
+    - serializedVersion: 2
+      rgba: 4286949991
+    - serializedVersion: 2
+      rgba: 4285244510
+    - serializedVersion: 2
+      rgba: 4285579359
+    - serializedVersion: 2
+      rgba: 4284053680
+    - serializedVersion: 2
+      rgba: 4290944747
+    - serializedVersion: 2
+      rgba: 4285830821
+    - serializedVersion: 2
+      rgba: 4280776506
+    - serializedVersion: 2
+      rgba: 4290278540
+    - serializedVersion: 2
+      rgba: 4280506210
+    - serializedVersion: 2
+      rgba: 4288927457
+    - serializedVersion: 2
+      rgba: 4283934097
+  - name: Ruby Isle
     mapColor: {r: 0.8773585, g: 0.23589355, b: 0.23589355, a: 1}
     provinces:
     - serializedVersion: 2
       rgba: 4282371797
-  - name: China
+    - serializedVersion: 2
+      rgba: 4291605871
+    - serializedVersion: 2
+      rgba: 4290993519
+    - serializedVersion: 2
+      rgba: 4281576168
+    - serializedVersion: 2
+      rgba: 4290614210
+    - serializedVersion: 2
+      rgba: 4286556501
+    - serializedVersion: 2
+      rgba: 4280517465
+    - serializedVersion: 2
+      rgba: 4284384294
+  - name: Zonjadum
     mapColor: {r: 0.7622455, g: 0.7924528, b: 0.22054112, a: 1}
     provinces:
     - serializedVersion: 2
-      rgba: 4289455764
+      rgba: 4293404081
+    - serializedVersion: 2
+      rgba: 4284952792
+    - serializedVersion: 2
+      rgba: 4285443387
+    - serializedVersion: 2
+      rgba: 4281216658
+    - serializedVersion: 2
+      rgba: 4290079088
+    - serializedVersion: 2
+      rgba: 4287215718
+    - serializedVersion: 2
+      rgba: 4286634397
+    - serializedVersion: 2
+      rgba: 4280645933
+    - serializedVersion: 2
+      rgba: 4285311387
+    - serializedVersion: 2
+      rgba: 4281202377
     - serializedVersion: 2
       rgba: 4290396864
     - serializedVersion: 2
-      rgba: 4278649975
-  - name: Persia
-    mapColor: {r: 0.3523051, g: 0.8584906, b: 0.66982114, a: 1}
+      rgba: 4291011638
+    - serializedVersion: 2
+      rgba: 4286852148
+    - serializedVersion: 2
+      rgba: 4282601340
+    - serializedVersion: 2
+      rgba: 4292527787
+    - serializedVersion: 2
+      rgba: 4280309623
+    - serializedVersion: 2
+      rgba: 4282165777
+    - serializedVersion: 2
+      rgba: 4280401306
+    - serializedVersion: 2
+      rgba: 4281898051
+    - serializedVersion: 2
+      rgba: 4281834167
+    - serializedVersion: 2
+      rgba: 4293300163
+    - serializedVersion: 2
+      rgba: 4286943525
+    - serializedVersion: 2
+      rgba: 4284335020
+    - serializedVersion: 2
+      rgba: 4288391908
+    - serializedVersion: 2
+      rgba: 4283351779
+    - serializedVersion: 2
+      rgba: 4286208987
+    - serializedVersion: 2
+      rgba: 4286690003
+    - serializedVersion: 2
+      rgba: 4289455764
+    - serializedVersion: 2
+      rgba: 4291806044
+    - serializedVersion: 2
+      rgba: 4279581343
+    - serializedVersion: 2
+      rgba: 4292842733
+    - serializedVersion: 2
+      rgba: 4292401831
+    - serializedVersion: 2
+      rgba: 4279981427
+    - serializedVersion: 2
+      rgba: 4282809899
+    - serializedVersion: 2
+      rgba: 4282140461
+    - serializedVersion: 2
+      rgba: 4292510399
+    - serializedVersion: 2
+      rgba: 4289970404
+    - serializedVersion: 2
+      rgba: 4291284052
+    - serializedVersion: 2
+      rgba: 4289933609
+    - serializedVersion: 2
+      rgba: 4291776488
+    - serializedVersion: 2
+      rgba: 4283019924
+  - name: Selus
+    mapColor: {r: 0.63828987, g: 0.6157885, b: 0.6981132, a: 1}
     provinces:
+    - serializedVersion: 2
+      rgba: 4288175668
     - serializedVersion: 2
       rgba: 4284023552
     - serializedVersion: 2
-      rgba: 4278448843
+      rgba: 4285518270
+    - serializedVersion: 2
+      rgba: 4285306943
+    - serializedVersion: 2
+      rgba: 4281807790
+    - serializedVersion: 2
+      rgba: 4282619097
+    - serializedVersion: 2
+      rgba: 4286274852
+    - serializedVersion: 2
+      rgba: 4280442236
+    - serializedVersion: 2
+      rgba: 4278649975
+    - serializedVersion: 2
+      rgba: 4286433385
+    - serializedVersion: 2
+      rgba: 4283582257
+    - serializedVersion: 2
+      rgba: 4284105043
+    - serializedVersion: 2
+      rgba: 4281430925
+    - serializedVersion: 2
+      rgba: 4280961051
+    - serializedVersion: 2
+      rgba: 4282573264
+    - serializedVersion: 2
+      rgba: 4282137771
+    - serializedVersion: 2
+      rgba: 4285189712
+    - serializedVersion: 2
+      rgba: 4285753941
+    - serializedVersion: 2
+      rgba: 4280768643
+    - serializedVersion: 2
+      rgba: 4285613514
+    - serializedVersion: 2
+      rgba: 4281263810
+    - serializedVersion: 2
+      rgba: 4287507850
+    - serializedVersion: 2
+      rgba: 4278255482
+    - serializedVersion: 2
+      rgba: 4290280019
+    - serializedVersion: 2
+      rgba: 4278233087
+    - serializedVersion: 2
+      rgba: 4293314606
+    - serializedVersion: 2
+      rgba: 4286699670
+    - serializedVersion: 2
+      rgba: 4282933814
+    - serializedVersion: 2
+      rgba: 4287078702
+    - serializedVersion: 2
+      rgba: 4293610690
+    - serializedVersion: 2
+      rgba: 4281753692
