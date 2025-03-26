@@ -36,6 +36,7 @@ public class MapGenerator : MonoBehaviour {
     private int imageWidth, imageHeight;
     private Vector2 worldSpaceOffset;
     private float worldSpaceScale;
+    private Vector3 provinceScale;
     
     private void Awake(){
         Land.ClearProvinceList();
@@ -48,6 +49,7 @@ public class MapGenerator : MonoBehaviour {
         
         worldSpaceScale = mapWidth/imageWidth;
         worldSpaceOffset = -0.5f*new Vector2(mapWidth, mapWidth*imageHeight/imageWidth);
+        provinceScale = new Vector3(worldSpaceScale, 1, worldSpaceScale);
         
         FindProvincePositions();
         GenerateProvinceMeshDataParallel();
@@ -149,7 +151,6 @@ public class MapGenerator : MonoBehaviour {
     }
     
     private void SpawnProvinceGameObjects(){
-        Vector3 provinceScale = new(worldSpaceScale, 1, worldSpaceScale);
         foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
             Vector3 worldPosition = ConvertToWorldSpace(provinceGenerator.Pivot);
             Province province;
@@ -188,6 +189,7 @@ public class MapGenerator : MonoBehaviour {
         foreach (CountryData data in countryData.List){
             Country country = Instantiate(countryPrefab, countryParent);
             country.Init(data, mapGraph);
+            country.transform.localScale = provinceScale;
         }
 #if UNITY_EDITOR
         if (doRandomizeCountries){

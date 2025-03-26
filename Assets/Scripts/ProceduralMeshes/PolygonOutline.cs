@@ -5,6 +5,9 @@ using UnityEngine;
 namespace ProceduralMeshes {
 	public class PolygonOutline {
 		public static void GenerateMeshData(MeshData meshData, List<Vector2> vertices, float halfWidth){
+			if (vertices.Count == 0){
+				return;
+			}
 			Vector2 beforeStart = vertices[^1];
 			Vector2 start = vertices[0];
 			for (int i = 1; i <= vertices.Count; i++){
