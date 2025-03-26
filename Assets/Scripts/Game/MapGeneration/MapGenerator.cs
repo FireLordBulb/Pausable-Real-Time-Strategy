@@ -76,7 +76,7 @@ public class MapGenerator : MonoBehaviour {
     
     // Multithreading reduced time from 18ms to 11ms when tested on March 20th's provinces.png file.
     private void GenerateProvinceMeshDataParallel(){
-        Thread[] threads = new Thread[/*Environment.ProcessorCount*/1];
+        Thread[] threads = new Thread[Environment.ProcessorCount];
         KeyValuePair<Color32, Vector2Int>[] provincePositionArray = provincePositions.ToArray();
         provinceGenerators = new (Color32, ProvinceGenerator)[provincePositionArray.Length];
         for (int i = 0; i < threads.Length; i++){

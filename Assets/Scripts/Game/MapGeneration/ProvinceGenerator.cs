@@ -15,7 +15,7 @@ public class ProvinceGenerator {
 			{(false, VectorGeometry.UpLeft), new Vector2(+0.5f, -0.5f)},
 			// No 90 degree left turns, so Vector2Int.up is skipped
 			{(false, VectorGeometry.UpRight  ), new Vector2(0    , +0.5f)},
-			// No vertices along 180 degree straight lines, so Vector2Int.right is skipped
+			{(false, Vector2Int.right        ), new Vector2(0    , +0.5f)},
 			{(false, VectorGeometry.DownRight), new Vector2(0    , +0.5f)},
 			{(false, Vector2Int.down         ), new Vector2(+0.5f, +0.5f)},
 			{(false, VectorGeometry.DownLeft ), new Vector2(+1.0f, +0.5f)},
@@ -23,7 +23,7 @@ public class ProvinceGenerator {
 			{(true , Vector2Int.left         ), new Vector2(+0.5f, +0.5f)},
 			{(true , VectorGeometry.UpLeft   ), new Vector2(-0.5f, 0    )},
 			{(true , Vector2Int.up           ), new Vector2(-0.5f, 0    )},
-			// No vertices along 180 degree straight lines, so VectorGeometry.UpRight is skipped
+			{(true , VectorGeometry.UpRight  ), new Vector2(0    , +0.5f)},
 			{(true , Vector2Int.right        ), new Vector2(0    , +0.5f)},
 			{(true , VectorGeometry.DownRight), new Vector2(0    , +0.5f)},
 			{(true , Vector2Int.down         ), new Vector2(+0.5f, +1.0f)}
@@ -79,12 +79,13 @@ public class ProvinceGenerator {
 			Vector2Int differenceFromPrevious = currentPixel-previousPixel;
 			Vector2Int differenceToNext = nextPixel-currentPixel;
 
+			bool isTriPointIndex = triPointIndexIndex < TriPointIndices.Count && i == TriPointIndices[triPointIndexIndex];
 			// Only add the current pixel if it's not on a straight line between the previous and next.
-			if (differenceFromPrevious-differenceToNext != Vector2Int.zero){
+			if (differenceFromPrevious-differenceToNext != Vector2Int.zero || isTriPointIndex){
 				AddEdgeVertex(currentPixel, differenceFromPrevious, differenceToNext);
 					
 				// Convert each value in TriPointIndices from a OutlinePixels index to a Vertices index.
-				if (triPointIndexIndex < TriPointIndices.Count && i >= TriPointIndices[triPointIndexIndex]){
+				if (isTriPointIndex){
 					TriPointIndices[triPointIndexIndex] = Vertices.Count-1;
 					triPointIndexIndex++;
 				}
@@ -151,7 +152,7 @@ public class ProvinceGenerator {
 			Vertices.RemoveAt(otherIndex);
 			Vertices[index] = positionCombiner(point, otherPoint);
 			
-			if (0 <= triPointIndexIndex && otherIndex <= TriPointIndices[triPointIndexIndex]){
+			while (0 <= triPointIndexIndex && otherIndex <= TriPointIndices[triPointIndexIndex]){
 				triPointIndexIndex--;
 			}
 			for (int j = triPointIndexIndex+1; j < TriPointIndices.Count; j++){
