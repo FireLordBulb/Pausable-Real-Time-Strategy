@@ -45,12 +45,14 @@ public class ProvinceGenerator {
 	public Vector2 Pivot {get; private set;}
 
 	private readonly float borderHalfWidth;
+	private readonly float textureScale;
 
 	private Vector2 min, max;
 	private LoopList fullVertexLoop;
 	
-	public ProvinceGenerator(float borderWidth){
-		borderHalfWidth = borderWidth;
+	public ProvinceGenerator(float borderWidth, float textureScaleValue){
+		borderHalfWidth = borderWidth*0.5f;
+		textureScale = textureScaleValue;
 	}
 	
 	public void GenerateData(){
@@ -218,7 +220,7 @@ public class ProvinceGenerator {
 		for (int i = 0; i < vertices.Count; i++){
 			shapeMeshData.Vertices.Add(VectorGeometry.ToXZPlane(vertices[i]));
 			shapeMeshData.Normals.Add(Vector3.up);
-			shapeMeshData.UVs.Add(GetBoundsUV(vertices[i]));
+			shapeMeshData.UVs.Add((vertices[i]+Pivot)/textureScale);
 			positionIndexMap.Add(vertices[i], i);
 		}
 		AddPolygon(fullVertexLoop, vertices.Count, positionIndexMap);
@@ -289,11 +291,6 @@ public class ProvinceGenerator {
 			}
 		}
 		return true;
-	}
-	private Vector2 GetBoundsUV(Vector2 position) => new(InverseLerpWithinBounds(position, X), InverseLerpWithinBounds(position, Y));
-	private const int X = 0, Y = 1;
-	private float InverseLerpWithinBounds(Vector2 vector, int dimension){
-		return Mathf.InverseLerp(min[dimension], max[dimension], vector[dimension]);
 	}
 /*
 #if UNITY_EDITOR
