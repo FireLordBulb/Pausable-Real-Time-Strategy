@@ -36,8 +36,8 @@ public class ProvinceGenerator {
 	public readonly List<Vector2Int> OutlinePixels = new();
 	public readonly List<Color32> Neighbors = new();
 	public readonly List<int> TriPointIndices = new();
-
-	private readonly List<Vector2> vertices = new();
+	public readonly List<Vector2> vertices = new();
+	
 	private MeshData outlineMeshData;
 	private MeshData shapeMeshData;
 	
@@ -73,7 +73,6 @@ public class ProvinceGenerator {
 		Vector2Int previousPixel = OutlinePixels[^1];
 		Vector2Int currentPixel = OutlinePixels[0];
 		int triPointIndexIndex = 0;
-		int lastTripointIndex = TriPointIndices[triPointIndexIndex];
 		for (int i = 0; i < OutlinePixels.Count; i++){
 			Vector2Int nextPixel = OutlinePixels[(i+1)%OutlinePixels.Count];
 
@@ -84,13 +83,10 @@ public class ProvinceGenerator {
 			if (differenceFromPrevious-differenceToNext != Vector2Int.zero){
 				AddEdgeVertex(currentPixel, differenceFromPrevious, differenceToNext);
 					
-				if (lastTripointIndex == i){
-					triPointIndexIndex = (triPointIndexIndex+1)%TriPointIndices.Count;
-					lastTripointIndex = TriPointIndices[triPointIndexIndex];
-				} else if (lastTripointIndex < i){
-					TriPointIndices[triPointIndexIndex] = i;
-					triPointIndexIndex = (triPointIndexIndex+1)%TriPointIndices.Count;
-					lastTripointIndex = TriPointIndices[triPointIndexIndex];
+				// Convert each value in TriPointIndices from a OutlinePixels index to a Vertices index.
+				if (triPointIndexIndex < TriPointIndices.Count && i >= TriPointIndices[triPointIndexIndex]){
+					TriPointIndices[triPointIndexIndex] = vertices.Count-1;
+					triPointIndexIndex++;
 				}
 			}
 			
@@ -131,13 +127,7 @@ public class ProvinceGenerator {
 	private void CombineAdjacentVertices(Vector2 maxDistance, SkipPredicate skipPredicate, PositionCombiner positionCombiner){
 		float maxDistanceSqr = maxDistance.sqrMagnitude+Vector2.kEpsilon;
 		int triPointIndexIndex = TriPointIndices.Count-1;
-		int lastTripointIndex = TriPointIndices[triPointIndexIndex];
 		for (int i = vertices.Count-1; i >= 0; i--){
-			if (lastTripointIndex == i){
-				triPointIndexIndex = (triPointIndexIndex-1+TriPointIndices.Count)%TriPointIndices.Count;
-				lastTripointIndex = TriPointIndices[triPointIndexIndex];
-			} 
-			
 			int index = i;
 			int otherIndex = (i+1)%vertices.Count;
 			Vector2 point = vertices[index];
@@ -161,10 +151,11 @@ public class ProvinceGenerator {
 			vertices.RemoveAt(otherIndex);
 			vertices[index] = positionCombiner(point, otherPoint);
 			
-			if (lastTripointIndex == otherIndex){
-				TriPointIndices[triPointIndexIndex] = (TriPointIndices[triPointIndexIndex]-1+vertices.Count)%vertices.Count;
-				triPointIndexIndex = (triPointIndexIndex-1+TriPointIndices.Count)%TriPointIndices.Count;
-				lastTripointIndex = TriPointIndices[triPointIndexIndex];
+			if (0 <= triPointIndexIndex && otherIndex <= TriPointIndices[triPointIndexIndex]){
+				triPointIndexIndex--;
+			}
+			for (int j = triPointIndexIndex+1; j < TriPointIndices.Count; j++){
+				TriPointIndices[j]--;
 			}
 		}
 	}

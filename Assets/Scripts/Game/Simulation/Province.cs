@@ -23,6 +23,7 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     
     
     public List<int> TriPointIndices;
+    public List<Vector2> Vertices;
     public List<Color32> neighbors = new();
     
     public Color32 ColorKey {get; private set;}
