@@ -37,6 +37,8 @@ public class MapGenerator : MonoBehaviour {
     private float worldSpaceScale;
     
     private void Awake(){
+        Land.ClearProvinceList();
+        
         mapGraph = GetComponent<MapGraph>();
         mapPixels = mapImage.GetPixels32();
         
