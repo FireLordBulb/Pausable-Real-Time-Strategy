@@ -8,30 +8,25 @@ using UnityEngine;
 public class ProvinceGenerator {
 	private static readonly Vector2 HalfPixel = new(0.5f, 0.5f);
 	// Only handles one quadrant. Rotate the input so it matches the quadrant and then rotate the output offset the same amount in reverse.
-	private static readonly Dictionary<(bool isDiagonal, Vector2Int directionToNext), Vector2> OuterEdgeOffsets = GetOuterEdgeOffsets();
-	private static Dictionary<(bool, Vector2Int), Vector2> GetOuterEdgeOffsets(){
-		Dictionary<(bool, Vector2Int), Vector2> outerEdgeOffsets = new(){
-			{(false, Vector2Int.left), new Vector2(+0.5f, 0)},
-			{(false, VectorGeometry.UpLeft), new Vector2(+0.5f, -0.5f)},
-			// No 90 degree left turns, so Vector2Int.up is skipped
-			{(false, VectorGeometry.UpRight  ), new Vector2(0    , +0.5f)},
-			{(false, Vector2Int.right        ), new Vector2(0    , +0.5f)},
-			{(false, VectorGeometry.DownRight), new Vector2(0    , +0.5f)},
-			{(false, Vector2Int.down         ), new Vector2(+0.5f, +0.5f)},
-			{(false, VectorGeometry.DownLeft ), new Vector2(+1.0f, +0.5f)},
-			
-			{(true , Vector2Int.left         ), new Vector2(+0.5f, +0.5f)},
-			{(true , VectorGeometry.UpLeft   ), new Vector2(-0.5f, 0    )},
-			{(true , Vector2Int.up           ), new Vector2(-0.5f, 0    )},
-			{(true , VectorGeometry.UpRight  ), new Vector2(0    , +0.5f)},
-			{(true , Vector2Int.right        ), new Vector2(0    , +0.5f)},
-			{(true , VectorGeometry.DownRight), new Vector2(0    , +0.5f)},
-			{(true , Vector2Int.down         ), new Vector2(+0.5f, +1.0f)}
-			// The outline can not reach a dead end along diagonals, VectorGeometry.DownLeft is skipped.
-		};
+	private static readonly Dictionary<(bool isDiagonal, Vector2Int directionToNext), Vector2> OuterEdgeOffsets = new(){
+		{(false, Vector2Int.left         ), new Vector2(+0.5f, 0    )},
+		{(false, VectorGeometry.UpLeft   ), new Vector2(+0.5f, -0.5f)},
+		// No 90 degree left turns, so Vector2Int.up is skipped
+		{(false, VectorGeometry.UpRight  ), new Vector2(0    , +0.5f)},
+		{(false, Vector2Int.right        ), new Vector2(0    , +0.5f)},
+		{(false, VectorGeometry.DownRight), new Vector2(0    , +0.5f)},
+		{(false, Vector2Int.down         ), new Vector2(+0.5f, +0.5f)},
+		{(false, VectorGeometry.DownLeft ), new Vector2(+1.0f, +0.5f)},
 		
-		return outerEdgeOffsets;
-	}
+		{(true , Vector2Int.left         ), new Vector2(+0.5f, +0.5f)},
+		{(true , VectorGeometry.UpLeft   ), new Vector2(-0.5f, 0    )},
+		{(true , Vector2Int.up           ), new Vector2(-0.5f, 0    )},
+		{(true , VectorGeometry.UpRight  ), new Vector2(0    , +0.5f)},
+		{(true , Vector2Int.right        ), new Vector2(0    , +0.5f)},
+		{(true , VectorGeometry.DownRight), new Vector2(0    , +0.5f)},
+		{(true , Vector2Int.down         ), new Vector2(+0.5f, +1.0f)}
+		// The outline can not reach a dead end along diagonals, VectorGeometry.DownLeft is skipped.
+	};
 	
 	public readonly List<Vector2Int> OutlinePixels = new();
 	public readonly List<Color32> Neighbors = new();
