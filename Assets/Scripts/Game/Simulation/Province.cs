@@ -24,7 +24,9 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     
     public List<int> TriPointIndices;
     public List<Vector2> Vertices;
+    public List<(int startIndex, int endIndex, ProvinceLink link)> outlineSegments = new();
     public List<Color32> neighbors = new();
+    
     
     public Color32 ColorKey {get; private set;}
     public Terrain Terrain {get; private set;}
@@ -59,12 +61,24 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         terrainMeshFilter.sharedMesh = shapeMesh;
         terrainMeshRenderer.sharedMaterial = terrain.Material;
     }
-    public void AddNeighbor(Province neighbor){
-        if (type == Type.LandLocked && neighbor.type == Type.Sea){
-            type = Type.Coast;
+    public void AddNeighbor(Province neighbor, int triPointIndex){
+        ProvinceLink newLink;
+        if (neighbor != null){
+            if (type == Type.LandLocked && neighbor.type == Type.Sea){
+                type = Type.Coast;
+            }
+            newLink = new ProvinceLink(this, neighbor, outlineSegments.Count);
+            links.Add(neighbor.ColorKey, newLink);
+            neighbors.Add(neighbor.ColorKey);
+        } else {
+            newLink = null;
         }
-        links.Add(neighbor.ColorKey, new ProvinceLink(this, neighbor));
-        neighbors.Add(neighbor.ColorKey);
+        int previousTriPointIndex = outlineSegments.Count == 0 ? -1 : outlineSegments[^1].endIndex;
+        outlineSegments.Add((previousTriPointIndex, triPointIndex, newLink));
+    }
+    public void CompleteSegmentLoop(){
+        (int _, int endIndex, ProvinceLink link) = outlineSegments[0];
+        outlineSegments[0] = (outlineSegments[^1].endIndex, endIndex, link);
     }
 
     public void SetOwner(Country newOwner){

@@ -32,7 +32,7 @@ public class MapGenerator : MonoBehaviour {
     private readonly Dictionary<Color32, Vector2Int> provincePositions = new();
     private (Color32, ProvinceGenerator)[] provinceGenerators;
     private readonly Dictionary<Color32, ProvinceData> provinceDataDictionary = new();
-    private readonly HashSet<(Province province, List<Color32>)> provinceNeighbors = new();
+    private readonly HashSet<(Province province, (List<Color32>, List<int>))> provinceNeighbors = new();
     
     private int imageWidth, imageHeight;
     private Vector2 worldSpaceOffset;
@@ -111,15 +111,12 @@ public class MapGenerator : MonoBehaviour {
             for (int i = 0; i < CardinalDirections.Length; i++){
                 int directionIndex = (leftTurnIndex+i+CardinalDirections.Length) % CardinalDirections.Length;
                 Vector2Int newPosition = position+CardinalDirections[directionIndex];
-                if (newPosition.x < 0 || imageWidth <= newPosition.x || newPosition.y < 0 || imageHeight <= newPosition.y){
-                    firstNeighborColor ??= OffMapColorKey;
-                    if (previousNeighborColor != null && !previousNeighborColor.Equals(OffMapColorKey)){
-                        triPointIndices.Add(outlinePixels.Count-1);
-                    }
-                    previousNeighborColor = OffMapColorKey;
-                    continue;
+                Color32 newPixelColor;
+                if (0 <= newPosition.x && newPosition.x < imageWidth && 0 <= newPosition.y && newPosition.y < imageHeight){
+                    newPixelColor = GetPixel(newPosition.x, newPosition.y);
+                } else {
+                    newPixelColor = OffMapColorKey;
                 }
-                Color32 newPixelColor = GetPixel(newPosition.x, newPosition.y);
                 if (!color.Equals(newPixelColor)){
                     firstNeighborColor ??= newPixelColor;
                     if (neighbors.Count == 0 || !neighbors[0].Equals(newPixelColor) && !neighbors[^1].Equals(newPixelColor)){
@@ -182,7 +179,7 @@ public class MapGenerator : MonoBehaviour {
                 province = sea.Province;
             }
             province.transform.localScale = provinceScale;
-            provinceNeighbors.Add((province, provinceGenerator.Neighbors));
+            provinceNeighbors.Add((province, (provinceGenerator.Neighbors, provinceGenerator.TriPointIndices)));
             mapGraph.Add(province);
 
             province.TriPointIndices = provinceGenerator.TriPointIndices;
@@ -191,10 +188,11 @@ public class MapGenerator : MonoBehaviour {
     }
 
     private void LinkNeighboringProvinces(){
-        foreach ((Province province, List<Color32> neighbors) in provinceNeighbors){
-            foreach (Color32 neighborColor in neighbors){
-                province.AddNeighbor(mapGraph[neighborColor]);
+        foreach ((Province province, (List<Color32> neighborColors, List<int> triPointIndices)) in provinceNeighbors){
+            for (int i = 0; i < neighborColors.Count; i++){
+                province.AddNeighbor(mapGraph[neighborColors[i]], triPointIndices[i]);
             }
+            province.CompleteSegmentLoop();
         }
     }
     
