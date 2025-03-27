@@ -25,7 +25,6 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
     public List<int> TriPointIndices;
     public List<Vector2> Vertices;
     public List<(int startIndex, int endIndex, ProvinceLink link)> outlineSegments = new();
-    public List<Color32> neighbors = new();
     
     
     public Color32 ColorKey {get; private set;}
@@ -69,7 +68,6 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
             }
             newLink = new ProvinceLink(this, neighbor, outlineSegments.Count);
             links.Add(neighbor.ColorKey, newLink);
-            neighbors.Add(neighbor.ColorKey);
         } else {
             newLink = null;
         }

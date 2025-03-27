@@ -31,20 +31,39 @@ public class Country : MonoBehaviour {
 	private void RegenerateBorder(){
 		DestroyImmediate(borderMeshFilter.sharedMesh);
 		MeshData borderMeshData = new($"{gameObject.name}BorderMesh");
+		List<Vector2> borderVertices = new();
+		
 		// TODO: Only add the sections of vertices between outer border tri-points.
-		foreach (Province province in provinces){
-			List<Vector2> borderVertices = new();
-			for (int i = 0; i < province.TriPointIndices.Count; i++){
-				int startIndex = province.TriPointIndices[i];
-				int endIndex = province.TriPointIndices[(i+1)%province.TriPointIndices.Count];
+		Province province = provinces.First();
+		int startSegment = 0;
+		ProvinceLink link = null;
+		AddAllButOneSegments();
+		startSegment = (link.Target[province.ColorKey].SegmentIndex+1)%link.Target.outlineSegments.Count;
+		province = link.Target;
+		AddAllButOneSegments();
+		
+		// Completes incomplete loops
+		/*for (int i = borderVertices.Count-2; i > 0; i--){
+			borderVertices.Add(borderVertices[i]+Vector2.up*5);
+		}*/
+		
+		PolygonOutline.GenerateMeshData(borderMeshData, borderVertices, borderHalfWidth);
+		borderMeshFilter.mesh = borderMeshData.ToMesh();
+		wasBorderChanged = false;
+
+		void AddAllButOneSegments(){
+			for (int i = 0; i < province.outlineSegments.Count; i++){
+				int index = (i+startSegment+province.outlineSegments.Count)%province.outlineSegments.Count;
+				int startIndex, endIndex;
+				(startIndex, endIndex, link) = province.outlineSegments[index];
+				if (i >= province.outlineSegments.Count-1){
+					break;
+				}
 				for (int j = startIndex; j != endIndex; j = (j+1)%province.Vertices.Count){
 					borderVertices.Add(province.MapPosition+province.Vertices[j]);
 				}
 			}
-			PolygonOutline.GenerateMeshData(borderMeshData, borderVertices, borderHalfWidth);
 		}
-		borderMeshFilter.mesh = borderMeshData.ToMesh();
-		wasBorderChanged = false;
 	}
 	private void Update(){
 		if (wasBorderChanged){
