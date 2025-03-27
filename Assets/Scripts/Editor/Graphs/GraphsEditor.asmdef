@@ -1,0 +1,16 @@
+{
+    "name": "GraphsEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ee13ae98d27b9ed42a295dd6ba6492b2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
