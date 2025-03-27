@@ -2,9 +2,11 @@ using System.Collections.Generic;
 using Graphs;
 using UnityEditor;
 
-public abstract class MapGraphEditor : Editor {
-	protected IEnumerable<Province> Nodes;
-	protected virtual void OnSceneGUI(){
-		EditorGraphUtils<Province, ProvinceLink>.DrawGraph(Nodes);
+namespace Simulation {
+	public abstract class MapGraphEditor : Editor {
+		protected IEnumerable<Province> Nodes;
+		protected virtual void OnSceneGUI(){
+			EditorGraphUtils<Province, ProvinceLink>.DrawGraph(Nodes);
+		}
 	}
 }

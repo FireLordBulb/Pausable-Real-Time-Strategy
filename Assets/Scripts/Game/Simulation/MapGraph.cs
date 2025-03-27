@@ -1,7 +1,8 @@
-	using System.Collections.Generic;
-	using Graphs;
-	using UnityEngine;
+using System.Collections.Generic;
+using Graphs;
+using UnityEngine;
 
+namespace Simulation {
 	public class MapGraph : MonoBehaviour, ISearchableGraph<Province, ProvinceLink> {
 		private readonly Dictionary<Color32, Province> provinces = new();
 		public IEnumerable<Province> Nodes => provinces.Values;
@@ -18,3 +19,4 @@
 			return Vector2.Distance(goal.MapPosition, start.MapPosition);
 		}
 	}
+}
