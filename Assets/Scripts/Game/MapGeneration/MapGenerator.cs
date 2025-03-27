@@ -122,8 +122,7 @@ public class MapGenerator : MonoBehaviour {
                 Color32 newPixelColor = GetPixel(newPosition.x, newPosition.y);
                 if (!color.Equals(newPixelColor)){
                     firstNeighborColor ??= newPixelColor;
-                    // TODO Fix to remove linear search for FindIndex
-                    if (neighbors.FindIndex(c => c.Equals(newPixelColor)) == -1){
+                    if (neighbors.Count == 0 || !neighbors[0].Equals(newPixelColor) && !neighbors[^1].Equals(newPixelColor)){
                         neighbors.Add(newPixelColor);
                     }
                     if (previousNeighborColor != null && !previousNeighborColor.Equals(newPixelColor)){
@@ -153,7 +152,6 @@ public class MapGenerator : MonoBehaviour {
         // Checking for a tri-point exactly where the loop connects.
         if (!firstNeighborColor.Equals(previousNeighborColor)){
             triPointIndices.Add(outlinePixels.Count-1);
-            //triPointIndices.Insert(0, 0);
         }
         
         province.OutlinePixels.AddRange(outlinePixels);
