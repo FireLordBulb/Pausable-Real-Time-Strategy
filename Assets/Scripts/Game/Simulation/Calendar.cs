@@ -28,6 +28,7 @@ public class Calendar : MonoBehaviour {
 	public UnityEvent OnDayTick => currentDate.OnDayTick;
 	public UnityEvent OnMonthTick => currentDate.OnMonthTick;
 	public UnityEvent OnYearTick => currentDate.OnYearTick;
+	public string Date => currentDate.ToString();
 	
 	private void Awake(){
 		if (Instance != null){

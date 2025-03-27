@@ -42,22 +42,17 @@ public struct Date {
 	
 	public void ToNextDay(){
 		day++;
+		if (MonthLength() < day){
+			day = 1;
+			month++;
+			if (Months.Length <= month){
+				month = 0;
+				year++;
+				OnYearTick.Invoke();
+			}
+			OnMonthTick.Invoke();
+		}
 		OnDayTick.Invoke();
-		if (MonthLength() >= day){
-			Debug.Log(this);
-			return;
-		}
-		day = 1;
-		month++;
-		OnMonthTick.Invoke();
-		if (Months.Length > month){
-			Debug.Log(this);
-			return;
-		}
-		month = 0;
-		year++;
-		OnYearTick.Invoke();
-		Debug.Log(this);
 	}
 	
 	public int MonthLength(){
