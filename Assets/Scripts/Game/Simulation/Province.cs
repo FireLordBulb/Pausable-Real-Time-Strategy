@@ -59,6 +59,9 @@ public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
         shapeMeshFilter.sharedMesh = shapeMesh;
         terrainMeshFilter.sharedMesh = shapeMesh;
         terrainMeshRenderer.sharedMaterial = terrain.Material;
+#if UNITY_EDITOR
+        terrainMeshFilter.gameObject.hideFlags = HideFlags.HideInHierarchy;
+#endif
     }
     public void AddNeighbor(Province neighbor, int triPointIndex){
         ProvinceLink newLink;
