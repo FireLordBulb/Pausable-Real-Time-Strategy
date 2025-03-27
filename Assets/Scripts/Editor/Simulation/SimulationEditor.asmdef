@@ -1,0 +1,18 @@
+{
+    "name": "SimulationEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:49aaa38406a57a144be43c76aab328f4",
+        "GUID:e057d3f7f06abb144875c9a3945046a9",
+        "GUID:ee13ae98d27b9ed42a295dd6ba6492b2"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
