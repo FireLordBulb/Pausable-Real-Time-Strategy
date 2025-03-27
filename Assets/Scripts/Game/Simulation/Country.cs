@@ -47,7 +47,7 @@ public class Country : MonoBehaviour {
 			borderVertices.Add(borderVertices[i]+Vector2.up*5);
 		}*/
 		
-		PolygonOutline.GenerateMeshData(borderMeshData, borderVertices, borderHalfWidth);
+		PolygonOutline.GenerateMeshData(borderMeshData, borderVertices, borderHalfWidth, true);
 		borderMeshFilter.mesh = borderMeshData.ToMesh();
 		wasBorderChanged = false;
 

@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace ProceduralMeshes {
 	public class PolygonOutline {
-		public static void GenerateMeshData(MeshData meshData, List<Vector2> vertices, float halfWidth){
+		private static readonly Vector2 HalfUp = new(0, 0.5f);
+		public static void GenerateMeshData(MeshData meshData, List<Vector2> vertices, float halfWidth, bool isHalfWide = false){
 			if (vertices.Count == 0){
 				return;
 			}
@@ -19,7 +20,7 @@ namespace ProceduralMeshes {
 			
 				Vector2 offset = (beforePerpendicular+middlePerpendicular).normalized;
 				offset *= halfWidth/Vector2.Dot(offset, beforePerpendicular);
-				AddBorderSection(meshData, start+offset, start-offset);
+				AddBorderSection(meshData, isHalfWide ? start : start+offset, start-offset, isHalfWide ? HalfUp : Vector2.up);
 
 				beforeStart = start;
 				start = end;
@@ -29,13 +30,13 @@ namespace ProceduralMeshes {
 			meshData.Triangles[^2] = startIndex+0;
 			meshData.Triangles[^1] = startIndex+1;
 		}
-		private static void AddBorderSection(MeshData meshData, Vector2 left, Vector2 right){
+		private static void AddBorderSection(MeshData meshData, Vector2 left, Vector2 right, Vector2 leftUV){
 			int startIndex = meshData.Vertices.Count;
 			meshData.Vertices.Add(VectorGeometry.ToXZPlane(left));
 			meshData.Vertices.Add(VectorGeometry.ToXZPlane(right));
 			meshData.Normals.Add(Vector3.up);
 			meshData.Normals.Add(Vector3.up);
-			meshData.UVs.Add(Vector2.up);
+			meshData.UVs.Add(leftUV);
 			meshData.UVs.Add(Vector2.zero);
 			meshData.Triangles.AddRange(new[]{
 				startIndex+1, startIndex+0, startIndex+2,
