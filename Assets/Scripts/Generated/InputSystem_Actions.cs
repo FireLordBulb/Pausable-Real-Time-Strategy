@@ -809,6 +809,198 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Calendar"",
+            ""id"": ""08367572-532b-42ef-b42e-2613d22ace92"",
+            ""actions"": [
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""5898f5ce-592f-4284-add2-348c69eda8dc"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeSpeed"",
+                    ""type"": ""Value"",
+                    ""id"": ""4befadf1-7662-4256-a78e-6b81e61c6bcd"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Speed1"",
+                    ""type"": ""Button"",
+                    ""id"": ""beb03416-00ab-465f-9ed4-fe6f8313db02"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Speed2"",
+                    ""type"": ""Button"",
+                    ""id"": ""e3cbdcca-cb8a-4fcd-9eb7-a642aade2e14"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Speed3"",
+                    ""type"": ""Button"",
+                    ""id"": ""e0921e16-ca33-4270-9edc-eda88f0c0546"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Speed4"",
+                    ""type"": ""Button"",
+                    ""id"": ""fccdb6dd-4960-4f60-88d6-c57c3aa686ac"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Speed5"",
+                    ""type"": ""Button"",
+                    ""id"": ""9eefdaee-f7b4-4ddb-89b9-6b8f682d0aec"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""99723b23-1644-4da3-ba75-f8ee23a933fc"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Pause"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""dc655747-be7e-4c3e-981d-57b95e136a89"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeSpeed"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""5d10d09c-95dd-4dc7-ad1f-c920533a80be"",
+                    ""path"": ""<Keyboard>/#(-)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ChangeSpeed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""9b15d158-9ad1-46cd-9f8c-eb46da491e4f"",
+                    ""path"": ""<Keyboard>/#(+)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ChangeSpeed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""c9be2996-13f6-4cd5-9af9-713f25781290"",
+                    ""path"": ""<Keyboard>/numpadMinus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ChangeSpeed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""759a8403-01cf-417f-8045-bbda7d8298ff"",
+                    ""path"": ""<Keyboard>/numpadPlus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""ChangeSpeed"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a7d43022-6592-482d-ac3b-d21297f850d3"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Speed1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8c0caed4-2c2b-44a1-98b5-4738ee0ee787"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Speed2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6c231935-1687-4335-805f-964e170a649c"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Speed3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2af0d647-d479-40b5-b421-0fad09ca9798"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Speed4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""34afe4cd-1f6c-49ad-880c-50b59be35d67"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Speed5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -893,12 +1085,22 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_Camera_MiddleClick = m_Camera.FindAction("MiddleClick", throwIfNotFound: true);
         m_Camera_DirectionalMovement = m_Camera.FindAction("DirectionalMovement", throwIfNotFound: true);
         m_Camera_MousePosition = m_Camera.FindAction("MousePosition", throwIfNotFound: true);
+        // Calendar
+        m_Calendar = asset.FindActionMap("Calendar", throwIfNotFound: true);
+        m_Calendar_Pause = m_Calendar.FindAction("Pause", throwIfNotFound: true);
+        m_Calendar_ChangeSpeed = m_Calendar.FindAction("ChangeSpeed", throwIfNotFound: true);
+        m_Calendar_Speed1 = m_Calendar.FindAction("Speed1", throwIfNotFound: true);
+        m_Calendar_Speed2 = m_Calendar.FindAction("Speed2", throwIfNotFound: true);
+        m_Calendar_Speed3 = m_Calendar.FindAction("Speed3", throwIfNotFound: true);
+        m_Calendar_Speed4 = m_Calendar.FindAction("Speed4", throwIfNotFound: true);
+        m_Calendar_Speed5 = m_Calendar.FindAction("Speed5", throwIfNotFound: true);
     }
 
     ~@Input()
     {
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, Input.UI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_Camera.enabled, "This will cause a leak and performance issues, Input.Camera.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Calendar.enabled, "This will cause a leak and performance issues, Input.Calendar.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1305,6 +1507,168 @@ public partial class @Input: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="CameraActions" /> instance referencing this action map.
     /// </summary>
     public CameraActions @Camera => new CameraActions(this);
+
+    // Calendar
+    private readonly InputActionMap m_Calendar;
+    private List<ICalendarActions> m_CalendarActionsCallbackInterfaces = new List<ICalendarActions>();
+    private readonly InputAction m_Calendar_Pause;
+    private readonly InputAction m_Calendar_ChangeSpeed;
+    private readonly InputAction m_Calendar_Speed1;
+    private readonly InputAction m_Calendar_Speed2;
+    private readonly InputAction m_Calendar_Speed3;
+    private readonly InputAction m_Calendar_Speed4;
+    private readonly InputAction m_Calendar_Speed5;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Calendar".
+    /// </summary>
+    public struct CalendarActions
+    {
+        private @Input m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public CalendarActions(@Input wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Calendar/Pause".
+        /// </summary>
+        public InputAction @Pause => m_Wrapper.m_Calendar_Pause;
+        /// <summary>
+        /// Provides access to the underlying input action "Calendar/ChangeSpeed".
+        /// </summary>
+        public InputAction @ChangeSpeed => m_Wrapper.m_Calendar_ChangeSpeed;
+        /// <summary>
+        /// Provides access to the underlying input action "Calendar/Speed1".
+        /// </summary>
+        public InputAction @Speed1 => m_Wrapper.m_Calendar_Speed1;
+        /// <summary>
+        /// Provides access to the underlying input action "Calendar/Speed2".
+        /// </summary>
+        public InputAction @Speed2 => m_Wrapper.m_Calendar_Speed2;
+        /// <summary>
+        /// Provides access to the underlying input action "Calendar/Speed3".
+        /// </summary>
+        public InputAction @Speed3 => m_Wrapper.m_Calendar_Speed3;
+        /// <summary>
+        /// Provides access to the underlying input action "Calendar/Speed4".
+        /// </summary>
+        public InputAction @Speed4 => m_Wrapper.m_Calendar_Speed4;
+        /// <summary>
+        /// Provides access to the underlying input action "Calendar/Speed5".
+        /// </summary>
+        public InputAction @Speed5 => m_Wrapper.m_Calendar_Speed5;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Calendar; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="CalendarActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(CalendarActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="CalendarActions" />
+        public void AddCallbacks(ICalendarActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CalendarActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CalendarActionsCallbackInterfaces.Add(instance);
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
+            @ChangeSpeed.started += instance.OnChangeSpeed;
+            @ChangeSpeed.performed += instance.OnChangeSpeed;
+            @ChangeSpeed.canceled += instance.OnChangeSpeed;
+            @Speed1.started += instance.OnSpeed1;
+            @Speed1.performed += instance.OnSpeed1;
+            @Speed1.canceled += instance.OnSpeed1;
+            @Speed2.started += instance.OnSpeed2;
+            @Speed2.performed += instance.OnSpeed2;
+            @Speed2.canceled += instance.OnSpeed2;
+            @Speed3.started += instance.OnSpeed3;
+            @Speed3.performed += instance.OnSpeed3;
+            @Speed3.canceled += instance.OnSpeed3;
+            @Speed4.started += instance.OnSpeed4;
+            @Speed4.performed += instance.OnSpeed4;
+            @Speed4.canceled += instance.OnSpeed4;
+            @Speed5.started += instance.OnSpeed5;
+            @Speed5.performed += instance.OnSpeed5;
+            @Speed5.canceled += instance.OnSpeed5;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="CalendarActions" />
+        private void UnregisterCallbacks(ICalendarActions instance)
+        {
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
+            @ChangeSpeed.started -= instance.OnChangeSpeed;
+            @ChangeSpeed.performed -= instance.OnChangeSpeed;
+            @ChangeSpeed.canceled -= instance.OnChangeSpeed;
+            @Speed1.started -= instance.OnSpeed1;
+            @Speed1.performed -= instance.OnSpeed1;
+            @Speed1.canceled -= instance.OnSpeed1;
+            @Speed2.started -= instance.OnSpeed2;
+            @Speed2.performed -= instance.OnSpeed2;
+            @Speed2.canceled -= instance.OnSpeed2;
+            @Speed3.started -= instance.OnSpeed3;
+            @Speed3.performed -= instance.OnSpeed3;
+            @Speed3.canceled -= instance.OnSpeed3;
+            @Speed4.started -= instance.OnSpeed4;
+            @Speed4.performed -= instance.OnSpeed4;
+            @Speed4.canceled -= instance.OnSpeed4;
+            @Speed5.started -= instance.OnSpeed5;
+            @Speed5.performed -= instance.OnSpeed5;
+            @Speed5.canceled -= instance.OnSpeed5;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="CalendarActions.UnregisterCallbacks(ICalendarActions)" />.
+        /// </summary>
+        /// <seealso cref="CalendarActions.UnregisterCallbacks(ICalendarActions)" />
+        public void RemoveCallbacks(ICalendarActions instance)
+        {
+            if (m_Wrapper.m_CalendarActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="CalendarActions.AddCallbacks(ICalendarActions)" />
+        /// <seealso cref="CalendarActions.RemoveCallbacks(ICalendarActions)" />
+        /// <seealso cref="CalendarActions.UnregisterCallbacks(ICalendarActions)" />
+        public void SetCallbacks(ICalendarActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CalendarActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CalendarActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="CalendarActions" /> instance referencing this action map.
+    /// </summary>
+    public CalendarActions @Calendar => new CalendarActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -1490,5 +1854,62 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMousePosition(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Calendar" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="CalendarActions.AddCallbacks(ICalendarActions)" />
+    /// <seealso cref="CalendarActions.RemoveCallbacks(ICalendarActions)" />
+    public interface ICalendarActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPause(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ChangeSpeed" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnChangeSpeed(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Speed1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpeed1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Speed2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpeed2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Speed3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpeed3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Speed4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpeed4(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Speed5" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpeed5(InputAction.CallbackContext context);
     }
 }

@@ -21,7 +21,7 @@ namespace Simulation {
 			get => speedIndex;
 			set {
 				speedIndex = value;
-				speed = 1/speedTimeSteps[startingSpeed];
+				speed = 1/speedTimeSteps[value];
 			}
 		}
 		public bool IsPaused {get; set;}
