@@ -84,7 +84,7 @@ namespace ActionStackSystem {
 		}
 #if UNITY_EDITOR
 		protected virtual void OnGUI(){
-			if (gameObject.name != "UI"){
+			if (gameObject.name != "OnGUI is disabled!"){
 				return;
 			}
 			const float lineHeight = 32.0f;
