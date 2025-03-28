@@ -19,12 +19,11 @@ namespace Player {
 			}
 		}
 		public override void OnEnd(){
-			print(UI.PlayerCountry.name);
 			UI.DeselectProvince();
 			base.OnEnd();
 		}
 		public override bool IsDone(){
-			return UI.PlayerCountry != null;
+			return Player != null;
 		}
 	}
 }
