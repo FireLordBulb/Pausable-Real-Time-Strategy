@@ -25,6 +25,7 @@ namespace Simulation {
 		
 		public Color MapColor {get; private set;}
 		public IEnumerable<Province> Provinces => provinces;
+		public string Name => gameObject.name;
 		
 		public void Init(CountryData data, MapGraph map){
 			gameObject.name = data.Name;
@@ -36,7 +37,7 @@ namespace Simulation {
 			borderColor.a = 1;
 			borderMeshRenderer.material.color = borderColor;
 			RegenerateBorder();
-			Countries.Add(data.Name, this);
+			Countries.Add(Name, this);
 		}
 		private void RegenerateBorder(){
 			DestroyImmediate(borderMeshFilter.sharedMesh);

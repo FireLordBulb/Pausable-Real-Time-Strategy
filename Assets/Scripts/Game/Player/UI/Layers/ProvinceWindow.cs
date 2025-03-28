@@ -6,33 +6,33 @@ using UnityEngine.UI;
 
 namespace Player {
 	public class ProvinceWindow : UILayer {
-		[SerializeField] private TextMeshProUGUI color;
-		[SerializeField] private TextMeshProUGUI terrain;
+		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image terrainImage;
 		[SerializeField] private GameObject terrainValuesTable;
 		[SerializeField] private TextMeshProUGUI developmentModifier;
 		[SerializeField] private TextMeshProUGUI defenderAdvantage;
-		[SerializeField] private TextMeshProUGUI neighbors;
+		[SerializeField] private TextMeshProUGUI owner;
+		[SerializeField] private Image ownerFlag;
 		[SerializeField] private Button button;
 		
 		private Province province;
 		private bool isDone;
 		private void Awake(){
 			province = UI.SelectedProvince;
-			color.text = $"Color: {province.gameObject.name}";
-			terrain.text = $"Terrain: {province.Terrain.Name}";
-			developmentModifier.text = Format.SignedPercent(province.Terrain.DevelopmentModifier);
-			defenderAdvantage.text = Format.SignedPercent(province.Terrain.DefenderAdvantage);
+			title.text = $"{province.Terrain.Name}";
 			Texture2D texture = (Texture2D)province.Terrain.Material.mainTexture;
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 			if (province.IsSea){
 				terrainValuesTable.SetActive(false);
+				owner.gameObject.SetActive(false);
+			} else {
+				developmentModifier.text = Format.SignedPercent(province.Terrain.DevelopmentModifier);
+				defenderAdvantage.text = Format.SignedPercent(province.Terrain.DefenderAdvantage);
+				owner.text = $"Part of {province.Owner.Name}";
+				ownerFlag.material = new Material(ownerFlag.material){
+					color = province.Owner.MapColor
+				};
 			}
-			StringBuilder neighborsString = new("Neighbors:");
-			foreach (ProvinceLink provinceLink in province.Links){
-				neighborsString.Append($"\n{provinceLink.Target.gameObject.name}");
-			}
-			neighbors.text = neighborsString.ToString();
 			province.OnSelect();
 			
 			button.onClick.AddListener(() => {
