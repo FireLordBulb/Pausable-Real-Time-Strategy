@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7122426016029382025}
   - component: {fileID: 2926375419595886397}
   - component: {fileID: 6448579837056250185}
+  - component: {fileID: 4158990316465069942}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -265,3 +266,15 @@ MonoBehaviour:
   movementSpeed: 0.75
   stoppingSeconds: 0.15
   terrainMapModeAlpha: 0.3
+--- !u!114 &4158990316465069942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7232527191750998926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bccd8998c9636f64a89bfe98a5bcb428, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -2,7 +2,6 @@ using System;
 using Mathematics;
 using Simulation;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Player {
     [RequireComponent(typeof(Camera))]
@@ -22,11 +21,11 @@ namespace Player {
                 new
     #endif
                     Camera camera;
-        private Input.CameraActions input;
         
         private Vector2 movementDirection;
         private int targetZoom;
         private bool isDragging;
+        private Vector3 mousePosition;
         
         private int previousZoom;
         // Well, smaller or equal.
@@ -37,50 +36,10 @@ namespace Player {
         private float currentAlpha;
         
         private bool IsMouseLocked => isDragging || previousZoom != targetZoom;
-        private Ray MouseRay => camera.ScreenPointToRay(input.MousePosition.ReadValue<Vector2>());
-        private Vector3 MousePosition => input.MousePosition.ReadValue<Vector2>();
+        private Ray MouseRay => camera.ScreenPointToRay(mousePosition);
         
         private void Awake(){
             camera = GetComponent<Camera>();
-            input = new Input().Camera;
-            input.Enable();
-
-            Action<InputAction.CallbackContext> directionalMovement = context => {
-                movementDirection = context.ReadValue<Vector2>();
-            };
-            input.DirectionalMovement.performed += directionalMovement;
-            input.DirectionalMovement.canceled += directionalMovement;
-
-            input.ScrollWheel.performed += context => {
-                zoomStartMousePosition = MousePosition;
-                if (Physics.Raycast(camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
-                    lockedMousePoint = hit.point;
-                }
-                
-                int targetZoomSaved = targetZoom;
-                targetZoom += Mathf.RoundToInt(context.ReadValue<Vector2>().y);
-                targetZoom = Mathf.Clamp(targetZoom, 0, zoomLevels.Length-1);
-                
-                // Inverting the direction mid-zoom.
-                // Both of differences being negative or both being positive means y isn't between target and
-                // previous, requiring previous to be changed to prevent a discontinuous jump.
-                float y = transform.position.y;
-                if (Math.Sign(y-zoomLevels[previousZoom].height)*Math.Sign(y-zoomLevels[targetZoom].height) != -1){
-                    previousZoom = targetZoomSaved;
-                }
-            };
-
-            input.MiddleClick.performed += _ => {
-                if (!Physics.Raycast(MouseRay, out RaycastHit hit)){
-                    return;
-                }
-                isDragging = true;
-                lockedMousePoint = hit.point;
-            };
-            input.MiddleClick.canceled += _ => {
-                isDragging = false;
-                zoomStartMousePosition = MousePosition;
-            };
 
             Vector3 position = transform.position;
             if (position.y < zoomLevels[^1].height){
@@ -97,6 +56,46 @@ namespace Player {
                 break;
             }
         }
+
+        public void DirectionalMovement(Vector2 direction){
+            movementDirection = direction;
+        }
+        public void ChangeZoom(int change){
+            SetZoom(targetZoom+change);
+        }
+        public void SetZoom(int zoom){
+            zoomStartMousePosition = mousePosition;
+            if (Physics.Raycast(camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
+                lockedMousePoint = hit.point;
+            }
+                
+            int targetZoomSaved = targetZoom;
+            targetZoom = zoom;
+            targetZoom = Mathf.Clamp(targetZoom, 0, zoomLevels.Length-1);
+                
+            // Inverting the direction mid-zoom.
+            // Both of differences being negative or both being positive means y isn't between target and
+            // previous, requiring previous to be changed to prevent a discontinuous jump.
+            float y = transform.position.y;
+            if (Math.Sign(y-zoomLevels[previousZoom].height)*Math.Sign(y-zoomLevels[targetZoom].height) != -1){
+                previousZoom = targetZoomSaved;
+            }
+        }
+        public void StartDragging(){
+            if (!Physics.Raycast(MouseRay, out RaycastHit hit)){
+                return;
+            }
+            isDragging = true;
+            lockedMousePoint = hit.point;
+        }
+        public void ReleaseDragging(){
+            isDragging = false;
+            zoomStartMousePosition = mousePosition;
+        }
+        public void UpdateMousePosition(Vector3 position){
+            mousePosition = position;
+        }
+        
         private void SetZoomLevel(int index){
             Vector3 position = transform.position;
             position.y = zoomLevels[index].height;
