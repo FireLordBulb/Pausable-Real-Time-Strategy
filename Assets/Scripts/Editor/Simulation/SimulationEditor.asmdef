@@ -1,6 +1,6 @@
 {
     "name": "SimulationEditor",
-    "rootNamespace": "",
+    "rootNamespace": "Simulation",
     "references": [
         "GUID:49aaa38406a57a144be43c76aab328f4",
         "GUID:e057d3f7f06abb144875c9a3945046a9",

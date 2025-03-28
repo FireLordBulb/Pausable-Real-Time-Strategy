@@ -1,6 +1,6 @@
 {
     "name": "Mathematics",
-    "rootNamespace": "",
+    "rootNamespace": "Mathematics",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

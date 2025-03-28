@@ -1,6 +1,6 @@
 {
     "name": "Simulation",
-    "rootNamespace": "",
+    "rootNamespace": "Simulation",
     "references": [
         "GUID:ee13ae98d27b9ed42a295dd6ba6492b2",
         "GUID:abc0b0f6254bd8a4f84aba4acc5e52b1"

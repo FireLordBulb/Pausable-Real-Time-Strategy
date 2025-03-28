@@ -1,3 +1,14 @@
 {
-	"name": "Graphs"
+    "name": "Graphs",
+    "rootNamespace": "Graphs",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }

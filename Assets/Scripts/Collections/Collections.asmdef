@@ -1,6 +1,6 @@
 {
     "name": "Collections",
-    "rootNamespace": "",
+    "rootNamespace": "Collections",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

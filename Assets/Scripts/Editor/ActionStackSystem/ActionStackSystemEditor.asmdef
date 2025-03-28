@@ -1,6 +1,6 @@
 {
     "name": "ActionStackSystemEditor",
-    "rootNamespace": "",
+    "rootNamespace": "ActionStackSystem",
     "references": [
         "GUID:6dff4efbea6d84b468577cd03074d105"
     ],

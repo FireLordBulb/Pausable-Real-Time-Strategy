@@ -1,6 +1,6 @@
 {
     "name": "Player",
-    "rootNamespace": "",
+    "rootNamespace": "Player",
     "references": [
         "GUID:49aaa38406a57a144be43c76aab328f4",
         "GUID:4afa242dfed9f6d4f9fd8e796234b7d4",

@@ -1,7 +1,9 @@
 {
     "name": "ProceduralMeshes",
-    "rootNamespace": "",
-    "references": ["GUID:4afa242dfed9f6d4f9fd8e796234b7d4"],
+    "rootNamespace": "ProceduralMeshes",
+    "references": [
+        "GUID:4afa242dfed9f6d4f9fd8e796234b7d4"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

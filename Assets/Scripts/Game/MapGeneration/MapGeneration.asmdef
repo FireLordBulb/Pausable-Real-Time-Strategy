@@ -1,6 +1,6 @@
 {
     "name": "MapGeneration",
-    "rootNamespace": "",
+    "rootNamespace": "MapGeneration",
     "references": [
         "GUID:49aaa38406a57a144be43c76aab328f4",
         "GUID:abc0b0f6254bd8a4f84aba4acc5e52b1",
