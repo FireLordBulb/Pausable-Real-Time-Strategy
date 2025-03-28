@@ -169,7 +169,7 @@ namespace Player {
                 return;
             }
             foreach (Province province in Land.AllProvinces){
-                province.SetAlpha(currentAlpha);
+                province.Alpha = currentAlpha;
             }
         }
         

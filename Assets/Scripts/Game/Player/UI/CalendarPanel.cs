@@ -28,12 +28,14 @@ namespace Player {
 			input.Pause.performed += _ => Calendar.Instance.TogglePause();
 		}
 		private void Start(){
-			Calendar.Instance.OnDayTick.AddListener(() => {
-				date.text = Calendar.Instance.Date;
-			});
+			Calendar.Instance.OnDayTick.AddListener(UpdateDate);
+			UpdateDate();
 			UpdateSpeed();
 		}
-
+		
+		private void UpdateDate(){
+			date.text = Calendar.Instance.Date;
+		}
 		private void SetSpeed(int index){
 			Calendar.Instance.SpeedIndex = index;
 			UpdateSpeed();

@@ -42,8 +42,10 @@ namespace MapGeneration {
         private Vector3 provinceScale;
         
         private void Awake(){
+#if UNITY_EDITOR // Clearing static collections to avoid having to reload domain.
             Land.ClearProvinceList();
-            
+            Country.ClearCountryDictionary();
+#endif
             mapGraph = GetComponent<MapGraph>();
             mapPixels = mapImage.GetPixels32();
             
@@ -234,7 +236,7 @@ namespace MapGeneration {
             HashSet<Province> unownedLandProvinces = new();
             foreach (ProvinceData data in provinceDataDictionary.Values){
                 Province landProvince = mapGraph[data.Color];
-                landProvince.SetOwner(null);
+                landProvince.Owner = null;
                 unownedLandProvinces.Add(landProvince);
             }
             Queue<Province> provinceCrawl = new();
@@ -243,7 +245,7 @@ namespace MapGeneration {
                 int countryProvinceCount = Mathf.Max(Mathf.Min(Random.Range(1, maxProvinces+1), landProvincesLeft-i), (landProvincesLeft-i)/(i+1));
                 for (int j = 0; j < countryProvinceCount; j++){
                     Province province = provinceCrawl.Dequeue();
-                    province.SetOwner(countries[i]);
+                    province.Owner = countries[i];
                     unownedLandProvinces.Remove(province);
                     landProvincesLeft--;
                     if (provinceCrawl.Count != 0 || landProvincesLeft == 0){

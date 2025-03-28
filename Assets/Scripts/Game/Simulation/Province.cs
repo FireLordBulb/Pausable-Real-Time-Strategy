@@ -31,6 +31,34 @@ namespace Simulation {
         public Color32 ColorKey {get; private set;}
         public Terrain Terrain {get; private set;}
         public Vector2 MapPosition {get; private set;}
+        
+        public Country Owner {
+            get => owner;
+            set {
+                if (owner == value){
+                    return;
+                }
+                if (owner != null){
+                    owner.LoseProvince(this);
+                }
+                owner = value;
+                float alpha = baseColor.a;
+                if (owner != null){
+                    owner.GainProvince(this);
+                    baseColor = owner.MapColor;
+                } else {
+                    baseColor = Color.black;
+                }
+                baseColor.a = alpha;
+
+                UpdateColors();
+            }
+        }
+        public float Alpha { set {
+            baseColor.a = value;
+            UpdateColors();
+        }}
+        
         public Vector3 WorldPosition => transform.position;
         public bool IsSea => type == Type.Sea;
         public bool IsCoast => type == Type.Coast;
@@ -82,31 +110,7 @@ namespace Simulation {
             (int _, int endIndex, ProvinceLink link) = outlineSegments[0];
             outlineSegments[0] = (outlineSegments[^1].endIndex, endIndex, link);
         }
-
-        public void SetOwner(Country newOwner){
-            if (owner == newOwner){
-                return;
-            }
-            if (owner != null){
-                owner.LoseProvince(this);
-            }
-            owner = newOwner;
-            float alpha = baseColor.a;
-            if (owner != null){
-                owner.GainProvince(this);
-                baseColor = owner.MapColor;
-            } else {
-                baseColor = Color.black;
-            }
-            baseColor.a = alpha;
-
-            UpdateColors();
-        }
         
-        public void SetAlpha(float alpha){
-            baseColor.a = alpha;
-            UpdateColors();
-        }
         private void UpdateColors(){
             float increasedBrightness = OneThird*(baseColor.grayscale+2);
             selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));

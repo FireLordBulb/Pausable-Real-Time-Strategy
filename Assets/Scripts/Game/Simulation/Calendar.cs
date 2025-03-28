@@ -38,7 +38,7 @@ namespace Simulation {
 				Destroy(gameObject);
 			}
 			Instance = this;
-			IsPaused = false;
+			IsPaused = true;
 			currentDate = new Date(startDate);
 			tickProgress = NoProgress;
 			SpeedIndex = startingSpeed;

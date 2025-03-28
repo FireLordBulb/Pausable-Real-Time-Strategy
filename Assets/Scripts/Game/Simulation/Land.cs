@@ -7,9 +7,11 @@ namespace Simulation {
 	public class Land : MonoBehaviour {
 		private static readonly List<Province> ProvinceList = new();
 		public static IEnumerable<Province> AllProvinces => ProvinceList;
+#if UNITY_EDITOR
 		public static void ClearProvinceList(){
 			ProvinceList.Clear();
 		}
+#endif
 		
 		public Province Province {get; private set;}
 		

@@ -195,6 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hud: {fileID: 2608212566208872574, guid: 87b19940fd39f214895f33b0c49279b2, type: 3}
+  countrySelection: {fileID: 7794877087622164946, guid: 302df008c884f524c9a45d15d2ce97cf, type: 3}
   provinceWindow: {fileID: -7138890633483812799, guid: 7f98c94f4eef91347a5d5a705bc6e926, type: 3}
   mapClickMask:
     serializedVersion: 2

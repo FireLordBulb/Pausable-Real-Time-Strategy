@@ -17,7 +17,7 @@ namespace Player {
 		private Province province;
 		private bool isDone;
 		private void Awake(){
-			province = UIStack.Instance.SelectedProvince;
+			province = UI.SelectedProvince;
 			color.text = $"Color: {province.gameObject.name}";
 			if (province.Terrain != null){
 				terrain.text = $"Terrain: {province.Terrain.Name}";
@@ -35,15 +35,19 @@ namespace Player {
 			
 			button.onClick.AddListener(() => {
 				isDone = true;
-				Stack.DeselectProvince(province);
+				UI.DeselectProvince(province);
 			});
 		}
 		public override void OnUpdate(){
 			// TODO: When a tick passes or an action was taken on the province, update window info.
-			if (Stack.SelectedProvince == province){
+			if (UI.SelectedProvince == province){
 				return;
 			}
 			isDone = true;
+		}
+		public override void OnProvinceSelected(){
+			// Delay the push until right after the end of OnUpdate so the current window can remove itself first.
+			UI.DelayedPush(UI.ProvinceWindow);
 		}
 		public override void OnEnd(){
 			province.OnDeselect();

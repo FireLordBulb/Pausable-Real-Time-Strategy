@@ -11,6 +11,7 @@ namespace Player {
 		public static UIStack Instance;
 		
 		[SerializeField] private UILayer hud;
+		[SerializeField] private UILayer countrySelection;
 		[SerializeField] private ProvinceWindow provinceWindow;
 		[SerializeField] private LayerMask mapClickMask;
 
@@ -20,8 +21,10 @@ namespace Player {
 		private Province mouseDownProvince;
 		
 		public Camera Camera {get; private set;}
+		public Country PlayerCountry {get; internal set;}
 		public Province SelectedProvince {get; private set;}
 		
+		public ProvinceWindow ProvinceWindow => provinceWindow;
 		public LayerMask MapClickMask => mapClickMask;
 		public Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
 		
@@ -44,8 +47,7 @@ namespace Player {
 				}
 				if (mouseDownProvince == hoveredProvince && mouseDownProvince != SelectedProvince){
 					SelectedProvince = mouseDownProvince;
-					// Delay the push until the end of Update so the current layer can remove itself.
-					DelayedPush(provinceWindow);
+					CurrentAction.OnProvinceSelected();
 				} else {
 					SelectedProvince = null;
 				}
@@ -53,6 +55,7 @@ namespace Player {
 			};
 			
 			Push(hud);
+			Push(countrySelection);
 		}
 		private void Start(){
 			Camera = Camera.main;
@@ -115,6 +118,9 @@ namespace Player {
 			if (SelectedProvince == province){
 				SelectedProvince = null;
 			}
+		}
+		public void DeselectProvince(){
+			SelectedProvince = null;
 		}
 	}
 }

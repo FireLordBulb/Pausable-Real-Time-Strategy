@@ -2,12 +2,10 @@ using ActionStackSystem;
 
 namespace Player {
 	public class UILayer : ActionBehaviour {
-		protected UIStack Stack {get; private set;}
+		protected static UIStack UI => UIStack.Instance;
 
-		public override void OnBegin(bool isFirstTime){
-			base.OnBegin(isFirstTime);
-			Stack = UIStack.Instance;
-		}
+		public override void OnBegin(bool isFirstTime){}
+		public virtual void OnProvinceSelected(){}
 		public override void OnEnd(){
 			Destroy(gameObject);
 		}

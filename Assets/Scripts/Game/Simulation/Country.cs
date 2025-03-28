@@ -6,6 +6,14 @@ using UnityEngine;
 
 namespace Simulation {
 	public class Country : MonoBehaviour {
+		private static readonly Dictionary<string, Country> Countries = new();
+		public static Country Get(string key) => Countries[key];
+#if UNITY_EDITOR
+		public static void ClearCountryDictionary(){
+			Countries.Clear();
+		}
+#endif
+		
 		private readonly HashSet<Province> provinces = new();
 		
 		[SerializeField] private MeshFilter borderMeshFilter;
@@ -22,12 +30,13 @@ namespace Simulation {
 			gameObject.name = data.Name;
 			MapColor = data.MapColor;
 			foreach (Color32 province in data.Provinces){
-				map[province].SetOwner(this);
+				map[province].Owner = this;
 			}
 			Color borderColor = MapColor*borderBrightnessFactor;
 			borderColor.a = 1;
 			borderMeshRenderer.material.color = borderColor;
 			RegenerateBorder();
+			Countries.Add(data.Name, this);
 		}
 		private void RegenerateBorder(){
 			DestroyImmediate(borderMeshFilter.sharedMesh);
