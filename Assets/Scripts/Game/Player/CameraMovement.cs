@@ -6,6 +6,7 @@ using UnityEngine;
 namespace Player {
     [RequireComponent(typeof(Camera))]
     public class CameraMovement : MonoBehaviour {
+        public static CameraMovement Instance {get; private set;}
         private const float Opaque = 1;
         private static readonly Vector3 Center = new(0.5f, 0.5f);
         
@@ -15,12 +16,6 @@ namespace Player {
         [SerializeField] private float movementSpeed;
         [SerializeField] private float stoppingSeconds;
         [SerializeField] private float terrainMapModeAlpha;
-
-        private
-    #if UNITY_EDITOR
-                new
-    #endif
-                    Camera camera;
         
         private Vector2 movementDirection;
         private int targetZoom;
@@ -34,12 +29,20 @@ namespace Player {
         private Vector3 lockedMousePoint;
         private Vector2 movementVelocity;
         private float currentAlpha;
+
+        public Camera Camera {get; private set;}
         
+        public int MaxZoom => zoomLevels.Length-1;
         private bool IsMouseLocked => isDragging || previousZoom != targetZoom;
-        private Ray MouseRay => camera.ScreenPointToRay(mousePosition);
+        private Ray MouseRay => Camera.ScreenPointToRay(mousePosition);
         
         private void Awake(){
-            camera = GetComponent<Camera>();
+            if (Instance != null){
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+            Camera = GetComponent<Camera>();
 
             Vector3 position = transform.position;
             if (position.y < zoomLevels[^1].height){
@@ -52,7 +55,7 @@ namespace Player {
                 }
                 nearestSmallerZoom = targetZoom = i;
                 previousZoom = Mathf.Max(i-1, 0);
-                zoomStartMousePosition = camera.ViewportToScreenPoint(Center);
+                zoomStartMousePosition = Camera.ViewportToScreenPoint(Center);
                 break;
             }
         }
@@ -64,8 +67,11 @@ namespace Player {
             SetZoom(targetZoom+change);
         }
         public void SetZoom(int zoom){
-            zoomStartMousePosition = mousePosition;
-            if (Physics.Raycast(camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
+            SetZoom(zoom, mousePosition);
+        }
+        public void SetZoom(int zoom, Vector3 zoomCenter){
+            zoomStartMousePosition = zoomCenter;
+            if (Physics.Raycast(Camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
                 lockedMousePoint = hit.point;
             }
                 
@@ -156,7 +162,7 @@ namespace Player {
             Vector3 positionDelta = VectorGeometry.ToXZPlane(Time.deltaTime*position.y*movementVelocity);
             if (IsMouseLocked){
                 lockedMousePoint += positionDelta;
-                if (Physics.Raycast(isDragging ? MouseRay : camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
+                if (Physics.Raycast(isDragging ? MouseRay : Camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
                     position += lockedMousePoint-hit.point;
                 }
             } else {

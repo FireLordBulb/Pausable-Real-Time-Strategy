@@ -20,6 +20,8 @@ namespace Player {
 		}
 		public override void OnEnd(){
 			UI.DeselectProvince();
+			CameraMovement cameraMovement = CameraMovement.Instance;
+			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(Player.Capital.WorldPosition));
 			base.OnEnd();
 		}
 		public override bool IsDone(){

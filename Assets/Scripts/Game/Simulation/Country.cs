@@ -25,6 +25,8 @@ namespace Simulation {
 		
 		public Color MapColor {get; private set;}
 		public IEnumerable<Province> Provinces => provinces;
+		// TODO: Assign a specific province as capital from country data.
+		public Province Capital => provinces.First();
 		public string Name => gameObject.name;
 		
 		public void Init(CountryData data, MapGraph map){

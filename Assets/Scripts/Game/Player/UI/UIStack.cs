@@ -8,7 +8,7 @@ namespace Player {
 	public class UIStack : ActionStack<UILayer> {
 		private const float ActivationThreshold = 0.5f;
 
-		public static UIStack Instance;
+		public static UIStack Instance {get; private set;}
 		
 		[SerializeField] private UILayer hud;
 		[SerializeField] private UILayer countrySelection;
