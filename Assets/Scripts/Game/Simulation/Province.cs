@@ -22,6 +22,9 @@ namespace Simulation {
         private bool isHovered;
         private bool isSelected;
         
+        private float goldProduction;
+        private int manpowerProduction;
+        private int sailorsProduction;
         
         public List<int> TriPointIndices;
         public List<Vector2> Vertices;
@@ -114,6 +117,21 @@ namespace Simulation {
         public void CompleteSegmentLoop(){
             (int _, int endIndex, ProvinceLink link) = outlineSegments[0];
             outlineSegments[0] = (outlineSegments[^1].endIndex, endIndex, link);
+        }
+        
+        // TODO: Refactor away and put values in an SO.
+        private const int BaseProduction = 10;
+        private void Start(){
+            float multiplier = 1+Terrain.DevelopmentModifier;
+            goldProduction = multiplier;
+            manpowerProduction = Mathf.RoundToInt(BaseProduction*multiplier);
+            sailorsProduction = IsCoast ? Mathf.RoundToInt(BaseProduction*multiplier) : 0;
+            Calendar.Instance.OnMonthTick.AddListener(() => {
+                if (!HasOwner){
+                    return;
+                }               
+                Owner.GainResources(goldProduction, manpowerProduction, sailorsProduction);
+            });
         }
         
         private void UpdateColors(){

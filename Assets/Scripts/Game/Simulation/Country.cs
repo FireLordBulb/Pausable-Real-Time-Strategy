@@ -24,6 +24,11 @@ namespace Simulation {
 		private bool wasBorderChanged;
 		
 		public Color MapColor {get; private set;}
+		public bool IsDirty {get; private set;}
+		public float Gold {get; private set;}
+		public int Manpower {get; private set;}
+		public int Sailors {get; private set;}
+		
 		public IEnumerable<Province> Provinces => provinces;
 		// TODO: Assign a specific province as capital from country data.
 		public Province Capital => provinces.First();
@@ -78,19 +83,33 @@ namespace Simulation {
 				}
 			}
 		}
+		
 		private void Update(){
 			if (wasBorderChanged){
 				RegenerateBorder();
 			}
 		}
+		
+		public void GainResources(float gold, int manpower, int sailors){
+			Gold += gold;
+			Manpower += manpower;
+			Sailors += sailors;
+			IsDirty = true;
+		}
+		public void MarkClean(){
+			IsDirty = false;
+		}
+		
 		public bool LoseProvince(Province province){
 			bool didLoseProvince = provinces.Remove(province);
 			wasBorderChanged |= didLoseProvince;
+			IsDirty |= didLoseProvince;
 			return didLoseProvince;
 		}
 		public bool GainProvince(Province province){
 			bool didGainProvince = provinces.Add(province);
 			wasBorderChanged |= didGainProvince;
+			IsDirty |= didGainProvince;
 			return didGainProvince;
 		}
 	}

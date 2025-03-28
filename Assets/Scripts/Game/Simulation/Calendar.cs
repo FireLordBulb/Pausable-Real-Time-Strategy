@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 namespace Simulation {
 	public class Calendar : MonoBehaviour {
-		public static Calendar Instance;
+		public static Calendar Instance {get; private set;}
 		
 		private const float NoProgress = 0;
 		private const float FullProgress = 1;
@@ -36,6 +36,7 @@ namespace Simulation {
 		private void Awake(){
 			if (Instance != null){
 				Destroy(gameObject);
+				return;
 			}
 			Instance = this;
 			IsPaused = true;
