@@ -194,7 +194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b542b4d30831f7142898318c3cff0555, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hud: {fileID: 1117888496859181619, guid: 87b19940fd39f214895f33b0c49279b2, type: 3}
+  hud: {fileID: 2608212566208872574, guid: 87b19940fd39f214895f33b0c49279b2, type: 3}
   provinceWindow: {fileID: -7138890633483812799, guid: 7f98c94f4eef91347a5d5a705bc6e926, type: 3}
   mapClickMask:
     serializedVersion: 2
