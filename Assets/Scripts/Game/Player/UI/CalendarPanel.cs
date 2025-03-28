@@ -25,9 +25,7 @@ namespace Player {
 				UpdateSpeed();
 			};
 
-			input.Pause.performed += _ => {
-				Calendar.Instance.IsPaused = !Calendar.Instance.IsPaused;
-			};
+			input.Pause.performed += _ => Calendar.Instance.TogglePause();
 		}
 		private void Start(){
 			Calendar.Instance.OnDayTick.AddListener(() => {
