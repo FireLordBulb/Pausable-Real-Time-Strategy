@@ -31,6 +31,8 @@ namespace Simulation {
         public Color32 ColorKey {get; private set;}
         public Terrain Terrain {get; private set;}
         public Vector2 MapPosition {get; private set;}
+        public Land Land {get; private set;}
+        public Sea Sea {get; private set;}
         
         public Country Owner {
             get => owner;
@@ -70,6 +72,9 @@ namespace Simulation {
         
         private void Awake(){
             meshCollider = GetComponent<MeshCollider>();
+            Land = GetComponent<Land>();
+            Sea = GetComponent<Sea>();
+            Debug.Assert(Land == null ^ Sea == null, $"Province {gameObject.name} is both land and sea, or neither!");
         }
         public void Init(Color32 colorKey, Type provinceType, Terrain terrain, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
             ColorKey = colorKey;
