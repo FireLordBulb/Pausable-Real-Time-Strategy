@@ -8,10 +8,11 @@ namespace Player {
 	public class ProvinceWindow : UILayer {
 		[SerializeField] private TextMeshProUGUI color;
 		[SerializeField] private TextMeshProUGUI terrain;
+		[SerializeField] private Image terrainImage;
+		[SerializeField] private GameObject terrainValuesTable;
 		[SerializeField] private TextMeshProUGUI developmentModifier;
 		[SerializeField] private TextMeshProUGUI defenderAdvantage;
 		[SerializeField] private TextMeshProUGUI neighbors;
-		[SerializeField] private Image terrainImage;
 		[SerializeField] private Button button;
 		
 		private Province province;
@@ -19,12 +20,13 @@ namespace Player {
 		private void Awake(){
 			province = UI.SelectedProvince;
 			color.text = $"Color: {province.gameObject.name}";
-			if (province.Terrain != null){
-				terrain.text = $"Terrain: {province.Terrain.Name}";
-				developmentModifier.text = Format.SignedPercent(province.Terrain.DevelopmentModifier);
-				defenderAdvantage.text = Format.SignedPercent(province.Terrain.DefenderAdvantage);
-				Texture2D texture = (Texture2D)province.Terrain.Material.mainTexture;
-				terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
+			terrain.text = $"Terrain: {province.Terrain.Name}";
+			developmentModifier.text = Format.SignedPercent(province.Terrain.DevelopmentModifier);
+			defenderAdvantage.text = Format.SignedPercent(province.Terrain.DefenderAdvantage);
+			Texture2D texture = (Texture2D)province.Terrain.Material.mainTexture;
+			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
+			if (province.IsSea){
+				terrainValuesTable.SetActive(false);
 			}
 			StringBuilder neighborsString = new("Neighbors:");
 			foreach (ProvinceLink provinceLink in province.Links){
