@@ -41,7 +41,7 @@ namespace Player {
 			Calendar.Instance.OnPauseToggle.AddListener(pauseLabel.SetActive);
 			pauseLabel.SetActive(Calendar.Instance.IsPaused);
 		}
-		public override void OnUpdate(){
+		private void Update(){
 			if (doRefreshNextFrame){
 				doRefreshNextFrame = false;
 				doRefreshThisFrame = true;
