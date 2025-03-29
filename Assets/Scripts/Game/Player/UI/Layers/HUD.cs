@@ -1,3 +1,4 @@
+using Simulation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,8 +51,8 @@ namespace Player {
 				RefreshResources();
 			}
 		}
-		public override void OnProvinceSelected(){
-			UI.Push(UI.ProvinceWindow);
+		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
+			return RegularProvinceClick(clickedProvince, isRightClick);
 		}
 	}
 }

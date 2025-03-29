@@ -47,9 +47,8 @@ namespace Player {
 			}
 			isDone = true;
 		}
-		public override void OnProvinceSelected(){
-			// Delay the push until right after the end of OnUpdate so the current window can remove itself first.
-			UI.DelayedPush(UI.ProvinceWindow);
+		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
+			return RegularProvinceClick(clickedProvince, isRightClick);
 		}
 		public override void OnEnd(){
 			province.OnDeselect();

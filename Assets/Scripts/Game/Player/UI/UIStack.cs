@@ -22,11 +22,12 @@ namespace Player {
 		
 		public Camera Camera {get; private set;}
 		public Country PlayerCountry {get; internal set;}
-		public Province SelectedProvince {get; private set;}
+		public Component Selected {get; private set;}
 		
+		public Province SelectedProvince => Selected as Province;
+		public Country SelectedCountry => Selected as Country;
 		public ProvinceWindow ProvinceWindow => provinceWindow;
-		public LayerMask MapClickMask => mapClickMask;
-		public Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
+		private Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
 		
 		private void Awake(){
 			if (Instance != null){
@@ -45,11 +46,11 @@ namespace Player {
 					mouseDownProvince = hoveredProvince;
 					return;
 				}
-				if (mouseDownProvince == hoveredProvince && mouseDownProvince != SelectedProvince){
-					SelectedProvince = mouseDownProvince;
-					CurrentAction.OnProvinceSelected();
+				if (mouseDownProvince == hoveredProvince){
+					Selected = CurrentAction.OnProvinceClicked(mouseDownProvince, false);
 				} else {
-					SelectedProvince = null;
+					// Dragging a left click always results in a deselect, no layer-specific logic for this.
+					Deselect();
 				}
 				mouseDownProvince = null;
 			};
@@ -58,16 +59,13 @@ namespace Player {
 			Push(countrySelection);
 		}
 		private void Start(){
-			Camera = Camera.main;
+			Camera = CameraMovement.Instance.Camera;
 		}
 
-		// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
 		public void DelayedPush(UILayer layer) {
-			if (!layer.gameObject.scene.IsValid()){
-				layer = Instantiate(layer, transform);
-			}
 			layerToPush = layer;
 		}
+		// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
 		public override void Push(UILayer layer) {
 			if (!layer.gameObject.scene.IsValid()){
 				layer = Instantiate(layer, transform);
@@ -78,7 +76,7 @@ namespace Player {
 			UpdateHover();
 			base.Update();
 			if (layerToPush != null){
-				base.Push(layerToPush);
+				Push(layerToPush);
 				layerToPush = null;
 			}
 		}
@@ -104,7 +102,7 @@ namespace Player {
 				hit = new RaycastHit();
 				return false;
 			}
-			return Physics.Raycast(Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, MapClickMask);
+			return Physics.Raycast(Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, mapClickMask);
 		}
 		private void EndHover(){
 			if (!hoveredProvince){
@@ -115,12 +113,12 @@ namespace Player {
 		}
 
 		public void DeselectProvince(Province province){
-			if (SelectedProvince == province){
-				SelectedProvince = null;
+			if (Selected == province){
+				Selected = null;
 			}
 		}
-		public void DeselectProvince(){
-			SelectedProvince = null;
+		public void Deselect(){
+			Selected = null;
 		}
 	}
 }

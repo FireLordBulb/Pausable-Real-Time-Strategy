@@ -13,13 +13,14 @@ namespace Player {
 			}
 #endif
 		}
-		public override void OnProvinceSelected(){
-			if (UI.SelectedProvince.HasOwner){
-				UI.PlayerCountry = UI.SelectedProvince.Owner;
+		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
+			if (clickedProvince.HasOwner){
+				UI.PlayerCountry = clickedProvince.Owner;
 			}
+			return null;
 		}
 		public override void OnEnd(){
-			UI.DeselectProvince();
+			UI.Deselect();
 			CameraMovement cameraMovement = CameraMovement.Instance;
 			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(Player.Capital.WorldPosition));
 			base.OnEnd();
