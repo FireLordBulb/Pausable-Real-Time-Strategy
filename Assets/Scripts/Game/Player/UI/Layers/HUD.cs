@@ -34,10 +34,7 @@ namespace Player {
 		}
 		private void Start(){
 			Calendar.Instance.OnMonthTick.AddListener(() => {
-				if (Player.IsDirty){
-					doRefreshNextFrame = true;
-					Player.MarkClean();
-				}
+				doRefreshNextFrame = true;
 			});
 			Calendar.Instance.OnPauseToggle.AddListener(pauseLabel.SetActive);
 			pauseLabel.SetActive(Calendar.Instance.IsPaused);
@@ -48,7 +45,10 @@ namespace Player {
 				doRefreshThisFrame = true;
 			} else if (doRefreshThisFrame){
 				doRefreshThisFrame = false;
-				RefreshResources();
+				if (Player.IsDirty){
+					RefreshResources();
+					Player.MarkClean();
+				}
 			}
 		}
 		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
