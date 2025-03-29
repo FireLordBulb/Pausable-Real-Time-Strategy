@@ -2,6 +2,7 @@ using ActionStackSystem;
 using Simulation;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace Player {
 	[RequireComponent(typeof(Canvas))]
@@ -19,6 +20,7 @@ namespace Player {
 		private UILayer layerToPush;
 		private Province hoveredProvince;
 		private Province mouseDownProvince;
+		private bool isProvinceClickRight;
 		
 		public Camera Camera {get; private set;}
 		public Country PlayerCountry {get; internal set;}
@@ -37,36 +39,50 @@ namespace Player {
 			Instance = this;
 			input = new Input().UI;
 			input.Enable();
-			input.Click.performed += context => {
-				bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
-				if (!hoveredProvince){
-					return;
-				}
-				if (isMouseDown){
-					mouseDownProvince = hoveredProvince;
-					return;
-				}
-				if (mouseDownProvince == hoveredProvince){
-					Selected = CurrentAction.OnProvinceClicked(mouseDownProvince, false);
-				} else {
-					// Dragging a left click always results in a deselect, no layer-specific logic for this.
-					Deselect();
-				}
-				mouseDownProvince = null;
-			};
+			input.Click.performed      += context => ClickProvince(context, false);
+			input.RightClick.performed += context => ClickProvince(context, true );
 			
 			Push(hud);
 			Push(countrySelection);
 		}
+
+		private void ClickProvince(InputAction.CallbackContext context, bool isRightClick){
+			bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
+			if (!hoveredProvince){
+				return;
+			}
+			if (isMouseDown){
+				mouseDownProvince = hoveredProvince;
+				isProvinceClickRight = isRightClick;
+				return;
+			}
+			// Ignore mouse up for the mouse button pressed down less recently, if both mouse buttons, were down.
+			if (isProvinceClickRight != isRightClick){
+				return;
+			}
+			if (mouseDownProvince == hoveredProvince){
+				Selected = CurrentAction.OnProvinceClicked(mouseDownProvince, isRightClick);
+				// Delay the push until after the next OnUpdate() so the current window can remove itself first.
+				if (Selected is Province){
+					DelayedPush(ProvinceWindow);
+				} else if (Selected is Country){
+					// TODO: Spawn country panel
+				}
+			} else {
+				// Dragging a left click always results in a deselect, no layer-specific logic for this.
+				Deselect();
+			}
+			mouseDownProvince = null;
+		}
 		private void Start(){
 			Camera = CameraMovement.Instance.Camera;
 		}
-
+		
 		public void DelayedPush(UILayer layer) {
 			layerToPush = layer;
 		}
 		// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
-		public override void Push(UILayer layer) {
+		public override void Push(UILayer layer){
 			if (!layer.gameObject.scene.IsValid()){
 				layer = Instantiate(layer, transform);
 			}
@@ -75,10 +91,11 @@ namespace Player {
 		protected override void Update(){
 			UpdateHover();
 			base.Update();
-			if (layerToPush != null){
-				Push(layerToPush);
-				layerToPush = null;
+			if (layerToPush == null){
+				return;
 			}
+			Push(layerToPush);
+			layerToPush = null;
 		}
 		private void UpdateHover(){
 			if (!MouseRaycast(out RaycastHit hit)){

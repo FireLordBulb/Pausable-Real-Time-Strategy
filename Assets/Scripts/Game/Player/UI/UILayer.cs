@@ -23,9 +23,7 @@ namespace Player {
 			if (clickedProvince == UI.Selected){
 				return null;
 			}
-			// Delay the push until after the next OnUpdate() so that UI.Selected is set to clickedProvince before the window is instantiated.
-			UI.DelayedPush(UI.ProvinceWindow);
-			return clickedProvince;
+			return isRightClick ? clickedProvince.Owner : clickedProvince;
 		}
 	}
 }
