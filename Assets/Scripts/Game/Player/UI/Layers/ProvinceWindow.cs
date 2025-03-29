@@ -1,3 +1,4 @@
+using System;
 using System.Text;
 using Simulation;
 using TMPro;
@@ -9,14 +10,15 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image terrainImage;
 		[SerializeField] private GameObject terrainValuesTable;
-		[SerializeField] private TextMeshProUGUI developmentModifier;
-		[SerializeField] private TextMeshProUGUI defenderAdvantage;
+		[SerializeField] private ValueTable valueTable;
+		[SerializeField] private string[] valueNames;
 		[SerializeField] private TextMeshProUGUI owner;
 		[SerializeField] private Image ownerFlag;
 		[SerializeField] private Button button;
 		
 		private Province province;
 		private bool isDone;
+
 		private void Awake(){
 			province = UI.SelectedProvince;
 			title.text = $"{province.Terrain.Name}";
@@ -26,8 +28,8 @@ namespace Player {
 				terrainValuesTable.SetActive(false);
 				owner.gameObject.SetActive(false);
 			} else {
-				developmentModifier.text = Format.SignedPercent(province.Terrain.DevelopmentModifier);
-				defenderAdvantage.text = Format.SignedPercent(province.Terrain.DefenderAdvantage);
+				valueTable.Generate(-1, valueNames);
+				valueTable.UpdateColumn(0, Format.SignedPercent, province.Terrain.DevelopmentModifier, province.Terrain.DefenderAdvantage);
 				owner.text = $"Part of {province.Owner.Name}";
 				ownerFlag.material = new Material(ownerFlag.material){
 					color = province.Owner.MapColor
