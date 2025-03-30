@@ -77,7 +77,7 @@ namespace Mathematics {
 		
 		public static Vector2 Swizzle(Vector2 vector) => new(vector.y, vector.x);
 		
-		public static void SetWidth(RectTransform rectTransform, float width){
+		public static void SetRectWidth(RectTransform rectTransform, float width){
 			Vector2 sizeDelta = rectTransform.sizeDelta;
 			sizeDelta.x = width;
 			rectTransform.sizeDelta = sizeDelta;

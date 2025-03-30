@@ -14,7 +14,7 @@ namespace Player {
             float width = ((RectTransform)transform).rect.width;
 
             rows[0] = Instantiate(rowPrefab, transform);
-            VectorGeometry.SetWidth(rows[0].RectTransform, width);
+            VectorGeometry.SetRectWidth(rows[0].RectTransform, width);
             rows[0].SetCell(columnIndex, cellTexts[0]);
             
             Vector2 positionOffset = new(0, -rows[0].RectTransform.rect.height);
@@ -23,7 +23,7 @@ namespace Player {
                 rowPosition += positionOffset;
                 rows[i] = Instantiate(rowPrefab, transform);
                 rows[i].RectTransform.anchoredPosition = rowPosition;
-                VectorGeometry.SetWidth(rows[i].RectTransform, width);
+                VectorGeometry.SetRectWidth(rows[i].RectTransform, width);
                 rows[i].SetCell(columnIndex, cellTexts[i]);
             }
         }

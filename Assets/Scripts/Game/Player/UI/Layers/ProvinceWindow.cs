@@ -31,7 +31,7 @@ namespace Player {
 				valueTable.UpdateColumn(0, Format.SignedPercent, province.Terrain.DevelopmentModifier, province.Terrain.DefenderAdvantage);
 				ownerName.text = province.Owner.Name;
 				ownerName.ForceMeshUpdate();
-				VectorGeometry.SetWidth((RectTransform)ownerName.transform, ownerName.textBounds.size.x);
+				VectorGeometry.SetRectWidth((RectTransform)ownerName.transform, ownerName.textBounds.size.x);
 				AddCountryLink(ownerName.gameObject, province.Owner);
 				ownerFlag.material = new Material(ownerFlag.material){
 					color = province.Owner.MapColor
