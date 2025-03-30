@@ -13,7 +13,8 @@ namespace Player {
 		
 		[SerializeField] private UILayer hud;
 		[SerializeField] private UILayer countrySelection;
-		[SerializeField] private ProvinceWindow provinceWindow;
+		[SerializeField] private UILayer provinceWindow;
+		[SerializeField] private UILayer countryWindow;
 		[SerializeField] private LayerMask mapClickMask;
 
 		private Input.UIActions input;
@@ -21,14 +22,12 @@ namespace Player {
 		private Province hoveredProvince;
 		private Province mouseDownProvince;
 		private bool isProvinceClickRight;
-		
-		public Camera Camera {get; private set;}
+
 		public Country PlayerCountry {get; internal set;}
 		public Component Selected {get; private set;}
 		
 		public Province SelectedProvince => Selected as Province;
 		public Country SelectedCountry => Selected as Country;
-		public ProvinceWindow ProvinceWindow => provinceWindow;
 		private Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
 		
 		private void Awake(){
@@ -64,18 +63,15 @@ namespace Player {
 				Selected = CurrentAction.OnProvinceClicked(mouseDownProvince, isRightClick);
 				// Delay the push until after the next OnUpdate() so the current window can remove itself first.
 				if (Selected is Province){
-					DelayedPush(ProvinceWindow);
+					DelayedPush(provinceWindow);
 				} else if (Selected is Country){
-					// TODO: Spawn country panel
+					DelayedPush(countryWindow);
 				}
 			} else {
 				// Dragging a left click always results in a deselect, no layer-specific logic for this.
 				Deselect();
 			}
 			mouseDownProvince = null;
-		}
-		private void Start(){
-			Camera = CameraMovement.Instance.Camera;
 		}
 		
 		public void DelayedPush(UILayer layer) {
@@ -119,7 +115,7 @@ namespace Player {
 				hit = new RaycastHit();
 				return false;
 			}
-			return Physics.Raycast(Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, mapClickMask);
+			return Physics.Raycast(CameraMovement.Instance.Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, mapClickMask);
 		}
 		private void EndHover(){
 			if (!hoveredProvince){
@@ -129,7 +125,7 @@ namespace Player {
 			hoveredProvince = null;
 		}
 
-		public void DeselectProvince(Province province){
+		public void Deselect(Component province){
 			if (Selected == province){
 				Selected = null;
 			}

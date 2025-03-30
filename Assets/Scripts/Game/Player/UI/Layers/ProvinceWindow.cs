@@ -1,5 +1,3 @@
-using System;
-using System.Text;
 using Simulation;
 using TMPro;
 using UnityEngine;
@@ -17,7 +15,6 @@ namespace Player {
 		[SerializeField] private Button button;
 		
 		private Province province;
-		private bool isDone;
 
 		private void Awake(){
 			province = UI.SelectedProvince;
@@ -37,17 +34,10 @@ namespace Player {
 			}
 			province.OnSelect();
 			
-			button.onClick.AddListener(() => {
-				isDone = true;
-				UI.DeselectProvince(province);
-			});
+			button.onClick.AddListener(() => UI.Deselect(province));
 		}
 		public override void OnUpdate(){
 			// TODO: When a tick passes or an action was taken on the province, update window info.
-			if (UI.SelectedProvince == province){
-				return;
-			}
-			isDone = true;
 		}
 		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
 			return RegularProvinceClick(clickedProvince, isRightClick);
@@ -57,7 +47,7 @@ namespace Player {
 			base.OnEnd();
 		}
 		public override bool IsDone(){
-			return isDone;
+			return UI.SelectedProvince != province;
 		}
 	}
 }

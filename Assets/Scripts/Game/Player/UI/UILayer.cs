@@ -20,10 +20,10 @@ namespace Player {
 		
 		// Subclass Sandbox. |>-------------------------------------------------------------------------------------------
 		protected static Component RegularProvinceClick(Province clickedProvince, bool isRightClick){
-			if (clickedProvince == UI.Selected){
-				return null;
+			if (isRightClick){
+				return clickedProvince.Owner == UI.SelectedCountry ? null : clickedProvince.Owner;
 			}
-			return isRightClick ? clickedProvince.Owner : clickedProvince;
+			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
 		}
 	}
 }

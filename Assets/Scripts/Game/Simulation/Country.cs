@@ -25,6 +25,7 @@ namespace Simulation {
 		
 		public Color MapColor {get; private set;}
 		public bool IsDirty {get; private set;}
+		public int ProvinceCount {get; private set;}
 		public float Gold {get; private set;}
 		public int Manpower {get; private set;}
 		public int Sailors {get; private set;}
@@ -100,17 +101,21 @@ namespace Simulation {
 			IsDirty = false;
 		}
 		
-		public bool LoseProvince(Province province){
-			bool didLoseProvince = provinces.Remove(province);
-			wasBorderChanged |= didLoseProvince;
-			IsDirty |= didLoseProvince;
-			return didLoseProvince;
-		}
 		public bool GainProvince(Province province){
-			bool didGainProvince = provinces.Add(province);
-			wasBorderChanged |= didGainProvince;
-			IsDirty |= didGainProvince;
-			return didGainProvince;
+			return ChangeProvinceCount(provinces.Add(province), +1);
+		}
+		public bool LoseProvince(Province province){
+			return ChangeProvinceCount(provinces.Remove(province), -1);
+
+		}
+		private bool ChangeProvinceCount(bool wasChanged, int change){
+			if (!wasChanged){
+				return false;
+			}
+			ProvinceCount += change;
+			wasBorderChanged = true;
+			IsDirty = true;
+			return true;
 		}
 	}
 
