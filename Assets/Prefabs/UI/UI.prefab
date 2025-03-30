@@ -201,3 +201,4 @@ MonoBehaviour:
   mapClickMask:
     serializedVersion: 2
     m_Bits: 51
+  maxSelectHistory: 20

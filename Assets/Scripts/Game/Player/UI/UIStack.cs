@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ActionStackSystem;
 using Simulation;
 using UnityEngine;
@@ -16,9 +17,12 @@ namespace Player {
 		[SerializeField] private UILayer provinceWindow;
 		[SerializeField] private UILayer countryWindow;
 		[SerializeField] private LayerMask mapClickMask;
+		[SerializeField] private int maxSelectHistory;
 
 		private Input.UIActions input;
 		private UILayer layerToPush;
+		private readonly LinkedList<Component> selectedHistory = new();
+		private int selectHistoryCount;
 		private Province hoveredProvince;
 		private Province mouseDownProvince;
 		private bool isProvinceClickRight;
@@ -40,6 +44,14 @@ namespace Player {
 			input.Enable();
 			input.Click.performed      += context => ClickProvince(context, false);
 			input.RightClick.performed += context => ClickProvince(context, true );
+			input.Back.performed += _ => {
+				if (selectHistoryCount == 0){
+					return;
+				}
+				selectedHistory.RemoveFirst();
+				selectHistoryCount--;
+				SelectWithoutHistoryUpdate(selectHistoryCount != 0 ? selectedHistory.First.Value : null);
+			};
 			
 			Push(hud);
 			Push(countrySelection);
@@ -120,6 +132,10 @@ namespace Player {
 		}
 
 		public void Select(Component component){
+			SelectWithoutHistoryUpdate(component);
+			UpdateSelectedHistory(Selected);
+		}
+		private void SelectWithoutHistoryUpdate(Component component){
 			Selected = component;
 			// Delay the push until after the next OnUpdate() so the current window can remove itself first.
 			if (Selected is Province){
@@ -130,11 +146,28 @@ namespace Player {
 		}
 		public void Deselect(Component component){
 			if (Selected == component){
-				Selected = null;
+				Deselect();
 			}
 		}
 		public void Deselect(){
 			Selected = null;
+			UpdateSelectedHistory(Selected);
+		}
+
+		private void UpdateSelectedHistory(Component component){
+			if (selectHistoryCount != 0 && selectedHistory.First.Value == Selected){
+				return;
+			}
+			selectedHistory.AddFirst(Selected);
+			selectHistoryCount++;
+			while (maxSelectHistory < selectHistoryCount){
+				selectedHistory.RemoveLast();
+				selectHistoryCount--;
+			}
+		}
+		public void ClearSelectHistory(){
+			selectedHistory.Clear();
+			selectHistoryCount = 0;
 		}
 
 		public UILayer GetLayerBelow(UILayer layer){

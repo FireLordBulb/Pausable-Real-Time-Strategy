@@ -27,6 +27,7 @@ namespace Player {
 				select.onClick.AddListener(() => {
 					UI.PlayerCountry = country;
 					UI.Deselect();
+					UI.ClearSelectHistory();
 				});
 			} else {
 				select.gameObject.SetActive(false);
