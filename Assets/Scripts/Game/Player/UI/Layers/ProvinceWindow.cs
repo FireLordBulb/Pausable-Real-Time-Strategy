@@ -1,3 +1,4 @@
+using Mathematics;
 using Simulation;
 using TMPro;
 using UnityEngine;
@@ -10,9 +11,10 @@ namespace Player {
 		[SerializeField] private GameObject terrainValuesTable;
 		[SerializeField] private ValueTable valueTable;
 		[SerializeField] private string[] valueNames;
-		[SerializeField] private TextMeshProUGUI owner;
+		[SerializeField] private GameObject ownerRow;
+		[SerializeField] private TextMeshProUGUI ownerName;
 		[SerializeField] private Image ownerFlag;
-		[SerializeField] private Button button;
+		[SerializeField] private Button close;
 		
 		private Province province;
 
@@ -23,18 +25,22 @@ namespace Player {
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 			if (province.IsSea){
 				terrainValuesTable.SetActive(false);
-				owner.gameObject.SetActive(false);
+				ownerRow.gameObject.SetActive(false);
 			} else {
 				valueTable.Generate(-1, valueNames);
 				valueTable.UpdateColumn(0, Format.SignedPercent, province.Terrain.DevelopmentModifier, province.Terrain.DefenderAdvantage);
-				owner.text = $"Part of {province.Owner.Name}";
+				ownerName.text = province.Owner.Name;
+				ownerName.ForceMeshUpdate();
+				VectorGeometry.SetWidth((RectTransform)ownerName.transform, ownerName.textBounds.size.x);
+				AddCountryLink(ownerName.gameObject, province.Owner);
 				ownerFlag.material = new Material(ownerFlag.material){
 					color = province.Owner.MapColor
 				};
+				AddCountryLink(ownerFlag.gameObject, province.Owner);
 			}
 			province.OnSelect();
 			
-			button.onClick.AddListener(() => UI.Deselect(province));
+			close.onClick.AddListener(() => UI.Deselect(province));
 		}
 		public override void OnUpdate(){
 			// TODO: When a tick passes or an action was taken on the province, update window info.

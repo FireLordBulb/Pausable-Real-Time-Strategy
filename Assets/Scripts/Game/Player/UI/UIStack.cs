@@ -60,13 +60,7 @@ namespace Player {
 				return;
 			}
 			if (mouseDownProvince == hoveredProvince){
-				Selected = CurrentAction.OnProvinceClicked(mouseDownProvince, isRightClick);
-				// Delay the push until after the next OnUpdate() so the current window can remove itself first.
-				if (Selected is Province){
-					DelayedPush(provinceWindow);
-				} else if (Selected is Country){
-					DelayedPush(countryWindow);
-				}
+				Select (CurrentAction.OnProvinceClicked(mouseDownProvince, isRightClick));
 			} else {
 				// Dragging a left click always results in a deselect, no layer-specific logic for this.
 				Deselect();
@@ -125,8 +119,17 @@ namespace Player {
 			hoveredProvince = null;
 		}
 
-		public void Deselect(Component province){
-			if (Selected == province){
+		public void Select(Component component){
+			Selected = component;
+			// Delay the push until after the next OnUpdate() so the current window can remove itself first.
+			if (Selected is Province){
+				DelayedPush(provinceWindow);
+			} else if (Selected is Country){
+				DelayedPush(countryWindow);
+			}
+		}
+		public void Deselect(Component component){
+			if (Selected == component){
 				Selected = null;
 			}
 		}

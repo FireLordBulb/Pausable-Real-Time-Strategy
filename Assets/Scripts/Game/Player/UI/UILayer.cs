@@ -25,5 +25,9 @@ namespace Player {
 			}
 			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
 		}
+
+		protected static void AddCountryLink(GameObject linkObject, Country country){
+			linkObject.AddComponent<UILink>().Link(() => UI.Select(country));
+		}
 	}
 }
