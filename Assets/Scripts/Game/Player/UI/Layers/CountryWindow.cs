@@ -24,7 +24,10 @@ namespace Player {
 			valueTable.Generate(-1, valueNames);
 			UpdateValueTable();
 			if (UI.PlayerCountry == null){
-				select.onClick.AddListener(() => UI.PlayerCountry = country);
+				select.onClick.AddListener(() => {
+					UI.PlayerCountry = country;
+					UI.Deselect();
+				});
 			} else {
 				select.gameObject.SetActive(false);
 			}
@@ -44,7 +47,7 @@ namespace Player {
 		}
 		
 		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
-			return RegularProvinceClick(clickedProvince, isRightClick);
+			return LayerBelow.OnProvinceClicked(clickedProvince, isRightClick);
 		}	
 		public override void OnEnd(){
 			Calendar.Instance.OnMonthTick.RemoveListener(UpdateValueTable);

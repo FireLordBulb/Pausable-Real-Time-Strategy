@@ -4,9 +4,17 @@ using UnityEngine;
 
 namespace Player {
 	public abstract class UILayer : ActionBehaviour {
+		private UILayer layerBelow;
+		
+		protected UILayer LayerBelow {get {
+			if (layerBelow == null){
+				layerBelow = UI.GetLayerBelow(this);
+			}
+			return layerBelow;
+		}}
 		protected static UIStack UI => UIStack.Instance;
-		protected static Country Player => UIStack.Instance.PlayerCountry;
-
+		protected static Country Player => UI.PlayerCountry;
+		
 		public override void OnBegin(bool isFirstTime){}
 
 		public virtual Component OnProvinceClicked(Province clickedProvince, bool isRightClick) => null;

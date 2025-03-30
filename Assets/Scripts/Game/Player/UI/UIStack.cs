@@ -22,7 +22,7 @@ namespace Player {
 		private Province hoveredProvince;
 		private Province mouseDownProvince;
 		private bool isProvinceClickRight;
-
+		
 		public Country PlayerCountry {get; internal set;}
 		public Component Selected {get; private set;}
 		
@@ -135,6 +135,14 @@ namespace Player {
 		}
 		public void Deselect(){
 			Selected = null;
+		}
+
+		public UILayer GetLayerBelow(UILayer layer){
+			int index = StackList.FindIndex(l => l == layer);
+			if (index < 1){
+				return null;
+			}
+			return StackList[index-1];
 		}
 	}
 }
