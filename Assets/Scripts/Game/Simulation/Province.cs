@@ -142,18 +142,16 @@ namespace Simulation {
         }
         
         public void OnHoverEnter(){
-            if (isSelected){
-                return;
-            }
-            shapeMeshRenderer.sharedMaterial.color = hoverColor;
             isHovered = true;
+            if (!isSelected){
+                shapeMeshRenderer.sharedMaterial.color = hoverColor;
+            }
         }
         public void OnHoverLeave(){
-            if (isSelected){
-                return;
-            }
-            shapeMeshRenderer.sharedMaterial.color = baseColor;
             isHovered = false;
+            if (!isSelected){
+                shapeMeshRenderer.sharedMaterial.color = baseColor;
+            }
         }
         public void OnSelect(){
             isSelected = true;
