@@ -23,7 +23,6 @@ namespace Player {
 			
 			valueTable.Generate(-1, valueNames);
 			UpdateValueTable();
-			// TODO: country.Deselect();
 			if (UI.PlayerCountry == null){
 				select.onClick.AddListener(() => UI.PlayerCountry = country);
 			} else {
@@ -31,6 +30,8 @@ namespace Player {
 			}
 			close.onClick.AddListener(() => UI.Deselect(country));
 			Calendar.Instance.OnMonthTick.AddListener(UpdateValueTable);
+			
+			country.OnSelect();
 		}
 
 		public void UpdateValueTable(){
@@ -47,7 +48,7 @@ namespace Player {
 		}	
 		public override void OnEnd(){
 			Calendar.Instance.OnMonthTick.RemoveListener(UpdateValueTable);
-			// TODO: country.OnDeselect();
+			country.OnDeselect();
 			base.OnEnd();
 		}
 		public override bool IsDone(){

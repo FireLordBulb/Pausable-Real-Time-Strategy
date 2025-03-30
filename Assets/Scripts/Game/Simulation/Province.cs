@@ -159,7 +159,7 @@ namespace Simulation {
         }
         public void OnDeselect(){
             isSelected = false;
-            shapeMeshRenderer.sharedMaterial.color = baseColor;
+            shapeMeshRenderer.sharedMaterial.color = isHovered ? hoverColor : baseColor;
         }
 
         public enum Type {

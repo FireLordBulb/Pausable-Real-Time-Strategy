@@ -117,6 +117,17 @@ namespace Simulation {
 			IsDirty = true;
 			return true;
 		}
+		
+		public void OnSelect(){
+			foreach (Province province in Provinces){
+				province.OnSelect();
+			}
+		}
+		public void OnDeselect(){
+			foreach (Province province in Provinces){
+				province.OnDeselect();
+			}
+		}
 	}
 
 	[Serializable]
