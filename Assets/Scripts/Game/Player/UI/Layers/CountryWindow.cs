@@ -25,7 +25,7 @@ namespace Player {
 			UpdateValueTable();
 			if (UI.PlayerCountry == null){
 				select.onClick.AddListener(() => {
-					UI.PlayerCountry = country;
+					UI.PlayAs(country);
 					UI.Deselect();
 					UI.ClearSelectHistory();
 				});
@@ -56,6 +56,7 @@ namespace Player {
 			base.OnEnd();
 		}
 		public override bool IsDone(){
+			base.IsDone();
 			return UI.SelectedCountry != country;
 		}
 	}

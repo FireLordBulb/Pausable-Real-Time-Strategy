@@ -20,9 +20,14 @@ namespace Player {
 		public virtual Component OnProvinceClicked(Province clickedProvince, bool isRightClick) => null;
 
 		public override void OnEnd(){
-			Destroy(gameObject);
+			if (this != null){
+				Destroy(gameObject);
+			}
 		}
 		public override bool IsDone(){
+			if (LayerBelow != null && LayerBelow.IsDone()){
+				LayerBelow.OnEnd();
+			}
 			return false;
 		}
 		

@@ -7,7 +7,10 @@ using UnityEngine;
 namespace Simulation {
 	public class Country : MonoBehaviour {
 		private static readonly Dictionary<string, Country> Countries = new();
-		public static Country Get(string key) => Countries[key];
+		public static Country Get(string key){
+			Countries.TryGetValue(key, out Country country);
+			return country;
+		}
 #if UNITY_EDITOR
 		public static void ClearCountryDictionary(){
 			Countries.Clear();

@@ -9,7 +9,7 @@ namespace Player {
 		public override void OnBegin(bool isFirstTime){
 #if UNITY_EDITOR
 			if (doAutoSelect){
-				UI.PlayerCountry = Country.Get(autoSelectedCountryName);
+				UI.PlayAs(Country.Get(autoSelectedCountryName));
 			}
 #endif
 		}
@@ -23,6 +23,7 @@ namespace Player {
 			base.OnEnd();
 		}
 		public override bool IsDone(){
+			base.IsDone();
 			return Player != null;
 		}
 	}

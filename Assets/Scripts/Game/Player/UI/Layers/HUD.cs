@@ -17,8 +17,12 @@ namespace Player {
 		private bool doRefreshThisFrame;
 		
 		public override void OnBegin(bool isFirstTime){
-			// TODO: Alter when observer mode is added.
-			Debug.Assert(Player != null);
+			RefreshCountry();
+		}
+		public void RefreshCountry(){
+			if (Player == null){
+				return;
+			}
 			gameObject.SetActive(true);
 
 			countryFlag.material = new Material(countryFlag.material){
@@ -53,6 +57,9 @@ namespace Player {
 		}
 		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
 			return RegularProvinceClick(clickedProvince, isRightClick);
+		}
+		public override bool IsDone(){
+			return false;
 		}
 	}
 }

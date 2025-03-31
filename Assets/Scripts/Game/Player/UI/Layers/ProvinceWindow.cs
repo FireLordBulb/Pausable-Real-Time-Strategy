@@ -53,6 +53,7 @@ namespace Player {
 			base.OnEnd();
 		}
 		public override bool IsDone(){
+			base.IsDone();
 			return UI.SelectedProvince != province;
 		}
 	}

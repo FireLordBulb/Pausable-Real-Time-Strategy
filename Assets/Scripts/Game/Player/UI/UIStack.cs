@@ -12,10 +12,11 @@ namespace Player {
 
 		public static UIStack Instance {get; private set;}
 		
-		[SerializeField] private UILayer hud;
+		[SerializeField] private HUD hud;
 		[SerializeField] private UILayer countrySelection;
 		[SerializeField] private UILayer provinceWindow;
 		[SerializeField] private UILayer countryWindow;
+		[SerializeField] private DebugConsole debugConsole;
 		[SerializeField] private LayerMask mapClickMask;
 		[SerializeField] private int maxSelectHistory;
 
@@ -27,7 +28,7 @@ namespace Player {
 		private Province mouseDownProvince;
 		private bool isProvinceClickRight;
 		
-		public Country PlayerCountry {get; internal set;}
+		public Country PlayerCountry {get; private set;}
 		public Component Selected {get; private set;}
 		
 		public Province SelectedProvince => Selected as Province;
@@ -44,7 +45,7 @@ namespace Player {
 			input.Enable();
 			input.Click.performed      += context => ClickProvince(context, false);
 			input.RightClick.performed += context => ClickProvince(context, true );
-			input.Back.performed += _ => {
+			input.Back.canceled += _ => {
 				if (selectHistoryCount == 0){
 					return;
 				}
@@ -52,7 +53,29 @@ namespace Player {
 				selectHistoryCount--;
 				SelectWithoutHistoryUpdate(selectHistoryCount != 0 ? selectedHistory.First.Value : null);
 			};
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+			debugConsole = Instantiate(debugConsole, transform);
+			bool debugWasDeactivated = false;
+			input.Debug.canceled += _ => {
+				if (debugConsole.gameObject.activeSelf){
+					return;
+				}
+				if (debugWasDeactivated){
+					debugWasDeactivated = false;
+					return;
+				}
+				debugConsole.Enable();
+			};
+			input.Debug.performed += _ => {
+				if (!debugConsole.gameObject.activeSelf){
+					return;
+				}
+				debugWasDeactivated = true;
+				debugConsole.Disable();
+			};
+#endif
 			
+			hud = Instantiate(hud, transform);
 			Push(hud);
 			Push(countrySelection);
 		}
@@ -131,6 +154,11 @@ namespace Player {
 			hoveredProvince = null;
 		}
 
+		public void PlayAs(Country country){
+			PlayerCountry = country;
+			hud.RefreshCountry();
+		}
+		
 		public void Select(Component component){
 			SelectWithoutHistoryUpdate(component);
 			UpdateSelectedHistory(Selected);
@@ -171,6 +199,7 @@ namespace Player {
 		}
 
 		public UILayer GetLayerBelow(UILayer layer){
+			StackList.RemoveAll(l => l == null);
 			int index = StackList.FindIndex(l => l == layer);
 			if (index < 1){
 				return null;
