@@ -33,6 +33,10 @@ namespace Player {
 		private void RunCommand(string command){
 			string[] words = command.Split(" ");
 			switch(words[0].ToLower()){
+				case "country_switching":
+					UIStack.Instance.CanSwitchCountry = !UIStack.Instance.CanSwitchCountry;
+					AddConsoleResponse($"Free country switching is now {(UIStack.Instance.CanSwitchCountry ? "Enabled" : "Disabled")}.");
+					return;
 				case "play_as":
 					if (words.Length == 1){
 						AddConsoleResponse("Incomplete command: 'play_as' requires country name as argument.");

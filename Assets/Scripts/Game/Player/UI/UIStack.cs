@@ -28,6 +28,7 @@ namespace Player {
 		private Province mouseDownProvince;
 		private bool isProvinceClickRight;
 		
+		public bool CanSwitchCountry {get; internal set;}
 		public Country PlayerCountry {get; private set;}
 		public Component Selected {get; private set;}
 		
@@ -157,6 +158,9 @@ namespace Player {
 		public void PlayAs(Country country){
 			PlayerCountry = country;
 			hud.RefreshCountry();
+			Deselect();
+			CameraMovement cameraMovement = CameraMovement.Instance;
+			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.WorldPosition));
 		}
 		
 		public void Select(Component component){

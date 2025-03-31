@@ -23,7 +23,7 @@ namespace Player {
 			
 			valueTable.Generate(-1, valueNames);
 			UpdateValueTable();
-			if (UI.PlayerCountry == null){
+			if (UI.PlayerCountry == null || UI.CanSwitchCountry){
 				select.onClick.AddListener(() => {
 					UI.PlayAs(country);
 					UI.Deselect();
