@@ -164,6 +164,22 @@ namespace Player {
 			CameraMovement cameraMovement = CameraMovement.Instance;
 			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.WorldPosition));
 		}
+
+		public void RefreshSelected(){
+			if (Selected is Province){
+				RefreshWindow<ProvinceWindow>();
+			} else if (Selected is Country){
+				RefreshWindow<CountryWindow>();
+			}
+		}
+		private void RefreshWindow<T>() where T : IRefreshable {
+			for (int i = StackList.Count-1; i > 0; i--){
+				if (StackList[i] is T window){
+					window.Refresh();
+					break;
+				}
+			}
+		}
 		
 		public void Select(Component component){
 			SelectWithoutHistoryUpdate(component);

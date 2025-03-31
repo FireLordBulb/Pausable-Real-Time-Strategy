@@ -12,9 +12,6 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI gold;
 		[SerializeField] private TextMeshProUGUI manpower;
 		[SerializeField] private TextMeshProUGUI sailors;
-
-		private bool doRefreshNextFrame;
-		private bool doRefreshThisFrame;
 		
 		public override void OnBegin(bool isFirstTime){
 			gameObject.SetActive(true);
@@ -41,9 +38,6 @@ namespace Player {
 			sailors.text = Format.FormatLargeNumber(Player.Sailors, Format.SevenDigits);
 		}
 		private void Start(){
-			Calendar.Instance.OnMonthTick.AddListener(() => {
-				doRefreshNextFrame = true;
-			});
 			Calendar.Instance.OnPauseToggle.AddListener(pauseLabel.SetActive);
 			pauseLabel.SetActive(Calendar.Instance.IsPaused);
 		}
@@ -51,15 +45,9 @@ namespace Player {
 			if (Player == null){
 				return;
 			}
-			if (doRefreshNextFrame){
-				doRefreshNextFrame = false;
-				doRefreshThisFrame = true;
-			} else if (doRefreshThisFrame){
-				doRefreshThisFrame = false;
-				if (Player.IsDirty){
-					RefreshResources();
-					Player.MarkClean();
-				}
+			if (Player.IsDirty){
+				RefreshResources();
+				Player.MarkClean();
 			}
 		}
 		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){

@@ -1,3 +1,4 @@
+using System;
 using Simulation;
 using TMPro;
 using UnityEngine;
@@ -54,8 +55,44 @@ namespace Player {
 						AddConsoleResponse($"Command 'play_as' failed. No country has the name '{words[1]}'.");
 					}
 					return;
+				case "gold":
+					AddResource(words,
+						s => (float.TryParse(s, out float value), value),
+						value => UIStack.Instance.PlayerCountry.GainResources(value, 0, 0),
+					"a float");
+					return;
+				case "manpower":
+					AddResource(words,
+						s => (int.TryParse(s, out int value), value),
+						value => UIStack.Instance.PlayerCountry.GainResources(0, value, 0),
+					"an int");
+					return;
+				case "sailors":
+					AddResource(words,
+						s => (int.TryParse(s, out int value), value),
+						value => UIStack.Instance.PlayerCountry.GainResources(0, 0, value),
+					"an int");
+					return;
 			}
 			AddConsoleResponse($"Invalid command: {words[0]}");
+		}
+		private void AddResource<T>(string[] words, Func<string, (bool, T)> parser, Action<T> addfunction, string typeName){
+			if (UIStack.Instance.PlayerCountry == null){
+				AddConsoleResponse($"Command '{words[0]}' failed. Must be playing as a country to add resources to it.");
+				return;
+			}
+			if (words.Length == 1){
+				AddConsoleResponse($"Incomplete command: '{words[0]}' requires {words[0]} amount as argument.");
+				return;
+			}
+			(bool couldParse, T value) = parser(words[1]);
+			if (couldParse){
+				addfunction(value);
+				UIStack.Instance.RefreshSelected();
+				AddConsoleResponse($"Added {words[1]} {words[0]} to {UIStack.Instance.PlayerCountry.Name}.");
+			} else {
+				AddConsoleResponse($"Command '{words[0]}' failed. Couldn't parse {words[1]} to {typeName}.");
+			}
 		}
 		private void AddConsoleResponse(string response){
 			consoleText.text += $"\n> {response}";

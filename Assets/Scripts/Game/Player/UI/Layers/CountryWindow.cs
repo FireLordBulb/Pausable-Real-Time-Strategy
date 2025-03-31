@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Player {
-	public class CountryWindow : UILayer {
+	public class CountryWindow : UILayer, IRefreshable {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image flag;
 		[SerializeField] private ValueTable valueTable;
@@ -22,7 +22,7 @@ namespace Player {
 			};
 			
 			valueTable.Generate(-1, valueNames);
-			UpdateValueTable();
+			Refresh();
 			if (UI.PlayerCountry == null || UI.CanSwitchCountry){
 				select.onClick.AddListener(() => {
 					UI.PlayAs(country);
@@ -33,12 +33,12 @@ namespace Player {
 				select.gameObject.SetActive(false);
 			}
 			close.onClick.AddListener(() => UI.Deselect(country));
-			Calendar.Instance.OnMonthTick.AddListener(UpdateValueTable);
+			Calendar.Instance.OnMonthTick.AddListener(Refresh);
 			
 			country.OnSelect();
 		}
 
-		public void UpdateValueTable(){
+		public void Refresh(){
 			valueTable.UpdateColumn(0, (
 				Format.FormatLargeNumber(country.ProvinceCount, Format.SevenDigits)),	
 				Format.FormatLargeNumber(country.Gold, Format.FiveDigits),	
@@ -51,7 +51,7 @@ namespace Player {
 			return LayerBelow.OnProvinceClicked(clickedProvince, isRightClick);
 		}	
 		public override void OnEnd(){
-			Calendar.Instance.OnMonthTick.RemoveListener(UpdateValueTable);
+			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
 			country.OnDeselect();
 			base.OnEnd();
 		}

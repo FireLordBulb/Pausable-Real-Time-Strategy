@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Player {
-	public class ProvinceWindow : UILayer {
+	public class ProvinceWindow : UILayer, IRefreshable {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image terrainImage;
 		[SerializeField] private GameObject terrainValuesTable;
@@ -28,22 +28,25 @@ namespace Player {
 				ownerRow.gameObject.SetActive(false);
 			} else {
 				valueTable.Generate(-1, valueNames);
-				valueTable.UpdateColumn(0, Format.SignedPercent, province.Terrain.DevelopmentModifier, province.Terrain.DefenderAdvantage);
-				ownerName.text = province.Owner.Name;
-				ownerName.ForceMeshUpdate();
-				VectorGeometry.SetRectWidth((RectTransform)ownerName.transform, ownerName.textBounds.size.x);
-				AddCountryLink(ownerName.gameObject, province.Owner);
-				ownerFlag.material = new Material(ownerFlag.material){
-					color = province.Owner.MapColor
-				};
-				AddCountryLink(ownerFlag.gameObject, province.Owner);
+				Refresh();
 			}
 			province.OnSelect();
 			
 			close.onClick.AddListener(() => UI.Deselect(province));
 		}
-		public override void OnUpdate(){
-			// TODO: When a tick passes or an action was taken on the province, update window info.
+		public void Refresh(){
+			if (province.IsSea){
+				return;
+			}
+			valueTable.UpdateColumn(0, Format.SignedPercent, province.Terrain.DevelopmentModifier, province.Terrain.DefenderAdvantage);
+			ownerName.text = province.Owner.Name;
+			ownerName.ForceMeshUpdate();
+			VectorGeometry.SetRectWidth((RectTransform)ownerName.transform, ownerName.textBounds.size.x);
+			AddCountryLink(ownerName.gameObject, province.Owner);
+			ownerFlag.material = new Material(ownerFlag.material){
+				color = province.Owner.MapColor
+			};
+			AddCountryLink(ownerFlag.gameObject, province.Owner);
 		}
 		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
 			return RegularProvinceClick(clickedProvince, isRightClick);
