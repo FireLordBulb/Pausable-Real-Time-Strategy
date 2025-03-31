@@ -7,6 +7,11 @@ using UnityEngine.EventSystems;
 
 namespace Player {
 	public class DebugConsole : MonoBehaviour {
+		// ReSharper disable thrice InconsistentNaming
+		private const int YYYY_MM_DD = 3;
+		private const int MM_DD = 2;
+		private const int YYYY = 1;
+		
 		[SerializeField] private TextMeshProUGUI consoleText;
 		[SerializeField] private TMP_InputField inputField;
 		private void Awake(){
@@ -82,12 +87,29 @@ namespace Player {
 						AddConsoleResponse("Incomplete command: 'skip_days' requires number of days as argument.");
 						return;
 					}
-					if (int.TryParse(words[1], out int value)){
-						SetDate(new Date(Calendar.Instance.CurrentDate.year, Calendar.Instance.CurrentDate.month,
-							Calendar.Instance.CurrentDate.day+value));
+					if (int.TryParse(words[1], out int days)){
+						Date date = Calendar.Instance.CurrentDate;
+						date.day += days;
+						SetDate(date);
 					} else {
 						AddConsoleResponse($"Command 'skip_days' failed. Couldn't parse {words[1]} to int.");
 					}
+					return;
+				}
+				case "date": {
+					if (words.Length == 1){
+						AddConsoleResponse("Incomplete command: 'date' requires a date as argument.");
+						return;
+					}
+					string[] numberStrings = words[1].TrimStart('-').Split('-');
+					if (numberStrings.Length <= YYYY_MM_DD){
+						int sign = words[1][0] == '-' ? -1 : +1;
+						bool couldParse = ParseAndSetDate(numberStrings, sign);
+						if (couldParse){
+							return;
+						}
+					}
+					AddConsoleResponse($"Command 'skip_days' failed. Date must be formatted as YYYY-MM-DD or YYYY or MM-DD.");
 					return;
 				}
 			}
@@ -110,6 +132,27 @@ namespace Player {
 			} else {
 				AddConsoleResponse($"Command '{words[0]}' failed. Couldn't parse {words[1]} to {typeName}.");
 			}
+		}
+		private bool ParseAndSetDate(string[] numberStrings, int sign){
+			int[] ints = new int[numberStrings.Length];
+			for (int i = 0; i < numberStrings.Length; i++){
+				if (!int.TryParse(numberStrings[i], out ints[i])){
+					return false;
+				}
+			}
+			ints[0] *= sign;
+			switch(numberStrings.Length){
+				case YYYY_MM_DD:
+					SetDate(new Date(ints[0], ints[1]-1, ints[2]));
+					break;
+				case MM_DD:
+					SetDate(new Date(Calendar.Instance.CurrentDate.year, ints[0]-1, ints[1]));
+					break;
+				case YYYY:
+					SetDate(new Date(ints[0], Calendar.Instance.CurrentDate.month, Calendar.Instance.CurrentDate.day));
+					break;
+			}
+			return true;
 		}
 		private async void SetDate(Date date){
 			if (date < Calendar.Instance.CurrentDate){
