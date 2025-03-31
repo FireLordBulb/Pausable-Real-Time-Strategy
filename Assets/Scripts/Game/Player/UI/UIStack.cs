@@ -158,7 +158,9 @@ namespace Player {
 		public void PlayAs(Country country){
 			PlayerCountry = country;
 			hud.RefreshCountry();
-			Deselect();
+			if (country == null){
+				return;
+			}
 			CameraMovement cameraMovement = CameraMovement.Instance;
 			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.WorldPosition));
 		}

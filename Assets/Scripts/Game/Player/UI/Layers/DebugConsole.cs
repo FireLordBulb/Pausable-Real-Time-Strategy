@@ -37,6 +37,10 @@ namespace Player {
 					UIStack.Instance.CanSwitchCountry = !UIStack.Instance.CanSwitchCountry;
 					AddConsoleResponse($"Free country switching is now {(UIStack.Instance.CanSwitchCountry ? "Enabled" : "Disabled")}.");
 					return;
+				case "observe":
+					UIStack.Instance.PlayAs(null);
+					AddConsoleResponse("Activated observer mode. Deactivate by selecting a country.");
+					return;
 				case "play_as":
 					if (words.Length == 1){
 						AddConsoleResponse("Incomplete command: 'play_as' requires country name as argument.");

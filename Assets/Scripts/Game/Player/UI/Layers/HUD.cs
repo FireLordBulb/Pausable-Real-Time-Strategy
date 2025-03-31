@@ -17,14 +17,18 @@ namespace Player {
 		private bool doRefreshThisFrame;
 		
 		public override void OnBegin(bool isFirstTime){
+			gameObject.SetActive(true);
 			RefreshCountry();
 		}
 		public void RefreshCountry(){
 			if (Player == null){
+				countryFlag.material = new Material(countryFlag.material){
+					color = Color.magenta
+				};
+				countryName.text = "<i>Observing</i>";
+				sailors.text = manpower.text = gold.text = "N/A";
 				return;
 			}
-			gameObject.SetActive(true);
-
 			countryFlag.material = new Material(countryFlag.material){
 				color = Player.MapColor
 			};
@@ -44,6 +48,9 @@ namespace Player {
 			pauseLabel.SetActive(Calendar.Instance.IsPaused);
 		}
 		private void Update(){
+			if (Player == null){
+				return;
+			}
 			if (doRefreshNextFrame){
 				doRefreshNextFrame = false;
 				doRefreshThisFrame = true;
