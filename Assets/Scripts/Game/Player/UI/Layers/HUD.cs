@@ -12,6 +12,9 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI gold;
 		[SerializeField] private TextMeshProUGUI manpower;
 		[SerializeField] private TextMeshProUGUI sailors;
+		[SerializeField] private CalendarPanel calendarPanel;
+
+		public CalendarPanel CalendarPanel => calendarPanel;
 		
 		public override void OnBegin(bool isFirstTime){
 			gameObject.SetActive(true);

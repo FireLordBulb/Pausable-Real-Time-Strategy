@@ -1,5 +1,4 @@
 using System;
-using UnityEngine.Events;
 
 namespace Simulation {
 	[Serializable]
@@ -16,20 +15,25 @@ namespace Simulation {
 		public int month;
 		public int day;
 
-		public readonly UnityEvent OnDayTick;
-		public readonly UnityEvent OnMonthTick;
-		public readonly UnityEvent OnYearTick;
-
-		public Date(Date date){
-			year = date.year;
-			month = date.month;
-			day = date.day;
-			OnDayTick = new UnityEvent();
-			OnMonthTick = new UnityEvent();
-			OnYearTick = new UnityEvent();
+		public Date(Date date) : this(date.year, date.month, date.day){}
+		public Date(int startingYear, int startingMonth, int startingDay){
+			year = startingYear;
+			month = startingMonth;
+			day = startingDay;
 			Validate();
 		}
 		private void Validate(){
+			if (day < 1){
+				do {
+					month--;
+					while (month < 0){
+						year--;
+						month += Months.Length;
+					}
+					day += MonthLength();
+				} while (day < 1);
+				return;
+			}
 			while (MonthLength() < day){
 				day -= MonthLength();
 				month++;
@@ -40,21 +44,10 @@ namespace Simulation {
 			}
 		}
 		
-		public void ToNextDay(){
-			day++;
-			if (MonthLength() < day){
-				day = 1;
-				month++;
-				if (Months.Length <= month){
-					month = 0;
-					year++;
-					OnYearTick.Invoke();
-				}
-				OnMonthTick.Invoke();
-			}
-			OnDayTick.Invoke();
+		// YearLength is always the same amount of months so it's static, MonthLength depends on the current month so it's not static.
+		public static int YearLength(){
+			return Months.Length;
 		}
-		
 		public int MonthLength(){
 			// Leap year calculation is just a bunch of magic numbers. 97 leap years per 400 years.
 			if (month == February && year%4 == 0 && (year%100 != 0 || year%400 == 0)){
@@ -63,6 +56,28 @@ namespace Simulation {
 			return Months[month].days;
 		}
 		
+		public override bool Equals(object obj){
+			return obj is Date other && Equals(other);
+		}
+		public bool Equals(Date other){
+			return this == other;
+		}
+		public static bool operator==(Date left, Date right){
+			return left.year == right.year && left.month == right.month && left.day == right.day;
+		}
+		public static bool operator!=(Date left, Date right){
+			return !(left == right);
+		}
+		public static bool operator>(Date left, Date right){
+			return right < left;
+		}
+		public static bool operator<(Date left, Date right){
+			return left.year < right.year || left.year == right.year && (left.month < right.month || left.month == right.month && left.day < right.day);
+		}
+		
+		public override int GetHashCode(){
+			return HashCode.Combine(year, month, day);
+		}
 		public override string ToString(){
 			return $"{day} {Months[month].name} {year}";
 		}

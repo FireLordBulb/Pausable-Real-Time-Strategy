@@ -484,6 +484,7 @@ MonoBehaviour:
   gold: {fileID: 1830330327676014844}
   manpower: {fileID: 4398956410264506836}
   sailors: {fileID: 2707727149731271354}
+  calendarPanel: {fileID: 1614260340479607437}
 --- !u!1 &8740807339332405151
 GameObject:
   m_ObjectHideFlags: 0
@@ -951,6 +952,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b418a6abc1143c47bd53cdc11622db9, type: 3}
+--- !u!114 &1614260340479607437 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8058381847445944161, guid: 7b418a6abc1143c47bd53cdc11622db9, type: 3}
+  m_PrefabInstance: {fileID: 8769105106654295532}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c75a46ef78245ff81c2ca104e6d1742, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6586077628723891206 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2509749739248777706, guid: 7b418a6abc1143c47bd53cdc11622db9, type: 3}

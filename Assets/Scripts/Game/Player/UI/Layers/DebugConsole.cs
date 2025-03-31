@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Simulation;
 using TMPro;
 using UnityEngine;
@@ -55,28 +56,44 @@ namespace Player {
 						AddConsoleResponse($"Command 'play_as' failed. No country has the name '{words[1]}'.");
 					}
 					return;
-				case "gold":
-					AddResource(words,
+				case "gold": {
+					AddResource(words, "a float",
 						s => (float.TryParse(s, out float value), value),
-						value => UIStack.Instance.PlayerCountry.GainResources(value, 0, 0),
-					"a float");
+						gold => UIStack.Instance.PlayerCountry.GainResources(gold, 0, 0)
+					);
 					return;
-				case "manpower":
-					AddResource(words,
+				}
+				case "manpower": {
+					AddResource(words, "an int",
 						s => (int.TryParse(s, out int value), value),
-						value => UIStack.Instance.PlayerCountry.GainResources(0, value, 0),
-					"an int");
+						manpower => UIStack.Instance.PlayerCountry.GainResources(0, manpower, 0)
+					);
 					return;
-				case "sailors":
-					AddResource(words,
+				}
+				case "sailors": {
+					AddResource(words, "an int",
 						s => (int.TryParse(s, out int value), value),
-						value => UIStack.Instance.PlayerCountry.GainResources(0, 0, value),
-					"an int");
+						sailors => UIStack.Instance.PlayerCountry.GainResources(0, 0, sailors)
+					);
 					return;
+				}
+				case "skip_days": {
+					if (words.Length == 1){
+						AddConsoleResponse("Incomplete command: 'skip_days' requires number of days as argument.");
+						return;
+					}
+					if (int.TryParse(words[1], out int value)){
+						SetDate(new Date(Calendar.Instance.CurrentDate.year, Calendar.Instance.CurrentDate.month,
+							Calendar.Instance.CurrentDate.day+value));
+					} else {
+						AddConsoleResponse($"Command 'skip_days' failed. Couldn't parse {words[1]} to int.");
+					}
+					return;
+				}
 			}
 			AddConsoleResponse($"Invalid command: {words[0]}");
 		}
-		private void AddResource<T>(string[] words, Func<string, (bool, T)> parser, Action<T> addfunction, string typeName){
+		private void AddResource<T>(string[] words, string typeName, Func<string, (bool, T)> parser, Action<T> addfunction){
 			if (UIStack.Instance.PlayerCountry == null){
 				AddConsoleResponse($"Command '{words[0]}' failed. Must be playing as a country to add resources to it.");
 				return;
@@ -93,6 +110,29 @@ namespace Player {
 			} else {
 				AddConsoleResponse($"Command '{words[0]}' failed. Couldn't parse {words[1]} to {typeName}.");
 			}
+		}
+		private async void SetDate(Date date){
+			if (date < Calendar.Instance.CurrentDate){
+				AddConsoleResponse($"Changing the date to the past will not modify the simulation.");
+				Calendar.Instance.SetDate(date);
+				UIStack.Instance.CalendarPanel.UpdateDate();
+				AddConsoleResponse($"Set the date to {date}.");
+				return;
+			}
+			if (date == Calendar.Instance.CurrentDate){
+				AddConsoleResponse($"Desired date is already current date.");
+				return;
+			}
+			AddConsoleResponse($"Will change the date to {date}. This may cause a lag spike.");
+			// Wait a bit to let the lag spike warning render to the screen.
+			await Task.Delay(100);
+			UIStack.Instance.CalendarPanel.DisableUpdate();
+			do {
+				Calendar.Instance.ToNextDay();
+			} while (Calendar.Instance.CurrentDate < date);
+			UIStack.Instance.CalendarPanel.EnableUpdate();
+			UIStack.Instance.CalendarPanel.UpdateDate();
+			AddConsoleResponse($"Successfully changed the date to {date}.");
 		}
 		private void AddConsoleResponse(string response){
 			consoleText.text += $"\n> {response}";

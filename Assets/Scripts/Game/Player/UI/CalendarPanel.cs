@@ -48,14 +48,21 @@ namespace Player {
 			};
 		}
 		private void Start(){
-			Calendar.Instance.OnDayTick.AddListener(UpdateDate);
+			EnableUpdate();
 			UpdateDate();
 			UpdateSpeed();
 		}
 		
-		private void UpdateDate(){
-			date.text = Calendar.Instance.Date;
+		public void EnableUpdate(){
+			Calendar.Instance.OnDayTick.AddListener(UpdateDate);
 		}
+		public void DisableUpdate(){
+			Calendar.Instance.OnDayTick.RemoveListener(UpdateDate);
+		}
+		public void UpdateDate(){
+			date.text = Calendar.Instance.CurrentDate.ToString();
+		}
+		
 		private void SetSpeed(int index){
 			Calendar.Instance.SpeedIndex = index;
 			UpdateSpeed();

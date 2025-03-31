@@ -19,7 +19,7 @@ namespace Player {
 		[SerializeField] private DebugConsole debugConsole;
 		[SerializeField] private LayerMask mapClickMask;
 		[SerializeField] private int maxSelectHistory;
-
+		
 		private Input.UIActions input;
 		private UILayer layerToPush;
 		private readonly LinkedList<Component> selectedHistory = new();
@@ -32,6 +32,7 @@ namespace Player {
 		public Country PlayerCountry {get; private set;}
 		public Component Selected {get; private set;}
 		
+		public CalendarPanel CalendarPanel => hud.CalendarPanel;
 		public Province SelectedProvince => Selected as Province;
 		public Country SelectedCountry => Selected as Country;
 		private Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();

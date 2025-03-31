@@ -15,9 +15,10 @@ namespace Simulation {
 		private Date currentDate;
 		private float speed;
 		private float tickProgress;
-
+		
 		private int speedIndex;
 		
+		public Date CurrentDate => currentDate;
 		public bool IsPaused {get; private set;}
 		
 		public int SpeedIndex {
@@ -27,11 +28,10 @@ namespace Simulation {
 				speed = 1/speedTimeSteps[value];
 			}
 		}
-		public UnityEvent OnDayTick => currentDate.OnDayTick;
-		public UnityEvent OnMonthTick => currentDate.OnMonthTick;
-		public UnityEvent OnYearTick => currentDate.OnYearTick;
+		public UnityEvent OnDayTick {get; private set;}
+		public UnityEvent OnMonthTick {get; private set;}
+		public UnityEvent OnYearTick {get; private set;}
 		public UnityEvent<bool> OnPauseToggle {get; private set;}
-		public string Date => currentDate.ToString();
 		
 		private void Awake(){
 			if (Instance != null){
@@ -44,6 +44,9 @@ namespace Simulation {
 			tickProgress = NoProgress;
 			SpeedIndex = startingSpeed;
 
+			OnDayTick = new UnityEvent();
+			OnMonthTick = new UnityEvent();
+			OnYearTick = new UnityEvent();
 			OnPauseToggle = new UnityEvent<bool>();
 		}
 		private void Update(){
@@ -55,9 +58,27 @@ namespace Simulation {
 				return;
 			}
 			tickProgress = NoProgress;
-			currentDate.ToNextDay();
+			ToNextDay();
+		}
+		public void ToNextDay(){
+			currentDate.day++;
+			if (currentDate.MonthLength() < currentDate.day){
+				currentDate.day = 1;
+				currentDate.month++;
+				if (Date.YearLength() <= currentDate.month){
+					currentDate.month = 0;
+					currentDate.year++;
+					OnYearTick.Invoke();
+				}
+				OnMonthTick.Invoke();
+			}
+			OnDayTick.Invoke();
 		}
 
+		public void SetDate(Date date){
+			currentDate = date;
+		}
+		
 		public void TogglePause(){
 			IsPaused = !IsPaused;
 			OnPauseToggle.Invoke(IsPaused);
