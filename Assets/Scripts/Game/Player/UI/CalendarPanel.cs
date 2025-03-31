@@ -1,6 +1,7 @@
 using Simulation;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Player {
@@ -17,15 +18,34 @@ namespace Player {
 			InputAction[] speeds = {input.Speed1, input.Speed2, input.Speed3, input.Speed4, input.Speed5};
 			for (int i = 0; i < speeds.Length; i++){
 				int index = i;
-				speeds[i].performed += _ => SetSpeed(index);
+				speeds[i].performed += _ => {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+					if (EventSystem.current.currentSelectedGameObject != null){
+						return;
+					}
+#endif
+					SetSpeed(index);
+				};
 			}
 			
 			input.ChangeSpeed.performed += context => {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+				if (EventSystem.current.currentSelectedGameObject != null){
+					return;
+				}
+#endif
 				Calendar.Instance.ChangeSpeed(Mathf.RoundToInt(context.ReadValue<float>()));
 				UpdateSpeed();
 			};
 
-			input.Pause.performed += _ => Calendar.Instance.TogglePause();
+			input.Pause.performed += _ => {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+				if (EventSystem.current.currentSelectedGameObject != null){
+					return;
+				}
+#endif
+				Calendar.Instance.TogglePause();
+			};
 		}
 		private void Start(){
 			Calendar.Instance.OnDayTick.AddListener(UpdateDate);
