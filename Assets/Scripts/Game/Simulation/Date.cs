@@ -23,10 +23,18 @@ namespace Simulation {
 			Validate();
 		}
 		private void Validate(){
+			while (month < 0){
+				year--;
+				month += Months.Length;
+			}
+			while (Months.Length <= month){
+				month -= Months.Length;
+				year++;
+			}
 			if (day < 1){
 				do {
 					month--;
-					while (month < 0){
+					if (month < 0){
 						year--;
 						month += Months.Length;
 					}
@@ -37,7 +45,7 @@ namespace Simulation {
 			while (MonthLength() < day){
 				day -= MonthLength();
 				month++;
-				while (Months.Length <= month){
+				if (Months.Length <= month){
 					month -= Months.Length;
 					year++;
 				}
