@@ -98,7 +98,7 @@ namespace Player {
 				}
 				case "date": {
 					if (words.Length == 1){
-						AddConsoleResponse("Incomplete command: 'date' requires a date as argument.");
+						AddConsoleResponse("Incomplete command: 'date' requires a date formatted as YYYY-MM-DD or YYYY or MM-DD as argument.");
 						return;
 					}
 					string[] numberStrings = words[1].TrimStart('-').Split('-');
@@ -109,7 +109,7 @@ namespace Player {
 							return;
 						}
 					}
-					AddConsoleResponse($"Command 'skip_days' failed. Date must be formatted as YYYY-MM-DD or YYYY or MM-DD.");
+					AddConsoleResponse($"Command 'date' failed. Date must be formatted as YYYY-MM-DD or YYYY or MM-DD.");
 					return;
 				}
 			}
