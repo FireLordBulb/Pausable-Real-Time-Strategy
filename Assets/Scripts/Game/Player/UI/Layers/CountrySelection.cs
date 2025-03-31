@@ -4,12 +4,13 @@ using UnityEngine;
 namespace Player {
 	public class CountrySelection : UILayer {
 		[SerializeField] private bool doAutoSelect;
+		[SerializeField] private bool isObserver;
 		[SerializeField] private string autoSelectedCountryName;
 		
 		public override void OnBegin(bool isFirstTime){
 #if UNITY_EDITOR
 			if (doAutoSelect){
-				UI.PlayAs(Country.Get(autoSelectedCountryName));
+				UI.PlayAs(isObserver ? null : Country.Get(autoSelectedCountryName));
 			}
 #endif
 		}
@@ -22,7 +23,11 @@ namespace Player {
 		}
 		public override bool IsDone(){
 			base.IsDone();
+#if UNITY_EDITOR
+			return Player != null || doAutoSelect;
+#else
 			return Player != null;
+#endif
 		}
 	}
 }

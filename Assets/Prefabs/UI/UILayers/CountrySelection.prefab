@@ -186,6 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   doAutoSelect: 0
+  isObserver: 0
   autoSelectedCountryName: Etor
 --- !u!1 &5042385790205966124
 GameObject:
