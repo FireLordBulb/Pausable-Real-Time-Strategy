@@ -198,6 +198,7 @@ MonoBehaviour:
   countrySelection: {fileID: 7794877087622164946, guid: 302df008c884f524c9a45d15d2ce97cf, type: 3}
   provinceWindow: {fileID: -7138890633483812799, guid: 7f98c94f4eef91347a5d5a705bc6e926, type: 3}
   countryWindow: {fileID: 1446410105903125700, guid: 9a00421b1669b03459c729da4b1217f8, type: 3}
+  regimentWindow: {fileID: 1341853900789584854, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
   debugConsole: {fileID: 1024205404159437411, guid: 72ad65def81c0d94ebf3dc77efaf42bb, type: 3}
   mapClickMask:
     serializedVersion: 2
