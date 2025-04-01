@@ -7,7 +7,7 @@ namespace Simulation.Military {
 		public bool IsBuilt {get; private set;}
 		public Location<T> Location {get; private set;}
 
-		public static bool TryStartBuilding(UnitType<T> type, Location<T> buildLocation, Country owner){
+		internal static bool TryStartBuilding(UnitType<T> type, Location<T> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
 				return false;
 			}

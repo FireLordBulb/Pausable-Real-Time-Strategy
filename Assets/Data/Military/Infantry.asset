@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a262dbe0c2d745918f5df1450a2341cc, type: 3}
   m_Name: Infantry
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 4774899881842561818, guid: f1d06fe5c1792ef4da0233acb24fd736, type: 3}
   daysToBuild: 0
+  goldCost: 15
+  manpower: 1000

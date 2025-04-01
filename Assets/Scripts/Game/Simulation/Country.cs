@@ -17,13 +17,14 @@ namespace Simulation {
 		}
 #endif
 		
-		private readonly HashSet<Province> provinces = new();
-		
+		[SerializeField] private Military.RegimentType[] regimentTypes;
+		[SerializeField] private Military.ShipType[] shipTypes;
 		[SerializeField] private MeshFilter borderMeshFilter;
 		[SerializeField] private MeshRenderer borderMeshRenderer;
 		[SerializeField] private float borderHalfWidth;
 		[SerializeField] private float borderBrightnessFactor;
 		
+		private readonly HashSet<Province> provinces = new();
 		private bool wasBorderChanged;
 		
 		public Color MapColor {get; private set;}
@@ -119,6 +120,13 @@ namespace Simulation {
 			wasBorderChanged = true;
 			IsDirty = true;
 			return true;
+		}
+
+		public bool TryStartBuildingArmy(Military.RegimentType type, Province province){
+			if (!regimentTypes.Contains(type) || !provinces.Contains(province)){
+				return false;
+			}
+			return Military.Regiment.TryStartBuilding(type, province.Land.ArmyLocation, this);
 		}
 		
 		public void OnSelect(){
