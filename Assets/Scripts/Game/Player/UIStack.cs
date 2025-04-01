@@ -16,6 +16,7 @@ namespace Player {
 		[SerializeField] private UILayer countrySelection;
 		[SerializeField] private UILayer provinceWindow;
 		[SerializeField] private UILayer countryWindow;
+		[SerializeField] private UILayer regimentWindow;
 		[SerializeField] private DebugConsole debugConsole;
 		[SerializeField] private LayerMask mapClickMask;
 		[SerializeField] private int maxSelectHistory;
@@ -24,9 +25,9 @@ namespace Player {
 		private UILayer layerToPush;
 		private readonly LinkedList<Component> selectedHistory = new();
 		private int selectHistoryCount;
-		private Province hoveredProvince;
-		private Province mouseDownProvince;
-		private bool isProvinceClickRight;
+		private Component hoveredSelectable;
+		private Component mouseDownSelectable;
+		private bool isSelectClickRight;
 		
 		public bool CanSwitchCountry {get; internal set;}
 		public Country PlayerCountry {get; private set;}
@@ -35,6 +36,7 @@ namespace Player {
 		public CalendarPanel CalendarPanel => hud.CalendarPanel;
 		public Province SelectedProvince => Selected as Province;
 		public Country SelectedCountry => Selected as Country;
+		public Simulation.Military.Regiment SelectedRegiment => Selected as Simulation.Military.Regiment;
 		private Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
 		
 		private void Awake(){
@@ -45,8 +47,8 @@ namespace Player {
 			Instance = this;
 			input = new Input().UI;
 			input.Enable();
-			input.Click.performed      += context => ClickProvince(context, false);
-			input.RightClick.performed += context => ClickProvince(context, true );
+			input.Click.performed      += context => OnClick(context, false);
+			input.RightClick.performed += context => OnClick(context, true );
 			input.Back.canceled += _ => {
 				if (selectHistoryCount == 0){
 					return;
@@ -82,27 +84,27 @@ namespace Player {
 			Push(countrySelection);
 		}
 
-		private void ClickProvince(InputAction.CallbackContext context, bool isRightClick){
+		private void OnClick(InputAction.CallbackContext context, bool isRightClick){
 			bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
-			if (!hoveredProvince){
+			if (!hoveredSelectable){
 				return;
 			}
 			if (isMouseDown){
-				mouseDownProvince = hoveredProvince;
-				isProvinceClickRight = isRightClick;
+				mouseDownSelectable = hoveredSelectable;
+				isSelectClickRight = isRightClick;
 				return;
 			}
 			// Ignore mouse up for the mouse button pressed down less recently, if both mouse buttons, were down.
-			if (isProvinceClickRight != isRightClick){
+			if (isSelectClickRight != isRightClick){
 				return;
 			}
-			if (mouseDownProvince == hoveredProvince){
-				Select (CurrentAction.OnProvinceClicked(mouseDownProvince, isRightClick));
+			if (mouseDownSelectable == hoveredSelectable){
+				Select(CurrentAction.OnSelectableClicked(mouseDownSelectable, isRightClick));
 			} else {
 				// Dragging a left click always results in a deselect, no layer-specific logic for this.
 				Deselect();
 			}
-			mouseDownProvince = null;
+			mouseDownSelectable = null;
 		}
 		
 		public void DelayedPush(UILayer layer) {
@@ -131,15 +133,18 @@ namespace Player {
 			}
 			if (!hit.collider.TryGetComponent(out Province province)){
 				EndHover();
-				// TODO: hovering UI elements and army units.
+				// TODO: hovering UI elements.
+				if (hit.collider.TryGetComponent(out RegimentClickCollider regimentCollider)){
+					hoveredSelectable = regimentCollider.Regiment;
+				}
 				return;
 			}
-			if (province == hoveredProvince){
+			if (province == hoveredSelectable){
 				return;
 			}
 			EndHover();
 			province.OnHoverEnter();
-			hoveredProvince = province;
+			hoveredSelectable = province;
 		}
 		private bool MouseRaycast(out RaycastHit hit){
 			if (EventSystem.current.IsPointerOverGameObject()){
@@ -149,11 +154,13 @@ namespace Player {
 			return Physics.Raycast(CameraMovement.Instance.Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, mapClickMask);
 		}
 		private void EndHover(){
-			if (!hoveredProvince){
+			if (!hoveredSelectable){
 				return;
 			}
-			hoveredProvince.OnHoverLeave();
-			hoveredProvince = null;
+			if (hoveredSelectable is Province province){
+				province.OnHoverLeave();
+			}
+			hoveredSelectable = null;
 		}
 
 		public void PlayAs(Country country){
@@ -171,6 +178,8 @@ namespace Player {
 				RefreshWindow<ProvinceWindow>();
 			} else if (Selected is Country){
 				RefreshWindow<CountryWindow>();
+			} else if (Selected is Simulation.Military.Regiment){
+				RefreshWindow<RegimentWindow>();
 			}
 		}
 		private void RefreshWindow<T>() where T : IRefreshable {
@@ -184,15 +193,20 @@ namespace Player {
 		
 		public void Select(Component component){
 			SelectWithoutHistoryUpdate(component);
-			UpdateSelectedHistory(Selected);
+			UpdateSelectedHistory();
 		}
-		private void SelectWithoutHistoryUpdate(Component component){
-			Selected = component;
+		private void SelectWithoutHistoryUpdate(Component selectable){
+			if (Selected == selectable){
+				return;
+			}
+			Selected = selectable;
 			// Delay the push until after the next OnUpdate() so the current window can remove itself first.
 			if (Selected is Province){
 				DelayedPush(provinceWindow);
 			} else if (Selected is Country){
 				DelayedPush(countryWindow);
+			} else if (Selected is Simulation.Military.Regiment){
+				DelayedPush(regimentWindow);
 			}
 		}
 		public void Deselect(Component component){
@@ -202,10 +216,10 @@ namespace Player {
 		}
 		public void Deselect(){
 			Selected = null;
-			UpdateSelectedHistory(Selected);
+			UpdateSelectedHistory();
 		}
 
-		private void UpdateSelectedHistory(Component component){
+		private void UpdateSelectedHistory(){
 			if (selectHistoryCount != 0 && selectedHistory.First.Value == Selected){
 				return;
 			}

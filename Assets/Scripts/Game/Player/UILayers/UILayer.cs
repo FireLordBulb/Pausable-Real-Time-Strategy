@@ -17,7 +17,7 @@ namespace Player {
 		
 		public override void OnBegin(bool isFirstTime){}
 
-		public virtual Component OnProvinceClicked(Province clickedProvince, bool isRightClick) => null;
+		public virtual Component OnSelectableClicked(Component clickedSelectable, bool isRightClick) => null;
 
 		public override void OnEnd(){
 			if (this != null){
@@ -32,7 +32,10 @@ namespace Player {
 		}
 		
 		// Subclass Sandbox. |>-------------------------------------------------------------------------------------------
-		protected static Component RegularProvinceClick(Province clickedProvince, bool isRightClick){
+		protected static Component RegularProvinceClick(Component clickedSelectable, bool isRightClick){
+			if (clickedSelectable is not Province clickedProvince){
+				return clickedSelectable == UI.Selected ? null : clickedSelectable;
+			}
 			if (isRightClick){
 				return clickedProvince.Owner == UI.SelectedCountry ? null : clickedProvince.Owner;
 			}

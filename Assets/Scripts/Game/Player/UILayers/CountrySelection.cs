@@ -14,7 +14,10 @@ namespace Player {
 			}
 #endif
 		}
-		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
+		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
+			if (clickedSelectable is not Province clickedProvince){
+				return null;
+			}
 			return clickedProvince.Owner == UI.SelectedCountry ? null : clickedProvince.Owner;
 		}
 		public override void OnEnd(){

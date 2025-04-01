@@ -47,8 +47,8 @@ namespace Player {
 			);
 		}
 		
-		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
-			return LayerBelow.OnProvinceClicked(clickedProvince, isRightClick);
+		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
+			return LayerBelow.OnSelectableClicked(clickedSelectable, isRightClick);
 		}	
 		public override void OnEnd(){
 			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);

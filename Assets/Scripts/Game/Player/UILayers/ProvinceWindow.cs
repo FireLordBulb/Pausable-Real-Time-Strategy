@@ -49,8 +49,8 @@ namespace Player {
 			DestroyImmediate(ownerFlag.gameObject.GetComponent<UILink>());
 			AddCountryLink(ownerFlag.gameObject, province.Owner);
 		}
-		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
-			return RegularProvinceClick(clickedProvince, isRightClick);
+		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
+			return RegularProvinceClick(clickedSelectable, isRightClick);
 		}
 		public override void OnEnd(){
 			province.OnDeselect();
