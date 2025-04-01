@@ -7,11 +7,12 @@ namespace Simulation.Military {
 		public bool IsBuilt {get; private set;}
 		public Location<T> Location {get; private set;}
 
-		public static bool TryStartBuilding(Country owner, Location<T> buildLocation, UnitType<T> type){
+		public static bool TryStartBuilding(UnitType<T> type, Location<T> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
 				return false;
 			}
 			Unit<T> unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.transform);
+			type.ConsumeBuildCostFrom(owner);
 			buildLocation.Units.Add(unit);
 			unit.Location = buildLocation;
 			if (type.DaysToBuild == 0){
@@ -23,7 +24,7 @@ namespace Simulation.Military {
 			return true;
 		}
 		
-		public void TickBuild(){
+		private void TickBuild(){
 			BuildDaysLeft--;
 			if (BuildDaysLeft == 0){
 				FinishBuilding();
