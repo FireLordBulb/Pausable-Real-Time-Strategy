@@ -1,7 +1,7 @@
 namespace Simulation.Military {
-	public class NavyUnit : Unit<Navy> {
+	public class Regiment : Unit<Army> {
 		private void Awake(){
-			Branch = new Navy();
+			Branch = new Army();
 		}
 	}
 }
