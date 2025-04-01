@@ -5,6 +5,7 @@ namespace Simulation.Military {
 		public readonly Land Land;
 
 		public override Vector3 WorldPosition => Land.transform.position;
+		public override Province Province => Land.Province;
 		
 		public LandLocation(Land land){
 			Land = land;

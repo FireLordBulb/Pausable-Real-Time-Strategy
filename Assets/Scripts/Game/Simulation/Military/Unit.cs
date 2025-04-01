@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Graphs;
 using UnityEngine;
 
 namespace Simulation.Military {
@@ -34,6 +36,21 @@ namespace Simulation.Military {
 		private void FinishBuilding(){
 			IsBuilt = true;
 			Calendar.Instance.OnDayTick.RemoveListener(TickBuild);
+		}
+
+		public bool TryMoveTo(Location<T> destination){
+			if (!IsBuilt){
+				return false;
+			}
+			List<Province> path = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, destination.Province, Branch.LinkEvaluator);
+			if (path == null){
+				return false;
+			}
+			Location.Units.Remove(this);
+			destination.Units.Add(this);
+			Location = destination;
+			print(path.Count);
+			return true;
 		}
 	}
 }
