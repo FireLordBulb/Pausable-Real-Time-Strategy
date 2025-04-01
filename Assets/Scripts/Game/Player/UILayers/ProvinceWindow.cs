@@ -46,6 +46,7 @@ namespace Player {
 			ownerFlag.material = new Material(ownerFlag.material){
 				color = province.Owner.MapColor
 			};
+			DestroyImmediate(ownerFlag.gameObject.GetComponent<UILink>());
 			AddCountryLink(ownerFlag.gameObject, province.Owner);
 		}
 		public override Component OnProvinceClicked(Province clickedProvince, bool isRightClick){
