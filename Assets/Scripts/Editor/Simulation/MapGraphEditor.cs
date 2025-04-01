@@ -8,6 +8,7 @@ namespace Simulation {
 		private static readonly Dictionary<System.Type, Color> LinkColors = new(){
 			{typeof(LandLink), Color.magenta},
 			{typeof(CoastLink), Color.green},
+			{typeof(ShallowsLink), Color.green},
 			{typeof(SeaLink), Color.red}
 		};
 		protected IEnumerable<Province> Nodes;

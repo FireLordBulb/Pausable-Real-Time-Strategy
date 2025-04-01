@@ -106,14 +106,18 @@ namespace Simulation {
                 if (type == Type.LandLocked && neighbor.type == Type.Sea){
                     type = Type.Coast;
                 }
-                if (type == neighbor.type){
-                    if (type == Type.Sea){
+                if (type == Type.Sea){
+                    if (neighbor.type == Type.Sea){
                         newLink = new SeaLink(this, neighbor, outlineSegments.Count);
+                    } else {
+                        newLink = new CoastLink(this, neighbor, outlineSegments.Count);
+                    }
+                } else {
+                    if (neighbor.type == Type.Sea){
+                        newLink = new ShallowsLink(this, neighbor, outlineSegments.Count);
                     } else {
                         newLink = new LandLink(this, neighbor, outlineSegments.Count);
                     }
-                } else {
-                    newLink = new CoastLink(this, neighbor, outlineSegments.Count);
                 }
                 links.Add(neighbor.ColorKey, newLink);
             } else {
