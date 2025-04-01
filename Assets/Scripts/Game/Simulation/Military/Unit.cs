@@ -11,7 +11,8 @@ namespace Simulation.Military {
 			if (!type.CanBeBuiltBy(owner)){
 				return false;
 			}
-			Unit<T> unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.transform);
+			
+			Unit<T> unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.MilitaryUnitParent);
 			type.ConsumeBuildCostFrom(owner);
 			buildLocation.Units.Add(unit);
 			unit.Location = buildLocation;

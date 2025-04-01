@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Simulation {
 	public class Country : MonoBehaviour {
+		private static Transform militaryUnitParent;
 		private static readonly Dictionary<string, Country> Countries = new();
 		public static Country Get(string key){
 			Countries.TryGetValue(key, out Country country);
@@ -34,6 +35,21 @@ namespace Simulation {
 		public int Manpower {get; private set;}
 		public int Sailors {get; private set;}
 		
+		public Transform MilitaryUnitParent {
+			get {
+				if (militaryUnitParent == null){
+					militaryUnitParent = new GameObject("MilitaryUnits"){
+						transform = {
+							// TODO: Replace with passed down reference when singletons are removed.
+							parent = transform.parent.parent
+						}
+					}.transform;
+				}
+				return militaryUnitParent;
+			}
+		}
+		public IEnumerable<Military.RegimentType> RegimentTypes => regimentTypes;
+		public IEnumerable<Military.ShipType> ShipTypes => shipTypes;
 		public IEnumerable<Province> Provinces => provinces;
 		// TODO: Assign a specific province as capital from country data.
 		public Province Capital => provinces.First();
