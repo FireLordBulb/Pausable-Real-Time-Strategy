@@ -88,7 +88,8 @@ namespace Player {
 					);
 					return;
 				}
-				case "skip_days": {
+				case "skip_days":
+				case "skip": {
 					if (words.Length == 1){
 						AddConsoleResponse("Incomplete command: 'skip_days' requires number of days as argument.");
 						return;
