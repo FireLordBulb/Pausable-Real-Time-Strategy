@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Simulation;
 using TMPro;
@@ -110,6 +111,31 @@ namespace Player {
 						}
 					}
 					AddConsoleResponse($"Command 'date' failed. Date must be formatted as YYYY-MM-DD or YYYY or MM-DD.");
+					return;
+				}
+				case "regiment": {
+					if (UIStack.Instance.PlayerCountry == null){
+						AddConsoleResponse($"Command 'regiment' failed. Must be playing as a country to build a regiment.");
+						return;
+					}
+					Province province;
+					if (words.Length == 1){
+						province = UIStack.Instance.PlayerCountry.Capital;
+					} else {
+						if (int.TryParse(words[1], out int index)){
+							province = UIStack.Instance.PlayerCountry.Provinces.ElementAtOrDefault(index);
+							if (province == null){
+								AddConsoleResponse($"Command 'regiment' failed. {words[1]} isn't smaller than {UIStack.Instance.PlayerCountry.Name}'s province count.");
+								return;
+							}
+						} else {
+							AddConsoleResponse($"Command 'regiment' failed: Couldn't parse {words[1]} to an int province index.");
+							return;
+						}
+					}
+					Simulation.Military.RegimentType type = UIStack.Instance.PlayerCountry.RegimentTypes.First();
+					bool didStartBuilding = UIStack.Instance.PlayerCountry.TryStartBuildingArmy(type, province);
+					AddConsoleResponse(didStartBuilding ? $"Started building {type.name}." : $"Failed to start building {type.name}.");
 					return;
 				}
 			}
