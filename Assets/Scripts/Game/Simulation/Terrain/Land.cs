@@ -14,8 +14,10 @@ namespace Simulation {
 #endif
 		
 		public Province Province {get; private set;}
+		public Military.LandLocation ArmyLocation {get; private set;}
 		
 		public void Init(Color32 colorKey, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
+			ArmyLocation = new Military.LandLocation();
 			Province = GetComponent<Province>();
 			// All land is assumed LandLocked by default, is updated to Coast if a Link to a sea tile is added.
 			Province.Init(colorKey, Province.Type.LandLocked, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh);
