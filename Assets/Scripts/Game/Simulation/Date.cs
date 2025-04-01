@@ -22,7 +22,7 @@ namespace Simulation {
 			day = startingDay;
 			Validate();
 		}
-		private void Validate(){
+		public void Validate(){
 			while (month < 0){
 				year--;
 				month += Months.Length;

@@ -96,6 +96,7 @@ namespace Player {
 					if (int.TryParse(words[1], out int days)){
 						Date date = Calendar.Instance.CurrentDate;
 						date.day += days;
+						date.Validate();
 						SetDate(date);
 					} else {
 						AddConsoleResponse($"Command 'skip_days' failed. Couldn't parse {words[1]} to int.");
