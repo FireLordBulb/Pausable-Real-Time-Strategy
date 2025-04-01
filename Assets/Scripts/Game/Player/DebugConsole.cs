@@ -62,6 +62,11 @@ namespace Player {
 						AddConsoleResponse($"Command 'play_as' failed. No country has the name '{words[1]}'.");
 					}
 					return;
+				case "rich":
+					RunCommand("gold 999900");
+					RunCommand("manpower 999999");
+					RunCommand("sailors 999999");
+					return;
 				case "gold": {
 					AddResource(words, "a float",
 						s => (float.TryParse(s, out float value), value),
