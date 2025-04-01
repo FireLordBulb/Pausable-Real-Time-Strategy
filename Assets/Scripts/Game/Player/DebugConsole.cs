@@ -118,7 +118,8 @@ namespace Player {
 					AddConsoleResponse($"Command 'date' failed. Date must be formatted as YYYY-MM-DD or YYYY or MM-DD.");
 					return;
 				}
-				case "regiment": {
+				case "regiment":
+				case "reg": {
 					if (UIStack.Instance.PlayerCountry == null){
 						AddConsoleResponse($"Command 'regiment' failed. Must be playing as a country to build a regiment.");
 						return;
