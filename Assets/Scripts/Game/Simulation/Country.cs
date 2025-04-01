@@ -144,6 +144,12 @@ namespace Simulation {
 			}
 			return Military.Regiment.TryStartBuilding(type, province.Land.ArmyLocation, this);
 		}
+		public bool TryMoveRegimentTo(Military.Regiment regiment, Province province){
+			if (regiment.Owner != this || province.IsSea){
+				return false;
+			}
+			return regiment.TryMoveTo(province.Land.ArmyLocation);
+		}
 		
 		public void OnSelect(){
 			foreach (Province province in Provinces){

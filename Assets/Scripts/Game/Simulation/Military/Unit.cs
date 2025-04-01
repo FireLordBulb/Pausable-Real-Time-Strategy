@@ -4,7 +4,10 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public abstract class Unit<T> : MonoBehaviour where T : Branch {
-		public T Branch {get; protected set;}
+		protected T Branch;
+		
+		public UnitType<T> Type {get; protected set;}
+		public Country Owner {get; protected set;}
 		public int BuildDaysLeft {get; private set;}
 		public bool IsBuilt {get; private set;}
 		public Location<T> Location {get; private set;}
@@ -13,12 +16,14 @@ namespace Simulation.Military {
 			if (!type.CanBeBuiltBy(owner)){
 				return false;
 			}
-			
 			Unit<T> unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.MilitaryUnitParent);
-			type.ConsumeBuildCostFrom(owner);
-			buildLocation.Units.Add(unit);
+			unit.Owner = owner;
 			unit.Location = buildLocation;
-			if (type.DaysToBuild == 0){
+			unit.Location.Units.Add(unit);
+			unit.Type = type;
+			unit.Type.ConsumeBuildCostFrom(unit.Owner);
+			
+			if (unit.Type.DaysToBuild == 0){
 				unit.FinishBuilding();
 				return true;
 			}
@@ -38,7 +43,7 @@ namespace Simulation.Military {
 			Calendar.Instance.OnDayTick.RemoveListener(TickBuild);
 		}
 
-		public bool TryMoveTo(Location<T> destination){
+		internal bool TryMoveTo(Location<T> destination){
 			if (!IsBuilt){
 				return false;
 			}
@@ -49,7 +54,8 @@ namespace Simulation.Military {
 			Location.Units.Remove(this);
 			destination.Units.Add(this);
 			Location = destination;
-			print(path.Count);
+			transform.position = Location.WorldPosition;
+			print($"Moved {path.Count-1} provinces.");
 			return true;
 		}
 	}
