@@ -106,7 +106,15 @@ namespace Simulation {
                 if (type == Type.LandLocked && neighbor.type == Type.Sea){
                     type = Type.Coast;
                 }
-                newLink = new ProvinceLink(this, neighbor, outlineSegments.Count);
+                if (type == neighbor.type){
+                    if (type == Type.Sea){
+                        newLink = new SeaLink(this, neighbor, outlineSegments.Count);
+                    } else {
+                        newLink = new LandLink(this, neighbor, outlineSegments.Count);
+                    }
+                } else {
+                    newLink = new CoastLink(this, neighbor, outlineSegments.Count);
+                }
                 links.Add(neighbor.ColorKey, newLink);
             } else {
                 newLink = null;
