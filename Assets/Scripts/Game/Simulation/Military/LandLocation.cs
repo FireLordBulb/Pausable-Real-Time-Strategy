@@ -1,5 +1,13 @@
+using UnityEngine;
+
 namespace Simulation.Military {
 	public class LandLocation : Location<Army> {
+		public readonly Land Land;
+
+		public override Vector3 WorldPosition => Land.transform.position;
 		
+		public LandLocation(Land land){
+			Land = land;
+		}
 	}
 }
