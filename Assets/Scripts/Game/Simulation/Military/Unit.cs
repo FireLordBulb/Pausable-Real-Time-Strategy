@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public abstract class Unit<T> : MonoBehaviour where T : Branch {
+		[SerializeField] private float movementSpeed;
 		[SerializeField] private float worldSpaceSpeed;
 		
 		protected T Branch;
@@ -110,8 +111,8 @@ namespace Simulation.Military {
 			pathIndex++;
 			ProvinceLink link = pathToTarget[pathIndex-1][pathToTarget[pathIndex].ColorKey];
 			// TODO: Add Terrain.unitSpeedMultiplier
-			float terrainSpeedMultiplier = 1;//0.5f*(link.Source.Terrain.unitSpeedMultiplier+link.Target.Terrain.unitSpeedMultiplier);
-			daysToNextLocation = Mathf.CeilToInt(terrainSpeedMultiplier*link.Distance);
+			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
+			daysToNextLocation = Mathf.CeilToInt(link.Distance/(movementSpeed*terrainSpeedMultiplier));
 		}
 	}
 }
