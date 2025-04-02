@@ -133,7 +133,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   regimentTypes:
   - {fileID: 11400000, guid: 8854755774e6f3e4b8ebb01f65ec371b, type: 2}
-  shipTypes: []
+  shipTypes:
+  - {fileID: 11400000, guid: 7060571e4dda1394da16eea7beaf8c95, type: 2}
   borderMeshFilter: {fileID: 4317057714546016801}
   borderMeshRenderer: {fileID: 8783975994422403568}
   borderHalfWidth: 1
