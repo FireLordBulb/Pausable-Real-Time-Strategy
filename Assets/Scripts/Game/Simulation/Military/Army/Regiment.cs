@@ -3,5 +3,8 @@ namespace Simulation.Military {
 		private void Awake(){
 			Branch = new Army();
 		}
+		protected override Location<Army> GetLocation(Province province){
+			return province.Land.ArmyLocation;
+		}
 	}
 }

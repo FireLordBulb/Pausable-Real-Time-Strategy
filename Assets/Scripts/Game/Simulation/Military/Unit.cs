@@ -5,12 +5,19 @@ using UnityEngine;
 namespace Simulation.Military {
 	public abstract class Unit<T> : MonoBehaviour where T : Branch {
 		protected T Branch;
+
+		private List<Province> pathToTarget;
+		private int pathIndex;
+		private int daysToNextLocation;
 		
 		public UnitType<T> Type {get; protected set;}
 		public Country Owner {get; protected set;}
 		public int BuildDaysLeft {get; private set;}
 		public bool IsBuilt {get; private set;}
 		public Location<T> Location {get; private set;}
+		public Location<T> TargetLocation {get; private set;}
+		
+		public IEnumerable<Province> PathToTarget => pathToTarget;
 
 		internal static bool TryStartBuilding(UnitType<T> type, Location<T> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
@@ -41,8 +48,32 @@ namespace Simulation.Military {
 		private void FinishBuilding(){
 			IsBuilt = true;
 			Calendar.Instance.OnDayTick.RemoveListener(TickBuild);
+			Calendar.Instance.OnDayTick.AddListener(OnDayTick);
 		}
-
+		private void OnDayTick(){
+			if (pathToTarget == null){
+				return;
+			}
+			daysToNextLocation--;
+			if (0 < daysToNextLocation){
+				return;
+			}
+			Location.Units.Remove(this);
+			Location<T> nextLocation = GetLocation(pathToTarget[pathIndex]);
+					
+			nextLocation.Units.Add(this);
+			Location = nextLocation;
+			transform.position = Location.WorldPosition;
+			if (ReferenceEquals(nextLocation, TargetLocation)){
+				pathToTarget = null;
+				TargetLocation = null;
+			} else {
+				NextPathIndex();
+			}
+		}
+		
+		protected abstract Location<T> GetLocation(Province province);
+		
 		internal bool TryMoveTo(Location<T> destination){
 			if (!IsBuilt){
 				return false;
@@ -51,12 +82,18 @@ namespace Simulation.Military {
 			if (path == null){
 				return false;
 			}
-			Location.Units.Remove(this);
-			destination.Units.Add(this);
-			Location = destination;
-			transform.position = Location.WorldPosition;
-			print($"Moved {path.Count-1} provinces.");
+			pathToTarget = path;
+			TargetLocation = destination;
+			pathIndex = 0;
+			NextPathIndex();
 			return true;
+		}
+		private void NextPathIndex(){
+			pathIndex++;
+			ProvinceLink link = pathToTarget[pathIndex-1][pathToTarget[pathIndex].ColorKey];
+			// TODO: Add Terrain.unitSpeedMultiplier
+			float terrainSpeedMultiplier = 1;//0.5f*(link.Source.Terrain.unitSpeedMultiplier+link.Target.Terrain.unitSpeedMultiplier);
+			daysToNextLocation = Mathf.CeilToInt(terrainSpeedMultiplier*link.Distance);
 		}
 	}
 }
