@@ -145,7 +145,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2376454583743424520}
-  - component: {fileID: 1446410105903125700}
+  - component: {fileID: 6336260556752774995}
   m_Layer: 5
   m_Name: WarMenu
   m_TagString: Untagged
@@ -173,7 +173,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1446410105903125700
+--- !u!114 &6336260556752774995
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -182,18 +182,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 3382394670850141454}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc24b03359b14f92b425f9523e78d3a4, type: 3}
+  m_Script: {fileID: 11500000, guid: a5fe2290d7304c8790d9548b5b0a5a8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  title: {fileID: 3736304348171977507}
-  flag: {fileID: 0}
-  valueTable: {fileID: 0}
-  valueNames:
-  - Provinces
-  - Gold
-  - Manpower
-  - Sailors
-  select: {fileID: 0}
+  army: {fileID: 227181940427191657}
+  navy: {fileID: 5002473533063424201}
   close: {fileID: 7456254978685305010}
 --- !u!1 &6006013718052964263
 GameObject:
