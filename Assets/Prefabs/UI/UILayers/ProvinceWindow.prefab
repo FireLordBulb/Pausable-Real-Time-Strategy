@@ -33,8 +33,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 10, y: -10}
-  m_SizeDelta: {x: 280, y: 50}
+  m_AnchoredPosition: {x: 10, y: 0}
+  m_SizeDelta: {x: 280, y: 75}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1942703259564020409
 MonoBehaviour:
@@ -315,6 +315,7 @@ MonoBehaviour:
   valueTable: {fileID: 1942703259564020409}
   valueNames:
   - Development
+  - Movement Speed
   - Defender Advantage
   ownerRow: {fileID: 5705531354629335557}
   ownerName: {fileID: 3046301991459831323}

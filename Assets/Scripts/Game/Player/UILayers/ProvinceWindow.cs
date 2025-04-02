@@ -3,6 +3,7 @@ using Simulation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Terrain = Simulation.Terrain;
 
 namespace Player {
 	public class ProvinceWindow : UILayer, IRefreshable {
@@ -38,7 +39,8 @@ namespace Player {
 			if (province.IsSea){
 				return;
 			}
-			valueTable.UpdateColumn(0, Format.SignedPercent, province.Terrain.DevelopmentModifier, province.Terrain.DefenderAdvantage);
+			Terrain terrain = province.Terrain;
+			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentModifier, terrain.MoveSpeedModifier, terrain.DefenderAdvantage);
 			ownerName.text = province.Owner.Name;
 			ownerName.ForceMeshUpdate();
 			VectorGeometry.SetRectWidth((RectTransform)ownerName.transform, ownerName.textBounds.size.x);
