@@ -15,4 +15,5 @@ MonoBehaviour:
   name: Jungle
   material: {fileID: 2100000, guid: 0208b5c2e1b393b47866d716cbc6488a, type: 2}
   developmentModifier: -0.25
+  moveSpeedModifier: -0.3
   defenderAdvantage: 0.25

@@ -15,4 +15,5 @@ MonoBehaviour:
   name: Mountains
   material: {fileID: 2100000, guid: 8c94c63417cd45c4ba9c92b234f8fe77, type: 2}
   developmentModifier: -0.4
+  moveSpeedModifier: -0.6
   defenderAdvantage: 0.5
