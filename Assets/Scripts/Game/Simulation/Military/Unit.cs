@@ -4,11 +4,14 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public abstract class Unit<T> : MonoBehaviour where T : Branch {
+		[SerializeField] private float worldSpaceSpeed;
+		
 		protected T Branch;
 
 		private List<Province> pathToTarget;
 		private int pathIndex;
 		private int daysToNextLocation;
+		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		
 		public UnitType<T> Type {get; protected set;}
 		public Country Owner {get; protected set;}
@@ -18,7 +21,7 @@ namespace Simulation.Military {
 		public Location<T> TargetLocation {get; private set;}
 		
 		public IEnumerable<Province> PathToTarget => pathToTarget;
-
+		
 		internal static bool TryStartBuilding(UnitType<T> type, Location<T> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
 				return false;
@@ -37,6 +40,16 @@ namespace Simulation.Military {
 			unit.BuildDaysLeft = type.DaysToBuild;
 			Calendar.Instance.OnDayTick.AddListener(unit.TickBuild);
 			return true;
+		}
+		
+		private void Update(){
+			if (0 < worldPositionsOnPath.Count){
+				Vector3 target = worldPositionsOnPath.Peek();
+				transform.position = Vector3.MoveTowards(transform.position, target, worldSpaceSpeed*Time.deltaTime);
+				if (Vector3.Distance(transform.position, target) < Vector3.kEpsilon){
+					worldPositionsOnPath.Dequeue();
+				}
+			}
 		}
 		
 		private void TickBuild(){
@@ -63,7 +76,7 @@ namespace Simulation.Military {
 					
 			nextLocation.Units.Add(this);
 			Location = nextLocation;
-			transform.position = Location.WorldPosition;
+			worldPositionsOnPath.Enqueue(Location.WorldPosition);
 			if (ReferenceEquals(nextLocation, TargetLocation)){
 				pathToTarget = null;
 				TargetLocation = null;
@@ -76,6 +89,11 @@ namespace Simulation.Military {
 		
 		internal bool TryMoveTo(Location<T> destination){
 			if (!IsBuilt){
+				return false;
+			}
+			if (Location == destination){
+				pathToTarget = null;
+				TargetLocation = null;
 				return false;
 			}
 			List<Province> path = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, destination.Province, Branch.LinkEvaluator);
