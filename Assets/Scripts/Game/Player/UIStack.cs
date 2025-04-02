@@ -235,6 +235,10 @@ namespace Player {
 			selectHistoryCount = 0;
 		}
 
+		// Different from CurrentAction since that might be null right after a new layer has been pushed.
+		public UILayer GetTopLayer(){
+			return StackList[^1];
+		}
 		public UILayer GetLayerBelow(UILayer layer){
 			StackList.RemoveAll(l => l == null);
 			int index = StackList.FindIndex(l => l == layer);
