@@ -29,15 +29,15 @@ namespace Player {
 		}
 		private void SidePanelButtonClick(Button clickedButton, UILayer menuPrefab){
 			DestroyImmediate(sidePanelMenuGameObject);
-			EnableButtons();
-			clickedButton.enabled = false;
+			SetButtonsInteractable();
+			clickedButton.interactable = false;
 			UI.Push(menuPrefab);
 			sidePanelMenuGameObject = UI.GetTopLayer().gameObject;
 		}
 		public override void OnBegin(bool isFirstTime){
 			gameObject.SetActive(true);
 			RefreshCountry();
-			EnableButtons();
+			SetButtonsInteractable();
 		}
 		public void RefreshCountry(){
 			if (Player == null){
@@ -59,10 +59,10 @@ namespace Player {
 			manpower.text = Format.FormatLargeNumber(Player.Manpower, Format.SevenDigits);
 			sailors.text = Format.FormatLargeNumber(Player.Sailors, Format.SevenDigits);
 		}
-		private void EnableButtons(){
-			bool mayEnable = Player != null;
-			warButton.enabled = mayEnable;
-			economyButton.enabled = mayEnable;
+		private void SetButtonsInteractable(){
+			bool mayInteract = Player != null;
+			warButton.interactable = mayInteract;
+			economyButton.interactable = mayInteract;
 		}
 		private void Start(){
 			Calendar.Instance.OnPauseToggle.AddListener(pauseLabel.SetActive);
@@ -70,7 +70,7 @@ namespace Player {
 		}
 		private void Update(){
 			if (sidePanelMenuGameObject == null){
-				EnableButtons();
+				SetButtonsInteractable();
 			}
 			if (Player == null){
 				return;
