@@ -8,9 +8,7 @@ namespace Simulation.Military {
 		[SerializeField] private float worldSpaceSpeed;
 		
 		protected T Branch;
-
-		private List<Province> pathToTarget;
-		private int pathIndex;
+		
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		
 		public UnitType<T> Type {get; protected set;}
@@ -21,8 +19,11 @@ namespace Simulation.Military {
 		public Location<T> NextLocation {get; private set;}
 		public Location<T> TargetLocation {get; private set;}
 		public int DaysToNextLocation {get; private set;}
+		protected List<Province> PathToTarget {get; private set;}
+		protected int PathIndex {get; private set;}
 
-		public bool IsMoving => pathToTarget != null;
+		public bool IsMoving => PathToTarget != null;
+		protected float MovementSpeed => movementSpeed;
 		
 		internal static bool TryStartBuilding(UnitType<T> type, Location<T> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
@@ -78,22 +79,20 @@ namespace Simulation.Military {
 			Location = NextLocation;
 			worldPositionsOnPath.Enqueue(Location.WorldPosition);
 			if (ReferenceEquals(NextLocation, TargetLocation)){
-				pathToTarget = null;
+				PathToTarget = null;
 				NextLocation = null;
 				TargetLocation = null;
 			} else {
-				NextPathIndex();
+				NextPathLocation();
 			}
 		}
-		
-		protected abstract Location<T> GetLocation(Province province);
 		
 		internal MoveOrderResult MoveTo(Location<T> destination){
 			if (!IsBuilt){
 				return MoveOrderResult.NotBuilt;
 			}
 			if (Location == destination){
-				pathToTarget = null;
+				PathToTarget = null;
 				TargetLocation = null;
 				return MoveOrderResult.AlreadyAtDestination;
 			}
@@ -101,29 +100,26 @@ namespace Simulation.Military {
 			if (path == null){
 				return MoveOrderResult.NoPath;
 			}
-			pathToTarget = path;
+			PathToTarget = path;
 			TargetLocation = destination;
-			if (NextLocation == GetLocation(path[1])){
-				pathIndex = 1;
+			if (NextLocation == GetLocation(path[0], path[1])){
+				PathIndex = 1;
 			} else {
-				pathIndex = 0;
-				NextPathIndex();
+				PathIndex = 0;
+				NextPathLocation();
 			}
 			return MoveOrderResult.Success;
 		}
 		public List<Province> GetPathTo(Location<T> end){
 			return GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.Province, Branch.LinkEvaluator);
 		}
-		private void NextPathIndex(){
-			pathIndex++;
-			Province nextProvince = pathToTarget[pathIndex];
-			NextLocation = GetLocation(nextProvince);
-			ProvinceLink link = pathToTarget[pathIndex-1][nextProvince.ColorKey];
-			// TODO: Add Terrain.unitSpeedMultiplier
-			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
-			DaysToNextLocation = Mathf.CeilToInt(link.Distance/(movementSpeed*terrainSpeedMultiplier));
+		private void NextPathLocation(){
+			PathIndex++;
+			(NextLocation, DaysToNextLocation) = CalculatePathLocation();
 		}
-
+		protected abstract (Location<T>, int) CalculatePathLocation();
+		protected abstract Location<T> GetLocation(Province previousProvince, Province nextProvince);
+		
 		public string CreatingVerb => Branch.CreatingVerb;
 	}
 }
