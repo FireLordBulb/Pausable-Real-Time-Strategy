@@ -47,11 +47,11 @@ namespace Player {
 			}
 			linkedCountry = province.Owner;
 			ownerName.text = linkedCountry.Name;
-			SetCountryLink(ownerName, linkedCountry);
+			SetSelectLink(ownerName, linkedCountry);
 			ownerFlag.material = new Material(ownerFlag.material){
 				color = province.Owner.MapColor
 			};
-			SetCountryLink(ownerFlag, linkedCountry);
+			SetSelectLink(ownerFlag, linkedCountry);
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			return RegularProvinceClick(clickedSelectable, isRightClick);

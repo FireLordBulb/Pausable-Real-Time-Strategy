@@ -22,11 +22,11 @@ namespace Player {
 			regiment = UI.SelectedRegiment;
 			title.text = $"{regiment.Type.name}";
 			ownerName.text = regiment.Owner.Name;
-			SetCountryLink(ownerName, regiment.Owner);
+			SetSelectLink(ownerName, regiment.Owner);
 			ownerFlag.material = new Material(ownerFlag.material){
 				color = regiment.Owner.MapColor
 			};
-			SetCountryLink(ownerFlag, regiment.Owner);
+			SetSelectLink(ownerFlag, regiment.Owner);
 			Refresh();
 			message.text = "";
 			close.onClick.AddListener(() => UI.Deselect());

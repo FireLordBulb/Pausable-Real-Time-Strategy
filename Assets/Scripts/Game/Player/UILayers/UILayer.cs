@@ -44,15 +44,15 @@ namespace Player {
 			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
 		}
 
-		protected static void SetCountryLink(TextMeshProUGUI linkText, Country country){
+		protected static void SetSelectLink(TextMeshProUGUI linkText, Component selectable){
 			linkText.ForceMeshUpdate();
 			RectTransform rectTransform = (RectTransform)linkText.transform;
 			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
-			SetCountryLink(rectTransform, country);
+			SetSelectLink(rectTransform, selectable);
 		}
-		protected static void SetCountryLink(Component linkComponent, Country country){
+		protected static void SetSelectLink(Component linkComponent, Component selectable){
 			DestroyImmediate(linkComponent.GetComponent<UILink>());
-			linkComponent.gameObject.AddComponent<UILink>().Link(() => UI.Select(country));
+			linkComponent.gameObject.AddComponent<UILink>().Link(() => UI.Select(selectable));
 		}
 		
 	}
