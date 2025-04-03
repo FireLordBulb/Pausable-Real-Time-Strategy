@@ -103,8 +103,12 @@ namespace Simulation.Military {
 			}
 			pathToTarget = path;
 			TargetLocation = destination;
-			pathIndex = 0;
-			NextPathIndex();
+			if (NextLocation == GetLocation(path[1])){
+				pathIndex = 1;
+			} else {
+				pathIndex = 0;
+				NextPathIndex();
+			}
 			return MoveOrderResult.Success;
 		}
 		private void NextPathIndex(){
