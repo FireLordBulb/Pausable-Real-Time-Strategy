@@ -21,7 +21,7 @@ namespace Player {
 
 		private void Awake(){
 			province = UI.SelectedProvince;
-			title.text = $"{province.Terrain.Name}";
+			title.text = $"{province}";
 			Texture2D texture = (Texture2D)province.Terrain.Material.mainTexture;
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 			if (province.IsSea){

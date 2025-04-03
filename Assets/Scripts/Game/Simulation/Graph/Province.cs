@@ -34,6 +34,7 @@ namespace Simulation {
         public Color32 ColorKey {get; private set;}
         public MapGraph Graph {get; private set;}
         public Terrain Terrain {get; private set;}
+        public string Name {get; private set;}
         public Vector2 MapPosition {get; private set;}
         public Land Land {get; private set;}
         public Sea Sea {get; private set;}
@@ -87,6 +88,7 @@ namespace Simulation {
             
             type = provinceType;
             Terrain = terrain;
+            Name = $"Rural {Terrain.Name}";
             baseColor = mapColor;
             
             shapeMeshRenderer.material.color = baseColor;
@@ -174,6 +176,9 @@ namespace Simulation {
         public void OnDeselect(){
             isSelected = false;
             shapeMeshRenderer.sharedMaterial.color = isHovered ? hoverColor : baseColor;
+        }
+        public override string ToString(){
+            return Name;
         }
 
         public enum Type {

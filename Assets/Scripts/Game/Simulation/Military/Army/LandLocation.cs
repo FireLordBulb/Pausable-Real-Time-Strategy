@@ -6,7 +6,8 @@ namespace Simulation.Military {
 
 		public override Vector3 WorldPosition => Land.transform.position;
 		public override Province Province => Land.Province;
-		
+		public override string Name => Province.Name;
+
 		public LandLocation(Land land){
 			Land = land;
 		}
