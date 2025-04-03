@@ -1,7 +1,6 @@
 using Simulation;
 using Simulation.Military;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Player {
@@ -36,19 +35,18 @@ namespace Player {
 		}
 		private RectTransform SetupButton<T>(UnitType<T> unitType, RectTransform parent) where T : Branch {
 			MilitaryUnitButton button = Instantiate(militaryUnitButton, parent);
-			button.Button.onClick.AddListener(() => SelectButton(button, unitType));
+			button.Button.onClick.AddListener(() => SelectUnit(button, unitType));
 			button.gameObject.name = unitType.name;
 			button.Label.text = unitType.name;
 			button.Cost.text += unitType.GetCostAsString();
 			return button.RectTransform;
 		}
-		private void SelectButton<T>(MilitaryUnitButton button, UnitType<T> unitType) where T : Branch {
+		private void SelectUnit<T>(MilitaryUnitButton button, UnitType<T> unitType) where T : Branch {
 			if (selectedButton == button){
 				selectedButton.HideInfoBox();
 				selectedButton = null;
 				selectedRegimentType = null;
 				selectedShipType = null;
-				EventSystem.current.SetSelectedGameObject(null);
 				return;
 			}
 			if (selectedButton != null){
@@ -59,7 +57,6 @@ namespace Player {
 			selectedShipType = unitType as ShipType;
 			Refresh();
 			selectedButton.ShowInfoBox();
-			EventSystem.current.SetSelectedGameObject(selectedButton.gameObject);
 		}
 		
 		public void Refresh(){

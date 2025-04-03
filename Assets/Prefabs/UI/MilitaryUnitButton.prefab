@@ -30,11 +30,11 @@ RectTransform:
   m_Children:
   - {fileID: 8662488843996948921}
   - {fileID: 5805979949007700386}
-  m_Father: {fileID: 4439923823965370078}
+  m_Father: {fileID: 1675605798572827728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &827580598116326550
@@ -461,20 +461,74 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 7359579217505014547, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1223604158326292072}
     - targetCorrespondingSourceObject: {fileID: 5548241119919243677, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
       insertIndex: 0
       addedObject: {fileID: 4607520765303317263}
-    - targetCorrespondingSourceObject: {fileID: 5548241119919243677, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1223604158326292072}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 872910451852370726, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 8427306832226580339}
-    - targetCorrespondingSourceObject: {fileID: 872910451852370726, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1309348688120853919}
+    - targetCorrespondingSourceObject: {fileID: 6427707773595274755, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7183848029387535202}
   m_SourcePrefab: {fileID: 100100000, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
+--- !u!224 &1675605798572827728 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 7359579217505014547, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
+  m_PrefabInstance: {fileID: 8170243129597720387}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2905181285076351296 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6427707773595274755, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
+  m_PrefabInstance: {fileID: 8170243129597720387}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7183848029387535202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2905181285076351296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Navigation:
+    m_Mode: 0
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 5971172795950369114}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &4439923823965370078 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5548241119919243677, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
@@ -507,50 +561,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 872910451852370726, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
   m_PrefabInstance: {fileID: 8170243129597720387}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8427306832226580339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9043152979881727077}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_WrapAround: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 5971172795950369114}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &1309348688120853919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -563,8 +573,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c0bfa4a1af94f3695908e2c05b770b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 7183848029387535202}
   border: {fileID: 4439923823965370078}
   label: {fileID: 8516469926697236827}
   infoBox: {fileID: 1223604158326292072}
   cost: {fileID: 8305389366604325200}
   message: {fileID: 7359554313732216528}
+  activeTint: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
