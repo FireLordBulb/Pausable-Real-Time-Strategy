@@ -10,5 +10,9 @@ namespace Simulation.Military {
 		public override void ConsumeBuildCostFrom(Country owner){
 			owner.GainResources(-goldCost, -manpower, 0);
 		}
+		public override string GetCostAsString(){
+			return $"{goldCost} Gold + {manpower} Manpower";
+		}
+		public override string CreatedVerb => "recruited";
 	}
 }

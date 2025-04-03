@@ -11,5 +11,7 @@ namespace Simulation.Military {
 		
 		public abstract bool CanBeBuiltBy(Country owner);
 		public abstract void ConsumeBuildCostFrom(Country owner);
+		public abstract string GetCostAsString();
+		public abstract string CreatedVerb {get;}
 	}
 }
