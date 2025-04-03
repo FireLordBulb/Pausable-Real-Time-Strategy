@@ -47,7 +47,7 @@ namespace Player {
 
 
 		private static readonly Dictionary<GameObject, (UILink link, Component selectable)> Links = new();
-		protected static void SetSelectLink(TextMeshProUGUI linkText, Component selectable){
+		public static void SetSelectLink(TextMeshProUGUI linkText, Component selectable){
 			if (Links.TryGetValue(linkText.gameObject, out (UILink, Component selectable) tuple) && tuple.selectable == selectable){
 				return;
 			}
@@ -56,7 +56,7 @@ namespace Player {
 			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
 			SetSelectLink(rectTransform, selectable);
 		}
-		protected static void SetSelectLink(Component linkComponent, Component selectable){
+		public static void SetSelectLink(Component linkComponent, Component selectable){
 			if (Links.TryGetValue(linkComponent.gameObject, out (UILink link, Component selectable) tuple)){
 				if (tuple.selectable == selectable){
 					return;

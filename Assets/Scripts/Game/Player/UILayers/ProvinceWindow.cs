@@ -11,9 +11,7 @@ namespace Player {
 		[SerializeField] private GameObject terrainValuesTable;
 		[SerializeField] private ValueTable valueTable;
 		[SerializeField] private string[] valueNames;
-		[SerializeField] private GameObject ownerRow;
-		[SerializeField] private TextMeshProUGUI ownerName;
-		[SerializeField] private Image ownerFlag;
+		[SerializeField] private CountryPanel countryPanel;
 		
 		private Province province;
 		private Country linkedCountry;
@@ -25,7 +23,7 @@ namespace Player {
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 			if (province.IsSea){
 				terrainValuesTable.SetActive(false);
-				ownerRow.gameObject.SetActive(false);
+				countryPanel.gameObject.SetActive(false);
 			} else {
 				valueTable.Generate(-1, valueNames);
 				Refresh();
@@ -38,17 +36,7 @@ namespace Player {
 			}
 			Terrain terrain = province.Terrain;
 			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentModifier, terrain.MoveSpeedModifier, terrain.DefenderAdvantage);
-			
-			if (linkedCountry == province.Owner){
-				return;
-			}
-			linkedCountry = province.Owner;
-			ownerName.text = linkedCountry.Name;
-			SetSelectLink(ownerName, linkedCountry);
-			ownerFlag.material = new Material(ownerFlag.material){
-				color = province.Owner.MapColor
-			};
-			SetSelectLink(ownerFlag, linkedCountry);
+			countryPanel.SetCountry(province.Owner);
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			return RegularProvinceClick(clickedSelectable, isRightClick);

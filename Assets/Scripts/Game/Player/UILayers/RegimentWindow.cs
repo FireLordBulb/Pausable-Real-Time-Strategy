@@ -14,20 +14,14 @@ namespace Player {
 		[SerializeField] private GameObject destination;
 		[SerializeField] private TextMeshProUGUI destinationLocation;
 		[SerializeField] private TextMeshProUGUI message;
-		[SerializeField] private TextMeshProUGUI ownerName;
-		[SerializeField] private Image ownerFlag;
-		
+		[SerializeField] private CountryPanel countryPanel;
+
 		private Regiment regiment;
 		
 		private void Awake(){
 			regiment = UI.SelectedRegiment;
 			title.text = $"{regiment.Type.name}";
-			ownerName.text = regiment.Owner.Name;
-			SetSelectLink(ownerName, regiment.Owner);
-			ownerFlag.material = new Material(ownerFlag.material){
-				color = regiment.Owner.MapColor
-			};
-			SetSelectLink(ownerFlag, regiment.Owner);
+			countryPanel.SetCountry(regiment.Owner);
 			Refresh();
 			message.text = "";
 			Calendar.Instance.OnDayTick.AddListener(Refresh);
