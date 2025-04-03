@@ -59,17 +59,31 @@ namespace Player {
 			}
 			switch(clickedSelectable){
 				case Province province:
-					Player.TryMoveRegimentTo(regiment, province);
-					Refresh();
+					MoveTo(province);
 					return regiment;
 				case Regiment clickedRegiment when regiment != clickedRegiment:
-					Player.TryMoveRegimentTo(regiment, clickedRegiment.Location.Province);
-					Refresh();
+					MoveTo(clickedRegiment.Location.Province);
 					return regiment;
 				default:
 					return null;
 			}
 		}
+		private void MoveTo(Province province){
+			if (Player == null){
+				return;
+			}
+			MoveOrderResult result = Player.MoveRegimentTo(regiment, province);
+			message.text = result switch {
+				MoveOrderResult.NotBuilt => "Cannot move an army before it has finished recruiting!",
+				MoveOrderResult.NoPath => $"Cannot move to {province} because the landmass is separated by sea!",
+				MoveOrderResult.NoAccess => "You cannot cross another country's borders when you're at peace with it!",
+				MoveOrderResult.InvalidTarget => "Armies cannot walk on water!",
+				MoveOrderResult.NotOwner => "You cannot move another country's units!",
+				_ => ""
+			};
+			Refresh();
+		}
+		
 		public override void OnEnd(){
 			Calendar.Instance.OnDayTick.RemoveListener(Refresh);
 			base.OnEnd();

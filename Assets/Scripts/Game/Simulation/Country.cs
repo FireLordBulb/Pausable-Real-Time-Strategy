@@ -144,11 +144,14 @@ namespace Simulation {
 			}
 			return Military.Regiment.TryStartBuilding(type, province.Land.ArmyLocation, this);
 		}
-		public bool TryMoveRegimentTo(Military.Regiment regiment, Province province){
-			if (regiment.Owner != this || province.IsSea){
-				return false;
+		public Military.MoveOrderResult MoveRegimentTo(Military.Regiment regiment, Province province){
+			if (regiment.Owner != this){
+				return Military.MoveOrderResult.NotOwner;
 			}
-			return regiment.TryMoveTo(province.Land.ArmyLocation);
+			if (province.IsSea){
+				return Military.MoveOrderResult.InvalidTarget;
+			}
+			return regiment.MoveTo(province.Land.ArmyLocation);
 		}
 		
 		public void OnSelect(){

@@ -88,24 +88,24 @@ namespace Simulation.Military {
 		
 		protected abstract Location<T> GetLocation(Province province);
 		
-		internal bool TryMoveTo(Location<T> destination){
+		internal MoveOrderResult MoveTo(Location<T> destination){
 			if (!IsBuilt){
-				return false;
+				return MoveOrderResult.NotBuilt;
 			}
 			if (Location == destination){
 				pathToTarget = null;
 				TargetLocation = null;
-				return false;
+				return MoveOrderResult.AlreadyAtDestination;
 			}
 			List<Province> path = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, destination.Province, Branch.LinkEvaluator);
 			if (path == null){
-				return false;
+				return MoveOrderResult.NoPath;
 			}
 			pathToTarget = path;
 			TargetLocation = destination;
 			pathIndex = 0;
 			NextPathIndex();
-			return true;
+			return MoveOrderResult.Success;
 		}
 		private void NextPathIndex(){
 			pathIndex++;
