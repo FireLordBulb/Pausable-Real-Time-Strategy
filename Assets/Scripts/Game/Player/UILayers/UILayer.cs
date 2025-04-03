@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ActionStackSystem;
 using Mathematics;
 using Simulation;
@@ -44,16 +45,28 @@ namespace Player {
 			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
 		}
 
+
+		private static readonly Dictionary<GameObject, (UILink link, Component selectable)> Links = new();
 		protected static void SetSelectLink(TextMeshProUGUI linkText, Component selectable){
+			if (Links.TryGetValue(linkText.gameObject, out (UILink, Component selectable) tuple) && tuple.selectable == selectable){
+				return;
+			}
 			linkText.ForceMeshUpdate();
 			RectTransform rectTransform = (RectTransform)linkText.transform;
 			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
 			SetSelectLink(rectTransform, selectable);
 		}
 		protected static void SetSelectLink(Component linkComponent, Component selectable){
-			DestroyImmediate(linkComponent.GetComponent<UILink>());
-			linkComponent.gameObject.AddComponent<UILink>().Link(() => UI.Select(selectable));
+			if (Links.TryGetValue(linkComponent.gameObject, out (UILink link, Component selectable) tuple)){
+				if (tuple.selectable == selectable){
+					return;
+				}
+				Links.Remove(linkComponent.gameObject);
+				DestroyImmediate(tuple.link);
+			}
+			UILink link = linkComponent.gameObject.AddComponent<UILink>();
+			link.Link(() => UI.Select(selectable));
+			Links.Add(linkComponent.gameObject, (link, selectable));
 		}
-		
 	}
 }

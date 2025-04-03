@@ -8,9 +8,11 @@ namespace Player {
 	public class RegimentWindow : UILayer, IRefreshable {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private TextMeshProUGUI action;
+		[SerializeField] private TextMeshProUGUI location;
 		[SerializeField] private TextMeshProUGUI days;
 		[SerializeField] private GameObject daysLeftText;
-		[SerializeField] private TextMeshProUGUI destination;
+		[SerializeField] private GameObject destination;
+		[SerializeField] private TextMeshProUGUI destinationLocation;
 		[SerializeField] private TextMeshProUGUI message;
 		[SerializeField] private TextMeshProUGUI ownerName;
 		[SerializeField] private Image ownerFlag;
@@ -34,21 +36,42 @@ namespace Player {
 		}
 		public void Refresh(){
 			if (regiment.IsBuilt && regiment.IsMoving){
-				action.text = $"Moving to {regiment.NextLocation}";
+				SetLeftOfLinkText("Moving to ", action, location);
+				location.text = regiment.NextLocation.Name;
+				SetSelectLink(location, regiment.NextLocation.Province);
 				days.text = regiment.DaysToNextLocation.ToString();
 				daysLeftText.SetActive(true);
-				destination.text = regiment.NextLocation == regiment.TargetLocation ? "" : $"End destination: {regiment.TargetLocation}";
+				if (regiment.NextLocation == regiment.TargetLocation){
+					destination.SetActive(false);
+				} else {
+					destinationLocation.text = regiment.TargetLocation.Name;
+					SetSelectLink(destinationLocation, regiment.TargetLocation.Province);
+					destination.SetActive(true);
+				}
 			} else if (regiment.IsBuilt && !regiment.IsMoving){
-				action.text = $"Located at {regiment.Location}";
+				SetLeftOfLinkText("Located at ", action, location);
+				location.text = regiment.Location.Name;
+				SetSelectLink(location, regiment.Location.Province);
 				days.text = "";
 				daysLeftText.SetActive(false);
-				destination.text = "";
+				destination.SetActive(false);
 			} else {
 				action.text = regiment.CreatingVerb;
+				location.text = "";
 				days.text = regiment.BuildDaysLeft.ToString();
 				daysLeftText.SetActive(true);
-				destination.text = "";
+				destination.SetActive(false);
 			}
+		}
+		private void SetLeftOfLinkText(string newText, TMP_Text textMesh, TMP_Text link){
+			if (textMesh.text == newText){
+				return;
+			}
+			textMesh.text = newText;
+			textMesh.ForceMeshUpdate();
+			//textMesh.textInfo.lineInfo[0].lastCharacterIndex
+			float x = textMesh.textInfo.characterInfo[textMesh.textInfo.lineInfo[0].lastCharacterIndex].xAdvance;
+			((RectTransform)link.transform).anchoredPosition = new Vector2(x, 0);
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			if (!isRightClick){
@@ -81,6 +104,7 @@ namespace Player {
 			Refresh();
 		}
 		
+		// ReSharper disable Unity.PerformanceAnalysis // This doesn't ever call the performance-intensive Refresh, it only removes it as a listener. 
 		public override void OnEnd(){
 			Calendar.Instance.OnDayTick.RemoveListener(Refresh);
 			base.OnEnd();
