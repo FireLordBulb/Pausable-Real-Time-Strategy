@@ -15,7 +15,7 @@ namespace Player {
 
             Action<InputAction.CallbackContext> directionalMovement = context => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                if (EventSystem.current.currentSelectedGameObject != null){
+                if (DebugConsole.IsKeyboardBusy()){
                     return;
                 }
 #endif
@@ -41,7 +41,7 @@ namespace Player {
         }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private void Update(){
-            if (EventSystem.current.currentSelectedGameObject != null){
+            if (DebugConsole.IsKeyboardBusy()){
                 cameraMovement.DirectionalMovement(Vector2.zero);
             } else {
                 cameraMovement.DirectionalMovement(input.DirectionalMovement.ReadValue<Vector2>());

@@ -20,7 +20,7 @@ namespace Player {
 				int index = i;
 				speeds[i].performed += _ => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-					if (EventSystem.current.currentSelectedGameObject != null){
+					if (DebugConsole.IsKeyboardBusy()){
 						return;
 					}
 #endif
@@ -30,7 +30,7 @@ namespace Player {
 			
 			input.ChangeSpeed.performed += context => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-				if (EventSystem.current.currentSelectedGameObject != null){
+				if (DebugConsole.IsKeyboardBusy()){
 					return;
 				}
 #endif
@@ -40,7 +40,7 @@ namespace Player {
 
 			input.Pause.performed += _ => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-				if (EventSystem.current.currentSelectedGameObject != null){
+				if (DebugConsole.IsKeyboardBusy()){
 					return;
 				}
 #endif

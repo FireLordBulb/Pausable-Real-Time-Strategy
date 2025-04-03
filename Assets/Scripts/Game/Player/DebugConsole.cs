@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 
 namespace Player {
 	public class DebugConsole : MonoBehaviour {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 		// ReSharper disable thrice InconsistentNaming
 		private const int YYYY_MM_DD = 3;
 		private const int MM_DD = 2;
@@ -15,6 +16,12 @@ namespace Player {
 		
 		[SerializeField] private TextMeshProUGUI consoleText;
 		[SerializeField] private TMP_InputField inputField;
+
+		private static GameObject InputFieldGameObject;
+		public static bool IsKeyboardBusy(){
+			return InputFieldGameObject == EventSystem.current.currentSelectedGameObject;
+		}
+		
 		private void Awake(){
 			gameObject.SetActive(false);
 			inputField.onSubmit.AddListener(message => {
@@ -27,6 +34,7 @@ namespace Player {
 				}
 			});
 			inputField.onValueChanged.AddListener(message => inputField.text = message.TrimEnd('\n').TrimEnd('\v'));
+			InputFieldGameObject = inputField.gameObject;
 		}
 		
 		public void Enable(){
@@ -214,5 +222,6 @@ namespace Player {
 		private void AddConsoleResponse(string response){
 			consoleText.text += $"\n> {response}";
 		}
+#endif
 	}
 }
