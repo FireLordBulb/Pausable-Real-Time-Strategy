@@ -11,7 +11,6 @@ namespace Simulation.Military {
 
 		private List<Province> pathToTarget;
 		private int pathIndex;
-		private int daysToNextLocation;
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		
 		public UnitType<T> Type {get; protected set;}
@@ -19,9 +18,11 @@ namespace Simulation.Military {
 		public int BuildDaysLeft {get; private set;}
 		public bool IsBuilt {get; private set;}
 		public Location<T> Location {get; private set;}
+		public Location<T> NextLocation {get; private set;}
 		public Location<T> TargetLocation {get; private set;}
-		
-		public IEnumerable<Province> PathToTarget => pathToTarget;
+		public int DaysToNextLocation {get; private set;}
+
+		public bool IsMoving => pathToTarget != null;
 		
 		internal static bool TryStartBuilding(UnitType<T> type, Location<T> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
@@ -65,21 +66,20 @@ namespace Simulation.Military {
 			Calendar.Instance.OnDayTick.AddListener(OnDayTick);
 		}
 		private void OnDayTick(){
-			if (pathToTarget == null){
+			if (!IsMoving){
 				return;
 			}
-			daysToNextLocation--;
-			if (0 < daysToNextLocation){
+			DaysToNextLocation--;
+			if (0 < DaysToNextLocation){
 				return;
 			}
 			Location.Units.Remove(this);
-			Location<T> nextLocation = GetLocation(pathToTarget[pathIndex]);
-					
-			nextLocation.Units.Add(this);
-			Location = nextLocation;
+			NextLocation.Units.Add(this);
+			Location = NextLocation;
 			worldPositionsOnPath.Enqueue(Location.WorldPosition);
-			if (ReferenceEquals(nextLocation, TargetLocation)){
+			if (ReferenceEquals(NextLocation, TargetLocation)){
 				pathToTarget = null;
+				NextLocation = null;
 				TargetLocation = null;
 			} else {
 				NextPathIndex();
@@ -109,10 +109,12 @@ namespace Simulation.Military {
 		}
 		private void NextPathIndex(){
 			pathIndex++;
-			ProvinceLink link = pathToTarget[pathIndex-1][pathToTarget[pathIndex].ColorKey];
+			Province nextProvince = pathToTarget[pathIndex];
+			NextLocation = GetLocation(nextProvince);
+			ProvinceLink link = pathToTarget[pathIndex-1][nextProvince.ColorKey];
 			// TODO: Add Terrain.unitSpeedMultiplier
 			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
-			daysToNextLocation = Mathf.CeilToInt(link.Distance/(movementSpeed*terrainSpeedMultiplier));
+			DaysToNextLocation = Mathf.CeilToInt(link.Distance/(movementSpeed*terrainSpeedMultiplier));
 		}
 
 		public string CreatingVerb => Branch.CreatingVerb;
