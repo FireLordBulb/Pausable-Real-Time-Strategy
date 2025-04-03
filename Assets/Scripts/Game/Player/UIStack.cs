@@ -4,6 +4,7 @@ using Simulation;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace Player {
 	[RequireComponent(typeof(Canvas))]
@@ -18,6 +19,7 @@ namespace Player {
 		[SerializeField] private UILayer countryWindow;
 		[SerializeField] private UILayer regimentWindow;
 		[SerializeField] private DebugConsole debugConsole;
+		[SerializeField] private Button closeButton;
 		[SerializeField] private LayerMask mapClickMask;
 		[SerializeField] private int maxSelectHistory;
 		
@@ -114,6 +116,10 @@ namespace Player {
 		public override void Push(UILayer layer){
 			if (!layer.gameObject.scene.IsValid()){
 				layer = Instantiate(layer, transform);
+				if (layer is IClosableWindow closableWindow){
+					Button button = Instantiate(closeButton, layer.transform);
+					button.onClick.AddListener(closableWindow.Close);
+				}
 			}
 			base.Push(layer);
 		}
