@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Player {
-	public class RegimentWindow : UILayer, IRefreshable {
+	public class RegimentWindow : UILayer, IRefreshable, IClosableWindow {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private TextMeshProUGUI action;
 		[SerializeField] private TextMeshProUGUI location;
@@ -16,7 +16,6 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI message;
 		[SerializeField] private TextMeshProUGUI ownerName;
 		[SerializeField] private Image ownerFlag;
-		[SerializeField] private Button close;
 		
 		private Regiment regiment;
 		
@@ -31,7 +30,6 @@ namespace Player {
 			SetSelectLink(ownerFlag, regiment.Owner);
 			Refresh();
 			message.text = "";
-			close.onClick.AddListener(() => UI.Deselect());
 			Calendar.Instance.OnDayTick.AddListener(Refresh);
 		}
 		public void Refresh(){
@@ -112,6 +110,9 @@ namespace Player {
 		public override bool IsDone(){
 			base.IsDone();
 			return UI.SelectedRegiment != regiment;
+		}
+		public void Close(){
+			UI.Deselect();
 		}
 	}
 }

@@ -1,14 +1,12 @@
 using Simulation;
 using Simulation.Military;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Player {
-	public class WarMenu : UILayer, IRefreshable {
+	public class WarMenu : UILayer, IRefreshable, IClosableWindow {
 		[SerializeField] private MilitaryUnitButton militaryUnitButton;
 		[SerializeField] private RectTransform army;
 		[SerializeField] private RectTransform navy;
-		[SerializeField] private Button close;
 
 		private bool isDone;
 		private MilitaryUnitButton selectedButton;
@@ -16,7 +14,6 @@ namespace Player {
 		private ShipType selectedShipType;
 		
 		private void Awake(){
-			close.onClick.AddListener(() => isDone = true);
 			Calendar.Instance.OnMonthTick.AddListener(Refresh);
 		}
 		public override void OnBegin(bool isFirstTime){
@@ -93,6 +90,9 @@ namespace Player {
 		public override bool IsDone(){
 			base.IsDone();
 			return isDone || Player == null;
+		}
+		public void Close(){
+			isDone = true;
 		}
 	}
 }

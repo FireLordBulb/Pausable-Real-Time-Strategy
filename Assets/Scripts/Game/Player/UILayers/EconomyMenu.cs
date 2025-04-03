@@ -1,15 +1,8 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Player {
-	public class EconomyMenu : UILayer {
-		[SerializeField] private Button close;
-
+	public class EconomyMenu : UILayer, IClosableWindow {
 		private bool isDone;
-		
-		private void Awake(){
-			close.onClick.AddListener(() => isDone = true);
-		}
 		
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			return LayerBelow.OnSelectableClicked(clickedSelectable, isRightClick);
@@ -17,6 +10,9 @@ namespace Player {
 		public override bool IsDone(){
 			base.IsDone();
 			return isDone || Player == null;
+		}
+		public void Close(){
+			isDone = true;
 		}
 	}
 }

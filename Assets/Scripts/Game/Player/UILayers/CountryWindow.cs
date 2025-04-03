@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Player {
-	public class CountryWindow : UILayer, IRefreshable {
+	public class CountryWindow : UILayer, IRefreshable, IClosableWindow {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image flag;
 		[SerializeField] private ValueTable valueTable;
 		[SerializeField] private string[] valueNames;
 		[SerializeField] private Button select;
-		[SerializeField] private Button close;
 		
 		private Country country;
 
@@ -32,7 +31,6 @@ namespace Player {
 			} else {
 				select.gameObject.SetActive(false);
 			}
-			close.onClick.AddListener(() => UI.Deselect(country));
 			Calendar.Instance.OnMonthTick.AddListener(Refresh);
 			
 			country.OnSelect();
@@ -58,6 +56,9 @@ namespace Player {
 		public override bool IsDone(){
 			base.IsDone();
 			return UI.SelectedCountry != country;
+		}
+		public void Close(){
+			UI.Deselect(country);
 		}
 	}
 }

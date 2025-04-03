@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Terrain = Simulation.Terrain;
 
 namespace Player {
-	public class ProvinceWindow : UILayer, IRefreshable {
+	public class ProvinceWindow : UILayer, IRefreshable, IClosableWindow {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image terrainImage;
 		[SerializeField] private GameObject terrainValuesTable;
@@ -14,7 +14,6 @@ namespace Player {
 		[SerializeField] private GameObject ownerRow;
 		[SerializeField] private TextMeshProUGUI ownerName;
 		[SerializeField] private Image ownerFlag;
-		[SerializeField] private Button close;
 		
 		private Province province;
 		private Country linkedCountry;
@@ -32,8 +31,6 @@ namespace Player {
 				Refresh();
 			}
 			province.OnSelect();
-			
-			close.onClick.AddListener(() => UI.Deselect(province));
 		}
 		public void Refresh(){
 			if (province.IsSea){
@@ -63,6 +60,9 @@ namespace Player {
 		public override bool IsDone(){
 			base.IsDone();
 			return UI.SelectedProvince != province;
+		}
+		public void Close(){
+			UI.Deselect(province);
 		}
 	}
 }
