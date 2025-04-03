@@ -13,7 +13,7 @@ namespace Simulation.Military {
 		public Harbor(Sea sea, Land land){
 			Sea = sea;
 			Land = land;
-			Name = $"Harbor at {Land.Province}";
+			Name = $"Harbor in {Land.Province}";
 		}
 	}
 }

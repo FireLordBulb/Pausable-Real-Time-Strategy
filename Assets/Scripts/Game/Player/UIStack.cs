@@ -18,6 +18,7 @@ namespace Player {
 		[SerializeField] private UILayer provinceWindow;
 		[SerializeField] private UILayer countryWindow;
 		[SerializeField] private UILayer regimentWindow;
+		[SerializeField] private UILayer shipWindow;
 		[SerializeField] private DebugConsole debugConsole;
 		[SerializeField] private Button closeButton;
 		[SerializeField] private LayerMask mapClickMask;
@@ -143,6 +144,8 @@ namespace Player {
 				// TODO: hovering UI elements.
 				if (hit.collider.TryGetComponent(out RegimentClickCollider regimentCollider)){
 					hoveredSelectable = regimentCollider.Regiment;
+				} else if (hit.collider.TryGetComponent(out ShipClickCollider shipCollider)){
+					hoveredSelectable = shipCollider.Ship;
 				}
 				return;
 			}
@@ -214,6 +217,8 @@ namespace Player {
 				DelayedPush(countryWindow);
 			} else if (Selected is Simulation.Military.Regiment){
 				DelayedPush(regimentWindow);
+			} else if (Selected is Simulation.Military.Ship){
+				DelayedPush(shipWindow);
 			}
 		}
 		public void Deselect(Component component){

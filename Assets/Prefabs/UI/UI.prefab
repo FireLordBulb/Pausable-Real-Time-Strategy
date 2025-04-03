@@ -199,6 +199,7 @@ MonoBehaviour:
   provinceWindow: {fileID: -7138890633483812799, guid: 7f98c94f4eef91347a5d5a705bc6e926, type: 3}
   countryWindow: {fileID: 1446410105903125700, guid: 9a00421b1669b03459c729da4b1217f8, type: 3}
   regimentWindow: {fileID: 2864578941607465854, guid: 7becfdb1bba272f45a60158d774cb888, type: 3}
+  shipWindow: {fileID: 4098614093643342425, guid: f1dfd81d342b4eb4da18c4ab76fcd0de, type: 3}
   debugConsole: {fileID: 1024205404159437411, guid: 72ad65def81c0d94ebf3dc77efaf42bb, type: 3}
   closeButton: {fileID: 4216319877830284443, guid: 504fa5c9a02984747b6e51b4ae649372, type: 3}
   mapClickMask:
