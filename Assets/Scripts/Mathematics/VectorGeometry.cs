@@ -82,5 +82,10 @@ namespace Mathematics {
 			sizeDelta.x = width;
 			rectTransform.sizeDelta = sizeDelta;
 		}
+		public static void SetRectHeight(RectTransform rectTransform, float height){
+			Vector2 sizeDelta = rectTransform.sizeDelta;
+			sizeDelta.y = height;
+			rectTransform.sizeDelta = sizeDelta;
+		}
 	}
 }
