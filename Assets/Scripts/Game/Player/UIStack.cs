@@ -38,7 +38,6 @@ namespace Player {
 		public CalendarPanel CalendarPanel => hud.CalendarPanel;
 		public Province SelectedProvince => Selected as Province;
 		public Country SelectedCountry => Selected as Country;
-		public Simulation.Military.Regiment SelectedRegiment => Selected as Simulation.Military.Regiment;
 		private Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
 		
 		private void Awake(){
