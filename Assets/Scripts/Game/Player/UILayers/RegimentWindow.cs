@@ -10,6 +10,7 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private TextMeshProUGUI action;
 		[SerializeField] private TextMeshProUGUI days;
+		[SerializeField] private GameObject daysLeftText;
 		[SerializeField] private TextMeshProUGUI destination;
 		[SerializeField] private TextMeshProUGUI message;
 		[SerializeField] private TextMeshProUGUI ownerName;
@@ -30,9 +31,28 @@ namespace Player {
 			};
 			AddCountryLink(ownerFlag.gameObject, regiment.Owner);
 			Refresh();
+			message.text = "";
 			close.onClick.AddListener(() => UI.Deselect());
+			Calendar.Instance.OnDayTick.AddListener(Refresh);
 		}
-		public void Refresh(){}
+		public void Refresh(){
+			if (regiment.IsBuilt && regiment.IsMoving){
+				action.text = $"Moving to {regiment.NextLocation}";
+				days.text = regiment.DaysToNextLocation.ToString();
+				daysLeftText.SetActive(true);
+				destination.text = regiment.NextLocation == regiment.TargetLocation ? "" : $"End destination: {regiment.TargetLocation}";
+			} else if (regiment.IsBuilt && !regiment.IsMoving){
+				action.text = $"Located at {regiment.Location}";
+				days.text = "";
+				daysLeftText.SetActive(false);
+				destination.text = "";
+			} else {
+				action.text = regiment.CreatingVerb;
+				days.text = regiment.BuildDaysLeft.ToString();
+				daysLeftText.SetActive(true);
+				destination.text = "";
+			}
+		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			if (!isRightClick){
 				return RegularProvinceClick(clickedSelectable, false);
@@ -40,13 +60,19 @@ namespace Player {
 			switch(clickedSelectable){
 				case Province province:
 					Player.TryMoveRegimentTo(regiment, province);
+					Refresh();
 					return regiment;
 				case Regiment clickedRegiment when regiment != clickedRegiment:
 					Player.TryMoveRegimentTo(regiment, clickedRegiment.Location.Province);
+					Refresh();
 					return regiment;
 				default:
 					return null;
 			}
+		}
+		public override void OnEnd(){
+			Calendar.Instance.OnDayTick.RemoveListener(Refresh);
+			base.OnEnd();
 		}
 		public override bool IsDone(){
 			base.IsDone();
