@@ -1,5 +1,7 @@
 using ActionStackSystem;
+using Mathematics;
 using Simulation;
+using TMPro;
 using UnityEngine;
 
 namespace Player {
@@ -42,8 +44,16 @@ namespace Player {
 			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
 		}
 
-		protected static void AddCountryLink(GameObject linkObject, Country country){
-			linkObject.AddComponent<UILink>().Link(() => UI.Select(country));
+		protected static void SetCountryLink(TextMeshProUGUI linkText, Country country){
+			linkText.ForceMeshUpdate();
+			RectTransform rectTransform = (RectTransform)linkText.transform;
+			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
+			SetCountryLink(rectTransform, country);
 		}
+		protected static void SetCountryLink(Component linkComponent, Country country){
+			DestroyImmediate(linkComponent.GetComponent<UILink>());
+			linkComponent.gameObject.AddComponent<UILink>().Link(() => UI.Select(country));
+		}
+		
 	}
 }

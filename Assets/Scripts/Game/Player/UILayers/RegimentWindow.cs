@@ -1,4 +1,3 @@
-using Mathematics;
 using Simulation;
 using Simulation.Military;
 using TMPro;
@@ -23,13 +22,11 @@ namespace Player {
 			regiment = UI.SelectedRegiment;
 			title.text = $"{regiment.Type.name}";
 			ownerName.text = regiment.Owner.Name;
-			ownerName.ForceMeshUpdate();
-			VectorGeometry.SetRectWidth((RectTransform)ownerName.transform, ownerName.textBounds.size.x);
-			AddCountryLink(ownerName.gameObject, regiment.Owner);
+			SetCountryLink(ownerName, regiment.Owner);
 			ownerFlag.material = new Material(ownerFlag.material){
 				color = regiment.Owner.MapColor
 			};
-			AddCountryLink(ownerFlag.gameObject, regiment.Owner);
+			SetCountryLink(ownerFlag, regiment.Owner);
 			Refresh();
 			message.text = "";
 			close.onClick.AddListener(() => UI.Deselect());

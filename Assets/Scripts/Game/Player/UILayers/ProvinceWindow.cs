@@ -1,4 +1,3 @@
-using Mathematics;
 using Simulation;
 using TMPro;
 using UnityEngine;
@@ -18,6 +17,7 @@ namespace Player {
 		[SerializeField] private Button close;
 		
 		private Province province;
+		private Country linkedCountry;
 
 		private void Awake(){
 			province = UI.SelectedProvince;
@@ -41,15 +41,17 @@ namespace Player {
 			}
 			Terrain terrain = province.Terrain;
 			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentModifier, terrain.MoveSpeedModifier, terrain.DefenderAdvantage);
-			ownerName.text = province.Owner.Name;
-			ownerName.ForceMeshUpdate();
-			VectorGeometry.SetRectWidth((RectTransform)ownerName.transform, ownerName.textBounds.size.x);
-			AddCountryLink(ownerName.gameObject, province.Owner);
+			
+			if (linkedCountry == province.Owner){
+				return;
+			}
+			linkedCountry = province.Owner;
+			ownerName.text = linkedCountry.Name;
+			SetCountryLink(ownerName, linkedCountry);
 			ownerFlag.material = new Material(ownerFlag.material){
 				color = province.Owner.MapColor
 			};
-			DestroyImmediate(ownerFlag.gameObject.GetComponent<UILink>());
-			AddCountryLink(ownerFlag.gameObject, province.Owner);
+			SetCountryLink(ownerFlag, linkedCountry);
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			return RegularProvinceClick(clickedSelectable, isRightClick);
