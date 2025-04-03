@@ -1,12 +1,12 @@
 using Simulation;
 using Simulation.Military;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Player {
 	public class WarMenu : UILayer {
 		[SerializeField] private MilitaryUnitButton militaryUnitButton;
-		[SerializeField] private Transform rows;
 		[SerializeField] private RectTransform army;
 		[SerializeField] private RectTransform navy;
 		[SerializeField] private Button close;
@@ -23,34 +23,42 @@ namespace Player {
 			if (!isFirstTime){
 				return;
 			}
-			Vector2 positionOffset = new(0, -army.rect.height);
-			Vector2 rowPosition = positionOffset;
+			RectTransform parent = army;
 			foreach (RegimentType regimentType in Player.RegimentTypes){
-				SetupButton(regimentType, rowPosition);
-				rowPosition += positionOffset;
+				parent = SetupButton(regimentType, parent);
 			}
-			navy.anchoredPosition = rowPosition;
-			positionOffset = new Vector2(0, -navy.rect.height);
-			rowPosition += positionOffset;
+			navy.SetParent(parent, false);
+			parent = navy;
 			foreach (ShipType shipType in Player.ShipTypes){
-				SetupButton(shipType, rowPosition);
-				rowPosition += positionOffset;
+				parent = SetupButton(shipType, parent);
 			}
 		}
-		private void SetupButton<T>(UnitType<T> unitType, Vector2 rowPosition) where T : Branch {
-			MilitaryUnitButton button = Instantiate(militaryUnitButton, rows);
-			button.RectTransform.anchoredPosition = rowPosition;
+		private RectTransform SetupButton<T>(UnitType<T> unitType, RectTransform parent) where T : Branch {
+			MilitaryUnitButton button = Instantiate(militaryUnitButton, parent);
 			button.Button.onClick.AddListener(() => SelectButton(button, unitType));
+			button.gameObject.name = unitType.name;
 			button.Label.text = unitType.name;
+			button.Cost.text += unitType.GetCostAsString();
+			return button.RectTransform;
 		}
 		private void SelectButton<T>(MilitaryUnitButton button, UnitType<T> unitType) where T : Branch {
+			if (selectedButton == button){
+				selectedButton.HideInfoBox();
+				selectedButton = null;
+				selectedRegimentType = null;
+				selectedShipType = null;
+				EventSystem.current.SetSelectedGameObject(null);
+				return;
+			}
 			if (selectedButton != null){
-				selectedButton.Button.interactable = true;
+				selectedButton.HideInfoBox();
 			}
 			selectedButton = button;
-			selectedButton.Button.interactable = false;
 			selectedRegimentType = unitType as RegimentType;
 			selectedShipType = unitType as ShipType;
+			selectedButton.Message.text = unitType.CanBeBuiltBy(Player) ? $"<color=green>Can be {unitType.CreatedVerb}</color>" : "<color=red>Cannot afford!</color>";
+			selectedButton.ShowInfoBox();
+			EventSystem.current.SetSelectedGameObject(selectedButton.gameObject);
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			if (isRightClick){
