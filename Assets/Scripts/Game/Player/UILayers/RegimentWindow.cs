@@ -8,6 +8,10 @@ using UnityEngine.UI;
 namespace Player {
 	public class RegimentWindow : UILayer, IRefreshable {
 		[SerializeField] private TextMeshProUGUI title;
+		[SerializeField] private TextMeshProUGUI action;
+		[SerializeField] private TextMeshProUGUI days;
+		[SerializeField] private TextMeshProUGUI destination;
+		[SerializeField] private TextMeshProUGUI message;
 		[SerializeField] private TextMeshProUGUI ownerName;
 		[SerializeField] private Image ownerFlag;
 		[SerializeField] private Button close;
