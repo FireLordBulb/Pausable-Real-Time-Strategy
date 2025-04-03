@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 6482149528193657007}
   - component: {fileID: 8395429354448305914}
   - component: {fileID: 1508542256802667837}
-  - component: {fileID: 5333289201452732764}
+  - component: {fileID: 7963448771550350397}
+  - component: {fileID: 8730196173454304588}
   m_Layer: 0
   m_Name: Cuboid
   m_TagString: Untagged
@@ -87,7 +88,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5333289201452732764
+--- !u!64 &7963448771550350397
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 551983826200447291}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &8730196173454304588
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,10 +119,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 551983826200447291}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3f5c2a605a54eb98ee0ed9adc81601b, type: 3}
+  m_Script: {fileID: 11500000, guid: a2424338fe224c0b9b3dc8a94fa5ff02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regiment: {fileID: 0}
+  ship: {fileID: 8767289471516083093}
 --- !u!1 &4738607553538569589
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,7 +167,8 @@ GameObject:
   - component: {fileID: 9219712072265414963}
   - component: {fileID: 4640565216289286160}
   - component: {fileID: 5842392309162600681}
-  - component: {fileID: 2793804728682634809}
+  - component: {fileID: 2145275174200506873}
+  - component: {fileID: 4949262121563723456}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Untagged
@@ -220,7 +244,29 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2793804728682634809
+--- !u!64 &2145275174200506873
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5778356098159096564}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &4949262121563723456
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -229,10 +275,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 5778356098159096564}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3f5c2a605a54eb98ee0ed9adc81601b, type: 3}
+  m_Script: {fileID: 11500000, guid: a2424338fe224c0b9b3dc8a94fa5ff02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regiment: {fileID: 0}
+  ship: {fileID: 8767289471516083093}
 --- !u!1 &6372061799994669380
 GameObject:
   m_ObjectHideFlags: 0
