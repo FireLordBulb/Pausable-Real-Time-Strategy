@@ -70,6 +70,19 @@ namespace Player {
 						AddConsoleResponse($"Command 'play_as' failed. No country has the name '{words[1]}'.");
 					}
 					return;
+				case "own":
+					if (UIStack.Instance.PlayerCountry == null){
+						AddConsoleResponse("Command 'own' failed. Must be playing as a country to own a province.");
+						return;
+					}
+					if (UIStack.Instance.SelectedProvince == null){
+						AddConsoleResponse("Command 'own' failed. You must select a specific province to own.");
+						return;
+					}
+					UIStack.Instance.SelectedProvince.Owner = UIStack.Instance.PlayerCountry;
+					UIStack.Instance.RefreshSelected();
+					AddConsoleResponse($"{UIStack.Instance.PlayerCountry.Name} now own the province {UIStack.Instance.SelectedProvince}.");
+					return;
 				case "rich":
 					RunCommand("gold 999900");
 					RunCommand("manpower 999999");
@@ -217,6 +230,7 @@ namespace Player {
 			} while (Calendar.Instance.CurrentDate < date);
 			UIStack.Instance.CalendarPanel.EnableUpdate();
 			UIStack.Instance.CalendarPanel.UpdateDate();
+			UIStack.Instance.RefreshSelected();
 			AddConsoleResponse($"Successfully changed the date to {date}.");
 		}
 		private void AddConsoleResponse(string response){

@@ -57,7 +57,6 @@ namespace Simulation {
                     baseColor = Color.black;
                 }
                 baseColor.a = alpha;
-
                 UpdateColors();
             }
         }

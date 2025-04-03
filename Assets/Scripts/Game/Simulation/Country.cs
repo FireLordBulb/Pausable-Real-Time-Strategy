@@ -69,6 +69,9 @@ namespace Simulation {
 		}
 		private void RegenerateBorder(){
 			DestroyImmediate(borderMeshFilter.sharedMesh);
+			if (provinces.Count == 0){
+				return;
+			}
 			MeshData borderMeshData = new($"{gameObject.name}BorderMesh");
 			List<Vector2> borderVertices = new();
 			
@@ -126,7 +129,6 @@ namespace Simulation {
 		}
 		public bool LoseProvince(Province province){
 			return ChangeProvinceCount(provinces.Remove(province), -1);
-
 		}
 		private bool ChangeProvinceCount(bool wasChanged, int change){
 			if (!wasChanged){
