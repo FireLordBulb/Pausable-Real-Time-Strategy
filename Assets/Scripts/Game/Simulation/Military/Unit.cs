@@ -114,5 +114,7 @@ namespace Simulation.Military {
 			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
 			daysToNextLocation = Mathf.CeilToInt(link.Distance/(movementSpeed*terrainSpeedMultiplier));
 		}
+
+		public string CreatingVerb => Branch.CreatingVerb;
 	}
 }

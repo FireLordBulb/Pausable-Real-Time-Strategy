@@ -3,5 +3,6 @@ namespace Simulation.Military {
 		public override bool LinkEvaluator(ProvinceLink link){
 			return link is SeaLink or CoastLink;
 		}
+		public override string CreatingVerb => "Constructing";
 	}
 }
