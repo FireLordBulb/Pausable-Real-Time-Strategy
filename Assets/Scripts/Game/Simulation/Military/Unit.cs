@@ -97,7 +97,7 @@ namespace Simulation.Military {
 				TargetLocation = null;
 				return MoveOrderResult.AlreadyAtDestination;
 			}
-			List<Province> path = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, destination.Province, Branch.LinkEvaluator);
+			List<Province> path = GetPathTo(destination);
 			if (path == null){
 				return MoveOrderResult.NoPath;
 			}
@@ -110,6 +110,9 @@ namespace Simulation.Military {
 				NextPathIndex();
 			}
 			return MoveOrderResult.Success;
+		}
+		public List<Province> GetPathTo(Location<T> end){
+			return GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.Province, Branch.LinkEvaluator);
 		}
 		private void NextPathIndex(){
 			pathIndex++;

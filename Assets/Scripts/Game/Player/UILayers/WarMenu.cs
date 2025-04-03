@@ -70,16 +70,19 @@ namespace Player {
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			if (isRightClick){
 				isDone = true;
-			} else {
-				Province clickedProvince = clickedSelectable as Province;
-				clickedProvince ??= (clickedSelectable as Regiment)?.Location.Province;
-				if (selectedRegimentType != null){
-					Player.TryStartBuildingArmy(selectedRegimentType, clickedProvince);
-					Refresh();
-				} else if (selectedShipType != null){
-					// TODO: TryStartBuildingNavy()
-					Refresh();
-				}
+				return UI.Selected;
+			}
+			Province clickedProvince = clickedSelectable as Province;
+			clickedProvince ??= (clickedSelectable as Unit<Army>)?.Location.Province;
+			if (clickedProvince == null){
+				return UI.Selected;
+			}
+			if (selectedRegimentType != null){
+				Player.TryStartRecuitingRegiment(selectedRegimentType, clickedProvince);
+				Refresh();
+			} else if (selectedShipType != null && clickedProvince.IsCoast){
+				Player.TryStartConstructingFleet(selectedShipType, GetHarbor(clickedProvince));
+				Refresh();
 			}
 			return UI.Selected;
 		}

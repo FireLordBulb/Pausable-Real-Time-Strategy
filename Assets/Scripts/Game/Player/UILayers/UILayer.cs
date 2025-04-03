@@ -68,5 +68,28 @@ namespace Player {
 			link.Link(() => UI.Select(selectable));
 			Links.Add(linkComponent.gameObject, (link, selectable));
 		}
+		
+		protected static Simulation.Military.Harbor GetHarbor(Province province){
+			if (!province.IsCoast){
+				return null;
+			} 
+			Simulation.Military.Harbor clostestHarbor = null;
+			float closestSquareDistance = float.MaxValue;
+			foreach (ProvinceLink provinceLink in province.Links){
+				if (provinceLink is not ShallowsLink shallowsLink){
+					continue;
+				}
+				Simulation.Military.Harbor harbor = shallowsLink.Harbor;
+				float squareDistance = (harbor.WorldPosition-UI.MouseWorldPosition).sqrMagnitude;
+				if (closestSquareDistance < squareDistance){
+					continue;
+				}
+				clostestHarbor = harbor;
+				closestSquareDistance = squareDistance;
+			}
+			// All coastal provinces have at least one harbor.
+			Debug.Assert(clostestHarbor != null);
+			return clostestHarbor;
+		}
 	}
 }

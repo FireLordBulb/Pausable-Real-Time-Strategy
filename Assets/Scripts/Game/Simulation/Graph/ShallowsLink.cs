@@ -3,6 +3,7 @@ namespace Simulation {
 	public class ShallowsLink : ProvinceLink {
 		public Land Land => Source.Land;
 		public Sea Sea => Target.Sea;
+		public Military.Harbor Harbor => ((CoastLink)Target[Source.ColorKey]).Harbor;
 		public ShallowsLink(Province source, Province target, int segmentIndex) : base(source, target, segmentIndex){}
 	}
 }

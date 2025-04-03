@@ -140,7 +140,7 @@ namespace Simulation {
 			return true;
 		}
 
-		public bool TryStartBuildingArmy(Military.RegimentType type, Province province){
+		public bool TryStartRecuitingRegiment(Military.RegimentType type, Province province){
 			if (!regimentTypes.Contains(type) || !provinces.Contains(province)){
 				return false;
 			}
@@ -154,6 +154,18 @@ namespace Simulation {
 				return Military.MoveOrderResult.InvalidTarget;
 			}
 			return regiment.MoveTo(province.Land.ArmyLocation);
+		}
+		public bool TryStartConstructingFleet(Military.ShipType type, Military.Harbor location){
+			if (!shipTypes.Contains(type) || !provinces.Contains(location.Land.Province)){
+				return false;
+			}
+			return Military.Ship.TryStartBuilding(type, location, this);
+		}
+		public Military.MoveOrderResult MoveFleetTo(Military.Ship ship, Military.Location<Military.Navy> location){
+			if (ship.Owner != this){
+				return Military.MoveOrderResult.NotOwner;
+			}
+			return ship.MoveTo(location);
 		}
 		
 		public void OnSelect(){

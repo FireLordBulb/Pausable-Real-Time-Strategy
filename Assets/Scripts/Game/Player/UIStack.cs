@@ -34,6 +34,7 @@ namespace Player {
 		public bool CanSwitchCountry {get; internal set;}
 		public Country PlayerCountry {get; private set;}
 		public Component Selected {get; private set;}
+		public Vector3 MouseWorldPosition {get; private set;}
 		
 		public CalendarPanel CalendarPanel => hud.CalendarPanel;
 		public Province SelectedProvince => Selected as Province;
@@ -136,6 +137,7 @@ namespace Player {
 				EndHover();
 				return;
 			}
+			MouseWorldPosition = hit.point;
 			if (!hit.collider.TryGetComponent(out Province province)){
 				EndHover();
 				// TODO: hovering UI elements.

@@ -163,7 +163,7 @@ namespace Player {
 						}
 					}
 					Simulation.Military.RegimentType type = UIStack.Instance.PlayerCountry.RegimentTypes.First();
-					bool didStartBuilding = UIStack.Instance.PlayerCountry.TryStartBuildingArmy(type, province);
+					bool didStartBuilding = UIStack.Instance.PlayerCountry.TryStartRecuitingRegiment(type, province);
 					AddConsoleResponse(didStartBuilding ? $"Started building {type.name}." : $"Failed to start building {type.name}.");
 					return;
 				}
