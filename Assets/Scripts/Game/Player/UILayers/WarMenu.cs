@@ -92,7 +92,7 @@ namespace Player {
 		}
 		public override bool IsDone(){
 			base.IsDone();
-			return isDone;
+			return isDone || Player == null;
 		}
 	}
 }
