@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d4ab7c3918b458c86d808db385d63fe, type: 3}
   m_Name: Man-of-War
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 8767289471516083093, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
   daysToBuild: 180
   goldCost: 35
   sailors: 400
