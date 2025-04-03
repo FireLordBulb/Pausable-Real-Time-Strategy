@@ -73,7 +73,10 @@ namespace Player {
 				return UI.Selected;
 			}
 			Province clickedProvince = clickedSelectable as Province;
-			clickedProvince ??= (clickedSelectable as Unit<Army>)?.Location.Province;
+			if (clickedProvince == null){
+				isDone = true;
+				return clickedSelectable;
+			}
 			if (clickedProvince == null){
 				return UI.Selected;
 			}
@@ -83,6 +86,9 @@ namespace Player {
 			} else if (selectedShipType != null && clickedProvince.IsCoast){
 				Player.TryStartConstructingFleet(selectedShipType, GetHarbor(clickedProvince));
 				Refresh();
+			} else {
+				isDone = true;
+				return clickedProvince;
 			}
 			return UI.Selected;
 		}
