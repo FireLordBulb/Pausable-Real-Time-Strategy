@@ -113,6 +113,9 @@ namespace Simulation.Military {
 		}
 		public List<ProvinceLink> GetPathTo(Location<T> end){
 			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.SearchTargetProvince, Branch.LinkEvaluator);
+			if (nodes == null){
+				return null;
+			}
 			List<ProvinceLink> path = new(nodes.Count);
 			for (int i = 1; i < nodes.Count; i++){
 				path.Add(nodes[i-1][nodes[i].ColorKey]);

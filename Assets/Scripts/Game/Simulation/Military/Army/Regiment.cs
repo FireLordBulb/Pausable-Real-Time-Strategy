@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Simulation.Military {
 	public class Regiment : Unit<Army> {
 		private void Awake(){
-			Branch = new Army();
+			Branch = new Army(this);
 		}
 		protected override Location<Army> GetLocation(ProvinceLink link){
 			return link.Target.Land.ArmyLocation;
