@@ -60,6 +60,11 @@ namespace Player {
 				selectHistoryCount--;
 				SelectWithoutHistoryUpdate(selectHistoryCount != 0 ? selectedHistory.First.Value : null);
 			};
+			input.Cancel.canceled += _ => {
+				if (CurrentAction is IClosableWindow closableWindow){
+					closableWindow.Close();
+				}
+			};
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			debugConsole = Instantiate(debugConsole, transform);
 			bool debugWasDeactivated = false;
