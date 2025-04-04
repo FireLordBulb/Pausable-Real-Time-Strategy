@@ -1,7 +1,7 @@
+using Simulation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Calendar = Simulation.Calendar;
 
 namespace Player {
 	public class HUD : UILayer {
@@ -85,7 +85,13 @@ namespace Player {
 			}
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
-			return RegularProvinceClick(clickedSelectable, isRightClick);
+			if (clickedSelectable is not Province clickedProvince){
+				return clickedSelectable == UI.Selected ? null : clickedSelectable;
+			}
+			if (isRightClick){
+				return clickedProvince.Owner == UI.SelectedCountry ? null : clickedProvince.Owner;
+			}
+			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
 		}
 		public override bool IsDone(){
 			return false;

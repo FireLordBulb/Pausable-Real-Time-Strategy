@@ -66,7 +66,7 @@ namespace Player {
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			if (!isRightClick){
-				return RegularProvinceClick(clickedSelectable, false);
+				return LayerBelow.OnSelectableClicked(clickedSelectable, false);
 			}
 			switch(clickedSelectable){
 				case Province province:

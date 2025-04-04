@@ -40,10 +40,7 @@ namespace Player {
 		}
 		private void SelectUnit<T>(MilitaryUnitButton button, UnitType<T> unitType) where T : Branch {
 			if (selectedButton == button){
-				selectedButton.HideInfoBox();
-				selectedButton = null;
-				selectedRegimentType = null;
-				selectedShipType = null;
+				DeselectButton();
 				return;
 			}
 			if (selectedButton != null){
@@ -68,30 +65,31 @@ namespace Player {
 		}
 
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
-			if (isRightClick){
-				isDone = true;
-				return UI.Selected;
-			}
-			Province clickedProvince = clickedSelectable as Province;
-			if (clickedProvince == null){
-				isDone = true;
-				return clickedSelectable;
-			}
-			if (clickedProvince == null){
-				return UI.Selected;
+			if (isRightClick || clickedSelectable is not Province clickedProvince){
+				DeselectButton();
+				return LayerBelow.OnSelectableClicked(clickedSelectable, true);
 			}
 			if (selectedRegimentType != null){
 				Player.TryStartRecuitingRegiment(selectedRegimentType, clickedProvince);
 				Refresh();
-			} else if (selectedShipType != null && clickedProvince.IsCoast){
+			} else if (selectedShipType != null){
 				Player.TryStartConstructingFleet(selectedShipType, GetHarbor(clickedProvince));
 				Refresh();
 			} else {
-				isDone = true;
 				return clickedProvince;
 			}
 			return UI.Selected;
 		}
+
+		private void DeselectButton(){
+			if (selectedButton != null){
+				selectedButton.HideInfoBox();
+				selectedButton = null;
+			}
+			selectedRegimentType = null;
+			selectedShipType = null;
+		}
+		
 		public override void OnEnd(){
 			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
 			base.OnEnd();

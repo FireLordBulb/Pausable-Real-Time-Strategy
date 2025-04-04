@@ -39,7 +39,7 @@ namespace Player {
 			countryPanel.SetCountry(province.Owner);
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
-			return RegularProvinceClick(clickedSelectable, isRightClick);
+			return LayerBelow.OnSelectableClicked(clickedSelectable, isRightClick);
 		}
 		public override void OnEnd(){
 			province.OnDeselect();

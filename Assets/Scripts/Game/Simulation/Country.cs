@@ -170,7 +170,7 @@ namespace Simulation {
 			return regiment.MoveTo(province.Land.ArmyLocation);
 		}
 		public bool TryStartConstructingFleet(Military.ShipType type, Military.Harbor location){
-			if (!shipTypes.Contains(type) || !provinces.Contains(location.Land.Province)){
+			if (!shipTypes.Contains(type) || location == null || !provinces.Contains(location.Land.Province)){
 				return false;
 			}
 			Military.Unit<Military.Navy> newNavyUnit = Military.Ship.StartCreating(type, location, this);

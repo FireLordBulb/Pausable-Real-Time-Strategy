@@ -35,17 +35,6 @@ namespace Player {
 		}
 		
 		// Subclass Sandbox. |>-------------------------------------------------------------------------------------------
-		protected static Component RegularProvinceClick(Component clickedSelectable, bool isRightClick){
-			if (clickedSelectable is not Province clickedProvince){
-				return clickedSelectable == UI.Selected ? null : clickedSelectable;
-			}
-			if (isRightClick){
-				return clickedProvince.Owner == UI.SelectedCountry ? null : clickedProvince.Owner;
-			}
-			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
-		}
-
-
 		private static readonly Dictionary<GameObject, (UILink link, Component selectable)> Links = new();
 		public static void SetSelectLink(TextMeshProUGUI linkText, Component selectable){
 			if (Links.TryGetValue(linkText.gameObject, out (UILink, Component selectable) tuple) && tuple.selectable == selectable){
