@@ -39,6 +39,8 @@ namespace Player {
 		public void Refresh(){
 			valueTable.UpdateColumn(0, (
 				Format.FormatLargeNumber(country.ProvinceCount, Format.SevenDigits)),	
+				Format.FormatLargeNumber(country.RegimentCount, Format.FiveDigits),	
+				Format.FormatLargeNumber(country.ShipCount, Format.FiveDigits),	
 				Format.FormatLargeNumber(country.Gold, Format.FiveDigits),	
 				Format.FormatLargeNumber(country.Manpower, Format.SevenDigits),	
 				Format.FormatLargeNumber(country.Sailors, Format.SevenDigits)

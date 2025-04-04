@@ -178,6 +178,8 @@ MonoBehaviour:
   valueTable: {fileID: 1942703259564020409}
   valueNames:
   - Provinces
+  - Regiments
+  - Ships
   - Gold
   - Manpower
   - Sailors

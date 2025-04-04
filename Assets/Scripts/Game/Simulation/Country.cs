@@ -55,6 +55,8 @@ namespace Simulation {
 		public IEnumerable<Province> Provinces => provinces;
 		// TODO: Assign a specific province as capital from country data.
 		public Province Capital => provinces.First();
+		public int RegimentCount => regiments.Count;
+		public int ShipCount => ships.Count;
 		public string Name => gameObject.name;
 		
 		public void Init(CountryData data, MapGraph map){
@@ -147,6 +149,9 @@ namespace Simulation {
 				return false;
 			}
 			Military.Unit<Military.Army> newArmyUnit = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
+			if (newArmyUnit == null){
+				return false;
+			}
 			if (newArmyUnit is not Military.Regiment newRegiment){
 				Debug.LogError($"Army unit of unknown type '{newArmyUnit.Type.name}' in {this}'s regimentTypes list!");
 				Destroy(newArmyUnit);
@@ -169,6 +174,9 @@ namespace Simulation {
 				return false;
 			}
 			Military.Unit<Military.Navy> newNavyUnit = Military.Ship.StartCreating(type, location, this);
+			if (newNavyUnit == null){
+				return false;
+			}
 			if (newNavyUnit is not Military.Ship newShip){
 				Debug.LogError($"Navy unit of unknown type '{newNavyUnit.Type.name}' in {this}'s shipTypes list!");
 				Destroy(newNavyUnit);

@@ -253,6 +253,7 @@ namespace Player {
 				}
 			}
 			(string typeName, bool didStartBuilding) = tryStartCreating(province);
+			UIStack.Instance.RefreshSelected();
 			AddConsoleResponse(didStartBuilding ? $"Started {creatingVerb} {typeName}." : $"Failed to start {creatingVerb} {typeName}.");
 		}
 		private void AddConsoleResponse(string response){
