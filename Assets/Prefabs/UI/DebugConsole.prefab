@@ -673,6 +673,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   consoleText: {fileID: 8264708232965290729}
   inputField: {fileID: 1131140191030279549}
+  doUseAutoCommands: 0
+  autoCommands:
+  - play_as Aldynis
+  - rich
+  - reg
+  - ship
+  - skip 200
 --- !u!223 &5417892655479546527
 Canvas:
   m_ObjectHideFlags: 0

@@ -16,6 +16,8 @@ namespace Player {
 		
 		[SerializeField] private TextMeshProUGUI consoleText;
 		[SerializeField] private TMP_InputField inputField;
+		[SerializeField] private bool doUseAutoCommands;
+		[SerializeField] private string[] autoCommands;
 
 		private static GameObject InputFieldGameObject;
 		public static bool IsKeyboardBusy(){
@@ -23,7 +25,6 @@ namespace Player {
 		}
 		
 		private void Awake(){
-			gameObject.SetActive(false);
 			inputField.onSubmit.AddListener(message => {
 				inputField.ActivateInputField();
 				inputField.text = "";
@@ -35,6 +36,15 @@ namespace Player {
 			});
 			inputField.onValueChanged.AddListener(message => inputField.text = message.TrimEnd('\n').TrimEnd('\v'));
 			InputFieldGameObject = inputField.gameObject;
+		}
+		private void Start(){
+			gameObject.SetActive(false);
+			if (!doUseAutoCommands){
+				return;
+			}
+			foreach (string command in autoCommands){
+				RunCommand(command);
+			}
 		}
 		
 		public void Enable(){
@@ -143,28 +153,17 @@ namespace Player {
 				}
 				case "regiment":
 				case "reg": {
-					if (UIStack.Instance.PlayerCountry == null){
-						AddConsoleResponse($"Command 'regiment' failed. Must be playing as a country to build a regiment.");
-						return;
-					}
-					Province province;
-					if (words.Length == 1){
-						province = UIStack.Instance.PlayerCountry.Capital;
-					} else {
-						if (int.TryParse(words[1], out int index)){
-							province = UIStack.Instance.PlayerCountry.Provinces.ElementAtOrDefault(index);
-							if (province == null){
-								AddConsoleResponse($"Command 'regiment' failed. {words[1]} isn't smaller than {UIStack.Instance.PlayerCountry.Name}'s province count.");
-								return;
-							}
-						} else {
-							AddConsoleResponse($"Command 'regiment' failed: Couldn't parse {words[1]} to an int province index.");
-							return;
-						}
-					}
-					Simulation.Military.RegimentType type = UIStack.Instance.PlayerCountry.RegimentTypes.First();
-					bool didStartBuilding = UIStack.Instance.PlayerCountry.TryStartRecuitingRegiment(type, province);
-					AddConsoleResponse(didStartBuilding ? $"Started building {type.name}." : $"Failed to start building {type.name}.");
+					CreateMilitaryUnit("regiment", words, province => {
+						Simulation.Military.RegimentType type = UIStack.Instance.PlayerCountry.RegimentTypes.First();
+						return (type.name, UIStack.Instance.PlayerCountry.TryStartRecuitingRegiment(type, province));
+					}, "recruit a regiment", "recruiting");
+					return;
+				}
+				case "ship": {
+					CreateMilitaryUnit("ship", words, province => {
+						Simulation.Military.ShipType type = UIStack.Instance.PlayerCountry.ShipTypes.First();
+						return (type.name, UIStack.Instance.PlayerCountry.TryStartConstructingFleet(type, UILayer.GetHarbor(province)));
+					}, "construct a ship", "constructing");
 					return;
 				}
 			}
@@ -232,6 +231,29 @@ namespace Player {
 			UIStack.Instance.CalendarPanel.UpdateDate();
 			UIStack.Instance.RefreshSelected();
 			AddConsoleResponse($"Successfully changed the date to {date}.");
+		}
+		private void CreateMilitaryUnit(string command, string[] words, Func<Province, (string, bool)> tryStartCreating, string setenceSegment, string creatingVerb){
+			if (UIStack.Instance.PlayerCountry == null){
+				AddConsoleResponse($"Command '{command}' failed. Must be playing as a country to {setenceSegment}.");
+				return;
+			}
+			Province province;
+			if (words.Length == 1){
+				province = UIStack.Instance.PlayerCountry.Capital;
+			} else {
+				if (int.TryParse(words[1], out int index)){
+					province = UIStack.Instance.PlayerCountry.Provinces.ElementAtOrDefault(index);
+					if (province == null){
+						AddConsoleResponse($"Command '{command}' failed. {words[1]} isn't smaller than {UIStack.Instance.PlayerCountry.Name}'s province count.");
+						return;
+					}
+				} else {
+					AddConsoleResponse($"Command '{command}' failed: Couldn't parse {words[1]} to an int province index.");
+					return;
+				}
+			}
+			(string typeName, bool didStartBuilding) = tryStartCreating(province);
+			AddConsoleResponse(didStartBuilding ? $"Started {creatingVerb} {typeName}." : $"Failed to start {creatingVerb} {typeName}.");
 		}
 		private void AddConsoleResponse(string response){
 			consoleText.text += $"\n> {response}";

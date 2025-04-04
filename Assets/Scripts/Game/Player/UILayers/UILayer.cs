@@ -69,7 +69,7 @@ namespace Player {
 			Links.Add(linkComponent.gameObject, (link, selectable));
 		}
 		
-		protected static Simulation.Military.Harbor GetHarbor(Province province){
+		public static Simulation.Military.Harbor GetHarbor(Province province){
 			if (!province.IsCoast){
 				return null;
 			} 
