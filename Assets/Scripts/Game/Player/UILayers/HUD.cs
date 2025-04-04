@@ -21,6 +21,7 @@ namespace Player {
 		[SerializeField] private CalendarPanel calendarPanel;
 		
 		private GameObject sidePanelMenuGameObject;
+		private IRefreshable sidePanelMenuRefreshable;
 		
 		public CalendarPanel CalendarPanel => calendarPanel;
 		private void Awake(){
@@ -33,7 +34,9 @@ namespace Player {
 			clickedButton.interactable = false;
 			UI.Push(menuPrefab);
 			sidePanelMenuGameObject = UI.GetTopLayer().gameObject;
+			sidePanelMenuRefreshable = sidePanelMenuGameObject.GetComponent<IRefreshable>();
 		}
+		// ReSharper disable Unity.PerformanceAnalysis // OnBegin isn't called every frame.
 		public override void OnBegin(bool isFirstTime){
 			gameObject.SetActive(true);
 			RefreshCountry();
@@ -58,6 +61,7 @@ namespace Player {
 			gold.text = Format.FormatLargeNumber(Player.Gold, Format.FiveDigits);
 			manpower.text = Format.FormatLargeNumber(Player.Manpower, Format.SevenDigits);
 			sailors.text = Format.FormatLargeNumber(Player.Sailors, Format.SevenDigits);
+			sidePanelMenuRefreshable?.Refresh();
 		}
 		private void SetButtonsInteractable(){
 			bool mayInteract = Player != null;

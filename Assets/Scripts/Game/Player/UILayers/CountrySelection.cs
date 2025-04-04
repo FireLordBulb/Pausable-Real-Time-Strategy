@@ -7,6 +7,7 @@ namespace Player {
 		[SerializeField] private bool isObserver;
 		[SerializeField] private string autoSelectedCountryName;
 		
+		// ReSharper disable Unity.PerformanceAnalysis // This is editor only AND OnBegin isn't called even near every frame.
 		public override void OnBegin(bool isFirstTime){
 #if UNITY_EDITOR
 			if (doAutoSelect){
