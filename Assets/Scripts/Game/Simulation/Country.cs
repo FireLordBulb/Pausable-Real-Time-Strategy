@@ -8,13 +8,26 @@ namespace Simulation {
 	public class Country : MonoBehaviour {
 		private static Transform militaryUnitParent;
 		private static readonly Dictionary<string, Country> Countries = new();
+		private static readonly Dictionary<(Country, Country), DiplomaticStatus> DiplomaticStatuses = new();
 		public static Country Get(string key){
 			Countries.TryGetValue(key, out Country country);
 			return country;
 		}
+		private static DiplomaticStatus GetDiplomaticStatus(Country a, Country b){
+			if (DiplomaticStatuses.TryGetValue((a, b), out DiplomaticStatus diplomaticStatus)){
+				return diplomaticStatus;
+			}
+			if (DiplomaticStatuses.TryGetValue((b, a), out diplomaticStatus)){
+				return diplomaticStatus;
+			}
+			diplomaticStatus = new DiplomaticStatus();
+			DiplomaticStatuses.Add((a, b), new DiplomaticStatus());
+			return diplomaticStatus;
+		}
 #if UNITY_EDITOR
 		public static void ClearCountryDictionary(){
 			Countries.Clear();
+			DiplomaticStatuses.Clear();
 		}
 #endif
 		
