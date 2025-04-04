@@ -161,7 +161,7 @@ namespace Simulation {
 		}
 
 		public bool TryStartRecuitingRegiment(Military.RegimentType type, Province province){
-			if (!regimentTypes.Contains(type) || !provinces.Contains(province)){
+			if (!regimentTypes.Contains(type) || province.Owner != this){
 				return false;
 			}
 			Military.Unit<Military.Army> newArmyUnit = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
@@ -183,10 +183,13 @@ namespace Simulation {
 			if (province.IsSea){
 				return Military.MoveOrderResult.InvalidTarget;
 			}
+			if (province.Owner != this && !GetDiplomaticStatus(province.Owner).IsAtWar){
+				return Military.MoveOrderResult.NoAccess;
+			}
 			return regiment.MoveTo(province.Land.ArmyLocation);
 		}
 		public bool TryStartConstructingFleet(Military.ShipType type, Military.Harbor location){
-			if (!shipTypes.Contains(type) || location == null || !provinces.Contains(location.Land.Province)){
+			if (!shipTypes.Contains(type) || location == null || location.Land.Province.Owner != this){
 				return false;
 			}
 			Military.Unit<Military.Navy> newNavyUnit = Military.Ship.StartCreating(type, location, this);
@@ -207,6 +210,10 @@ namespace Simulation {
 		public Military.MoveOrderResult MoveFleetTo(Military.Ship ship, Military.Location<Military.Navy> location){
 			if (ship.Owner != this){
 				return Military.MoveOrderResult.NotOwner;
+			}
+			Country owner = location.Province.Owner;
+			if (location.Province.IsLand && owner != this && !GetDiplomaticStatus(owner).IsAtWar){
+				return Military.MoveOrderResult.NoAccess;
 			}
 			return ship.MoveTo(location);
 		}
