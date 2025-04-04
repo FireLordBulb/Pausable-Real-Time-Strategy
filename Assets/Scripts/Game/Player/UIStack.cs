@@ -54,6 +54,11 @@ namespace Player {
 			input.Click.performed      += context => OnClick(context, false);
 			input.RightClick.performed += context => OnClick(context, true );
 			input.Back.canceled += _ => {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+				if (DebugConsole.IsKeyboardBusy()){
+					return;
+				}
+#endif
 				if (selectHistoryCount == 0){
 					return;
 				}
@@ -62,6 +67,11 @@ namespace Player {
 				SelectWithoutHistoryUpdate(selectHistoryCount != 0 ? selectedHistory.First.Value : null);
 			};
 			input.Cancel.canceled += _ => {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+				if (DebugConsole.IsKeyboardBusy()){
+					return;
+				}
+#endif
 				if (CurrentAction is IClosableWindow closableWindow){
 					closableWindow.Close();
 				}
