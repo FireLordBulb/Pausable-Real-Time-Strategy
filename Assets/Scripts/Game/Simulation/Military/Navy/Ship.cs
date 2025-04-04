@@ -21,5 +21,10 @@ namespace Simulation.Military {
 			};
 			return (GetLocation(link), Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)));
 		}
+		
+		public override void StackWipe(){
+			Owner.RemoveShip(this);
+			Destroy(gameObject);
+		}
 	}
 }

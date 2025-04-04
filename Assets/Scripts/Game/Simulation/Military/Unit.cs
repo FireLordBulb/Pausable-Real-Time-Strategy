@@ -129,6 +129,8 @@ namespace Simulation.Military {
 		}
 		protected abstract (Location<T>, int) CalculatePathLocation();
 		protected abstract Location<T> GetLocation(ProvinceLink link);
+
+		public abstract void StackWipe();
 		
 		public string CreatingVerb => Branch.CreatingVerb;
 	}

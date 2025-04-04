@@ -13,5 +13,10 @@ namespace Simulation.Military {
 			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
 			return (GetLocation(link), Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)));
 		}
+		
+		public override void StackWipe(){
+			Owner.RemoveRegiment(this);
+			Destroy(gameObject);
+		}
 	}
 }

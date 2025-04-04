@@ -218,6 +218,13 @@ namespace Simulation {
 			return ship.MoveTo(location);
 		}
 
+		internal void RemoveRegiment(Military.Regiment regiment){
+			regiments.Remove(regiment);
+		}
+		internal void RemoveShip(Military.Ship ship){
+			ships.Remove(ship);
+		}
+		
 		public DiplomaticStatus GetDiplomaticStatus(Country other){
 			return GetDiplomaticStatus(this, other);
 		}
