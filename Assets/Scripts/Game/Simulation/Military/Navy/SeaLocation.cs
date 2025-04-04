@@ -3,10 +3,10 @@ using UnityEngine;
 namespace Simulation.Military {
 	public class SeaLocation : Location<Navy> {
 		public readonly Sea Sea;
-
-		public override Vector3 WorldPosition => Sea.transform.position;
+		
+		public override string Name => Sea.Province.Name;
 		public override Province Province => Sea.Province;
-		public override string Name => Province.Name;
+		public override Vector3 WorldPosition => Sea.transform.position;
 		
 		public SeaLocation(Sea sea){
 			Sea = sea;

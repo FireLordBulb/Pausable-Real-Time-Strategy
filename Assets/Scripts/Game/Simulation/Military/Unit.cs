@@ -19,7 +19,7 @@ namespace Simulation.Military {
 		public Location<T> NextLocation {get; private set;}
 		public Location<T> TargetLocation {get; private set;}
 		public int DaysToNextLocation {get; private set;}
-		protected List<Province> PathToTarget {get; private set;}
+		protected List<ProvinceLink> PathToTarget {get; private set;}
 		protected int PathIndex {get; private set;}
 
 		public bool IsMoving => PathToTarget != null;
@@ -96,29 +96,35 @@ namespace Simulation.Military {
 				TargetLocation = null;
 				return MoveOrderResult.AlreadyAtDestination;
 			}
-			List<Province> path = GetPathTo(destination);
+			List<ProvinceLink> path = GetPathTo(destination);
 			if (path == null){
 				return MoveOrderResult.NoPath;
 			}
 			PathToTarget = path;
 			TargetLocation = destination;
-			if (NextLocation == GetLocation(path[0], path[1])){
-				PathIndex = 1;
-			} else {
+			if (NextLocation == GetLocation(path[0])){
 				PathIndex = 0;
+			} else {
+				PathIndex = -1;
 				NextPathLocation();
 			}
 			return MoveOrderResult.Success;
 		}
-		public List<Province> GetPathTo(Location<T> end){
-			return GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.Province, Branch.LinkEvaluator);
+		public List<ProvinceLink> GetPathTo(Location<T> end){
+			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.SearchTargetProvince, Branch.LinkEvaluator);
+			List<ProvinceLink> path = new(nodes.Count);
+			for (int i = 1; i < nodes.Count; i++){
+				path.Add(nodes[i-1][nodes[i].ColorKey]);
+			}
+			end.AdjustPath(path);
+			return path;
 		}
 		private void NextPathLocation(){
 			PathIndex++;
 			(NextLocation, DaysToNextLocation) = CalculatePathLocation();
 		}
 		protected abstract (Location<T>, int) CalculatePathLocation();
-		protected abstract Location<T> GetLocation(Province previousProvince, Province nextProvince);
+		protected abstract Location<T> GetLocation(ProvinceLink link);
 		
 		public string CreatingVerb => Branch.CreatingVerb;
 	}

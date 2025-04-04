@@ -5,7 +5,7 @@ namespace Simulation {
 		public Sea Sea => Source.Sea;
 		public Land Land => Target.Land;
 		public CoastLink(Province source, Province target, int segmentIndex) : base(source, target, segmentIndex){
-			Harbor = new(Sea, Land);
+			Harbor = new Military.Harbor(this);
 		}
 	}
 }
