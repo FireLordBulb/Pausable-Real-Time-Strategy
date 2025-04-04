@@ -32,7 +32,7 @@ namespace Simulation.Military {
 			Unit<T> unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.MilitaryUnitParent);
 			unit.Owner = owner;
 			unit.Location = buildLocation;
-			unit.Location.Units.Add(unit);
+			unit.Location.Add(unit);
 			unit.Type = type;
 			unit.gameObject.name = type.name;
 			
@@ -75,8 +75,8 @@ namespace Simulation.Military {
 			if (0 < DaysToNextLocation){
 				return;
 			}
-			Location.Units.Remove(this);
-			NextLocation.Units.Add(this);
+			Location.Remove(this);
+			NextLocation.Add(this);
 			Location = NextLocation;
 			worldPositionsOnPath.Enqueue(Location.WorldPosition);
 			if (ReferenceEquals(NextLocation, TargetLocation)){
