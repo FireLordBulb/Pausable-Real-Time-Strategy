@@ -124,10 +124,10 @@ namespace Simulation {
 			IsDirty = false;
 		}
 		
-		public bool GainProvince(Province province){
+		internal bool GainProvince(Province province){
 			return ChangeProvinceCount(provinces.Add(province), +1);
 		}
-		public bool LoseProvince(Province province){
+		internal bool LoseProvince(Province province){
 			return ChangeProvinceCount(provinces.Remove(province), -1);
 		}
 		private bool ChangeProvinceCount(bool wasChanged, int change){
