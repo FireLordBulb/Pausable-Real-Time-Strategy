@@ -1,7 +1,7 @@
 using Simulation;
 using Simulation.Military;
 namespace Player {
-	public class ShipWindow : MilitaryUnitWindow<Ship, Navy> {
+	public class ShipWindow : MilitaryUnitWindow<Ship> {
 		protected override void OrderMove(Province province){
 			MoveOrderResult result;
 			if (province.IsSea){

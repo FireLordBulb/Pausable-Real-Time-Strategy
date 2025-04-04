@@ -164,7 +164,7 @@ namespace Simulation {
 			if (!regimentTypes.Contains(type) || province.Owner != this){
 				return false;
 			}
-			Military.Unit<Military.Army> newArmyUnit = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
+			Military.Unit<Military.Regiment> newArmyUnit = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
 			if (newArmyUnit == null){
 				return false;
 			}
@@ -192,7 +192,7 @@ namespace Simulation {
 			if (!shipTypes.Contains(type) || location == null || location.Land.Province.Owner != this){
 				return false;
 			}
-			Military.Unit<Military.Navy> newNavyUnit = Military.Ship.StartCreating(type, location, this);
+			Military.Unit<Military.Ship> newNavyUnit = Military.Ship.StartCreating(type, location, this);
 			if (newNavyUnit == null){
 				return false;
 			}
@@ -207,7 +207,7 @@ namespace Simulation {
 			ships.Add(newShip);
 			return true;
 		}
-		public Military.MoveOrderResult MoveFleetTo(Military.Ship ship, Military.Location<Military.Navy> location){
+		public Military.MoveOrderResult MoveFleetTo(Military.Ship ship, Military.Location<Military.Ship> location){
 			if (ship.Owner != this){
 				return Military.MoveOrderResult.NotOwner;
 			}

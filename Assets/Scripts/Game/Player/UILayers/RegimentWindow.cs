@@ -1,7 +1,7 @@
 using Simulation;
 using Simulation.Military;
 namespace Player {
-	public class RegimentWindow : MilitaryUnitWindow<Regiment, Army> {
+	public class RegimentWindow : MilitaryUnitWindow<Regiment> {
 		protected override void OrderMove(Province province){
 			MoveOrderResult result = Player.MoveRegimentTo(Unit, province);
 			SetMessage(result switch {

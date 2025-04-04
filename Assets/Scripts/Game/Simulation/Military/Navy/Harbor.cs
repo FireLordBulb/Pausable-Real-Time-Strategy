@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Simulation.Military {
-	public class Harbor : Location<Navy> {
+	public class Harbor : Location<Ship> {
 		public readonly Sea Sea;
 		public readonly Land Land;
 		private readonly CoastLink coast;

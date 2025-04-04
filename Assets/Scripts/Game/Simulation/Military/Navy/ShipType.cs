@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	[CreateAssetMenu(fileName = "ShipType", menuName = "ScriptableObjects/Military/ShipType")]
-	public class ShipType : UnitType<Navy> {
+	public class ShipType : UnitType<Ship> {
 		[SerializeField] private int sailors;
 		public override bool CanBeBuiltBy(Country owner){
 			return sailors <= owner.Manpower && goldCost <= owner.Gold;

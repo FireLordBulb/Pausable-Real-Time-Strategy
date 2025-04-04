@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Simulation.Military {
-	public class SeaLocation : Location<Navy> {
+	public class SeaLocation : Location<Ship> {
 		public readonly Sea Sea;
 		
 		public override string Name => Sea.Province.Name;

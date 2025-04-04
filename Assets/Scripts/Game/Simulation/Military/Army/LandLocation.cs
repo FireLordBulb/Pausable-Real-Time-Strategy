@@ -1,7 +1,7 @@
 using UnityEngine;
 
 namespace Simulation.Military {
-	public class LandLocation : Location<Army> {
+	public class LandLocation : Location<Regiment> {
 		public readonly Land Land;
 		
 		public override string Name => Province.Name;

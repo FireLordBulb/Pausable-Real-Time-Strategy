@@ -3,11 +3,9 @@ using Graphs;
 using UnityEngine;
 
 namespace Simulation.Military {
-	public abstract class Unit<T> : MonoBehaviour where T : Branch {
+	public abstract class Unit<T> : MonoBehaviour where T : Unit<T> {
 		[SerializeField] private float movementSpeed;
 		[SerializeField] private float worldSpaceSpeed;
-		
-		protected T Branch;
 		
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		
@@ -112,7 +110,7 @@ namespace Simulation.Military {
 			return MoveOrderResult.Success;
 		}
 		public List<ProvinceLink> GetPathTo(Location<T> end){
-			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.SearchTargetProvince, Branch.LinkEvaluator);
+			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.SearchTargetProvince, LinkEvaluator);
 			if (nodes == null){
 				return null;
 			}
@@ -132,6 +130,7 @@ namespace Simulation.Military {
 
 		public abstract void StackWipe();
 		
-		public string CreatingVerb => Branch.CreatingVerb;
+		public abstract bool LinkEvaluator(ProvinceLink link);
+		public abstract string CreatingVerb {get;}
 	}
 }

@@ -30,7 +30,7 @@ namespace Player {
 				parent = SetupButton(shipType, parent);
 			}
 		}
-		private RectTransform SetupButton<T>(UnitType<T> unitType, RectTransform parent) where T : Branch {
+		private RectTransform SetupButton<TUnit>(UnitType<TUnit> unitType, RectTransform parent) where TUnit : Unit<TUnit> {
 			MilitaryUnitButton button = Instantiate(militaryUnitButton, parent);
 			button.Button.onClick.AddListener(() => SelectUnit(button, unitType));
 			button.gameObject.name = unitType.name;
@@ -38,7 +38,7 @@ namespace Player {
 			button.Cost.text += unitType.GetCostAsString();
 			return button.RectTransform;
 		}
-		private void SelectUnit<T>(MilitaryUnitButton button, UnitType<T> unitType) where T : Branch {
+		private void SelectUnit<TUnit>(MilitaryUnitButton button, UnitType<TUnit> unitType) where TUnit : Unit<TUnit> {
 			if (selectedButton == button){
 				DeselectButton();
 				return;
@@ -60,7 +60,7 @@ namespace Player {
 				Refresh(selectedShipType);
 			}
 		}
-		private void Refresh<T>(UnitType<T> unitType) where T : Branch {
+		private void Refresh<TUnit>(UnitType<TUnit> unitType) where TUnit : Unit<TUnit> {
 			selectedButton.Message.text = unitType.CanBeBuiltBy(Player) ? $"<color=green>Can be {unitType.CreatedVerb}</color>" : "<color=red>Cannot afford!</color>";
 		}
 

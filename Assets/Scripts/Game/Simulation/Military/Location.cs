@@ -4,7 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Simulation.Military {
-	public abstract class Location<T> where T : Branch {
+	public abstract class Location<T> where T : Unit<T> {
 		private readonly List<Unit<T>> units = new();
 
 		private bool battleIsOngoing;

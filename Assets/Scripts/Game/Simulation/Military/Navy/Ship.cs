@@ -1,18 +1,15 @@
 using UnityEngine;
 
 namespace Simulation.Military {
-	public class Ship : Unit<Navy> {
-		private void Awake(){
-			Branch = new Navy();
-		}
-		protected override Location<Navy> GetLocation(ProvinceLink link){
+	public class Ship : Unit<Ship> {
+		protected override Location<Ship> GetLocation(ProvinceLink link){
 			return link switch {
 				CoastLink coastLink => coastLink.Harbor,
 				ShallowsLink shallowsLink => shallowsLink.Sea.NavyLocation,
 				_ => link.Target.Sea.NavyLocation
 			};
 		}
-		protected override (Location<Navy>, int) CalculatePathLocation(){
+		protected override (Location<Ship>, int) CalculatePathLocation(){
 			ProvinceLink link = PathToTarget[PathIndex];
 			float terrainSpeedMultiplier = 1 + link switch {
 				CoastLink coastLink => coastLink.Sea.Province.Terrain.MoveSpeedModifier,
@@ -26,5 +23,10 @@ namespace Simulation.Military {
 			Owner.RemoveShip(this);
 			Destroy(gameObject);
 		}
+		
+		public override bool LinkEvaluator(ProvinceLink link){
+			return link is SeaLink or CoastLink or ShallowsLink;
+		}
+		public override string CreatingVerb => "Constructing";
 	}
 }

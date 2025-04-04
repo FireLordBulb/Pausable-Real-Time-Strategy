@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 namespace Player {
-	public abstract class MilitaryUnitWindow<TUnit, TBranch> : UILayer, IRefreshable, IClosableWindow where TUnit : Unit<TBranch> where TBranch : Branch {
+	public abstract class MilitaryUnitWindow<TUnit> : UILayer, IRefreshable, IClosableWindow where TUnit : Unit<TUnit> {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private TextMeshProUGUI action;
 		[SerializeField] private TextMeshProUGUI location;
