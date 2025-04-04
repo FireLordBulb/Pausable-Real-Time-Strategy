@@ -26,6 +26,8 @@ namespace Simulation {
 		[SerializeField] private float borderBrightnessFactor;
 		
 		private readonly HashSet<Province> provinces = new();
+		private readonly List<Military.Regiment> regiments = new();
+		private readonly List<Military.Ship> ships = new();
 		private bool wasBorderChanged;
 		
 		public Color MapColor {get; private set;}
@@ -144,7 +146,14 @@ namespace Simulation {
 			if (!regimentTypes.Contains(type) || !provinces.Contains(province)){
 				return false;
 			}
-			return Military.Regiment.TryStartBuilding(type, province.Land.ArmyLocation, this);
+			Military.Unit<Military.Army> newArmyUnit = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
+			if (newArmyUnit is not Military.Regiment newRegiment){
+				Debug.LogError($"Army unit of unknown type '{newArmyUnit.Type.name}' in {this}'s regimentTypes list!");
+				Destroy(newArmyUnit);
+				return false;
+			}
+			regiments.Add(newRegiment);
+			return true;
 		}
 		public Military.MoveOrderResult MoveRegimentTo(Military.Regiment regiment, Province province){
 			if (regiment.Owner != this){
@@ -159,7 +168,17 @@ namespace Simulation {
 			if (!shipTypes.Contains(type) || !provinces.Contains(location.Land.Province)){
 				return false;
 			}
-			return Military.Ship.TryStartBuilding(type, location, this);
+			Military.Unit<Military.Navy> newNavyUnit = Military.Ship.StartCreating(type, location, this);
+			if (newNavyUnit is not Military.Ship newShip){
+				Debug.LogError($"Navy unit of unknown type '{newNavyUnit.Type.name}' in {this}'s shipTypes list!");
+				Destroy(newNavyUnit);
+				return false;
+			}
+			if (newShip == null){
+				return false;
+			}
+			ships.Add(newShip);
+			return true;
 		}
 		public Military.MoveOrderResult MoveFleetTo(Military.Ship ship, Military.Location<Military.Navy> location){
 			if (ship.Owner != this){

@@ -25,24 +25,25 @@ namespace Simulation.Military {
 		public bool IsMoving => PathToTarget != null;
 		protected float MovementSpeed => movementSpeed;
 		
-		internal static bool TryStartBuilding(UnitType<T> type, Location<T> buildLocation, Country owner){
+		internal static Unit<T> StartCreating(UnitType<T> type, Location<T> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
-				return false;
+				return null;
 			}
 			Unit<T> unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.MilitaryUnitParent);
 			unit.Owner = owner;
 			unit.Location = buildLocation;
 			unit.Location.Units.Add(unit);
 			unit.Type = type;
-			unit.Type.ConsumeBuildCostFrom(unit.Owner);
+			unit.gameObject.name = type.name;
 			
-			if (unit.Type.DaysToBuild == 0){
+			type.ConsumeBuildCostFrom(unit.Owner);
+			if (type.DaysToBuild == 0){
 				unit.FinishBuilding();
-				return true;
+				return unit;
 			}
 			unit.BuildDaysLeft = type.DaysToBuild;
 			Calendar.Instance.OnDayTick.AddListener(unit.TickBuild);
-			return true;
+			return unit;
 		}
 		
 		private void Update(){
