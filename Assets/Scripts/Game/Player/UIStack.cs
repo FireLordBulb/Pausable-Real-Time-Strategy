@@ -34,6 +34,7 @@ namespace Player {
 		
 		public bool CanSwitchCountry {get; internal set;}
 		public Country PlayerCountry {get; private set;}
+		public bool HasPlayerCountryChanged {get; private set;}
 		public Component Selected {get; private set;}
 		public Vector3 MouseWorldPosition {get; private set;}
 		
@@ -180,7 +181,10 @@ namespace Player {
 
 		public void PlayAs(Country country){
 			PlayerCountry = country;
+			HasPlayerCountryChanged = true;
 			hud.RefreshCountry();
+			RefreshSelected();
+			HasPlayerCountryChanged = false;
 			if (country == null){
 				return;
 			}

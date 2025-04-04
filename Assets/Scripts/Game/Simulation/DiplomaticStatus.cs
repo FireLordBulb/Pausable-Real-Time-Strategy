@@ -6,7 +6,9 @@ namespace Simulation {
 			return !IsAtWar && TruceDaysLeft <= 0;
 		}
 		public void DeclareWar(){
-			IsAtWar = true;
+			if (CanDeclareWar()){
+				IsAtWar = true;
+			}
 		}
 		public void EndWar(int truceLength){
 			IsAtWar = false;

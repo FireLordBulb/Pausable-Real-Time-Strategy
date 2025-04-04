@@ -14,6 +14,9 @@ namespace Simulation {
 			return country;
 		}
 		private static DiplomaticStatus GetDiplomaticStatus(Country a, Country b){
+			if (a == b){
+				return null;
+			}
 			if (DiplomaticStatuses.TryGetValue((a, b), out DiplomaticStatus diplomaticStatus)){
 				return diplomaticStatus;
 			}
@@ -206,6 +209,10 @@ namespace Simulation {
 				return Military.MoveOrderResult.NotOwner;
 			}
 			return ship.MoveTo(location);
+		}
+
+		public DiplomaticStatus GetDiplomaticStatus(Country other){
+			return GetDiplomaticStatus(this, other);
 		}
 		
 		public void OnSelect(){
