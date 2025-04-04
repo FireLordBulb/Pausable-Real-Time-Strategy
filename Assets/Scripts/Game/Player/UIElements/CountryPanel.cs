@@ -10,6 +10,7 @@ namespace Player {
 		
 		private Country linkedCountry;
 		
+		// ReSharper disable Unity.PerformanceAnalysis // The guard clause prevents the performance-intensive part from running every frame.
 		public void SetCountry(Country country){
 			if (linkedCountry == country){
 				return;
