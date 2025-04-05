@@ -15,4 +15,6 @@ MonoBehaviour:
   name: Sea
   material: {fileID: 2100000, guid: 5f0d19956f55887469b795aecd6f463d, type: 2}
   developmentModifier: 0
+  moveSpeedModifier: 0
   defenderAdvantage: 0
+  combatWidth: 999999

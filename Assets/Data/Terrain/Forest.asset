@@ -15,4 +15,6 @@ MonoBehaviour:
   name: Forest
   material: {fileID: 2100000, guid: 6e60b10754b81c04aaa0789f92e7eb41, type: 2}
   developmentModifier: 0
+  moveSpeedModifier: 0
   defenderAdvantage: 0.15
+  combatWidth: 5000

@@ -17,3 +17,4 @@ MonoBehaviour:
   developmentModifier: -0.4
   moveSpeedModifier: -0.6
   defenderAdvantage: 0.5
+  combatWidth: 2000
