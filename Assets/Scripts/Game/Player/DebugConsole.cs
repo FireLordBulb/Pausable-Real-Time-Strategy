@@ -155,7 +155,7 @@ namespace Player {
 				case "reg": {
 					CreateMilitaryUnit("regiment", words, province => {
 						Simulation.Military.RegimentType type = UIStack.Instance.PlayerCountry.RegimentTypes.First();
-						return (type.name, UIStack.Instance.PlayerCountry.TryStartRecuitingRegiment(type, province));
+						return (type.name, UIStack.Instance.PlayerCountry.TryStartRecruitingRegiment(type, province));
 					}, "recruit a regiment", "recruiting");
 					return;
 				}

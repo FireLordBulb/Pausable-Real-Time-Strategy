@@ -160,7 +160,7 @@ namespace Simulation {
 			return true;
 		}
 
-		public bool TryStartRecuitingRegiment(Military.RegimentType type, Province province){
+		public bool TryStartRecruitingRegiment(Military.RegimentType type, Province province){
 			if (!regimentTypes.Contains(type) || province.Owner != this){
 				return false;
 			}

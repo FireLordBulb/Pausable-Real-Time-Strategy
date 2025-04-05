@@ -70,7 +70,7 @@ namespace Player {
 				return LayerBelow.OnSelectableClicked(clickedSelectable, true);
 			}
 			if (selectedRegimentType != null){
-				Player.TryStartRecuitingRegiment(selectedRegimentType, clickedProvince);
+				Player.TryStartRecruitingRegiment(selectedRegimentType, clickedProvince);
 				Refresh();
 			} else if (selectedShipType != null){
 				Player.TryStartConstructingFleet(selectedShipType, GetHarbor(clickedProvince));
