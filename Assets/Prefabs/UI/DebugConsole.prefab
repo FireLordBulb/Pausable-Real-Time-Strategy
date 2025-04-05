@@ -675,10 +675,15 @@ MonoBehaviour:
   inputField: {fileID: 1131140191030279549}
   doUseAutoCommands: 0
   autoCommands:
-  - play_as Aldynis
+  - play_as Olpeka
   - rich
-  - reg
-  - ship
+  - reg 1
+  - reg 2
+  - play_as Zum
+  - rich
+  - reg 2
+  - reg 1
+  - ship 3
   - skip 200
 --- !u!223 &5417892655479546527
 Canvas:
