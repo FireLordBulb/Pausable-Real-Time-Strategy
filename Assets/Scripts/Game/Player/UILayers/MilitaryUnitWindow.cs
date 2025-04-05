@@ -35,9 +35,9 @@ namespace Player {
 				if (Unit.NextLocation == Unit.TargetLocation){
 					destination.SetActive(false);
 				} else {
+					destination.SetActive(true);
 					destinationLocation.text = Unit.TargetLocation.Name;
 					SetSelectLink(destinationLocation, Unit.TargetLocation.Province);
-					destination.SetActive(true);
 				}
 			} else if (Unit.IsBuilt && !Unit.IsMoving){
 				SetLeftOfLinkText("Located at ", action, location);
@@ -60,7 +60,6 @@ namespace Player {
 			}
 			textMesh.text = newText;
 			textMesh.ForceMeshUpdate();
-			//textMesh.textInfo.lineInfo[0].lastCharacterIndex
 			float x = textMesh.textInfo.characterInfo[textMesh.textInfo.lineInfo[0].lastCharacterIndex].xAdvance;
 			((RectTransform)link.transform).anchoredPosition = new Vector2(x, 0);
 		}

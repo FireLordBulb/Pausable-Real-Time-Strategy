@@ -62,7 +62,7 @@ namespace Player {
 			if (!province.IsCoast){
 				return null;
 			} 
-			Simulation.Military.Harbor clostestHarbor = null;
+			Simulation.Military.Harbor closestHarbor = null;
 			float closestSquareDistance = float.MaxValue;
 			foreach (ProvinceLink provinceLink in province.Links){
 				if (provinceLink is not ShallowsLink shallowsLink){
@@ -73,12 +73,12 @@ namespace Player {
 				if (closestSquareDistance < squareDistance){
 					continue;
 				}
-				clostestHarbor = harbor;
+				closestHarbor = harbor;
 				closestSquareDistance = squareDistance;
 			}
 			// All coastal provinces have at least one harbor.
-			Debug.Assert(clostestHarbor != null);
-			return clostestHarbor;
+			Debug.Assert(closestHarbor != null);
+			return closestHarbor;
 		}
 	}
 }
