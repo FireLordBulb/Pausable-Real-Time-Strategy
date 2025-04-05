@@ -30,6 +30,7 @@ namespace Simulation.Military {
 		}
 		public override void StackWipe(){
 			Owner.RemoveShip(this);
+			Location.Remove(this);
 			Destroy(gameObject);
 		}
 		

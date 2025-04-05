@@ -14,9 +14,9 @@ namespace Simulation.Military {
 		public virtual Province SearchTargetProvince => Province;
 		public abstract Province Province {get;}
 		public abstract Vector3 WorldPosition {get;}
+		public bool IsBattleOngoing {get; private set;}
 
 		public IEnumerable<TUnit> Units => units;
-		public bool IsBattleOngoing => defendingUnits != null;
 		
 		public void Add(TUnit unit){
 			if (IsBattleOngoing){
@@ -34,6 +34,7 @@ namespace Simulation.Military {
 					attackingUnits = new List<TUnit>{unit};
 					defendingUnits[0].StartupBattleRandomness();
 					attackingUnits[0].StartupBattleRandomness();
+					IsBattleOngoing = true;
 					Calendar.Instance.OnDayTick.AddListener(BattleTick);
 				}
 			}
@@ -41,14 +42,11 @@ namespace Simulation.Military {
 		}
 		public void Remove(TUnit unit){
 			units.Remove(unit);
-			if (!IsBattleOngoing){
-				return;
-			}
 			RemoveFromSide(unit, defendingUnits, BattleResult.AttackerWon);
 			RemoveFromSide(unit, attackingUnits, BattleResult.DefenderWon);
 		}
 		private void RemoveFromSide(TUnit unit, List<TUnit> side, BattleResult result){
-			if (unit.Owner != side[0].Owner){
+			if (!IsBattleOngoing || side.Count == 0 || unit.Owner != side[0].Owner){
 				return;
 			}
 			side.Remove(unit);
@@ -67,7 +65,11 @@ namespace Simulation.Military {
 		}
 
 		private void EndBattle(BattleResult result){
+			if (!IsBattleOngoing){
+				return;
+			}
 			Calendar.Instance.OnDayTick.RemoveListener(BattleTick);
+			IsBattleOngoing = false;
 			bool didDefenderWin = result == BattleResult.DefenderWon;
 			foreach (TUnit unit in defendingUnits){
 				unit.OnBattleEnd(didDefenderWin);

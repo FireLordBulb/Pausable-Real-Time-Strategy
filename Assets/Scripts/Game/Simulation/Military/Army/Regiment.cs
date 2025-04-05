@@ -105,6 +105,7 @@ namespace Simulation.Military {
 		}
 		public override void StackWipe(){
 			Owner.RemoveRegiment(this);
+			Location.Remove(this);
 			Destroy(gameObject);
 		}
 		
