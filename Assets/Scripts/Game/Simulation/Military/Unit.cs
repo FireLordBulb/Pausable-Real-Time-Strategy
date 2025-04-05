@@ -3,19 +3,22 @@ using Graphs;
 using UnityEngine;
 
 namespace Simulation.Military {
-	public abstract class Unit<T> : MonoBehaviour where T : Unit<T> {
+	public abstract class Unit<TUnit> : MonoBehaviour where TUnit : Unit<TUnit> {
 		[SerializeField] private float movementSpeed;
 		[SerializeField] private float worldSpaceSpeed;
+		// Used to block use of Object.Instantiate outside of the StartCreating factory function. Serialized so it's actually copied from the prefab.
+		[SerializeField, HideInInspector] private bool doAllowInstantiate;
 		
+		private TUnit self;
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		
-		public UnitType<T> Type {get; protected set;}
+		public UnitType<TUnit> Type {get; protected set;}
 		public Country Owner {get; protected set;}
 		public int BuildDaysLeft {get; private set;}
 		public bool IsBuilt {get; private set;}
-		public Location<T> Location {get; private set;}
-		public Location<T> NextLocation {get; private set;}
-		public Location<T> TargetLocation {get; private set;}
+		public Location<TUnit> Location {get; private set;}
+		public Location<TUnit> NextLocation {get; private set;}
+		public Location<TUnit> TargetLocation {get; private set;}
 		public int DaysToNextLocation {get; private set;}
 		protected List<ProvinceLink> PathToTarget {get; private set;}
 		protected int PathIndex {get; private set;}
@@ -23,11 +26,14 @@ namespace Simulation.Military {
 		public bool IsMoving => PathToTarget != null;
 		protected float MovementSpeed => movementSpeed;
 		
-		internal static Unit<T> StartCreating(UnitType<T> type, Location<T> buildLocation, Country owner){
+		internal static TUnit StartCreating(UnitType<TUnit> type, Location<TUnit> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
 				return null;
 			}
-			Unit<T> unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.MilitaryUnitParent);
+			type.Prefab.doAllowInstantiate = true;
+			TUnit unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.MilitaryUnitParent);
+			type.Prefab.doAllowInstantiate = false;
+			unit.self = unit;
 			unit.Owner = owner;
 			unit.Location = buildLocation;
 			unit.Location.Add(unit);
@@ -42,6 +48,13 @@ namespace Simulation.Military {
 			unit.BuildDaysLeft = type.DaysToBuild;
 			Calendar.Instance.OnDayTick.AddListener(unit.TickBuild);
 			return unit;
+		}
+		private void Awake(){
+			if (doAllowInstantiate){
+				return;
+			}
+			Debug.LogError("ERROR: Object.Instantiate was used to create Military Unit directly! This is not allowed. Use the Unit<TUnit>.StartCreating factory method instead.");
+			DestroyImmediate(gameObject);
 		}
 		
 		private void Update(){
@@ -73,8 +86,8 @@ namespace Simulation.Military {
 			if (0 < DaysToNextLocation){
 				return;
 			}
-			Location.Remove(this);
-			NextLocation.Add(this);
+			Location.Remove(self);
+			NextLocation.Add(self);
 			Location = NextLocation;
 			worldPositionsOnPath.Enqueue(Location.WorldPosition);
 			if (ReferenceEquals(NextLocation, TargetLocation)){
@@ -86,7 +99,7 @@ namespace Simulation.Military {
 			}
 		}
 		
-		internal MoveOrderResult MoveTo(Location<T> destination){
+		internal MoveOrderResult MoveTo(Location<TUnit> destination){
 			if (!IsBuilt){
 				return MoveOrderResult.NotBuilt;
 			}
@@ -109,7 +122,7 @@ namespace Simulation.Military {
 			}
 			return MoveOrderResult.Success;
 		}
-		public List<ProvinceLink> GetPathTo(Location<T> end){
+		public List<ProvinceLink> GetPathTo(Location<TUnit> end){
 			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.SearchTargetProvince, LinkEvaluator);
 			if (nodes == null){
 				return null;
@@ -125,8 +138,8 @@ namespace Simulation.Military {
 			PathIndex++;
 			(NextLocation, DaysToNextLocation) = CalculatePathLocation();
 		}
-		protected abstract (Location<T>, int) CalculatePathLocation();
-		protected abstract Location<T> GetLocation(ProvinceLink link);
+		protected abstract (Location<TUnit>, int) CalculatePathLocation();
+		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
 
 		public abstract void StackWipe();
 		

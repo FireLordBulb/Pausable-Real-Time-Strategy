@@ -164,13 +164,8 @@ namespace Simulation {
 			if (!regimentTypes.Contains(type) || province.Owner != this){
 				return false;
 			}
-			Military.Unit<Military.Regiment> newArmyUnit = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
-			if (newArmyUnit == null){
-				return false;
-			}
-			if (newArmyUnit is not Military.Regiment newRegiment){
-				Debug.LogError($"Army unit of unknown type '{newArmyUnit.Type.name}' in {this}'s regimentTypes list!");
-				Destroy(newArmyUnit);
+			Military.Regiment newRegiment = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
+			if (newRegiment == null){
 				return false;
 			}
 			regiments.Add(newRegiment);
@@ -192,15 +187,7 @@ namespace Simulation {
 			if (!shipTypes.Contains(type) || location == null || location.Land.Province.Owner != this){
 				return false;
 			}
-			Military.Unit<Military.Ship> newNavyUnit = Military.Ship.StartCreating(type, location, this);
-			if (newNavyUnit == null){
-				return false;
-			}
-			if (newNavyUnit is not Military.Ship newShip){
-				Debug.LogError($"Navy unit of unknown type '{newNavyUnit.Type.name}' in {this}'s shipTypes list!");
-				Destroy(newNavyUnit);
-				return false;
-			}
+			Military.Ship newShip = Military.Ship.StartCreating(type, location, this);
 			if (newShip == null){
 				return false;
 			}

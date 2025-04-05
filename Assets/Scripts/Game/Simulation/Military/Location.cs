@@ -4,28 +4,28 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Simulation.Military {
-	public abstract class Location<T> where T : Unit<T> {
-		private readonly List<Unit<T>> units = new();
+	public abstract class Location<TUnit> where TUnit : Unit<TUnit> {
+		private readonly List<TUnit> units = new();
 
 		private bool battleIsOngoing;
 		// TODO: Allow for multiple units on each side.
-		private Unit<T> defendingUnit;
-		private Unit<T> attackingUnit;
+		private TUnit defendingUnit;
+		private TUnit attackingUnit;
 		
 		public abstract string Name {get;}
 		public virtual Province SearchTargetProvince => Province;
 		public abstract Province Province {get;}
 		public abstract Vector3 WorldPosition {get;}
 
-		public IEnumerable<Unit<T>> Units => units;
+		public IEnumerable<TUnit> Units => units;
 		public bool IsBattleOngoing => defendingUnit != null;
 		
-		public void Add(Unit<T> unit){
+		public void Add(TUnit unit){
 			if (battleIsOngoing){
 				throw new NotImplementedException("Reinforcing battles hasn't been implemented yet!");
 			}
 			if (0 < units.Count){
-				Unit<T> alreadyPresentUnit = units[0];
+				TUnit alreadyPresentUnit = units[0];
 				if (alreadyPresentUnit.Owner != unit.Owner){
 					defendingUnit = alreadyPresentUnit;
 					attackingUnit = unit;
@@ -34,7 +34,7 @@ namespace Simulation.Military {
 			}
 			units.Add(unit);
 		}
-		public void Remove(Unit<T> unit){
+		public void Remove(TUnit unit){
 			units.Remove(unit);
 			if (battleIsOngoing){
 				EndBattle();

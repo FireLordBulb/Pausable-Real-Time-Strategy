@@ -203,3 +203,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 4
   worldSpaceSpeed: 12
+  doAllowInstantiate: 0
