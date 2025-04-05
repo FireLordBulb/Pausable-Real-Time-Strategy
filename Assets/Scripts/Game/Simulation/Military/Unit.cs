@@ -141,9 +141,10 @@ namespace Simulation.Military {
 		protected abstract (Location<TUnit>, int) CalculatePathLocation();
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
 
+		public abstract BattleResult DefendBattle(TUnit attacker);
 		public abstract void StackWipe();
 		
-		public abstract bool LinkEvaluator(ProvinceLink link);
+		protected abstract bool LinkEvaluator(ProvinceLink link);
 		public abstract string CreatingVerb {get;}
 	}
 }

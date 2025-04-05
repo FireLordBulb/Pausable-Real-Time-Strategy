@@ -42,22 +42,12 @@ namespace Simulation.Military {
 		}
 		
 		private void BattleTick(){
-			BattleResult result = DefendBattle();
+			BattleResult result = defendingUnit.DefendBattle(attackingUnit);
 			if (result == BattleResult.Ongoing){
 				return;
 			}
 			(result == BattleResult.AttackerWon ? defendingUnit : attackingUnit).StackWipe();
 			EndBattle();
-		}
-		private BattleResult DefendBattle(){
-			int diceRoll = Random.Range(0, 6);
-			if (diceRoll < 3){
-				return BattleResult.Ongoing;
-			}
-			if (diceRoll == 3){
-				return BattleResult.AttackerWon;
-			}
-			return BattleResult.DefenderWon;
 		}
 
 		private void EndBattle(){

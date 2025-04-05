@@ -19,12 +19,15 @@ namespace Simulation.Military {
 			return (GetLocation(link), Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)));
 		}
 		
+		public override BattleResult DefendBattle(Ship attacker){
+			return BattleResult.DefenderWon;
+		}
 		public override void StackWipe(){
 			Owner.RemoveShip(this);
 			Destroy(gameObject);
 		}
 		
-		public override bool LinkEvaluator(ProvinceLink link){
+		protected override bool LinkEvaluator(ProvinceLink link){
 			return link is SeaLink or CoastLink or ShallowsLink;
 		}
 		public override string CreatingVerb => "Constructing";
