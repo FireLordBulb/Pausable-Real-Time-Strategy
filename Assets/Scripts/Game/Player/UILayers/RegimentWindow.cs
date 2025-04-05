@@ -5,6 +5,7 @@ namespace Player {
 		protected override void OrderMove(Province province){
 			MoveOrderResult result = Player.MoveRegimentTo(Unit, province);
 			SetMessage(result switch {
+				MoveOrderResult.BusyRetreating => "Cannot interrupt retreat movement!",
 				MoveOrderResult.NotBuilt => "Cannot move an army before it has finished recruiting!",
 				MoveOrderResult.NoPath => $"Cannot move to {province} because it's separated by sea or the land of countries you're at peace with!",
 				MoveOrderResult.NoAccess => "You cannot cross another country's borders when you're at peace with it!",

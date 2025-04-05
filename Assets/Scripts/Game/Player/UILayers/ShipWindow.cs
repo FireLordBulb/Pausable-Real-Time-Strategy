@@ -12,6 +12,7 @@ namespace Player {
 				result = MoveOrderResult.InvalidTarget;
 			}
 			SetMessage(result switch {
+				MoveOrderResult.BusyRetreating => "Cannot interrupt retreat movement!",
 				MoveOrderResult.NotBuilt => "Cannot move a navy before it has finished constructing!",
 				MoveOrderResult.NoPath => $"Cannot move to {province} because the path is blocked by landmass!",
 				MoveOrderResult.NoAccess => "You cannot enter another country's harbors when unless at war with the country!",
