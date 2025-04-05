@@ -24,7 +24,7 @@ namespace Simulation {
 				return diplomaticStatus;
 			}
 			diplomaticStatus = new DiplomaticStatus();
-			DiplomaticStatuses.Add((a, b), new DiplomaticStatus());
+			DiplomaticStatuses.Add((a, b), diplomaticStatus);
 			return diplomaticStatus;
 		}
 #if UNITY_EDITOR
