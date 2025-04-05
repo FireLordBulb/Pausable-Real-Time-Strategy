@@ -16,3 +16,5 @@ MonoBehaviour:
   daysToBuild: 90
   goldCost: 15
   manpower: 1000
+  attackPower: 1
+  toughness: 10
