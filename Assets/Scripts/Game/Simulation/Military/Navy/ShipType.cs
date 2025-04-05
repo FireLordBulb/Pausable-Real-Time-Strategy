@@ -7,6 +7,7 @@ namespace Simulation.Military {
 		public override bool CanBeBuiltBy(Country owner){
 			return sailors <= owner.Manpower && goldCost <= owner.Gold;
 		}
+		public override void ApplyValuesTo(Ship unit){}
 		public override void ConsumeBuildCostFrom(Country owner){
 			owner.GainResources(-goldCost, 0, -sailors);
 		}

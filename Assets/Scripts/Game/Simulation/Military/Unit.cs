@@ -6,14 +6,20 @@ namespace Simulation.Military {
 	public abstract class Unit<TUnit> : MonoBehaviour where TUnit : Unit<TUnit> {
 		[SerializeField] private float movementSpeed;
 		[SerializeField] private float worldSpaceSpeed;
+		[Header("Battle randomness")]
+		[SerializeField] private float maxDamageBoost;
+		[SerializeField] private int minRerollDays;
+		[SerializeField] private int maxRerollDays;
+		
 		// Used to block use of Object.Instantiate outside of the StartCreating factory function. Serialized so it's actually copied from the prefab.
 		[SerializeField, HideInInspector] private bool doAllowInstantiate;
 		
 		private TUnit self;
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
+		private int daysUntilReroll;
 		
-		public UnitType<TUnit> Type {get; protected set;}
-		public Country Owner {get; protected set;}
+		public UnitType<TUnit> Type {get; private set;}
+		public Country Owner {get; private set;}
 		public int BuildDaysLeft {get; private set;}
 		public bool IsBuilt {get; private set;}
 		public Location<TUnit> Location {get; private set;}
@@ -22,7 +28,8 @@ namespace Simulation.Military {
 		public int DaysToNextLocation {get; private set;}
 		protected List<ProvinceLink> PathToTarget {get; private set;}
 		protected int PathIndex {get; private set;}
-
+		protected float RandomDamageBoost {get; private set;}
+		
 		public bool IsMoving => PathToTarget != null;
 		protected float MovementSpeed => movementSpeed;
 		
@@ -37,8 +44,9 @@ namespace Simulation.Military {
 			unit.Owner = owner;
 			unit.Location = buildLocation;
 			unit.Location.Add(unit);
-			unit.Type = type;
 			unit.gameObject.name = type.name;
+			unit.Type = type;
+			unit.Type.ApplyValuesTo(unit);
 			
 			type.ConsumeBuildCostFrom(unit.Owner);
 			if (type.DaysToBuild == 0){
@@ -141,6 +149,17 @@ namespace Simulation.Military {
 		protected abstract (Location<TUnit>, int) CalculatePathLocation();
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
 
+		public void StartBattle(){
+			daysUntilReroll = 0;
+		}
+		public void RerollBattleRandomness(){
+			daysUntilReroll--;
+			if (0 < daysUntilReroll){
+				return;
+			}
+			daysUntilReroll = Random.Range(minRerollDays, maxRerollDays);
+			RandomDamageBoost = Random.Range(0, maxDamageBoost);
+		}
 		public abstract BattleResult DefendBattle(TUnit attacker);
 		public abstract void StackWipe();
 		

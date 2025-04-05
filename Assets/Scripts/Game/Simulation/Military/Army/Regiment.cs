@@ -2,6 +2,19 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public class Regiment : Unit<Regiment> {
+		public float AttackPower {get; private set;}
+		public float Toughness {get; private set;}
+		public int MaxManpower {get; private set;}
+		public int CurrentManpower {get; private set;}
+		public int DemoralizedManpower {get; private set;}
+		
+		internal void Init(float attackPower, float toughness, int manpower){
+			AttackPower = attackPower;
+			Toughness = toughness;
+			CurrentManpower = MaxManpower = manpower;
+			DemoralizedManpower = 0;
+		}
+		
 		protected override Location<Regiment> GetLocation(ProvinceLink link){
 			return link.Target.Land.ArmyLocation;
 		}

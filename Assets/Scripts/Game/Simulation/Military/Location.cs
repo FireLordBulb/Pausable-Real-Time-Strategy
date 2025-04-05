@@ -29,6 +29,8 @@ namespace Simulation.Military {
 				if (alreadyPresentUnit.Owner != unit.Owner){
 					defendingUnit = alreadyPresentUnit;
 					attackingUnit = unit;
+					defendingUnit.StartBattle();
+					attackingUnit.StartBattle();
 					Calendar.Instance.OnDayTick.AddListener(BattleTick);
 				}
 			}
@@ -42,6 +44,8 @@ namespace Simulation.Military {
 		}
 		
 		private void BattleTick(){
+			defendingUnit.RerollBattleRandomness();
+			attackingUnit.RerollBattleRandomness();
 			BattleResult result = defendingUnit.DefendBattle(attackingUnit);
 			if (result == BattleResult.Ongoing){
 				return;
