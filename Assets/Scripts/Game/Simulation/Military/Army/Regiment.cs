@@ -27,8 +27,11 @@ namespace Simulation.Military {
 		}
 		protected override (Location<Regiment>, int) CalculatePathLocation(){
 			ProvinceLink link = PathToTarget[PathIndex];
+			return (GetLocation(link), GetTravelDays(link));
+		}
+		private int GetTravelDays(ProvinceLink link){
 			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
-			return (GetLocation(link), Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)));
+			return Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier));
 		}
 		
 		public override BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers){
@@ -110,8 +113,26 @@ namespace Simulation.Military {
 		}
 		private void RetreatHome(){
 			IsRetreating = true;
-			List<ProvinceLink> path = GetPathTo(Owner.Capital.Land.ArmyLocation);
-			SetDestination(path[^1].Target.Land.ArmyLocation);
+			int shortestPathLength = int.MaxValue;
+			List<ProvinceLink> shortestPath = null;
+			foreach (Province province in Owner.Provinces){
+				List<ProvinceLink> path = GetPathTo(province.Land.ArmyLocation);
+				if (path == null){
+					continue;
+				}
+				int pathLength = path.Sum(GetTravelDays);
+				if (shortestPathLength < pathLength){
+					continue;
+				}
+				shortestPathLength = pathLength;
+				shortestPath = path;
+			}
+			// If the entire owner country is on a different landmass, retreat to a random bordering province instead.
+			if (shortestPath == null){
+				SetDestination(Location.Province.Links.ElementAt(Random.Range(0, Location.Province.Links.Count())).Target.Land.ArmyLocation);		
+				return;
+			}
+			SetDestination(shortestPath[^1].Target.Land.ArmyLocation);
 		}
 		public override void StackWipe(){
 			Owner.RemoveRegiment(this);
