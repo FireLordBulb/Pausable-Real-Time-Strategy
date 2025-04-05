@@ -18,3 +18,4 @@ MonoBehaviour:
   manpower: 1000
   attackPower: 1
   toughness: 10
+  killRate: 0.3

@@ -4,13 +4,15 @@ namespace Simulation.Military {
 	public class Regiment : Unit<Regiment> {
 		public float AttackPower {get; private set;}
 		public float Toughness {get; private set;}
+		public float KillRate {get; private set;}
 		public int MaxManpower {get; private set;}
 		public int CurrentManpower {get; private set;}
 		public int DemoralizedManpower {get; private set;}
 		
-		internal void Init(float attackPower, float toughness, int manpower){
+		internal void Init(float attackPower, float toughness, float killRate, int manpower){
 			AttackPower = attackPower;
 			Toughness = toughness;
+			KillRate = killRate;
 			CurrentManpower = MaxManpower = manpower;
 			DemoralizedManpower = 0;
 		}
@@ -25,14 +27,31 @@ namespace Simulation.Military {
 		}
 		
 		public override BattleResult DefendBattle(Regiment attacker){
-			int diceRoll = Random.Range(0, 6);
-			if (diceRoll < 3){
-				return BattleResult.Ongoing;
+			float attackerDamage = attacker.Damage;
+			float defenderDamage = Damage*(1+Location.Province.Land.Terrain.DefenderAdvantage);
+			attacker.TakeDamage(defenderDamage, KillRate);
+			if (attacker.CurrentManpower <= 0){
+				EndBattle(this, attacker);
+				return BattleResult.DefenderWon;
 			}
-			if (diceRoll == 3){
+			TakeDamage(attackerDamage, attacker.KillRate);
+			if (CurrentManpower <= 0){
+				EndBattle(attacker, this);
 				return BattleResult.AttackerWon;
 			}
-			return BattleResult.DefenderWon;
+			return BattleResult.Ongoing;
+		}
+		private float Damage => AttackPower*RandomDamageMultiplier*CurrentManpower;
+		private void TakeDamage(float damage, float killRate){
+			int previousManpower = CurrentManpower;
+			CurrentManpower = Mathf.Max(CurrentManpower-(int)(damage/Toughness), 0);
+			DemoralizedManpower += (int)((previousManpower-CurrentManpower)*(1-killRate));
+		}
+
+		private static void EndBattle(Regiment winner, Regiment loser){
+			loser.StackWipe();
+			winner.CurrentManpower += winner.DemoralizedManpower;
+			winner.DemoralizedManpower = 0;
 		}
 		public override void StackWipe(){
 			Owner.RemoveRegiment(this);

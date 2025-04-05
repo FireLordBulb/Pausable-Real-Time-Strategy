@@ -7,12 +7,13 @@ namespace Simulation.Military {
 		[Header("Combat values")]
 		[SerializeField] private float attackPower;
 		[SerializeField] private float toughness;
+		[SerializeField] private float killRate;
 		
 		public override bool CanBeBuiltBy(Country owner){
 			return manpower <= owner.Manpower && goldCost <= owner.Gold;
 		}
 		public override void ApplyValuesTo(Regiment unit){
-			unit.Init(attackPower, toughness, manpower);
+			unit.Init(attackPower, toughness, killRate, manpower);
 		}
 		public override void ConsumeBuildCostFrom(Country owner){
 			owner.GainResources(-goldCost, -manpower, 0);

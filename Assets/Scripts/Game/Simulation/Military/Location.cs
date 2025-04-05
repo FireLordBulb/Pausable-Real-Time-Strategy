@@ -47,11 +47,9 @@ namespace Simulation.Military {
 			defendingUnit.RerollBattleRandomness();
 			attackingUnit.RerollBattleRandomness();
 			BattleResult result = defendingUnit.DefendBattle(attackingUnit);
-			if (result == BattleResult.Ongoing){
-				return;
+			if (result != BattleResult.Ongoing){
+				EndBattle();
 			}
-			(result == BattleResult.AttackerWon ? defendingUnit : attackingUnit).StackWipe();
-			EndBattle();
 		}
 
 		private void EndBattle(){

@@ -203,7 +203,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 4
   worldSpaceSpeed: 12
-  maxDamageBoost: 1
-  minRerollDays: 3
-  maxRerollDays: 7
+  maxDamageBoost: 0.25
+  minRerollDays: 5
+  maxRerollDays: 14
   doAllowInstantiate: 0

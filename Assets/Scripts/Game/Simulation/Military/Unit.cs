@@ -28,7 +28,7 @@ namespace Simulation.Military {
 		public int DaysToNextLocation {get; private set;}
 		protected List<ProvinceLink> PathToTarget {get; private set;}
 		protected int PathIndex {get; private set;}
-		protected float RandomDamageBoost {get; private set;}
+		protected float RandomDamageMultiplier {get; private set;}
 		
 		public bool IsMoving => PathToTarget != null;
 		protected float MovementSpeed => movementSpeed;
@@ -158,7 +158,7 @@ namespace Simulation.Military {
 				return;
 			}
 			daysUntilReroll = Random.Range(minRerollDays, maxRerollDays);
-			RandomDamageBoost = Random.Range(0, maxDamageBoost);
+			RandomDamageMultiplier = Random.Range(1, 1+maxDamageBoost);
 		}
 		public abstract BattleResult DefendBattle(TUnit attacker);
 		public abstract void StackWipe();
