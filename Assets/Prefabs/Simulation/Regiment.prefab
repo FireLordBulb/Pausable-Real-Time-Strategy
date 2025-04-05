@@ -207,3 +207,4 @@ MonoBehaviour:
   minRerollDays: 5
   maxRerollDays: 14
   doAllowInstantiate: 0
+  stackWipeThreshold: 0.35
