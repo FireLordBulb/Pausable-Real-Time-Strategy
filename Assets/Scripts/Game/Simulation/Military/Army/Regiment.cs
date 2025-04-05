@@ -34,10 +34,10 @@ namespace Simulation.Military {
 			return DoBattle(defenders, attackers, Location.Province.Land.Terrain);
 		}
 		private static BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers, Terrain terrain){
-			List<Regiment> frontLineDefenders = GetFrontLine(defenders);
-			List<Regiment> frontLineAttackers = GetFrontLine(attackers);
-			(float defenderDamage, float defenderKillRate) = CalculateDamage(frontLineDefenders, terrain.DefenderAdvantage);
-			(float attackerDamage, float attackerKillRate) = CalculateDamage(frontLineAttackers);
+			(List<Regiment> frontLineDefenders, float defenderProportionOnFrontLine) = GetFrontLine(defenders, terrain.CombatWidth);
+			(List<Regiment> frontLineAttackers, float attackerProportionOnFrontLine) = GetFrontLine(attackers, terrain.CombatWidth);
+			(float defenderDamage, float defenderKillRate) = CalculateDamage(frontLineDefenders, defenderProportionOnFrontLine*(1+terrain.DefenderAdvantage));
+			(float attackerDamage, float attackerKillRate) = CalculateDamage(frontLineAttackers, attackerProportionOnFrontLine);
 			ApplyDamage(frontLineAttackers, defenderDamage, defenderKillRate);
 			if (attackers.Sum(attacker => attacker.CurrentManpower) <= 0){
 				return BattleResult.DefenderWon;
@@ -48,19 +48,30 @@ namespace Simulation.Military {
 			}
 			return BattleResult.Ongoing;
 		}
-		private static List<Regiment> GetFrontLine(List<Regiment> army){
+		private static (List<Regiment>, float) GetFrontLine(List<Regiment> army, int combatWidth){
 			List<Regiment> frontLine = new();
+			int manpowerSoFar = 0;
 			foreach (Regiment regiment in army){
-				if (0 < regiment.CurrentManpower){
-					frontLine.Add(regiment);
+				if (0 >= regiment.CurrentManpower){
+					continue;
+				}
+				frontLine.Add(regiment);
+				manpowerSoFar += regiment.CurrentManpower;
+				if (combatWidth <= manpowerSoFar){
+					break;
 				}
 			}
-			return frontLine;
+			// If combat width is say 1000, then maybe the List frontLine will include 3 regiments of 400 men each, for a total of 1200.
+			// Even though all 3 regiments are on the front line, only 1000 out of the 1200 men in those regiments is actively fighting.
+			// That's why this proportion value is needed to scale down the damage to represent that not every single soldier is the
+			// frontLine regiments is personally actively attacking. 
+			float proportionOnFrontLine = manpowerSoFar <= combatWidth ? 1 : combatWidth/(float)manpowerSoFar;
+			return (frontLine, proportionOnFrontLine);
 		}
-		private static (float, float) CalculateDamage(List<Regiment> dealer, float bonusAdvantage = 0f){
+		private static (float, float) CalculateDamage(List<Regiment> dealer, float multiplier){
 			float totalDamage = dealer.Sum(regiment => regiment.Damage);
 			float killRate = dealer.Sum(regiment => regiment.KillRate*regiment.Damage/totalDamage);
-			totalDamage *= 1+bonusAdvantage;
+			totalDamage *= multiplier;
 			// TODO: Make the multiplier being the same for the whole side less awkward.
 			totalDamage *= dealer[0].RandomDamageMultiplier;
 			return (totalDamage, killRate);
