@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public class Regiment : Unit<Regiment> {
+		[SerializeField] private float orderedRetreatDamageMultiplier;
 		[SerializeField] private float stackWipeThreshold;
 		public float AttackPower {get; private set;}
 		public float Toughness {get; private set;}
@@ -12,7 +13,7 @@ namespace Simulation.Military {
 		public int CurrentManpower {get; private set;}
 		public int DemoralizedManpower {get; private set;}
 		
-		private float Damage => AttackPower*CurrentManpower;
+		private float Damage => IsMoving ? AttackPower*CurrentManpower*orderedRetreatDamageMultiplier : AttackPower*CurrentManpower;
 		
 		internal void Init(float attackPower, float toughness, float killRate, int manpower){
 			AttackPower = attackPower;
@@ -112,6 +113,10 @@ namespace Simulation.Military {
 			}
 		}
 		private void RetreatHome(){
+			// If the battle was lost while a manual retreat was in progress, continue with it.
+			if (IsMoving){
+				return;
+			}
 			IsRetreating = true;
 			int shortestPathLength = int.MaxValue;
 			List<ProvinceLink> shortestPath = null;
