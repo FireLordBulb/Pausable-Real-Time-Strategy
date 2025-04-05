@@ -36,6 +36,12 @@ namespace Simulation.Military {
 					attackingUnits[0].StartupBattleRandomness();
 					IsBattleOngoing = true;
 					Calendar.Instance.OnDayTick.AddListener(BattleTick);
+					for (int i = units.Count-1; i >= 0; i--){
+						TUnit defendingUnit = units[i];
+						if (!defendingUnit.IsBuilt){
+							defendingUnit.StackWipe();
+						}
+					}
 				}
 			}
 			units.Add(unit);
