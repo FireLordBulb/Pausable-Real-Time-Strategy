@@ -29,6 +29,7 @@ namespace Simulation.Military {
 		protected List<ProvinceLink> PathToTarget {get; private set;}
 		protected int PathIndex {get; private set;}
 		protected float RandomDamageMultiplier {get; private set;}
+		public bool IsRetreating {get; protected set;}
 		
 		public bool IsMoving => PathToTarget != null;
 		protected float MovementSpeed => movementSpeed;
@@ -108,12 +109,19 @@ namespace Simulation.Military {
 				PathToTarget = null;
 				NextLocation = null;
 				TargetLocation = null;
+				IsRetreating = false;
 			} else {
 				NextPathLocation();
 			}
 		}
 		
 		internal MoveOrderResult MoveTo(Location<TUnit> destination){
+			if (IsRetreating){
+				return MoveOrderResult.BusyRetreating;
+			}
+			return SetDestination(destination);
+		}
+		protected MoveOrderResult SetDestination(Location<TUnit> destination){
 			if (!IsBuilt){
 				return MoveOrderResult.NotBuilt;
 			}
@@ -136,7 +144,7 @@ namespace Simulation.Military {
 			}
 			return MoveOrderResult.Success;
 		}
-		public List<ProvinceLink> GetPathTo(Location<TUnit> end){
+		protected List<ProvinceLink> GetPathTo(Location<TUnit> end){
 			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.SearchTargetProvince, LinkEvaluator);
 			if (nodes == null){
 				return null;

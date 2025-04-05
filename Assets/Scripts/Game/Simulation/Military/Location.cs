@@ -19,7 +19,9 @@ namespace Simulation.Military {
 		public IEnumerable<TUnit> Units => units;
 		
 		public void Add(TUnit unit){
-			if (IsBattleOngoing){
+			if (unit.IsRetreating){
+				// Pass by the battle, nothing to see here.
+			} else if (IsBattleOngoing){
 				if (unit.Owner == defendingUnits[0].Owner){
 					defendingUnits.Add(unit);
 				} else if (unit.Owner == attackingUnits[0].Owner){
@@ -28,23 +30,33 @@ namespace Simulation.Military {
 					throw new NotImplementedException("Handling of 3-way battles hasn't been implemented yet!");
 				}
 			} else if (0 < units.Count){
-				TUnit alreadyPresentUnit = units[0];
-				if (alreadyPresentUnit.Owner != unit.Owner){
-					defendingUnits = new List<TUnit>(units);
-					attackingUnits = new List<TUnit>{unit};
-					defendingUnits[0].StartupBattleRandomness();
-					attackingUnits[0].StartupBattleRandomness();
-					IsBattleOngoing = true;
-					Calendar.Instance.OnDayTick.AddListener(BattleTick);
-					for (int i = units.Count-1; i >= 0; i--){
-						TUnit defendingUnit = units[i];
-						if (!defendingUnit.IsBuilt){
-							defendingUnit.StackWipe();
-						}
-					}
-				}
+				StartBattle(unit);
 			}
 			units.Add(unit);
+		}
+
+		private void StartBattle(TUnit unit){
+			TUnit firstUnit = units[0];
+			if (firstUnit.Owner == unit.Owner){
+				return;
+			}
+			defendingUnits = new List<TUnit>();
+			foreach (TUnit presentUnit in units){
+				if (!presentUnit.IsRetreating){
+					defendingUnits.Add(presentUnit);
+				}
+			}
+			attackingUnits = new List<TUnit>{unit};
+			defendingUnits[0].StartupBattleRandomness();
+			attackingUnits[0].StartupBattleRandomness();
+			IsBattleOngoing = true;
+			Calendar.Instance.OnDayTick.AddListener(BattleTick);
+			for (int i = units.Count-1; i >= 0; i--){
+				TUnit defendingUnit = units[i];
+				if (!defendingUnit.IsBuilt){
+					defendingUnit.StackWipe();
+				}
+			}
 		}
 		public void Remove(TUnit unit){
 			units.Remove(unit);
@@ -62,6 +74,9 @@ namespace Simulation.Military {
 		}
 		
 		private void BattleTick(){
+			if (!IsBattleOngoing){
+				return;
+			}
 			defendingUnits[0].RerollBattleRandomness();
 			attackingUnits[0].RerollBattleRandomness();
 			BattleResult result = defendingUnits[0].DoBattle(defendingUnits, attackingUnits);

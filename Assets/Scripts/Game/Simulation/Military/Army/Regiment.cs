@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public class Regiment : Unit<Regiment> {
+		[SerializeField] private float stackWipeThreshold;
 		public float AttackPower {get; private set;}
 		public float Toughness {get; private set;}
 		public float KillRate {get; private set;}
@@ -96,12 +97,21 @@ namespace Simulation.Military {
 			}
 		}
 		public override void OnBattleEnd(bool didWin){
+			CurrentManpower += DemoralizedManpower;
+			DemoralizedManpower = 0;
 			if (didWin){
-				CurrentManpower += DemoralizedManpower;
-				DemoralizedManpower = 0;
+				return;
+			}
+			if (stackWipeThreshold < CurrentManpower/(float)MaxManpower){
+				RetreatHome();
 			} else {
 				StackWipe();
 			}
+		}
+		private void RetreatHome(){
+			IsRetreating = true;
+			List<ProvinceLink> path = GetPathTo(Owner.Capital.Land.ArmyLocation);
+			SetDestination(path[^1].Target.Land.ArmyLocation);
 		}
 		public override void StackWipe(){
 			Owner.RemoveRegiment(this);
@@ -110,7 +120,7 @@ namespace Simulation.Military {
 		}
 		
 		protected override bool LinkEvaluator(ProvinceLink link){
-			return link is LandLink && (Owner == link.Target.Owner || Owner.GetDiplomaticStatus(link.Target.Owner).IsAtWar);
+			return link is LandLink && (IsRetreating || Owner == link.Target.Owner || Owner.GetDiplomaticStatus(link.Target.Owner).IsAtWar);
 		}
 		public override string CreatingVerb => "Recruiting";
 	}
