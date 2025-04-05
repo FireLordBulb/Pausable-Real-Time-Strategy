@@ -164,6 +164,9 @@ namespace Simulation {
 			if (!regimentTypes.Contains(type) || province.Owner != this){
 				return false;
 			}
+			/*if (Province.IsOccupied){ TODO: Uncomment after occupation is added.
+				return false;
+			}*/
 			Military.Regiment newRegiment = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
 			if (newRegiment == null){
 				return false;
@@ -187,6 +190,9 @@ namespace Simulation {
 			if (!shipTypes.Contains(type) || location == null || location.Land.Province.Owner != this){
 				return false;
 			}
+			/*if (location.Land.Province.IsOccupied){ TODO: Uncomment after occupation is added.
+				return false;
+			}*/
 			Military.Ship newShip = Military.Ship.StartCreating(type, location, this);
 			if (newShip == null){
 				return false;

@@ -37,6 +37,12 @@ namespace Simulation.Military {
 			if (!type.CanBeBuiltBy(owner)){
 				return null;
 			}
+			foreach (TUnit locationUnit in buildLocation.Units){
+				// Can't build a unit where there's an enemy army
+				if (locationUnit.Owner != owner){
+					return null;
+				}
+			}
 			type.Prefab.doAllowInstantiate = true;
 			TUnit unit = Instantiate(type.Prefab, buildLocation.WorldPosition, Quaternion.identity, owner.MilitaryUnitParent);
 			type.Prefab.doAllowInstantiate = false;
