@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Simulation.Military {
@@ -19,8 +20,13 @@ namespace Simulation.Military {
 			return (GetLocation(link), Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)));
 		}
 		
-		public override BattleResult DefendBattle(Ship attacker){
+		public override BattleResult DoBattle(List<Ship> defenders, List<Ship> attackers){
 			return BattleResult.DefenderWon;
+		}
+		public override void OnBattleEnd(bool didWin){
+			if (!didWin){
+				StackWipe();
+			}
 		}
 		public override void StackWipe(){
 			Owner.RemoveShip(this);

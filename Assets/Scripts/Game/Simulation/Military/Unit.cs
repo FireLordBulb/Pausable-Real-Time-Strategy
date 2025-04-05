@@ -149,7 +149,7 @@ namespace Simulation.Military {
 		protected abstract (Location<TUnit>, int) CalculatePathLocation();
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
 
-		public void StartBattle(){
+		public void StartupBattleRandomness(){
 			daysUntilReroll = 0;
 		}
 		public void RerollBattleRandomness(){
@@ -160,7 +160,8 @@ namespace Simulation.Military {
 			daysUntilReroll = Random.Range(minRerollDays, maxRerollDays);
 			RandomDamageMultiplier = Random.Range(1, 1+maxDamageBoost);
 		}
-		public abstract BattleResult DefendBattle(TUnit attacker);
+		public abstract BattleResult DoBattle(List<TUnit> defenders, List<TUnit> attackers);
+		public abstract void OnBattleEnd(bool didWin);
 		public abstract void StackWipe();
 		
 		protected abstract bool LinkEvaluator(ProvinceLink link);

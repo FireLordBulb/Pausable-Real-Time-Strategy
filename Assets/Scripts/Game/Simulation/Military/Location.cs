@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Simulation.Military {
 	public abstract class Location<TUnit> where TUnit : Unit<TUnit> {
 		private readonly List<TUnit> units = new();
 
-		private bool battleIsOngoing;
 		// TODO: Allow for multiple units on each side.
-		private TUnit defendingUnit;
-		private TUnit attackingUnit;
+		private List<TUnit> defendingUnits;
+		private List<TUnit> attackingUnits;
 		
 		public abstract string Name {get;}
 		public virtual Province SearchTargetProvince => Province;
@@ -18,19 +16,24 @@ namespace Simulation.Military {
 		public abstract Vector3 WorldPosition {get;}
 
 		public IEnumerable<TUnit> Units => units;
-		public bool IsBattleOngoing => defendingUnit != null;
+		public bool IsBattleOngoing => defendingUnits != null;
 		
 		public void Add(TUnit unit){
-			if (battleIsOngoing){
-				throw new NotImplementedException("Reinforcing battles hasn't been implemented yet!");
-			}
-			if (0 < units.Count){
+			if (IsBattleOngoing){
+				if (unit.Owner == defendingUnits[0].Owner){
+					defendingUnits.Add(unit);
+				} else if (unit.Owner == attackingUnits[0].Owner){
+					attackingUnits.Add(unit);
+				} else {
+					throw new NotImplementedException("Handling of 3-way battles hasn't been implemented yet!");
+				}
+			} else if (0 < units.Count){
 				TUnit alreadyPresentUnit = units[0];
 				if (alreadyPresentUnit.Owner != unit.Owner){
-					defendingUnit = alreadyPresentUnit;
-					attackingUnit = unit;
-					defendingUnit.StartBattle();
-					attackingUnit.StartBattle();
+					defendingUnits = new List<TUnit>(units);
+					attackingUnits = new List<TUnit>{unit};
+					defendingUnits[0].StartupBattleRandomness();
+					attackingUnits[0].StartupBattleRandomness();
 					Calendar.Instance.OnDayTick.AddListener(BattleTick);
 				}
 			}
@@ -38,24 +41,42 @@ namespace Simulation.Military {
 		}
 		public void Remove(TUnit unit){
 			units.Remove(unit);
-			if (battleIsOngoing){
-				EndBattle();
+			if (!IsBattleOngoing){
+				return;
+			}
+			RemoveFromSide(unit, defendingUnits, BattleResult.AttackerWon);
+			RemoveFromSide(unit, attackingUnits, BattleResult.DefenderWon);
+		}
+		private void RemoveFromSide(TUnit unit, List<TUnit> side, BattleResult result){
+			if (unit.Owner != side[0].Owner){
+				return;
+			}
+			side.Remove(unit);
+			if (side.Count == 0){
+				EndBattle(result);
 			}
 		}
 		
 		private void BattleTick(){
-			defendingUnit.RerollBattleRandomness();
-			attackingUnit.RerollBattleRandomness();
-			BattleResult result = defendingUnit.DefendBattle(attackingUnit);
+			defendingUnits[0].RerollBattleRandomness();
+			attackingUnits[0].RerollBattleRandomness();
+			BattleResult result = defendingUnits[0].DoBattle(defendingUnits, attackingUnits);
 			if (result != BattleResult.Ongoing){
-				EndBattle();
+				EndBattle(result);
 			}
 		}
 
-		private void EndBattle(){
-			defendingUnit = null;
-			attackingUnit = null;
+		private void EndBattle(BattleResult result){
 			Calendar.Instance.OnDayTick.RemoveListener(BattleTick);
+			bool didDefenderWin = result == BattleResult.DefenderWon;
+			foreach (TUnit unit in defendingUnits){
+				unit.OnBattleEnd(didDefenderWin);
+			}
+			bool didAttackerWin = result == BattleResult.AttackerWon;
+			foreach (TUnit unit in attackingUnits){
+				unit.OnBattleEnd(didAttackerWin);
+			}
+			defendingUnits = attackingUnits = null;
 		}
 		
 		public virtual void AdjustPath(List<ProvinceLink> path){}
