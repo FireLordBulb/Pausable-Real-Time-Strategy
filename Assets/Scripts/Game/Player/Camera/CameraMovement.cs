@@ -124,7 +124,7 @@ namespace Player {
             } else {
                 position.y = newY;
                 if (newY < zoomLevels[nearestSmallerZoom].height){
-                    nearestSmallerZoom++;
+                    nearestSmallerZoom = Mathf.Min(nearestSmallerZoom+1, zoomLevels.Length-1);
                 } else if (nearestSmallerZoom != 0){
                     if (newY >= zoomLevels[nearestSmallerZoom-1].height){
                         nearestSmallerZoom--;
