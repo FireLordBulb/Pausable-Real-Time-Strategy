@@ -55,3 +55,17 @@ MonoBehaviour:
     year: 1618
     month: 4
     day: 23
+  callbackOrder:
+  - Simulation.Land
+  - Simulation.Military.Regiment
+  - Simulation.Military.Ship
+  - Simulation.Military.LandLocation
+  - Simulation.Military.SeaLocation
+  - Simulation.Military.Harbor
+  - Simulation.DiplomaticStatus
+  - Player.HUD, Player
+  - Player.CalendarPanel, Player
+  - Player.WarMenu, Player
+  - Player.CountryWindow, Player
+  - Player.RegimentWindow, Player
+  - Player.ShipWindow, Player
