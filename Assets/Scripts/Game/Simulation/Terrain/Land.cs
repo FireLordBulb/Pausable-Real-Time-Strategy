@@ -12,7 +12,8 @@ namespace Simulation {
 			ProvinceList.Clear();
 		}
 #endif
-		[SerializeField]private int occupationMaterialIndex;
+		[SerializeField] private int occupationMaterialIndex;
+		[SerializeField] private float siegeDaysPerDevelopment;
 		
 		private Country owner;
 		private Country occupier;
@@ -46,8 +47,11 @@ namespace Simulation {
 			}
 		}
 		public Country Occupier => occupier;
+		public Country Controller => Occupier == null ? Owner : Occupier;
 		public bool HasOwner => owner != null;
 		public bool IsOccupied => occupier != null;
+
+		public int SiegeDays => (int)(siegeDaysPerDevelopment*(1+Terrain.DevelopmentModifier));
 		
 		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
 			Province = GetComponent<Province>();
@@ -76,11 +80,15 @@ namespace Simulation {
 			});
 		}
 
-		internal void BecomeOccupiedBy(Country country){
+		internal void MakeOccupiedBy(Country country){
+			if (country == Owner){
+				Unoccupy();
+				return;
+			}
 			occupier = country;
 			occupationMaterial.color = occupier.MapColor;
 		}
-		internal void Deoccupy(){
+		internal void Unoccupy(){
 			occupier = null;
 			occupationMaterial.color = Color.clear;
 		}

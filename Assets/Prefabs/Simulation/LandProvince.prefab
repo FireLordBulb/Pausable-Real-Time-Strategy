@@ -58,3 +58,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   occupationMaterialIndex: 2
+  siegeDaysPerDevelopment: 50
