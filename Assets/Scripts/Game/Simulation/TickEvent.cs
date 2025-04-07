@@ -6,7 +6,7 @@ namespace Simulation {
 		private readonly List<Action> callbacks = new();
 		private readonly Queue<(Action, bool)> callbackChangeBuffer = new();
 
-		public void AddListener(Action callback){
+		public void AddListener(Action callback, Type callerType){
 			callbackChangeBuffer.Enqueue((callback, true));
 		}
 		public void RemoveListener(Action callback){

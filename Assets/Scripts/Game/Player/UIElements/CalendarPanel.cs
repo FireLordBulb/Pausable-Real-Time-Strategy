@@ -54,7 +54,7 @@ namespace Player {
 		}
 		
 		public void EnableUpdate(){
-			Calendar.Instance.OnDayTick.AddListener(UpdateDate);
+			Calendar.Instance.OnDayTick.AddListener(UpdateDate, GetType());
 		}
 		public void DisableUpdate(){
 			Calendar.Instance.OnDayTick.RemoveListener(UpdateDate);

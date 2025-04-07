@@ -77,7 +77,7 @@ namespace Simulation {
 					return;
 				}               
 				Owner.GainResources(goldProduction, manpowerProduction, sailorsProduction);
-			});
+			}, GetType());
 		}
 
 		internal void MakeOccupiedBy(Country country){

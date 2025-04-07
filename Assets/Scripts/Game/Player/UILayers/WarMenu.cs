@@ -14,7 +14,7 @@ namespace Player {
 		private ShipType selectedShipType;
 		
 		private void Awake(){
-			Calendar.Instance.OnMonthTick.AddListener(Refresh);
+			Calendar.Instance.OnMonthTick.AddListener(Refresh, GetType());
 		}
 		public override void OnBegin(bool isFirstTime){
 			if (!isFirstTime){

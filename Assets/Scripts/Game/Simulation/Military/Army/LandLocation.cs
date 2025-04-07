@@ -54,7 +54,7 @@ namespace Simulation.Military {
 					SiegeDaysLeft = Land.SiegeDays;
 					SiegeIsPausedBecauseMovement = false;
 					SiegeIsOngoing = true;
-					Calendar.Instance.OnDayTick.AddListener(TickSiege);
+					Calendar.Instance.OnDayTick.AddListener(TickSiege, GetType());
 					break;
 				}
 			}

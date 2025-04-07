@@ -139,7 +139,7 @@ namespace Simulation.Military {
 				unit.StopMoving();
 			}
 			IsBattleOngoing = true;
-			Calendar.Instance.OnDayTick.AddListener(BattleTick);
+			Calendar.Instance.OnDayTick.AddListener(BattleTick, GetType());
 		}
 		protected virtual void SpecificStartupLogic(){}
 		internal virtual void UpdateListeners(){}
