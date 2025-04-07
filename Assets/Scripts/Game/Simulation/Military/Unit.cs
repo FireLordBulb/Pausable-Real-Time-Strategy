@@ -103,13 +103,13 @@ namespace Simulation.Military {
 			}
 			Location.Remove(self);
 			Location = NextLocation;
-			worldPositionsOnPath.Enqueue(Location.WorldPosition);
-			Location.Add(self);
-			if (ReferenceEquals(NextLocation, TargetLocation)){
+			if (ReferenceEquals(Location, TargetLocation)){
 				StopMoving();
 			} else {
 				NextPathLocation();
 			}
+			worldPositionsOnPath.Enqueue(Location.WorldPosition);
+			Location.Add(self);
 		}
 		internal void StopMoving(){
 			PathToTarget = null;
@@ -131,6 +131,7 @@ namespace Simulation.Military {
 			if (Location == destination){
 				PathToTarget = null;
 				TargetLocation = null;
+				Location.UpdateListeners();
 				return MoveOrderResult.AlreadyAtDestination;
 			}
 			List<ProvinceLink> path = GetPathTo(destination);
@@ -145,6 +146,7 @@ namespace Simulation.Military {
 				PathIndex = -1;
 				NextPathLocation();
 			}
+			Location.UpdateListeners();
 			return MoveOrderResult.Success;
 		}
 		protected List<ProvinceLink> GetPathTo(Location<TUnit> end){
