@@ -4,8 +4,12 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public class Regiment : Unit<Regiment> {
+		[SerializeField] private float monthlyReinforcementRate;
 		[SerializeField] private float orderedRetreatDamageMultiplier;
 		[SerializeField] private float stackWipeThreshold;
+		
+		private int maxMonthlyReinforcement;
+		
 		public float AttackPower {get; private set;}
 		public float Toughness {get; private set;}
 		public float KillRate {get; private set;}
@@ -21,6 +25,8 @@ namespace Simulation.Military {
 			KillRate = killRate;
 			CurrentManpower = MaxManpower = manpower;
 			DemoralizedManpower = 0;
+			maxMonthlyReinforcement = (int)(MaxManpower*monthlyReinforcementRate);
+			Calendar.Instance.OnMonthTick.AddListener(Reinforce, GetType());
 		}
 		
 		protected override Location<Regiment> GetLocation(ProvinceLink link){
@@ -33,6 +39,25 @@ namespace Simulation.Military {
 		private int GetTravelDays(ProvinceLink link){
 			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
 			return Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier));
+		}
+
+		private void Reinforce(){
+			if (CurrentManpower == MaxManpower){
+				return;
+			}
+			if (IsUnsafe(Location) || IsMoving && IsUnsafe(NextLocation)){
+				return;
+			}
+			int reinforcementAmount = Mathf.Min(maxMonthlyReinforcement, Owner.Manpower, MaxManpower-CurrentManpower);
+			Owner.GainResources(0, -reinforcementAmount, 0);
+			CurrentManpower += reinforcementAmount;
+		}
+		private bool IsUnsafe(Location<Regiment> location){
+			if (location.IsBattleOngoing){
+				return false;
+			}
+			Land nextProvince = location.Province.Land;
+			return nextProvince.Owner != Owner || nextProvince.IsOccupied;
 		}
 		
 		public override BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers){

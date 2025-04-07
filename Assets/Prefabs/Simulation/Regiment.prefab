@@ -209,5 +209,6 @@ MonoBehaviour:
   minRerollDays: 5
   maxRerollDays: 14
   doAllowInstantiate: 0
+  monthlyReinforcementRate: 0.2
   orderedRetreatDamageMultiplier: 0.5
   stackWipeThreshold: 0.35
