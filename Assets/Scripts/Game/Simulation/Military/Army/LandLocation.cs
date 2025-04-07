@@ -18,6 +18,13 @@ namespace Simulation.Military {
 			Land = land;
 		}
 		
+		protected override void SpecificStartupLogic(){
+			// If you control the land you will count as the defender regardless of who actually moved in the province last.
+			if (AttackingUnits[0].Owner == Land.Controller){
+				(DefendingUnits, AttackingUnits) = (AttackingUnits, DefendingUnits);
+			}
+		}
+		
 		internal override void UpdateListeners(){
 			// New sieges aren't started during battles, and existing ones are paused.
 			if (IsBattleOngoing){
@@ -62,7 +69,6 @@ namespace Simulation.Military {
 				return;
 			}
 			SiegeDaysLeft--;
-			Debug.Log(SiegeDaysLeft);
 			if (SiegeDaysLeft > 0){
 				return;
 			}

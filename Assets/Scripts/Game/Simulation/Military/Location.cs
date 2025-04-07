@@ -6,8 +6,8 @@ namespace Simulation.Military {
 		private readonly List<TUnit> units = new();
 
 		// TODO: Allow for multiple units on each side.
-		private List<TUnit> defendingUnits;
-		private List<TUnit> attackingUnits;
+		protected List<TUnit> DefendingUnits;
+		protected List<TUnit> AttackingUnits;
 		
 		public abstract string Name {get;}
 		public virtual Province SearchTargetProvince => Province;
@@ -21,12 +21,12 @@ namespace Simulation.Military {
 			if (unit.IsRetreating){
 				// Pass by the battle, nothing to see here.
 			} else if (IsBattleOngoing){
-				if (unit.Owner == defendingUnits[0].Owner){
+				if (unit.Owner == DefendingUnits[0].Owner){
 					unit.StopMoving();
-					defendingUnits.Add(unit);
-				} else if (unit.Owner == attackingUnits[0].Owner){
+					DefendingUnits.Add(unit);
+				} else if (unit.Owner == AttackingUnits[0].Owner){
 					unit.StopMoving();
-					attackingUnits.Add(unit);
+					AttackingUnits.Add(unit);
 				} else {
 					// Third parties can't join ongoing battles, and may pass through provinces where others are battling undisturbed.
 				}
@@ -42,13 +42,13 @@ namespace Simulation.Military {
 			if (firstUnit.Owner == unit.Owner){
 				return;
 			}
-			defendingUnits = new List<TUnit>();
+			DefendingUnits = new List<TUnit>();
 			foreach (TUnit presentUnit in units){
 				if (!presentUnit.IsRetreating){
-					defendingUnits.Add(presentUnit);
+					DefendingUnits.Add(presentUnit);
 				}
 			}
-			attackingUnits = new List<TUnit>{unit};
+			AttackingUnits = new List<TUnit>{unit};
 			StartBattle();
 			for (int i = units.Count-1; i >= 0; i--){
 				TUnit defendingUnit = units[i];
@@ -59,8 +59,8 @@ namespace Simulation.Military {
 		}
 		public void Remove(TUnit unit){
 			units.Remove(unit);
-			RemoveFromSide(unit, defendingUnits, BattleResult.AttackerWon);
-			RemoveFromSide(unit, attackingUnits, BattleResult.DefenderWon);
+			RemoveFromSide(unit, DefendingUnits, BattleResult.AttackerWon);
+			RemoveFromSide(unit, AttackingUnits, BattleResult.DefenderWon);
 			UpdateListeners();
 		}
 		private void RemoveFromSide(TUnit unit, List<TUnit> side, BattleResult result){
@@ -77,9 +77,9 @@ namespace Simulation.Military {
 			if (!IsBattleOngoing){
 				return;
 			}
-			defendingUnits[0].RerollBattleRandomness();
-			attackingUnits[0].RerollBattleRandomness();
-			BattleResult result = defendingUnits[0].DoBattle(defendingUnits, attackingUnits);
+			DefendingUnits[0].RerollBattleRandomness();
+			AttackingUnits[0].RerollBattleRandomness();
+			BattleResult result = DefendingUnits[0].DoBattle(DefendingUnits, AttackingUnits);
 			if (result != BattleResult.Ongoing){
 				EndBattle(result);
 			}
@@ -92,35 +92,35 @@ namespace Simulation.Military {
 			Calendar.Instance.OnDayTick.RemoveListener(BattleTick);
 			IsBattleOngoing = false;
 			bool didDefenderWin = result == BattleResult.DefenderWon;
-			foreach (TUnit unit in defendingUnits){
+			foreach (TUnit unit in DefendingUnits){
 				unit.OnBattleEnd(didDefenderWin);
 			}
 			bool didAttackerWin = result == BattleResult.AttackerWon;
-			foreach (TUnit unit in attackingUnits){
+			foreach (TUnit unit in AttackingUnits){
 				unit.OnBattleEnd(didAttackerWin);
 			}
-			Country winningCountry = didDefenderWin ? defendingUnits[0].Owner : attackingUnits[0].Owner;
-			defendingUnits = attackingUnits = null;
+			Country winningCountry = didDefenderWin ? DefendingUnits[0].Owner : AttackingUnits[0].Owner;
+			DefendingUnits = AttackingUnits = null;
 			UpdateListeners();
 			BattleWithThirdParty(winningCountry);
 		}
 
 		private void BattleWithThirdParty(Country winningCountry){
 			// Instantly start another battle if there is a third party present in the province.
-			defendingUnits = new List<TUnit>();
-			attackingUnits = new List<TUnit>();
+			DefendingUnits = new List<TUnit>();
+			AttackingUnits = new List<TUnit>();
 			Country thirdParty = null;
 			foreach (TUnit unit in units){
 				if (unit.IsRetreating){
 					continue;
 				}
 				if (unit.Owner == winningCountry){
-					defendingUnits.Add(unit);
+					DefendingUnits.Add(unit);
 				} else if (unit.Owner == thirdParty){
-					attackingUnits.Add(unit);
+					AttackingUnits.Add(unit);
 				} else if (thirdParty == null){
 					thirdParty = unit.Owner;
-					attackingUnits.Add(unit);
+					AttackingUnits.Add(unit);
 				}
 			}
 			if (thirdParty != null){
@@ -129,18 +129,19 @@ namespace Simulation.Military {
 		}
 		
 		private void StartBattle(){
-			defendingUnits[0].StartupBattleRandomness();
-			attackingUnits[0].StartupBattleRandomness();
-			foreach (TUnit unit in defendingUnits){
+			SpecificStartupLogic();
+			DefendingUnits[0].StartupBattleRandomness();
+			AttackingUnits[0].StartupBattleRandomness();
+			foreach (TUnit unit in DefendingUnits){
 				unit.StopMoving();
 			}
-			foreach (TUnit unit in attackingUnits){
+			foreach (TUnit unit in AttackingUnits){
 				unit.StopMoving();
 			}
 			IsBattleOngoing = true;
 			Calendar.Instance.OnDayTick.AddListener(BattleTick);
 		}
-
+		protected virtual void SpecificStartupLogic(){}
 		internal virtual void UpdateListeners(){}
 		
 		public virtual void AdjustPath(List<ProvinceLink> path){}
