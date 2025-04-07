@@ -16,16 +16,11 @@ namespace Simulation {
         private MeshCollider meshCollider;
         private readonly Dictionary<Color32, ProvinceLink> links = new();
         private Type type;
-        private Country owner;
         private Color baseColor;
         private Color hoverColor;
         private Color selectedColor;
         private bool isHovered;
         private bool isSelected;
-        
-        private float goldProduction;
-        private int manpowerProduction;
-        private int sailorsProduction;
         
         [NonSerialized] public List<int> TriPointIndices;
         [NonSerialized] public List<Vector2> Vertices;
@@ -41,27 +36,12 @@ namespace Simulation {
         public Land Land {get; private set;}
         public Sea Sea {get; private set;}
         
-        public Country Owner {
-            get => owner;
-            set {
-                if (owner == value){
-                    return;
-                }
-                if (owner != null){
-                    owner.LoseProvince(this);
-                }
-                owner = value;
-                float alpha = baseColor.a;
-                if (owner != null){
-                    owner.GainProvince(this);
-                    baseColor = owner.MapColor;
-                } else {
-                    baseColor = Color.black;
-                }
-                baseColor.a = alpha;
-                UpdateColors();
-            }
-        }
+        internal Color BaseColor { set {
+            float alpha = baseColor.a;
+            baseColor = value;
+            baseColor.a = alpha;
+            UpdateColors();
+        }}
         public float Alpha { set {
             baseColor.a = value;
             UpdateColors();
@@ -71,7 +51,6 @@ namespace Simulation {
         public bool IsSea => type == Type.Sea;
         public bool IsCoast => type == Type.Coast;
         public bool IsLand => type is Type.LandLocked or Type.Coast;
-        public bool HasOwner => owner != null;
         
         public IEnumerable<ProvinceLink> Links => links.Values;
         public ProvinceLink this[Color32 color] => links[color];
@@ -134,21 +113,6 @@ namespace Simulation {
         public void CompleteSegmentLoop(){
             (int _, int endIndex, ProvinceLink link) = outlineSegments[0];
             outlineSegments[0] = (outlineSegments[^1].endIndex, endIndex, link);
-        }
-        
-        // TODO: Refactor away and put values in an SO.
-        private const int BaseProduction = 10;
-        private void Start(){
-            float multiplier = 1+Terrain.DevelopmentModifier;
-            goldProduction = multiplier;
-            manpowerProduction = Mathf.RoundToInt(BaseProduction*multiplier);
-            sailorsProduction = IsCoast ? Mathf.RoundToInt(BaseProduction*multiplier) : 0;
-            Calendar.Instance.OnMonthTick.AddListener(() => {
-                if (!HasOwner){
-                    return;
-                }               
-                Owner.GainResources(goldProduction, manpowerProduction, sailorsProduction);
-            });
         }
         
         private void UpdateColors(){

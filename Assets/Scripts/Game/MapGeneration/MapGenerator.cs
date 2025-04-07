@@ -233,29 +233,29 @@ namespace MapGeneration {
                 }
             }
             int landProvincesLeft = provinceDataDictionary.Count;
-            HashSet<Province> unownedLandProvinces = new();
+            HashSet<Land> unownedLandProvinces = new();
             foreach (ProvinceData data in provinceDataDictionary.Values){
-                Province landProvince = mapGraph[data.Color];
+                Land landProvince = mapGraph[data.Color].Land;
                 landProvince.Owner = null;
                 unownedLandProvinces.Add(landProvince);
             }
-            Queue<Province> provinceCrawl = new();
+            Queue<Land> provinceCrawl = new();
             provinceCrawl.Enqueue(RandomUnownedProvince());
             for (int i = countries.Length-1; i >= 0; i--){
                 int countryProvinceCount = Mathf.Max(Mathf.Min(Random.Range(1, maxProvinces+1), landProvincesLeft-i), (landProvincesLeft-i)/(i+1));
                 for (int j = 0; j < countryProvinceCount; j++){
-                    Province province = provinceCrawl.Dequeue();
-                    province.Owner = countries[i];
-                    unownedLandProvinces.Remove(province);
+                    Land land = provinceCrawl.Dequeue();
+                    land.Owner = countries[i];
+                    unownedLandProvinces.Remove(land);
                     landProvincesLeft--;
                     if (provinceCrawl.Count != 0 || landProvincesLeft == 0){
                         continue;
                     }
-                    List<Province> unownedNeighbors = new();
-                    foreach (ProvinceLink link in province.Links){
+                    List<Land> unownedNeighbors = new();
+                    foreach (ProvinceLink link in land.Province.Links){
                         Province neighbor = link.Target;
-                        if (!neighbor.HasOwner && !neighbor.IsSea){
-                            unownedNeighbors.Add(neighbor);
+                        if (neighbor.IsLand && !neighbor.Land.HasOwner){
+                            unownedNeighbors.Add(neighbor.Land);
                         }
                     }
                     for (int k = unownedNeighbors.Count-1; k > 0; k--){
@@ -265,14 +265,14 @@ namespace MapGeneration {
                     if (unownedNeighbors.Count == 0){
                         provinceCrawl.Enqueue(RandomUnownedProvince());
                     } else {
-                        foreach (Province neighbor in unownedNeighbors){
+                        foreach (Land neighbor in unownedNeighbors){
                             provinceCrawl.Enqueue(neighbor);
                         }
                     }
                 }
             }
             // TODO: Prefer coast
-            Province RandomUnownedProvince() => unownedLandProvinces.ElementAt(Random.Range(0, unownedLandProvinces.Count));
+            Land RandomUnownedProvince() => unownedLandProvinces.ElementAt(Random.Range(0, unownedLandProvinces.Count));
         }
     /*
         private void OnDrawGizmos(){

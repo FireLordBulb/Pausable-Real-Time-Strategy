@@ -41,7 +41,7 @@ namespace Simulation {
 		[SerializeField] private float borderHalfWidth;
 		[SerializeField] private float borderBrightnessFactor;
 		
-		private readonly HashSet<Province> provinces = new();
+		private readonly HashSet<Land> provinces = new();
 		private readonly List<Military.Regiment> regiments = new();
 		private readonly List<Military.Ship> ships = new();
 		private bool wasBorderChanged;
@@ -68,9 +68,9 @@ namespace Simulation {
 		}
 		public IEnumerable<Military.RegimentType> RegimentTypes => regimentTypes;
 		public IEnumerable<Military.ShipType> ShipTypes => shipTypes;
-		public IEnumerable<Province> Provinces => provinces;
+		public IEnumerable<Land> Provinces => provinces;
 		// TODO: Assign a specific province as capital from country data.
-		public Province Capital => provinces.First();
+		public Land Capital => provinces.First();
 		public int RegimentCount => regiments.Count;
 		public int ShipCount => ships.Count;
 		public string Name => gameObject.name;
@@ -79,7 +79,7 @@ namespace Simulation {
 			gameObject.name = data.Name;
 			MapColor = data.MapColor;
 			foreach (Color32 province in data.Provinces){
-				map[province].Owner = this;
+				map[province].Land.Owner = this;
 			}
 			Color borderColor = MapColor*borderBrightnessFactor;
 			borderColor.a = 1;
@@ -96,7 +96,7 @@ namespace Simulation {
 			List<Vector2> borderVertices = new();
 			
 			// TODO: Only add the sections of vertices between outer border tri-points.
-			Province province = provinces.First();
+			Province province = provinces.First().Province;
 			int startSegment = 0;
 			ProvinceLink link = null;
 			AddAllButOneSegments();
@@ -144,10 +144,10 @@ namespace Simulation {
 			IsDirty = false;
 		}
 		
-		internal bool GainProvince(Province province){
+		internal bool GainProvince(Land province){
 			return ChangeProvinceCount(provinces.Add(province), +1);
 		}
-		internal bool LoseProvince(Province province){
+		internal bool LoseProvince(Land province){
 			return ChangeProvinceCount(provinces.Remove(province), -1);
 		}
 		private bool ChangeProvinceCount(bool wasChanged, int change){
@@ -161,7 +161,7 @@ namespace Simulation {
 		}
 
 		public bool TryStartRecruitingRegiment(Military.RegimentType type, Province province){
-			if (!regimentTypes.Contains(type) || province.Owner != this){
+			if (!regimentTypes.Contains(type) || province.IsSea || province.Land.Owner != this){
 				return false;
 			}
 			/*if (Province.IsOccupied){ TODO: Uncomment after occupation is added.
@@ -181,13 +181,13 @@ namespace Simulation {
 			if (province.IsSea){
 				return Military.MoveOrderResult.InvalidTarget;
 			}
-			if (province.Owner != this && !GetDiplomaticStatus(province.Owner).IsAtWar){
+			if (province.Land.Owner != this && !GetDiplomaticStatus(province.Land.Owner).IsAtWar){
 				return Military.MoveOrderResult.NoAccess;
 			}
 			return regiment.MoveTo(province.Land.ArmyLocation);
 		}
 		public bool TryStartConstructingFleet(Military.ShipType type, Military.Harbor location){
-			if (!shipTypes.Contains(type) || location == null || location.Land.Province.Owner != this){
+			if (!shipTypes.Contains(type) || location == null || location.Land.Owner != this){
 				return false;
 			}
 			/*if (location.Land.Province.IsOccupied){ TODO: Uncomment after occupation is added.
@@ -204,8 +204,7 @@ namespace Simulation {
 			if (ship.Owner != this){
 				return Military.MoveOrderResult.NotOwner;
 			}
-			Country owner = location.Province.Owner;
-			if (location.Province.IsLand && owner != this && !GetDiplomaticStatus(owner).IsAtWar){
+			if (location.Province.IsLand && location.Province.Land.Owner != this && !GetDiplomaticStatus(location.Province.Land.Owner).IsAtWar){
 				return Military.MoveOrderResult.NoAccess;
 			}
 			return ship.MoveTo(location);
@@ -223,13 +222,13 @@ namespace Simulation {
 		}
 		
 		public void OnSelect(){
-			foreach (Province province in Provinces){
-				province.OnSelect();
+			foreach (Land land in Provinces){
+				land.Province.OnSelect();
 			}
 		}
 		public void OnDeselect(){
-			foreach (Province province in Provinces){
-				province.OnDeselect();
+			foreach (Land land in Provinces){
+				land.Province.OnDeselect();
 			}
 		}
 	}

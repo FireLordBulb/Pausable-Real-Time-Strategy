@@ -120,8 +120,8 @@ namespace Simulation.Military {
 			IsRetreating = true;
 			int shortestPathLength = int.MaxValue;
 			List<ProvinceLink> shortestPath = null;
-			foreach (Province province in Owner.Provinces){
-				List<ProvinceLink> path = GetPathTo(province.Land.ArmyLocation);
+			foreach (Land province in Owner.Provinces){
+				List<ProvinceLink> path = GetPathTo(province.ArmyLocation);
 				if (path == null){
 					continue;
 				}
@@ -146,7 +146,7 @@ namespace Simulation.Military {
 		}
 		
 		protected override bool LinkEvaluator(ProvinceLink link){
-			return link is LandLink && (IsRetreating || Owner == link.Target.Owner || Owner.GetDiplomaticStatus(link.Target.Owner).IsAtWar);
+			return link is LandLink landLink && (IsRetreating || Owner == landLink.TargetLand.Owner || Owner.GetDiplomaticStatus(landLink.TargetLand.Owner).IsAtWar);
 		}
 		public override string CreatingVerb => "Recruiting";
 	}

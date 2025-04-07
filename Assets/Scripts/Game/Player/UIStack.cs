@@ -199,7 +199,7 @@ namespace Player {
 				return;
 			}
 			CameraMovement cameraMovement = CameraMovement.Instance;
-			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.WorldPosition));
+			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
 		}
 
 		public void RefreshSelected(){

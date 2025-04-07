@@ -89,7 +89,7 @@ namespace Player {
 				return clickedSelectable == UI.Selected ? null : clickedSelectable;
 			}
 			if (isRightClick){
-				return clickedProvince.Owner == UI.SelectedCountry ? null : clickedProvince.Owner;
+				return clickedProvince.IsLand && clickedProvince.Land.Owner == UI.SelectedCountry ? null : clickedProvince.Land.Owner;
 			}
 			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
 		}

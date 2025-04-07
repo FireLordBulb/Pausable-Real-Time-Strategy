@@ -89,7 +89,11 @@ namespace Player {
 						AddConsoleResponse("Command 'own' failed. You must select a specific province to own.");
 						return;
 					}
-					UIStack.Instance.SelectedProvince.Owner = UIStack.Instance.PlayerCountry;
+					if (UIStack.Instance.SelectedProvince.IsSea){
+						AddConsoleResponse("Command 'own' failed. You cannot own sea provinces.");
+						return;
+					}
+					UIStack.Instance.SelectedProvince.Land.Owner = UIStack.Instance.PlayerCountry;
 					UIStack.Instance.RefreshSelected();
 					AddConsoleResponse($"{UIStack.Instance.PlayerCountry.Name} now own the province {UIStack.Instance.SelectedProvince}.");
 					return;
@@ -239,10 +243,10 @@ namespace Player {
 			}
 			Province province;
 			if (words.Length == 1){
-				province = UIStack.Instance.PlayerCountry.Capital;
+				province = UIStack.Instance.PlayerCountry.Capital.Province;
 			} else {
 				if (int.TryParse(words[1], out int index)){
-					province = UIStack.Instance.PlayerCountry.Provinces.ElementAtOrDefault(index);
+					province = UIStack.Instance.PlayerCountry.Provinces.ElementAtOrDefault(index)?.Province;
 					if (province == null){
 						AddConsoleResponse($"Command '{command}' failed. {words[1]} isn't smaller than {UIStack.Instance.PlayerCountry.Name}'s province count.");
 						return;

@@ -36,7 +36,7 @@ namespace Player {
 			}
 			Terrain terrain = province.Terrain;
 			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentModifier, terrain.MoveSpeedModifier, terrain.DefenderAdvantage);
-			countryPanel.SetCountry(province.Owner);
+			countryPanel.SetCountry(province.Land.Owner);
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
 			return LayerBelow.OnSelectableClicked(clickedSelectable, isRightClick);
