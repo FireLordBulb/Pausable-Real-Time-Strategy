@@ -203,6 +203,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 4
   worldSpaceSpeed: 12
+  worldSpaceMoveDirectionOffset: 0.7
+  worldSpaceMaxOffsetProportion: 0.25
   maxDamageBoost: 0.25
   minRerollDays: 5
   maxRerollDays: 14

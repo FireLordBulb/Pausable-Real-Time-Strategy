@@ -6,6 +6,8 @@ namespace Simulation.Military {
 	public abstract class Unit<TUnit> : MonoBehaviour where TUnit : Unit<TUnit> {
 		[SerializeField] private float movementSpeed;
 		[SerializeField] private float worldSpaceSpeed;
+		[SerializeField] private float worldSpaceMoveDirectionOffset;
+		[SerializeField] private float worldSpaceMaxOffsetProportion;
 		[Header("Battle randomness")]
 		[SerializeField] private float maxDamageBoost;
 		[SerializeField] private int minRerollDays;
@@ -108,7 +110,6 @@ namespace Simulation.Military {
 			} else {
 				NextPathLocation();
 			}
-			worldPositionsOnPath.Enqueue(Location.WorldPosition);
 			Location.Add(self);
 		}
 		internal void StopMoving(){
@@ -116,6 +117,7 @@ namespace Simulation.Military {
 			NextLocation = null;
 			TargetLocation = null;
 			IsRetreating = false;
+			worldPositionsOnPath.Enqueue(Location.WorldPosition);
 		}
 		
 		internal MoveOrderResult MoveTo(Location<TUnit> destination){
@@ -129,8 +131,7 @@ namespace Simulation.Military {
 				return MoveOrderResult.NotBuilt;
 			}
 			if (Location == destination){
-				PathToTarget = null;
-				TargetLocation = null;
+				StopMoving();
 				Location.UpdateListeners();
 				return MoveOrderResult.AlreadyAtDestination;
 			}
@@ -164,6 +165,10 @@ namespace Simulation.Military {
 		private void NextPathLocation(){
 			PathIndex++;
 			(NextLocation, DaysToNextLocation) = CalculatePathLocation();
+			float worldSpaceDistance = Vector3.Distance(Location.WorldPosition, NextLocation.WorldPosition);
+			float offset = Mathf.Min(worldSpaceMaxOffsetProportion*worldSpaceDistance, worldSpaceMoveDirectionOffset);
+			Vector3 offsetPosition = Vector3.MoveTowards(Location.WorldPosition, NextLocation.WorldPosition, offset);
+			worldPositionsOnPath.Enqueue(offsetPosition);
 		}
 		protected abstract (Location<TUnit>, int) CalculatePathLocation();
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
