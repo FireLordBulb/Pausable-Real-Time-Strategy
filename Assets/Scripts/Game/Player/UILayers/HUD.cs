@@ -58,7 +58,7 @@ namespace Player {
 			countryName.text = Player.gameObject.name;
 			RefreshResources();
 		}
-		private void RefreshResources(){
+		public void RefreshResources(){
 			gold.text = Format.FormatLargeNumber(Player.Gold, Format.FiveDigits);
 			manpower.text = Format.FormatLargeNumber(Player.Manpower, Format.SevenDigits);
 			sailors.text = Format.FormatLargeNumber(Player.Sailors, Format.SevenDigits);

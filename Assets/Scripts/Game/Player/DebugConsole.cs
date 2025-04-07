@@ -185,6 +185,7 @@ namespace Player {
 			(bool couldParse, T value) = parser(words[1]);
 			if (couldParse){
 				addfunction(value);
+				UIStack.Instance.RefreshHUDResource();
 				UIStack.Instance.RefreshSelected();
 				AddConsoleResponse($"Added {words[1]} {words[0]} to {UIStack.Instance.PlayerCountry.Name}.");
 			} else {

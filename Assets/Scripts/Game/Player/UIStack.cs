@@ -202,6 +202,9 @@ namespace Player {
 			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
 		}
 
+		public void RefreshHUDResource(){
+			hud.RefreshResources();
+		}
 		public void RefreshSelected(){
 			if (Selected is Province){
 				RefreshWindow<ProvinceWindow>();
