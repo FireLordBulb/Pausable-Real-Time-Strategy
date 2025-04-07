@@ -121,6 +121,9 @@ namespace Simulation.Military {
 			int shortestPathLength = int.MaxValue;
 			List<ProvinceLink> shortestPath = null;
 			foreach (Land province in Owner.Provinces){
+				if (Location.Province.Land == province){
+					continue;
+				}
 				List<ProvinceLink> path = GetPathTo(province.ArmyLocation);
 				if (path == null){
 					continue;
