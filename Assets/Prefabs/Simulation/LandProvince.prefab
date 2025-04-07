@@ -8,6 +8,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2668536342427610513, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2668536342427610513, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2a6d6439136b04c4cbc82985461935b7, type: 2}
     - target: {fileID: 2720611508413707290, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
       propertyPath: m_Name
       value: LandProvince

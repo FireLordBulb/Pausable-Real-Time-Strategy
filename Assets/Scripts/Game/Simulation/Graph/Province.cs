@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Graphs;
 using UnityEngine;
@@ -26,13 +27,14 @@ namespace Simulation {
         private int manpowerProduction;
         private int sailorsProduction;
         
-        public List<int> TriPointIndices;
-        public List<Vector2> Vertices;
-        public List<(int startIndex, int endIndex, ProvinceLink link)> outlineSegments = new();
+        [NonSerialized] public List<int> TriPointIndices;
+        [NonSerialized] public List<Vector2> Vertices;
+        [NonSerialized] public List<(int startIndex, int endIndex, ProvinceLink link)> outlineSegments = new();
         
         
         public Color32 ColorKey {get; private set;}
         public MapGraph Graph {get; private set;}
+        public MeshRenderer ShapeMeshRenderer => shapeMeshRenderer;
         public Terrain Terrain {get; private set;}
         public string Name {get; private set;}
         public Vector2 MapPosition {get; private set;}
