@@ -85,10 +85,17 @@ namespace Simulation {
 				Unoccupy();
 				return;
 			}
+			if (occupier != null){
+				occupier.LoseOccupation(this);
+			}
 			occupier = country;
+			occupier.GainOccupation(this);
 			occupationMaterial.color = occupier.MapColor;
 		}
 		internal void Unoccupy(){
+			if (occupier != null){
+				occupier.LoseOccupation(this);
+			}
 			occupier = null;
 			occupationMaterial.color = Color.clear;
 		}

@@ -42,6 +42,7 @@ namespace Simulation {
 		[SerializeField] private float borderBrightnessFactor;
 		
 		private readonly HashSet<Land> provinces = new();
+		private readonly HashSet<Land> occupations = new();
 		private readonly List<Military.Regiment> regiments = new();
 		private readonly List<Military.Ship> ships = new();
 		private bool wasBorderChanged;
@@ -69,6 +70,19 @@ namespace Simulation {
 		public IEnumerable<Military.RegimentType> RegimentTypes => regimentTypes;
 		public IEnumerable<Military.ShipType> ShipTypes => shipTypes;
 		public IEnumerable<Land> Provinces => provinces;
+		public IEnumerable<Land> Occupations => occupations;
+		public IEnumerable<Land> ControlledLand {
+			get {
+				foreach (Land province in provinces){
+					if (!province.IsOccupied){
+						yield return province;
+					}
+				}
+				foreach (Land province in occupations){
+					yield return province;
+				}
+			}
+		}
 		// TODO: Assign a specific province as capital from country data.
 		public Land Capital => provinces.First();
 		public int RegimentCount => regiments.Count;
@@ -144,29 +158,31 @@ namespace Simulation {
 			IsDirty = false;
 		}
 		
-		internal bool GainProvince(Land province){
-			return ChangeProvinceCount(provinces.Add(province), +1);
+		internal void GainProvince(Land province){
+			ChangeProvinceCount(provinces.Add(province), +1);
 		}
-		internal bool LoseProvince(Land province){
-			return ChangeProvinceCount(provinces.Remove(province), -1);
+		internal void LoseProvince(Land province){
+			ChangeProvinceCount(provinces.Remove(province), -1);
 		}
-		private bool ChangeProvinceCount(bool wasChanged, int change){
+		private void ChangeProvinceCount(bool wasChanged, int change){
 			if (!wasChanged){
-				return false;
+				return;
 			}
 			ProvinceCount += change;
 			wasBorderChanged = true;
 			IsDirty = true;
-			return true;
+		}
+		internal void GainOccupation(Land province){
+			occupations.Add(province);
+		}
+		internal void LoseOccupation(Land province){
+			occupations.Remove(province);
 		}
 
 		public bool TryStartRecruitingRegiment(Military.RegimentType type, Province province){
-			if (!regimentTypes.Contains(type) || province.IsSea || province.Land.Owner != this){
+			if (!regimentTypes.Contains(type) || province.IsSea || province.Land.Controller != this){
 				return false;
 			}
-			/*if (Province.IsOccupied){ TODO: Uncomment after occupation is added.
-				return false;
-			}*/
 			Military.Regiment newRegiment = Military.Regiment.StartCreating(type, province.Land.ArmyLocation, this);
 			if (newRegiment == null){
 				return false;
@@ -187,12 +203,9 @@ namespace Simulation {
 			return regiment.MoveTo(province.Land.ArmyLocation);
 		}
 		public bool TryStartConstructingFleet(Military.ShipType type, Military.Harbor location){
-			if (!shipTypes.Contains(type) || location == null || location.Land.Owner != this){
+			if (!shipTypes.Contains(type) || location == null || location.Land.Controller != this){
 				return false;
 			}
-			/*if (location.Land.Province.IsOccupied){ TODO: Uncomment after occupation is added.
-				return false;
-			}*/
 			Military.Ship newShip = Military.Ship.StartCreating(type, location, this);
 			if (newShip == null){
 				return false;
