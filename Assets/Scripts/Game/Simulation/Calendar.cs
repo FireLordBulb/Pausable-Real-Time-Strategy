@@ -28,9 +28,9 @@ namespace Simulation {
 				speed = 1/speedTimeSteps[value];
 			}
 		}
-		public UnityEvent OnDayTick {get; private set;}
-		public UnityEvent OnMonthTick {get; private set;}
-		public UnityEvent OnYearTick {get; private set;}
+		public TickEvent OnDayTick {get; private set;}
+		public TickEvent OnMonthTick {get; private set;}
+		public TickEvent OnYearTick {get; private set;}
 		public UnityEvent<bool> OnPauseToggle {get; private set;}
 		
 		private void Awake(){
@@ -44,9 +44,9 @@ namespace Simulation {
 			tickProgress = NoProgress;
 			SpeedIndex = startingSpeed;
 
-			OnDayTick = new UnityEvent();
-			OnMonthTick = new UnityEvent();
-			OnYearTick = new UnityEvent();
+			OnDayTick = new TickEvent();
+			OnMonthTick = new TickEvent();
+			OnYearTick = new TickEvent();
 			OnPauseToggle = new UnityEvent<bool>();
 		}
 		private void Update(){
