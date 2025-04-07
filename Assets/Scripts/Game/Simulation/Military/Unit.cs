@@ -102,17 +102,20 @@ namespace Simulation.Military {
 				return;
 			}
 			Location.Remove(self);
-			NextLocation.Add(self);
 			Location = NextLocation;
 			worldPositionsOnPath.Enqueue(Location.WorldPosition);
+			Location.Add(self);
 			if (ReferenceEquals(NextLocation, TargetLocation)){
-				PathToTarget = null;
-				NextLocation = null;
-				TargetLocation = null;
-				IsRetreating = false;
+				StopMoving();
 			} else {
 				NextPathLocation();
 			}
+		}
+		internal void StopMoving(){
+			PathToTarget = null;
+			NextLocation = null;
+			TargetLocation = null;
+			IsRetreating = false;
 		}
 		
 		internal MoveOrderResult MoveTo(Location<TUnit> destination){
