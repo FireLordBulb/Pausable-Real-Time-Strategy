@@ -48,7 +48,6 @@ namespace Simulation {
 		private bool wasBorderChanged;
 		
 		public Color MapColor {get; private set;}
-		public bool IsDirty {get; private set;}
 		public int ProvinceCount {get; private set;}
 		public float Gold {get; private set;}
 		public int Manpower {get; private set;}
@@ -152,10 +151,6 @@ namespace Simulation {
 			Gold += gold;
 			Manpower += manpower;
 			Sailors += sailors;
-			IsDirty = true;
-		}
-		public void MarkClean(){
-			IsDirty = false;
 		}
 		
 		internal void GainProvince(Land province){
@@ -170,7 +165,6 @@ namespace Simulation {
 			}
 			ProvinceCount += change;
 			wasBorderChanged = true;
-			IsDirty = true;
 		}
 		internal void GainOccupation(Land province){
 			occupations.Add(province);

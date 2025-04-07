@@ -41,6 +41,7 @@ namespace Player {
 			gameObject.SetActive(true);
 			RefreshCountry();
 			SetButtonsInteractable();
+			Calendar.Instance.OnMonthTick.AddListener(RefreshResources);
 		}
 		public void RefreshCountry(){
 			if (Player == null){
@@ -75,13 +76,6 @@ namespace Player {
 		private void Update(){
 			if (sidePanelMenuGameObject == null){
 				SetButtonsInteractable();
-			}
-			if (Player == null){
-				return;
-			}
-			if (Player.IsDirty){
-				RefreshResources();
-				Player.MarkClean();
 			}
 		}
 		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
