@@ -107,20 +107,40 @@ namespace Simulation {
 			}
 			MeshData borderMeshData = new($"{gameObject.name}BorderMesh");
 			HashSet<List<Province>> borderProvinceLoops = new();
-			
-			// HashSet for unsearched provinces
-			// 10: Select random province to start in
-			// Walk out from it (ignoring already searched provinces) until a province with a neighbor that isn't part of the country is found.
-			// continue clockwise to create a list of provinces that loop until first province of the loop is reached again.
-			// jump to 10 if there are unsearched provinces left
-			
-			// Temp province assortment.
-			borderProvinceLoops.Add(new List<Province> {
-				Capital.Province,
-				Capital.Province.Links.First().Target,
-				Capital.Province.Links.First().Target.Links.First(linkTo => linkTo.Target != Capital.Province && linkTo.Target.Links.Any(linkFrom => linkFrom.Target == Capital.Province)).Target
-			});
-			
+			HashSet<Province> unsearchedProvinces = new(provinces.Select(land => land.Province));
+			while (unsearchedProvinces.Count > 0){
+				Province borderProvince = unsearchedProvinces.First();
+				unsearchedProvinces.Remove(borderProvince);
+				for (int segmentIndex = 0; segmentIndex < borderProvince.OutlineSegments.Count; segmentIndex++){
+					(int _, int _, ProvinceLink link) = borderProvince.OutlineSegments[segmentIndex];
+					if (link != null && link.Target.IsLand && link.Target.Land.Owner == this){
+						continue;
+					}
+					List<Province> provinceLoop = new(){borderProvince};
+					ProvinceLink firstLink = null;
+					while (true){
+						segmentIndex = (segmentIndex+1)%borderProvince.OutlineSegments.Count;
+						(_, _, link) = borderProvince.OutlineSegments[segmentIndex];
+						if (link == firstLink){
+							if (provinceLoop.Count > 1){
+								// Remove the last province because it's a duplicate of loopStartProvince.
+								provinceLoop.RemoveAt(provinceLoop.Count-1);
+							}
+							break;
+						}
+						firstLink ??= link;
+						if (link == null || link.Target.IsSea || link.Target.Land.Owner != this){
+							continue;
+						}
+						segmentIndex = link.Target[borderProvince.ColorKey].SegmentIndex;
+						borderProvince = link.Target;
+						unsearchedProvinces.Remove(borderProvince);
+						provinceLoop.Add(borderProvince);
+					}
+					borderProvinceLoops.Add(provinceLoop);
+					break;
+				}
+			}
 			foreach (List<Province> provinceLoop in borderProvinceLoops){
 				List<Vector2> vertexLoop;
 				if (provinceLoop.Count == 1){
