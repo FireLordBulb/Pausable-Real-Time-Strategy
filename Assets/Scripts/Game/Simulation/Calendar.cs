@@ -11,6 +11,7 @@ namespace Simulation {
 		[SerializeField] public float[] speedTimeSteps;
 		[SerializeField] public int startingSpeed;
 		[SerializeField] private Date startDate;
+		[SerializeField] private string[] callbackOrder;
 		
 		private Date currentDate;
 		private float speed;
@@ -44,9 +45,10 @@ namespace Simulation {
 			tickProgress = NoProgress;
 			SpeedIndex = startingSpeed;
 
-			OnDayTick = new TickEvent();
-			OnMonthTick = new TickEvent();
-			OnYearTick = new TickEvent();
+			CallbackSorter sorter = new(callbackOrder);
+			OnDayTick = new TickEvent(sorter);
+			OnMonthTick = new TickEvent(sorter);
+			OnYearTick = new TickEvent(sorter);
 			OnPauseToggle = new UnityEvent<bool>();
 		}
 		private void Update(){
