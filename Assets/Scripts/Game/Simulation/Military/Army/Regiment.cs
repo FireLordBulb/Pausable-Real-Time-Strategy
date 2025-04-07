@@ -120,7 +120,7 @@ namespace Simulation.Military {
 			IsRetreating = true;
 			int shortestPathLength = int.MaxValue;
 			List<ProvinceLink> shortestPath = null;
-			foreach (Land province in Owner.Provinces){
+			foreach (Land province in Owner.ControlledLand){
 				if (Location.Province.Land == province){
 					continue;
 				}
