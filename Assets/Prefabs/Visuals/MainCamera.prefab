@@ -265,7 +265,7 @@ MonoBehaviour:
   zoomChangeSeconds: 0.6
   movementSpeed: 0.75
   stoppingSeconds: 0.15
-  terrainMapModeAlpha: 0.3
+  terrainMapModeAlpha: 0.2
 --- !u!114 &4158990316465069942
 MonoBehaviour:
   m_ObjectHideFlags: 0
