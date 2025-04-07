@@ -22,7 +22,7 @@ namespace Simulation {
         
         [NonSerialized] public List<int> TriPointIndices;
         [NonSerialized] public List<Vector2> Vertices;
-        [NonSerialized] public List<(int startIndex, int endIndex, ProvinceLink link)> outlineSegments = new();
+        [NonSerialized] public readonly List<(int startIndex, int endIndex, ProvinceLink link)> OutlineSegments = new();
         
         
         public Color32 ColorKey {get; private set;}
@@ -89,27 +89,27 @@ namespace Simulation {
                 }
                 if (type == Type.Sea){
                     if (neighbor.type == Type.Sea){
-                        newLink = new SeaLink(this, neighbor, outlineSegments.Count);
+                        newLink = new SeaLink(this, neighbor, OutlineSegments.Count);
                     } else {
-                        newLink = new CoastLink(this, neighbor, outlineSegments.Count);
+                        newLink = new CoastLink(this, neighbor, OutlineSegments.Count);
                     }
                 } else {
                     if (neighbor.type == Type.Sea){
-                        newLink = new ShallowsLink(this, neighbor, outlineSegments.Count);
+                        newLink = new ShallowsLink(this, neighbor, OutlineSegments.Count);
                     } else {
-                        newLink = new LandLink(this, neighbor, outlineSegments.Count);
+                        newLink = new LandLink(this, neighbor, OutlineSegments.Count);
                     }
                 }
                 links.Add(neighbor.ColorKey, newLink);
             } else {
                 newLink = null;
             }
-            int previousTriPointIndex = outlineSegments.Count == 0 ? -1 : outlineSegments[^1].endIndex;
-            outlineSegments.Add((previousTriPointIndex, triPointIndex, newLink));
+            int previousTriPointIndex = OutlineSegments.Count == 0 ? -1 : OutlineSegments[^1].endIndex;
+            OutlineSegments.Add((previousTriPointIndex, triPointIndex, newLink));
         }
         public void CompleteSegmentLoop(){
-            (int _, int endIndex, ProvinceLink link) = outlineSegments[0];
-            outlineSegments[0] = (outlineSegments[^1].endIndex, endIndex, link);
+            (int _, int endIndex, ProvinceLink link) = OutlineSegments[0];
+            OutlineSegments[0] = (OutlineSegments[^1].endIndex, endIndex, link);
         }
         
         private void UpdateColors(){

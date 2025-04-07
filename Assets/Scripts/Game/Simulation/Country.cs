@@ -106,39 +106,54 @@ namespace Simulation {
 				return;
 			}
 			MeshData borderMeshData = new($"{gameObject.name}BorderMesh");
-			List<Vector2> borderVertices = new();
+			HashSet<List<Province>> borderProvinceLoops = new();
 			
-			// TODO: Only add the sections of vertices between outer border tri-points.
-			Province province = provinces.First().Province;
-			int startSegment = 0;
-			ProvinceLink link = null;
-			AddAllButOneSegments();
-			startSegment = (link.Target[province.ColorKey].SegmentIndex+1)%link.Target.outlineSegments.Count;
-			province = link.Target;
-			AddAllButOneSegments();
+			// HashSet for unsearched provinces
+			// 10: Select random province to start in
+			// Walk out from it (ignoring already searched provinces) until a province with a neighbor that isn't part of the country is found.
+			// continue clockwise to create a list of provinces that loop until first province of the loop is reached again.
+			// jump to 10 if there are unsearched provinces left
 			
-			// Completes incomplete loops
-			/*for (int i = borderVertices.Count-2; i > 0; i--){
-				borderVertices.Add(borderVertices[i]+Vector2.up*5);
-			}*/
+			// Temp province assortment.
+			borderProvinceLoops.Add(new List<Province> {
+				Capital.Province,
+				Capital.Province.Links.First().Target,
+				Capital.Province.Links.First().Target.Links.First(linkTo => linkTo.Target != Capital.Province && linkTo.Target.Links.Any(linkFrom => linkFrom.Target == Capital.Province)).Target
+			});
 			
-			PolygonOutline.GenerateMeshData(borderMeshData, borderVertices, borderHalfWidth, true);
+			foreach (List<Province> provinceLoop in borderProvinceLoops){
+				List<Vector2> vertexLoop;
+				if (provinceLoop.Count == 1){
+					vertexLoop = new List<Vector2>(provinceLoop[0].Vertices);
+					for (int i = 0; i < vertexLoop.Count; i++){
+						vertexLoop[i] += provinceLoop[0].MapPosition;
+					}
+					PolygonOutline.GenerateMeshData(borderMeshData, vertexLoop, borderHalfWidth, true);
+					continue;
+				}
+				vertexLoop = new List<Vector2>();
+				Province previousProvince = provinceLoop[^1];
+				Province currentProvince = provinceLoop[0];
+				for (int provinceIndex = 0; provinceIndex < provinceLoop.Count; provinceIndex++){
+					Province nextProvince = provinceLoop[(provinceIndex+1)%provinceLoop.Count];
+					int segmentIndex = (currentProvince[previousProvince.ColorKey].SegmentIndex+1)%currentProvince.OutlineSegments.Count;
+					while (true){
+						(int vertexIndex, int endIndex, ProvinceLink link) = currentProvince.OutlineSegments[segmentIndex];
+						if (link.Target == nextProvince){
+							break;
+						}
+						for (; vertexIndex != endIndex; vertexIndex = (vertexIndex+1)%currentProvince.Vertices.Count){
+							vertexLoop.Add(currentProvince.MapPosition+currentProvince.Vertices[vertexIndex]);
+						}
+						segmentIndex = (segmentIndex+1)%currentProvince.OutlineSegments.Count;
+					}
+					previousProvince = currentProvince;
+					currentProvince = nextProvince;
+				}
+				PolygonOutline.GenerateMeshData(borderMeshData, vertexLoop, borderHalfWidth, true);
+			}
 			borderMeshFilter.mesh = borderMeshData.ToMesh();
 			wasBorderChanged = false;
-
-			void AddAllButOneSegments(){
-				for (int i = 0; i < province.outlineSegments.Count; i++){
-					int index = (i+startSegment+province.outlineSegments.Count)%province.outlineSegments.Count;
-					int startIndex, endIndex;
-					(startIndex, endIndex, link) = province.outlineSegments[index];
-					if (i >= province.outlineSegments.Count-1){
-						break;
-					}
-					for (int j = startIndex; j != endIndex; j = (j+1)%province.Vertices.Count){
-						borderVertices.Add(province.MapPosition+province.Vertices[j]);
-					}
-				}
-			}
 		}
 		
 		private void Update(){
