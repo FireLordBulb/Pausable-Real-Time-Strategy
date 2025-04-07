@@ -12,10 +12,16 @@ namespace Simulation {
 			ProvinceList.Clear();
 		}
 #endif
+		[SerializeField]private int occupationMaterialIndex;
+		
 		private Country owner;
+		private Country occupier;
+		
 		private float goldProduction;
 		private int manpowerProduction;
 		private int sailorsProduction;
+
+		private Material occupationMaterial;
 		
 		public Province Province {get; private set;}
 		public Terrain Terrain {get; private set;}
@@ -39,7 +45,9 @@ namespace Simulation {
 				}
 			}
 		}
+		public Country Occupier => occupier;
 		public bool HasOwner => owner != null;
+		public bool IsOccupied => occupier != null;
 		
 		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
 			Province = GetComponent<Province>();
@@ -47,7 +55,9 @@ namespace Simulation {
 			Province.Init(colorKey, mapGraph, Province.Type.LandLocked, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh);
 			ProvinceList.Add(Province);
 			// Hides the occupation material and creates a material instance that can be modified independently in the future.
-			Province.ShapeMeshRenderer.materials[1].color = Color.clear;
+			occupationMaterial = Province.ShapeMeshRenderer.materials[occupationMaterialIndex];
+			occupationMaterial.color = Color.clear;
+			Province.ShapeMeshRenderer.sharedMaterials[occupationMaterialIndex] = occupationMaterial;
 			Terrain = Province.Terrain;
 			ArmyLocation = new Military.LandLocation(this);
 		}
@@ -65,6 +75,15 @@ namespace Simulation {
 				}               
 				Owner.GainResources(goldProduction, manpowerProduction, sailorsProduction);
 			});
+		}
+
+		internal void BecomeOccupiedBy(Country country){
+			occupier = country;
+			occupationMaterial.color = occupier.MapColor;
+		}
+		internal void Deoccupy(){
+			occupier = null;
+			occupationMaterial.color = Color.clear;
 		}
 	}
 
