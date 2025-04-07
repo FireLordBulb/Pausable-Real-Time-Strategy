@@ -3,7 +3,7 @@ using Mathematics;
 using UnityEngine;
 
 namespace ProceduralMeshes {
-	public class PolygonOutline {
+	public static class PolygonOutline {
 		private static readonly Vector2 HalfUp = new(0, 0.5f);
 		public static void GenerateMeshData(MeshData meshData, List<Vector2> vertices, float halfWidth, bool isHalfWide = false){
 			if (vertices.Count == 0){
@@ -14,14 +14,15 @@ namespace ProceduralMeshes {
 			Vector2 start = vertices[0];
 			for (int i = 1; i <= vertices.Count; i++){
 				Vector2 end = vertices[i%vertices.Count];
-
-				Vector2 beforePerpendicular = VectorGeometry.LeftPerpendicular(beforeStart, start).normalized;
-				Vector2 middlePerpendicular = VectorGeometry.LeftPerpendicular(start, end).normalized;
-			
-				Vector2 offset = (beforePerpendicular+middlePerpendicular).normalized;
-				offset *= halfWidth/Vector2.Dot(offset, beforePerpendicular);
-				AddBorderSection(meshData, isHalfWide ? start : start+offset, start-offset, isHalfWide ? HalfUp : Vector2.up);
-
+				// Skip if two adjacent vertices are identical to avoid a division by zero and it won't change visually anyway. 
+				if (beforeStart != start){
+					Vector2 beforePerpendicular = VectorGeometry.LeftPerpendicular(beforeStart, start).normalized;
+					Vector2 middlePerpendicular = VectorGeometry.LeftPerpendicular(start, end).normalized;
+				
+					Vector2 offset = (beforePerpendicular+middlePerpendicular).normalized;
+					offset *= halfWidth/Vector2.Dot(offset, beforePerpendicular);
+					AddBorderSection(meshData, isHalfWide ? start : start+offset, start-offset, isHalfWide ? HalfUp : Vector2.up);
+				}
 				beforeStart = start;
 				start = end;
 			}
