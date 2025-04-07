@@ -19,7 +19,7 @@ namespace Player {
 			if (clickedSelectable is not Province clickedProvince){
 				return null;
 			}
-			return clickedProvince.IsLand && clickedProvince.Land.Owner == UI.SelectedCountry ? null : clickedProvince.Land.Owner;
+			return clickedProvince.IsSea ? null : clickedProvince.Land.Owner == UI.SelectedCountry ? null : clickedProvince.Land.Owner;
 		}
 		public override void OnEnd(){
 			UI.Deselect();
