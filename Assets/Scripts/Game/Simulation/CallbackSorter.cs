@@ -25,15 +25,11 @@ namespace Simulation {
 			if (left.Value == right.Value){
 				return 0;
 			}
-			int leftPriority = 0, rightPriority = 0;
-			// Default int value of 0 when the dictionary doesn't have a key is desired behavior.
-			if (left.Type != null){
-				priority.TryGetValue(left.Type, out leftPriority);
+			// Types not in the priority Dictionary get lower priority than all Types in it.
+			if (left.Type == null || !priority.ContainsKey(left.Type) || right.Type == null || !priority.ContainsKey(right.Type)){
+				return 1;
 			}
-			if (right.Type != null){
-				priority.TryGetValue(right.Type, out rightPriority);
-			}
-			int result = leftPriority-rightPriority;
+			int result = priority[left.Type]-priority[right.Type];
 			return result == 0 ? 1 : result;
 		}
 	}
