@@ -54,10 +54,9 @@ namespace Simulation {
 			// All land is assumed LandLocked by default, is updated to Coast if a Link to a sea tile is added.
 			Province.Init(colorKey, mapGraph, Province.Type.LandLocked, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh);
 			ProvinceList.Add(Province);
-			// Hides the occupation material and creates a material instance that can be modified independently in the future.
-			occupationMaterial = Province.ShapeMeshRenderer.materials[occupationMaterialIndex];
+
+			occupationMaterial = Province.MeshRenderer.sharedMaterials[occupationMaterialIndex];
 			occupationMaterial.color = Color.clear;
-			Province.ShapeMeshRenderer.sharedMaterials[occupationMaterialIndex] = occupationMaterial;
 			Terrain = Province.Terrain;
 			ArmyLocation = new Military.LandLocation(this);
 		}

@@ -10,10 +10,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2668536342427610513, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2668536342427610513, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
+      propertyPath: 'm_Materials.Array.data[2]'
       value: 
       objectReference: {fileID: 2100000, guid: 2a6d6439136b04c4cbc82985461935b7, type: 2}
     - target: {fileID: 2720611508413707290, guid: 53df9604e49702d47bc795f95723d3c1, type: 3}
@@ -57,4 +57,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030d736abdbd4805a4044c57d159912c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  occupationMaterialIndex: 1
+  occupationMaterialIndex: 2

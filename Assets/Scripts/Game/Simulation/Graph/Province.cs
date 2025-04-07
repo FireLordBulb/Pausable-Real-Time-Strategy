@@ -10,8 +10,6 @@ namespace Simulation {
         [SerializeField] private MeshFilter outlineMeshFilter;
         [SerializeField] private MeshFilter shapeMeshFilter;
         [SerializeField] private MeshRenderer shapeMeshRenderer;
-        [SerializeField] private MeshFilter terrainMeshFilter;
-        [SerializeField] private MeshRenderer terrainMeshRenderer;
         
         private MeshCollider meshCollider;
         private readonly Dictionary<Color32, ProvinceLink> links = new();
@@ -29,7 +27,7 @@ namespace Simulation {
         
         public Color32 ColorKey {get; private set;}
         public MapGraph Graph {get; private set;}
-        public MeshRenderer ShapeMeshRenderer => shapeMeshRenderer;
+        public MeshRenderer MeshRenderer => shapeMeshRenderer;
         public Terrain Terrain {get; private set;}
         public string Name {get; private set;}
         public Vector2 MapPosition {get; private set;}
@@ -54,7 +52,10 @@ namespace Simulation {
         
         public IEnumerable<ProvinceLink> Links => links.Values;
         public ProvinceLink this[Color32 color] => links[color];
-        
+        private Color SolidMaterialColor {
+            set => shapeMeshRenderer.sharedMaterials[1].color = value;
+        }
+
         private void Awake(){
             meshCollider = GetComponent<MeshCollider>();
             Land = GetComponent<Land>();
@@ -71,18 +72,14 @@ namespace Simulation {
             Name = $"Rural {Terrain.Name}";
             baseColor = mapColor;
             
-            shapeMeshRenderer.material.color = baseColor;
+            shapeMeshRenderer.materials[1].color = baseColor;
+            shapeMeshRenderer.sharedMaterial = terrain.Material;
             UpdateColors();
 
             MapPosition = mapPosition;
             outlineMeshFilter.sharedMesh = outlineMesh;
             meshCollider.sharedMesh = shapeMesh;
             shapeMeshFilter.sharedMesh = shapeMesh;
-            terrainMeshFilter.sharedMesh = shapeMesh;
-            terrainMeshRenderer.sharedMaterial = terrain.Material;
-    #if UNITY_EDITOR
-            terrainMeshFilter.gameObject.hideFlags = HideFlags.HideInHierarchy;
-    #endif
         }
         public void AddNeighbor(Province neighbor, int triPointIndex){
             ProvinceLink newLink;
@@ -119,28 +116,28 @@ namespace Simulation {
             float increasedBrightness = OneThird*(baseColor.grayscale+2);
             selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
             hoverColor = 0.5f*(baseColor+Color.gray);
-            shapeMeshRenderer.sharedMaterial.color = isSelected ? selectedColor : isHovered ? hoverColor : baseColor;
+            SolidMaterialColor = isSelected ? selectedColor : isHovered ? hoverColor : baseColor;
         }
         
         public void OnHoverEnter(){
             isHovered = true;
             if (!isSelected){
-                shapeMeshRenderer.sharedMaterial.color = hoverColor;
+                SolidMaterialColor = hoverColor;
             }
         }
         public void OnHoverLeave(){
             isHovered = false;
             if (!isSelected){
-                shapeMeshRenderer.sharedMaterial.color = baseColor;
+                SolidMaterialColor = baseColor;
             }
         }
         public void OnSelect(){
             isSelected = true;
-            shapeMeshRenderer.sharedMaterial.color = selectedColor;
+            SolidMaterialColor = selectedColor;
         }
         public void OnDeselect(){
             isSelected = false;
-            shapeMeshRenderer.sharedMaterial.color = isHovered ? hoverColor : baseColor;
+            SolidMaterialColor = isHovered ? hoverColor : baseColor;
         }
         public override string ToString(){
             return Name;
