@@ -97,7 +97,7 @@ namespace Player {
 		}
 		public override bool IsDone(){
 			base.IsDone();
-			return UI.Selected != Unit;
+			return !ReferenceEquals(UI.Selected, Unit);
 		}
 		public void Close(){
 			UI.Deselect();

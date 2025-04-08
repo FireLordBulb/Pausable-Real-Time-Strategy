@@ -114,9 +114,6 @@ namespace Player {
 			}
 		}
 		
-		public override ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
-			return LayerBelow.OnSelectableClicked(clickedSelectable, isRightClick);
-		}	
 		public override void OnEnd(){
 			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
 			country.OnDeselect();

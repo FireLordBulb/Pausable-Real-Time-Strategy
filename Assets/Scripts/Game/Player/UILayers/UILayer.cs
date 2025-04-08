@@ -19,9 +19,11 @@ namespace Player {
 		protected static Country Player => UI.PlayerCountry;
 		
 		public override void OnBegin(bool isFirstTime){}
-
-		public virtual ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick) => null;
-
+		
+		public virtual ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
+			return LayerBelow.OnSelectableClicked(clickedSelectable, isRightClick);
+		}
+		
 		public override void OnEnd(){
 			if (this != null){
 				Destroy(gameObject);
