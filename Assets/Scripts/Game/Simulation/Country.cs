@@ -255,6 +255,33 @@ namespace Simulation {
 			return ship.MoveTo(location);
 		}
 
+		public void EndWar(Country opponent, PeaceTreaty treaty){
+			DiplomaticStatus diplomaticStatus = GetDiplomaticStatus(opponent);
+			if (!diplomaticStatus.IsAtWar){
+				return;
+			}
+			this.Unoccupy(opponent);
+			opponent.Unoccupy(this);
+			treaty.Apply();
+			diplomaticStatus.EndWar(treaty.TruceLength);
+			this.RetreatFrom(opponent);
+			opponent.RetreatFrom(this);
+		}
+		private void Unoccupy(Country other){
+			foreach (Land occupiedLand in occupations.ToArray()){
+				if (occupiedLand.Owner == other){
+					occupiedLand.Unoccupy();
+				}
+			}
+		}
+		private void RetreatFrom(Country other){
+			foreach (Military.Regiment regiment in regiments){
+				if (regiment.Location.Province.Land.Owner == other){
+					regiment.RetreatHome();
+				}
+			}
+		}
+		
 		internal void RemoveRegiment(Military.Regiment regiment){
 			regiments.Remove(regiment);
 		}

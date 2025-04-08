@@ -10,16 +10,18 @@ namespace Simulation {
 				IsAtWar = true;
 			}
 		}
-		public void EndWar(int truceLength){
+		internal void EndWar(int truceLength){
 			IsAtWar = false;
 			TruceDaysLeft = truceLength;
 			Calendar.Instance.OnDayTick.AddListener(TickTruce, GetType());
 		}
 		private void TickTruce(){
 			TruceDaysLeft--;
-			if (TruceDaysLeft <= 0){
-				Calendar.Instance.OnDayTick.RemoveListener(TickTruce);
+			if (0 < TruceDaysLeft){
+				return;
 			}
+			TruceDaysLeft = 0;
+			Calendar.Instance.OnDayTick.RemoveListener(TickTruce);
 		}
 	}
 }

@@ -141,7 +141,7 @@ namespace Simulation.Military {
 				StackWipe();
 			}
 		}
-		private void RetreatHome(){
+		internal void RetreatHome(){
 			// If the battle was lost while a manual retreat was in progress, continue with it.
 			if (IsMoving){
 				return;
