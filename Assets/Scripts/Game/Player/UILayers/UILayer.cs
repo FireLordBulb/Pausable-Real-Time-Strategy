@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ActionStackSystem;
 using Mathematics;
@@ -38,16 +39,16 @@ namespace Player {
 		
 		// Subclass Sandbox. |>-------------------------------------------------------------------------------------------
 		private static readonly Dictionary<GameObject, (UILink link, ISelectable selectable)> Links = new();
-		public static void SetSelectLink(TextMeshProUGUI linkText, ISelectable selectable){
+		public static void SetSelectLink(TextMeshProUGUI linkText, ISelectable selectable, Action action = null){
 			if (Links.TryGetValue(linkText.gameObject, out (UILink, ISelectable selectable) tuple) && tuple.selectable == selectable){
 				return;
 			}
 			linkText.ForceMeshUpdate();
 			RectTransform rectTransform = (RectTransform)linkText.transform;
 			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
-			SetSelectLink(rectTransform, selectable);
+			SetSelectLink(rectTransform, selectable, action);
 		}
-		public static void SetSelectLink(Component linkComponent, ISelectable selectable){
+		public static void SetSelectLink(Component linkComponent, ISelectable selectable, Action action = null){
 			if (Links.TryGetValue(linkComponent.gameObject, out (UILink link, ISelectable selectable) tuple)){
 				if (tuple.selectable == selectable){
 					return;
@@ -56,7 +57,13 @@ namespace Player {
 				DestroyImmediate(tuple.link);
 			}
 			UILink link = linkComponent.gameObject.AddComponent<UILink>();
-			link.Link(() => UI.Select(selectable));
+			link.Link(action == null ? 
+				() => UI.Select(selectable) :
+				() => {
+					UI.Select(selectable);
+					action();
+				}
+			);
 			Links.Add(linkComponent.gameObject, (link, selectable));
 		}
 		

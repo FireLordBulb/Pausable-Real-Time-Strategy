@@ -45,8 +45,8 @@ namespace Player {
 		public void Init(Country enemyCountry){
 			enemy = enemyCountry;
 			treaty = Player.NewPeaceTreaty(enemy);
-			playerPanel.SetCountry(player);
-			enemyPanel.SetCountry(enemy);
+			playerPanel.SetCountry(player, Close);
+			enemyPanel.SetCountry(enemy, Close);
 			Refresh();
 		}
 		
