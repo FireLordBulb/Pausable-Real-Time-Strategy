@@ -189,6 +189,9 @@ namespace Simulation {
 		}
 		
 		internal void GainProvince(Land province){
+			if (province.Occupier == this){
+				province.Unoccupy();
+			}
 			ChangeProvinceCount(provinces.Add(province), +1);
 		}
 		internal void LoseProvince(Land province){
