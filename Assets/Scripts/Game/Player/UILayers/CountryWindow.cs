@@ -116,6 +116,7 @@ namespace Player {
 		
 		public override void OnEnd(){
 			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
+			Calendar.Instance.OnDayTick.RemoveListener(RefreshDiplomacy);
 			country.OnDeselect();
 			base.OnEnd();
 		}

@@ -80,11 +80,26 @@ namespace Player {
 						AddConsoleResponse($"Command 'play_as' failed. No country has the name '{words[1]}'.");
 					}
 					return;
-				case "own":
+				case "peace_with":
+				case "peace":
 					if (UIStack.Instance.PlayerCountry == null){
-						AddConsoleResponse("Command 'own' failed. Must be playing as a country to own a province.");
+						AddConsoleResponse("Command 'peace_with' failed. Must be playing as a country to end a war.");
 						return;
 					}
+					if (words.Length == 1){
+						AddConsoleResponse("Incomplete command: 'peace_with' requires country name as argument.");
+						return;
+					}
+					Country opponent = Country.Get(words[1]);
+					if (opponent != null){
+						UIStack.Instance.PlayerCountry.EndWar(opponent, new PeaceTreaty());
+						AddConsoleResponse($"Ending war with {opponent.name}.");
+					} else {
+						AddConsoleResponse($"Command 'peace_with' failed. No country has the name '{words[1]}'.");
+					}
+					return;
+				case "own":
+					
 					if (UIStack.Instance.SelectedProvince == null){
 						AddConsoleResponse("Command 'own' failed. You must select a specific province to own.");
 						return;
