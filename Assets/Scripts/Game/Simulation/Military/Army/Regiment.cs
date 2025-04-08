@@ -18,6 +18,7 @@ namespace Simulation.Military {
 		public int DemoralizedManpower {get; private set;}
 		
 		private float Damage => IsMoving ? AttackPower*CurrentManpower*orderedRetreatDamageMultiplier : AttackPower*CurrentManpower;
+		public override string CreatingVerb => "Recruiting";
 		
 		internal void Init(float attackPower, float toughness, float killRate, int manpower){
 			AttackPower = attackPower;
@@ -40,7 +41,10 @@ namespace Simulation.Military {
 			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
 			return Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier));
 		}
-
+		protected override bool LinkEvaluator(ProvinceLink link){
+			return link is LandLink landLink && (IsRetreating || Owner == landLink.TargetLand.Owner || Owner.GetDiplomaticStatus(landLink.TargetLand.Owner).IsAtWar);
+		}
+		
 		private void Reinforce(){
 			if (CurrentManpower == MaxManpower){
 				return;
@@ -60,7 +64,7 @@ namespace Simulation.Military {
 			return nextProvince.Owner != Owner || nextProvince.IsOccupied;
 		}
 		
-		public override BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers){
+		internal override BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers){
 			return DoBattle(defenders, attackers, Location.Province.Land.Terrain);
 		}
 		private static BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers, Terrain terrain){
@@ -125,7 +129,7 @@ namespace Simulation.Military {
 				}
 			}
 		}
-		public override void OnBattleEnd(bool didWin){
+		internal override void OnBattleEnd(bool didWin){
 			CurrentManpower += DemoralizedManpower;
 			DemoralizedManpower = 0;
 			if (didWin){
@@ -167,15 +171,10 @@ namespace Simulation.Military {
 			}
 			SetDestination(shortestPath[^1].Target.Land.ArmyLocation);
 		}
-		public override void StackWipe(){
+		internal override void StackWipe(){
 			Owner.RemoveRegiment(this);
 			Location.Remove(this);
 			Destroy(gameObject);
 		}
-		
-		protected override bool LinkEvaluator(ProvinceLink link){
-			return link is LandLink landLink && (IsRetreating || Owner == landLink.TargetLand.Owner || Owner.GetDiplomaticStatus(landLink.TargetLand.Owner).IsAtWar);
-		}
-		public override string CreatingVerb => "Recruiting";
 	}
 }

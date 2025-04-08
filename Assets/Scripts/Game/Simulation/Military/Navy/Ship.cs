@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public class Ship : Unit<Ship> {
+		public override string CreatingVerb => "Constructing";
+		
 		protected override Location<Ship> GetLocation(ProvinceLink link){
 			return link switch {
 				CoastLink coastLink => coastLink.Harbor,
@@ -19,24 +21,22 @@ namespace Simulation.Military {
 			};
 			return (GetLocation(link), Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)));
 		}
+		protected override bool LinkEvaluator(ProvinceLink link){
+			return link is SeaLink or CoastLink or ShallowsLink;
+		}
 		
-		public override BattleResult DoBattle(List<Ship> defenders, List<Ship> attackers){
+		internal override BattleResult DoBattle(List<Ship> defenders, List<Ship> attackers){
 			return BattleResult.DefenderWon;
 		}
-		public override void OnBattleEnd(bool didWin){
+		internal override void OnBattleEnd(bool didWin){
 			if (!didWin){
 				StackWipe();
 			}
 		}
-		public override void StackWipe(){
+		internal override void StackWipe(){
 			Owner.RemoveShip(this);
 			Location.Remove(this);
 			Destroy(gameObject);
 		}
-		
-		protected override bool LinkEvaluator(ProvinceLink link){
-			return link is SeaLink or CoastLink or ShallowsLink;
-		}
-		public override string CreatingVerb => "Constructing";
 	}
 }

@@ -3,7 +3,7 @@ using Graphs;
 using UnityEngine;
 
 namespace Simulation.Military {
-	public abstract class Unit<TUnit> : MonoBehaviour where TUnit : Unit<TUnit> {
+	public abstract class Unit<TUnit> : MonoBehaviour, IUnit where TUnit : Unit<TUnit> {
 		[SerializeField] private float movementSpeed;
 		[SerializeField] private float worldSpaceSpeed;
 		[SerializeField] private float worldSpaceMoveDirectionOffset;
@@ -35,7 +35,8 @@ namespace Simulation.Military {
 		
 		public bool IsMoving => PathToTarget != null;
 		protected float MovementSpeed => movementSpeed;
-		
+		public abstract string CreatingVerb {get;}
+
 		internal static TUnit StartCreating(UnitType<TUnit> type, Location<TUnit> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
 				return null;
@@ -172,11 +173,12 @@ namespace Simulation.Military {
 		}
 		protected abstract (Location<TUnit>, int) CalculatePathLocation();
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
-
-		public void StartupBattleRandomness(){
+		protected abstract bool LinkEvaluator(ProvinceLink link);
+		
+		internal void StartupBattleRandomness(){
 			daysUntilReroll = 0;
 		}
-		public void RerollBattleRandomness(){
+		internal void RerollBattleRandomness(){
 			daysUntilReroll--;
 			if (0 < daysUntilReroll){
 				return;
@@ -184,11 +186,19 @@ namespace Simulation.Military {
 			daysUntilReroll = Random.Range(minRerollDays, maxRerollDays);
 			RandomDamageMultiplier = Random.Range(1, 1+maxDamageBoost);
 		}
-		public abstract BattleResult DoBattle(List<TUnit> defenders, List<TUnit> attackers);
-		public abstract void OnBattleEnd(bool didWin);
-		public abstract void StackWipe();
-		
-		protected abstract bool LinkEvaluator(ProvinceLink link);
-		public abstract string CreatingVerb {get;}
+		internal abstract BattleResult DoBattle(List<TUnit> defenders, List<TUnit> attackers);
+		internal abstract void OnBattleEnd(bool didWin);
+		internal abstract void StackWipe();
+	}
+
+	// Public interface of Unit for everything non-generic.
+	public interface IUnit {
+		public Country Owner {get;}
+		public int BuildDaysLeft {get;}
+		public bool IsBuilt {get;}
+		public int DaysToNextLocation {get;}
+		public bool IsRetreating {get;}
+		public bool IsMoving {get;}
+		public string CreatingVerb {get;}
 	}
 }
