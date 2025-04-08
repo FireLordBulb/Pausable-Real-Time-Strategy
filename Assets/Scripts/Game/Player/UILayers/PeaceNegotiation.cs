@@ -9,10 +9,12 @@ namespace Player {
 		[SerializeField] private Button sendOffer;
 		
 		private readonly PeaceTreaty treaty = new();
+		private Country player;
 		private Country enemy;
 		private bool isDone;
 		
 		private void Awake(){
+			player = Player;
 			sendOffer.onClick.AddListener(() => {
 				Player.EndWar(enemy, treaty);
 				isDone = true;
@@ -23,7 +25,7 @@ namespace Player {
 		}
 		public void Init(Country enemyCountry){
 			enemy = enemyCountry;
-			playerPanel.SetCountry(Player);
+			playerPanel.SetCountry(player);
 			enemyPanel.SetCountry(enemy);
 			Refresh();
 		}
@@ -37,7 +39,7 @@ namespace Player {
 			base.OnEnd();
 		}
 		public override bool IsDone(){
-			return isDone || Player == null;
+			return isDone || Player != player || UI.SelectedCountry != enemy;
 		}
 		public void Close(){
 			isDone = true;
