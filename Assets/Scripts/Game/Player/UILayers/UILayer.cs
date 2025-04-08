@@ -24,6 +24,9 @@ namespace Player {
 		public virtual ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
 			return LayerBelow.OnSelectableClicked(clickedSelectable, isRightClick);
 		}
+		public virtual void OnDrag(bool isRightClick){
+			UI.Deselect();
+		}
 		
 		public override void OnEnd(){
 			if (this != null){

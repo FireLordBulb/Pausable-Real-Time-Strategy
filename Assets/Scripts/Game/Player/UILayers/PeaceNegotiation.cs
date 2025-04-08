@@ -79,6 +79,9 @@ namespace Player {
 			}
 			return UI.Selected;
 		}
+		public override void OnDrag(bool isRightClick){
+			// Do nothing when dragging with this panel open.
+		}
 		
 		private void SetWinner(bool isPlayer){
 			treaty.IsWhitePeace = false;

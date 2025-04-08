@@ -120,8 +120,7 @@ namespace Player {
 			if (mouseDownSelectable == hoveredSelectable){
 				Select(CurrentAction.OnSelectableClicked(mouseDownSelectable, isRightClick));
 			} else {
-				// Dragging a left click always results in a deselect, no layer-specific logic for this.
-				Deselect();
+				CurrentAction.OnDrag(isRightClick);
 			}
 			mouseDownSelectable = null;
 		}
