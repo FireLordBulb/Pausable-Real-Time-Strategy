@@ -7,6 +7,9 @@ namespace Player {
 	public class PeaceNegotiation : UILayer, IRefreshable, IClosableWindow {
 		[SerializeField] private CountryPanel playerPanel;
 		[SerializeField] private CountryPanel enemyPanel;
+		[SerializeField] private Button makeDemands;
+		[SerializeField] private Button whitePeace;
+		[SerializeField] private Button giveConcessions;
 		[SerializeField] private Button sendOffer;
 		
 		private PeaceTreaty treaty;
@@ -17,6 +20,19 @@ namespace Player {
 		private void Awake(){
 			player = Player;
 			UI.Selected.OnDeselect();
+			makeDemands.onClick.AddListener(() => {
+				SetWinner(true);
+			});
+			whitePeace.onClick.AddListener(() => {
+				treaty.IsWhitePeace = true;
+				SetSelectedButton(whitePeace);
+				foreach (Land land in treaty.AnnexedLands){
+					land.Province.OnDeselect();
+				}
+			});
+			giveConcessions.onClick.AddListener(() => {
+				SetWinner(false);
+			});
 			sendOffer.onClick.AddListener(() => {
 				Player.EndWar(enemy, treaty);
 				isDone = true;
@@ -25,11 +41,10 @@ namespace Player {
 			});
 			Calendar.Instance.OnMonthTick.AddListener(Refresh);
 		}
+		
 		public void Init(Country enemyCountry){
 			enemy = enemyCountry;
 			treaty = Player.NewPeaceTreaty(enemy);
-			// Default to treaties where the player won, since hopefully that happens more often than losing.
-			treaty.DidTreatyInitiatorWin = true;
 			playerPanel.SetCountry(player);
 			enemyPanel.SetCountry(enemy);
 			Refresh();
@@ -42,7 +57,17 @@ namespace Player {
 				return UI.Selected;
 			}
 			Land land = clickedProvince.Land;
-			if (land.Owner != player && land.Owner != enemy){
+			
+			if (treaty.IsWhitePeace){
+				bool isEnemyLand = land.Owner == enemy;
+				if (!isEnemyLand && land.Owner != player){
+					return UI.Selected;
+				}
+				treaty.AnnexedLands.Add(land);
+				SetWinner(isEnemyLand);
+				return UI.Selected;
+			}
+			if (land.Owner != treaty.Loser){
 				return UI.Selected;
 			}
 			if (treaty.AnnexedLands.Contains(land)){
@@ -54,6 +79,26 @@ namespace Player {
 			}
 			return UI.Selected;
 		}
+		
+		private void SetWinner(bool isPlayer){
+			treaty.IsWhitePeace = false;
+			treaty.DidTreatyInitiatorWin = isPlayer;
+			SetSelectedButton(isPlayer ? makeDemands : giveConcessions);
+			foreach (Land land in treaty.AnnexedLands){
+				if (land.Owner == treaty.Loser){
+					land.Province.OnSelect();
+				} else {
+					land.Province.OnDeselect();
+				}
+			}
+		}
+		private void SetSelectedButton(Button button){
+			makeDemands.interactable = true;
+			whitePeace.interactable = true;
+			giveConcessions.interactable = true;
+			button.interactable = false;
+		}
+		
 		public override void OnEnd(){
 			foreach (Land land in treaty.AnnexedLands){
 				land.Province.OnDeselect();
