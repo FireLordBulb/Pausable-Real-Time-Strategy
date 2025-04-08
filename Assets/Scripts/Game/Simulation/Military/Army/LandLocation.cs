@@ -33,17 +33,18 @@ namespace Simulation.Military {
 			if (SiegeIsOngoing){
 				if (Units.All(regiment => regiment.Owner == Land.Controller)){
 					EndSiege();
-				} else if (Units.All(regiment => regiment.Owner != Sieger || regiment.IsMoving)){
-					SiegeIsPausedBecauseMovement = true;
+				} else if (Units.Any(regiment => regiment.Owner == Sieger)){
+					SiegeIsPausedBecauseMovement = Units.All(regiment => regiment.IsMoving || regiment.Owner != Sieger);
 				} else {
 					SiegeIsPausedBecauseMovement = false;
 					foreach (Regiment regiment in Units){
-						if (Sieger == regiment.Owner || regiment.IsMoving){
+						if (regiment.IsMoving){
 							continue;
 						}
 						Sieger = regiment.Owner;
-						break;
+						return;
 					}
+					EndSiege();
 				}
 			} else {
 				foreach (Regiment regiment in Units){
