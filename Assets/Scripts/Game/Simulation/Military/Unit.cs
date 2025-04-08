@@ -34,6 +34,7 @@ namespace Simulation.Military {
 		public bool IsRetreating {get; protected set;}
 		
 		public bool IsMoving => PathToTarget != null;
+		public Province Province => Location.Province;
 		protected float MovementSpeed => movementSpeed;
 		public abstract string CreatingVerb {get;}
 
@@ -202,6 +203,7 @@ namespace Simulation.Military {
 		public int DaysToNextLocation {get;}
 		public bool IsRetreating {get;}
 		public bool IsMoving {get;}
+		public Province Province {get;}
 		public string CreatingVerb {get;}
 	}
 }

@@ -71,8 +71,8 @@ namespace Player {
 				case Province province:
 					MoveTo(province);
 					return Unit;
-				case TUnit clickedUnit when Unit != clickedUnit:
-					MoveTo(clickedUnit.Location.Province);
+				case IUnit clickedUnit when !ReferenceEquals(Unit, clickedUnit):
+					MoveTo(clickedUnit.Province);
 					return Unit;
 				default:
 					return null;
