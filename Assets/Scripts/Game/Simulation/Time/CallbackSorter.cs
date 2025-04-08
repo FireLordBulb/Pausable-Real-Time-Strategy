@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Simulation {
-	internal class CallbackSorter : IComparer<TypedCallback> {
+	internal class CallbackSorter : IComparer<Action> {
 		private readonly Dictionary<Type, int> priority = new();
 		
 		public CallbackSorter(string[] orderedTypes){
@@ -18,23 +18,25 @@ namespace Simulation {
 			}
 		}
 		
-		// Compares the priority int of the Types of the TypedCallbacks.
-		// Doesn't return zero if it's the same type (with same priority), since 0 is equality and
-		// equality is only when the callback actions are exactly the same.
-		public int Compare(TypedCallback left, TypedCallback right){
-			if (left.Value == right.Value){
+		public int Compare(Action left, Action right){
+			if (left == null){
+				return right == null ? 0 : 1;
+			}
+			if (right == null){
+				return -1;
+			}
+			if (left.Target == right.Target && left.Method == right.Method){
 				return 0;
 			}
 			// Types not in the priority Dictionary get lower priority than all Types in it.
-			if (left.Type == null || !priority.ContainsKey(left.Type) || right.Type == null || !priority.ContainsKey(right.Type)){
+			if (ContainsKey(left) || ContainsKey(right)){
 				return 1;
 			}
-			int result = priority[left.Type]-priority[right.Type];
+			int result = GetPriority(left)-GetPriority(right);
+			// Equal priority does not count as equality so result isn't allowed to be 0.
 			return result == 0 ? 1 : result;
 		}
-	}
-	internal struct TypedCallback {
-		public Type Type;
-		public Action Value;
+		private bool ContainsKey(Action action) => action.Target == null || !priority.ContainsKey(action.Target.GetType());
+		private int GetPriority(Action action) => priority[action.Target.GetType()];
 	}
 }
