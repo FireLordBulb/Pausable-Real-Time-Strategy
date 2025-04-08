@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Simulation {
 	public class PeaceTreaty {
-		public readonly List<Land> AnnexedLands = new();
+		public readonly HashSet<Land> AnnexedLands = new();
 		public float GoldTransfer;
 		public bool DidTreatyInitiatorWin;
 
@@ -26,6 +26,7 @@ namespace Simulation {
 		internal PeaceTreaty(Country initiatingCountry, Country receivingCountry, TruceData truceLengthData){
 			initiator = initiatingCountry;
 			recipient = receivingCountry;
+			truceData = truceLengthData;
 		}
 		
 		internal void Apply(){
