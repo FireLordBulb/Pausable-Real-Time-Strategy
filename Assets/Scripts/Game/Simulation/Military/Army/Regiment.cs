@@ -27,7 +27,7 @@ namespace Simulation.Military {
 			CurrentManpower = MaxManpower = manpower;
 			DemoralizedManpower = 0;
 			maxMonthlyReinforcement = (int)(MaxManpower*monthlyReinforcementRate);
-			Calendar.Instance.OnMonthTick.AddListener(Reinforce, GetType());
+			Calendar.Instance.OnMonthTick.AddListener(Reinforce);
 		}
 		
 		protected override Location<Regiment> GetLocation(ProvinceLink link){

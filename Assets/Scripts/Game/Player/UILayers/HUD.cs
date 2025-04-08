@@ -41,7 +41,7 @@ namespace Player {
 			gameObject.SetActive(true);
 			RefreshCountry();
 			SetButtonsInteractable();
-			Calendar.Instance.OnMonthTick.AddListener(RefreshResources, GetType());
+			Calendar.Instance.OnMonthTick.AddListener(RefreshResources);
 		}
 		public void RefreshCountry(){
 			if (Player == null){

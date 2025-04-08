@@ -29,7 +29,7 @@ namespace Player {
 			SetupDiplomacy();
 			SetupSelectButton();
 			Refresh();
-			Calendar.Instance.OnMonthTick.AddListener(Refresh, GetType());
+			Calendar.Instance.OnMonthTick.AddListener(Refresh);
 			select.onClick.AddListener(() => {
 				UI.PlayAs(country);
 				UI.Deselect();
@@ -108,7 +108,7 @@ namespace Player {
 			}
 			isRefreshingDiplomacyDaily = doRefresh;
 			if (isRefreshingDiplomacyDaily){
-				Calendar.Instance.OnDayTick.AddListener(RefreshDiplomacy, GetType());
+				Calendar.Instance.OnDayTick.AddListener(RefreshDiplomacy);
 			} else {
 				Calendar.Instance.OnDayTick.RemoveListener(RefreshDiplomacy);
 			}

@@ -13,7 +13,7 @@ namespace Simulation {
 		internal void EndWar(int truceLength){
 			IsAtWar = false;
 			TruceDaysLeft = truceLength;
-			Calendar.Instance.OnDayTick.AddListener(TickTruce, GetType());
+			Calendar.Instance.OnDayTick.AddListener(TickTruce);
 		}
 		private void TickTruce(){
 			TruceDaysLeft--;

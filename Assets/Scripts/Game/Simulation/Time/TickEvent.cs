@@ -10,7 +10,7 @@ namespace Simulation {
 			callbacks = new SortedSet<Action>(sorter);
 		}
 		
-		public void AddListener(Action callback, Type callerType){
+		public void AddListener(Action callback){
 			callbackChangeBuffer.Enqueue((callback, true));
 		}
 		public void RemoveListener(Action callback){

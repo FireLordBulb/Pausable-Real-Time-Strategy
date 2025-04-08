@@ -64,7 +64,7 @@ namespace Simulation.Military {
 				return unit;
 			}
 			unit.BuildDaysLeft = type.DaysToBuild;
-			Calendar.Instance.OnDayTick.AddListener(unit.TickBuild, unit.GetType());
+			Calendar.Instance.OnDayTick.AddListener(unit.TickBuild);
 			return unit;
 		}
 		private void Awake(){
@@ -94,7 +94,7 @@ namespace Simulation.Military {
 		private void FinishBuilding(){
 			IsBuilt = true;
 			Calendar.Instance.OnDayTick.RemoveListener(TickBuild);
-			Calendar.Instance.OnDayTick.AddListener(OnDayTick, GetType());
+			Calendar.Instance.OnDayTick.AddListener(OnDayTick);
 		}
 		private void OnDayTick(){
 			if (!IsMoving){

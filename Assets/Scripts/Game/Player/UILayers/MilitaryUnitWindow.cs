@@ -23,7 +23,7 @@ namespace Player {
 			countryPanel.SetCountry(Unit.Owner);
 			Refresh();
 			message.text = "";
-			Calendar.Instance.OnDayTick.AddListener(Refresh, GetType());
+			Calendar.Instance.OnDayTick.AddListener(Refresh);
 		}
 		public void Refresh(){
 			if (Unit.IsBuilt && Unit.IsMoving){
