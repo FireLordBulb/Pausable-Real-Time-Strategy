@@ -188,7 +188,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: f195e0b8c4c2bea49b17c4c1ec5faa2f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -410,6 +410,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5329449309241042523}
   - component: {fileID: 4774899881842561818}
+  - component: {fileID: 1517114082226002071}
   m_Layer: 0
   m_Name: Regiment
   m_TagString: Untagged
@@ -456,6 +457,21 @@ MonoBehaviour:
   monthlyReinforcementRate: 0.2
   orderedRetreatDamageMultiplier: 0.5
   stackWipeThreshold: 0.35
+--- !u!114 &1517114082226002071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6372061799994669380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f38a95b0aef4ce3bf164306f11ed246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderers:
+  - {fileID: 147349929639401619}
+  - {fileID: 4721911538617885388}
 --- !u!1 &7690448489740098931
 GameObject:
   m_ObjectHideFlags: 0
@@ -523,7 +539,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: f195e0b8c4c2bea49b17c4c1ec5faa2f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
