@@ -131,12 +131,12 @@ namespace Player {
 		}
 		
 		public override void OnEnd(){
+			if (peaceNegociation != null){
+				peaceNegociation.OnEnd();
+			}
+			country.OnDeselect();
 			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
 			Calendar.Instance.OnDayTick.RemoveListener(RefreshDiplomacy);
-			country.OnDeselect();
-			if (peaceNegociation != null){
-				Destroy(peaceNegociation.gameObject);
-			}
 			base.OnEnd();
 		}
 		public override bool IsDone(){
