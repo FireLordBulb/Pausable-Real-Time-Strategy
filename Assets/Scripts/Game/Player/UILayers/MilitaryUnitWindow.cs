@@ -63,7 +63,7 @@ namespace Player {
 			float x = textMesh.textInfo.characterInfo[textMesh.textInfo.lineInfo[0].lastCharacterIndex].xAdvance;
 			((RectTransform)link.transform).anchoredPosition = new Vector2(x, 0);
 		}
-		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
+		public override ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
 			if (!isRightClick){
 				return LayerBelow.OnSelectableClicked(clickedSelectable, false);
 			}

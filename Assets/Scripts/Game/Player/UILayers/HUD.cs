@@ -78,7 +78,7 @@ namespace Player {
 				SetButtonsInteractable();
 			}
 		}
-		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
+		public override ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
 			if (clickedSelectable is not Province clickedProvince){
 				return clickedSelectable == UI.Selected ? null : clickedSelectable;
 			}

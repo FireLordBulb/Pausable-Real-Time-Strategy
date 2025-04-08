@@ -20,7 +20,7 @@ namespace Player {
 		
 		public override void OnBegin(bool isFirstTime){}
 
-		public virtual Component OnSelectableClicked(Component clickedSelectable, bool isRightClick) => null;
+		public virtual ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick) => null;
 
 		public override void OnEnd(){
 			if (this != null){
@@ -35,9 +35,9 @@ namespace Player {
 		}
 		
 		// Subclass Sandbox. |>-------------------------------------------------------------------------------------------
-		private static readonly Dictionary<GameObject, (UILink link, Component selectable)> Links = new();
-		public static void SetSelectLink(TextMeshProUGUI linkText, Component selectable){
-			if (Links.TryGetValue(linkText.gameObject, out (UILink, Component selectable) tuple) && tuple.selectable == selectable){
+		private static readonly Dictionary<GameObject, (UILink link, ISelectable selectable)> Links = new();
+		public static void SetSelectLink(TextMeshProUGUI linkText, ISelectable selectable){
+			if (Links.TryGetValue(linkText.gameObject, out (UILink, ISelectable selectable) tuple) && tuple.selectable == selectable){
 				return;
 			}
 			linkText.ForceMeshUpdate();
@@ -45,8 +45,8 @@ namespace Player {
 			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
 			SetSelectLink(rectTransform, selectable);
 		}
-		public static void SetSelectLink(Component linkComponent, Component selectable){
-			if (Links.TryGetValue(linkComponent.gameObject, out (UILink link, Component selectable) tuple)){
+		public static void SetSelectLink(Component linkComponent, ISelectable selectable){
+			if (Links.TryGetValue(linkComponent.gameObject, out (UILink link, ISelectable selectable) tuple)){
 				if (tuple.selectable == selectable){
 					return;
 				}

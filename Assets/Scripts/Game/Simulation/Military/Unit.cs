@@ -189,10 +189,13 @@ namespace Simulation.Military {
 		internal abstract BattleResult DoBattle(List<TUnit> defenders, List<TUnit> attackers);
 		internal abstract void OnBattleEnd(bool didWin);
 		internal abstract void StackWipe();
+		
+		public void OnSelect(){}
+		public void OnDeselect(){}
 	}
 
 	// Public interface of Unit for everything non-generic.
-	public interface IUnit {
+	public interface IUnit : ISelectable {
 		public Country Owner {get;}
 		public int BuildDaysLeft {get;}
 		public bool IsBuilt {get;}

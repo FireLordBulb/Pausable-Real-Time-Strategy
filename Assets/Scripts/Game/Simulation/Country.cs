@@ -5,7 +5,7 @@ using ProceduralMeshes;
 using UnityEngine;
 
 namespace Simulation {
-	public class Country : MonoBehaviour {
+	public class Country : MonoBehaviour, ISelectable {
 		private static Transform militaryUnitParent;
 		private static readonly Dictionary<string, Country> Countries = new();
 		private static readonly Dictionary<(Country, Country), DiplomaticStatus> DiplomaticStatuses = new();

@@ -123,7 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f5c2a605a54eb98ee0ed9adc81601b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regiment: {fileID: 4774899881842561818}
+  selectable: {fileID: 4774899881842561818}
 --- !u!1 &1798770803516523528
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f5c2a605a54eb98ee0ed9adc81601b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regiment: {fileID: 4774899881842561818}
+  selectable: {fileID: 4774899881842561818}
 --- !u!1 &6372061799994669380
 GameObject:
   m_ObjectHideFlags: 0
@@ -595,4 +595,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f5c2a605a54eb98ee0ed9adc81601b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  regiment: {fileID: 4774899881842561818}
+  selectable: {fileID: 4774899881842561818}

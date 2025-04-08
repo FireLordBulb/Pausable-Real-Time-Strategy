@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Simulation {
     [RequireComponent(typeof(MeshCollider))]
-    public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province> {
+    public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province>, ISelectable {
         private const float OneThird = 1/3f;
         [SerializeField] private MeshFilter outlineMeshFilter;
         [SerializeField] private MeshFilter shapeMeshFilter;
@@ -139,6 +139,7 @@ namespace Simulation {
             isSelected = false;
             SolidMaterialColor = isHovered ? hoverColor : baseColor;
         }
+        
         public override string ToString(){
             return Name;
         }

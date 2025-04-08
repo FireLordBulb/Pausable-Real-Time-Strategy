@@ -64,7 +64,7 @@ namespace Player {
 			selectedButton.Message.text = unitType.CanBeBuiltBy(Player) ? $"<color=green>Can be {unitType.CreatedVerb}</color>" : "<color=red>Cannot afford!</color>";
 		}
 
-		public override Component OnSelectableClicked(Component clickedSelectable, bool isRightClick){
+		public override ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
 			if (isRightClick || clickedSelectable is not Province clickedProvince){
 				DeselectButton();
 				return LayerBelow.OnSelectableClicked(clickedSelectable, true);

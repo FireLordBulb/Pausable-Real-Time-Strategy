@@ -26,16 +26,16 @@ namespace Player {
 		
 		private Input.UIActions input;
 		private UILayer layerToPush;
-		private readonly LinkedList<Component> selectedHistory = new();
+		private readonly LinkedList<ISelectable> selectedHistory = new();
 		private int selectHistoryCount;
-		private Component hoveredSelectable;
-		private Component mouseDownSelectable;
+		private ISelectable hoveredSelectable;
+		private ISelectable mouseDownSelectable;
 		private bool isSelectClickRight;
 		
 		public bool CanSwitchCountry {get; internal set;}
 		public Country PlayerCountry {get; private set;}
 		public bool HasPlayerCountryChanged {get; private set;}
-		public Component Selected {get; private set;}
+		public ISelectable Selected {get; private set;}
 		public Vector3 MouseWorldPosition {get; private set;}
 		
 		public CalendarPanel CalendarPanel => hud.CalendarPanel;
@@ -105,7 +105,7 @@ namespace Player {
 
 		private void OnClick(InputAction.CallbackContext context, bool isRightClick){
 			bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
-			if (!hoveredSelectable){
+			if (hoveredSelectable == null){
 				return;
 			}
 			if (isMouseDown){
@@ -157,15 +157,13 @@ namespace Player {
 			MouseWorldPosition = hit.point;
 			if (!hit.collider.TryGetComponent(out Province province)){
 				EndHover();
-				// TODO: hovering UI elements.
-				if (hit.collider.TryGetComponent(out RegimentClickCollider regimentCollider)){
-					hoveredSelectable = regimentCollider.Regiment;
-				} else if (hit.collider.TryGetComponent(out ShipClickCollider shipCollider)){
-					hoveredSelectable = shipCollider.Ship;
+				// TODO: hovering world-space UI elements.
+				if (hit.collider.TryGetComponent(out SelectableClickCollider clickCollider)){
+					hoveredSelectable = clickCollider.Selectable;
 				}
 				return;
 			}
-			if (province == hoveredSelectable){
+			if (ReferenceEquals(province, hoveredSelectable)){
 				return;
 			}
 			EndHover();
@@ -180,7 +178,7 @@ namespace Player {
 			return Physics.Raycast(CameraMovement.Instance.Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, mapClickMask);
 		}
 		private void EndHover(){
-			if (!hoveredSelectable){
+			if (hoveredSelectable == null){
 				return;
 			}
 			if (hoveredSelectable is Province province){
@@ -223,11 +221,11 @@ namespace Player {
 			}
 		}
 		
-		public void Select(Component component){
-			SelectWithoutHistoryUpdate(component);
+		public void Select(ISelectable selectable){
+			SelectWithoutHistoryUpdate(selectable);
 			UpdateSelectedHistory();
 		}
-		private void SelectWithoutHistoryUpdate(Component selectable){
+		private void SelectWithoutHistoryUpdate(ISelectable selectable){
 			if (Selected == selectable){
 				return;
 			}
@@ -243,8 +241,8 @@ namespace Player {
 				DelayedPush(shipWindow);
 			}
 		}
-		public void Deselect(Component component){
-			if (Selected == component){
+		public void Deselect(ISelectable selectable){
+			if (Selected == selectable){
 				Deselect();
 			}
 		}
