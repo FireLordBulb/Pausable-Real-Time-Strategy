@@ -471,6 +471,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 872910451852370726, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1309348688120853919}
+    - targetCorrespondingSourceObject: {fileID: 872910451852370726, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 476149405554108628}
     - targetCorrespondingSourceObject: {fileID: 6427707773595274755, guid: b347544f6d11edc4ab795ae96f132ac2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7183848029387535202}
@@ -579,4 +582,17 @@ MonoBehaviour:
   infoBox: {fileID: 1223604158326292072}
   cost: {fileID: 8305389366604325200}
   message: {fileID: 7359554313732216528}
+--- !u!114 &476149405554108628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9043152979881727077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4d082b849ed406cb1dfb7daa3d54890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 7183848029387535202}
   activeTint: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
