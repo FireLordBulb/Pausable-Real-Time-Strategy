@@ -20,7 +20,7 @@ namespace InterfaceSerialization
 			this.requiredType = type;
 		}
 	}
-	
+#if UNITY_EDITOR
 	/// <summary>
 	/// Drawer for the RequireInterface attribute.
 	/// </summary>
@@ -69,4 +69,5 @@ namespace InterfaceSerialization
 			}
 		}
 	}
+#endif
 }
