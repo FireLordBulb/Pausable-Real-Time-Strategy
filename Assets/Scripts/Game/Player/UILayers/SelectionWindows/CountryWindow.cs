@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace Player {
 	public class CountryWindow : UILayer, IRefreshable, IClosableWindow {
+		[SerializeField] private PeaceNegotiation peaceNegociationPrefab;
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image flag;
 		[SerializeField] private ValueTable valueTable;
@@ -13,10 +14,12 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI statusLabel;
 		[SerializeField] private TextMeshProUGUI statusDescription;
 		[SerializeField] private Button declareWar;
+		[SerializeField] private Button makePeace;
 		[SerializeField] private Button select;
 		
 		private Country country;
 		private DiplomaticStatus diplomaticStatus;
+		private PeaceNegotiation peaceNegociation;
 		
 		private void Awake(){
 			country = UI.SelectedCountry;
@@ -62,6 +65,15 @@ namespace Player {
 					diplomaticStatus.DeclareWar();
 					RefreshDiplomacy();
 				});
+				makePeace.onClick.AddListener(() => {
+					if (peaceNegociation == null){
+						UI.Push(peaceNegociationPrefab);
+						peaceNegociation = (PeaceNegotiation)UI.GetTopLayer();
+						peaceNegociation.Init(country);
+					} else {
+						peaceNegociation.Close();
+					}
+				});
 			} else {
 				diplomaticStatus = null;
 				declareWar.onClick.RemoveAllListeners();
@@ -82,22 +94,26 @@ namespace Player {
 				statusLabel.text = "This is your country";
 				statusDescription.text = "";
 				declareWar.gameObject.SetActive(false);
+				makePeace.gameObject.SetActive(false);
 				SetDailyDiplomacyRefresh(false);
+				return;
+			}
+			statusLabel.text = $"Diplomatic status:";
+			if (diplomaticStatus.IsAtWar){
+				statusDescription.text = "At WAR";
+				SetDailyDiplomacyRefresh(false);
+				declareWar.gameObject.SetActive(false);
+				makePeace.gameObject.SetActive(true);
 			} else {
-				statusLabel.text = $"Diplomatic status:";
-				if (diplomaticStatus.IsAtWar){
-					statusDescription.text = "At WAR";
+				if (diplomaticStatus.TruceDaysLeft == 0){
+					statusDescription.text = "At Peace (no truce)";
 					SetDailyDiplomacyRefresh(false);
 				} else {
-					if (diplomaticStatus.TruceDaysLeft == 0){
-						statusDescription.text = "At Peace (no truce)";
-						SetDailyDiplomacyRefresh(false);
-					} else {
-						statusDescription.text = $"At Peace, truce for {diplomaticStatus.TruceDaysLeft} more days";
-						SetDailyDiplomacyRefresh(true);
-					}
+					statusDescription.text = $"At Peace, truce for {diplomaticStatus.TruceDaysLeft} more days";
+					SetDailyDiplomacyRefresh(true);
 				}
 				declareWar.gameObject.SetActive(true);
+				makePeace.gameObject.SetActive(false);
 				declareWar.interactable = diplomaticStatus.CanDeclareWar();
 			}
 		}
@@ -118,6 +134,9 @@ namespace Player {
 			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
 			Calendar.Instance.OnDayTick.RemoveListener(RefreshDiplomacy);
 			country.OnDeselect();
+			if (peaceNegociation != null){
+				Destroy(peaceNegociation.gameObject);
+			}
 			base.OnEnd();
 		}
 		public override bool IsDone(){
