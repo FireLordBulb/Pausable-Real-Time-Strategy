@@ -8,7 +8,7 @@ namespace Player {
 		[SerializeField] private CountryPanel enemyPanel;
 		[SerializeField] private Button sendOffer;
 		
-		private readonly PeaceTreaty treaty = new();
+		private PeaceTreaty treaty;
 		private Country player;
 		private Country enemy;
 		private bool isDone;
@@ -25,6 +25,7 @@ namespace Player {
 		}
 		public void Init(Country enemyCountry){
 			enemy = enemyCountry;
+			treaty = Player.NewPeaceTreaty(enemy);
 			playerPanel.SetCountry(player);
 			enemyPanel.SetCountry(enemy);
 			Refresh();

@@ -92,7 +92,7 @@ namespace Player {
 					}
 					Country opponent = Country.Get(words[1]);
 					if (opponent != null){
-						UIStack.Instance.PlayerCountry.EndWar(opponent, new PeaceTreaty());
+						UIStack.Instance.PlayerCountry.EndWar(opponent, UIStack.Instance.PlayerCountry.NewPeaceTreaty(opponent));
 						AddConsoleResponse($"Ending war with {opponent.name}.");
 					} else {
 						AddConsoleResponse($"Command 'peace_with' failed. No country has the name '{words[1]}'.");

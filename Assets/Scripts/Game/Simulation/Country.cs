@@ -36,6 +36,7 @@ namespace Simulation {
 		
 		[SerializeField] private Military.RegimentType[] regimentTypes;
 		[SerializeField] private Military.ShipType[] shipTypes;
+		[SerializeField] private TruceData truceData;
 		[SerializeField] private MeshFilter borderMeshFilter;
 		[SerializeField] private MeshRenderer borderMeshRenderer;
 		[SerializeField] private float borderHalfWidth;
@@ -291,6 +292,9 @@ namespace Simulation {
 		
 		public DiplomaticStatus GetDiplomaticStatus(Country other){
 			return GetDiplomaticStatus(this, other);
+		}
+		public PeaceTreaty NewPeaceTreaty(Country recipient){
+			return new PeaceTreaty(this, recipient, truceData);
 		}
 		
 		public void OnSelect(){
