@@ -37,6 +37,8 @@ namespace Player {
 		public bool HasPlayerCountryChanged {get; private set;}
 		public ISelectable Selected {get; private set;}
 		public Vector3 MouseWorldPosition {get; private set;}
+		public bool IsShiftHeld {get; private set;}
+		public bool IsControlHeld {get; private set;}
 		
 		public CalendarPanel CalendarPanel => hud.CalendarPanel;
 		public Province SelectedProvince => Selected as Province;
@@ -53,6 +55,18 @@ namespace Player {
 			input.Enable();
 			input.Click.performed      += context => OnClick(context, false);
 			input.RightClick.performed += context => OnClick(context, true );
+			input.Shift.performed += _ => {
+				IsShiftHeld = true;
+			};
+			input.Shift.canceled += _ => {
+				IsShiftHeld = false;
+			};
+			input.Control.performed += _ => {
+				IsControlHeld = true;
+			};
+			input.Control.canceled += _ => {
+				IsControlHeld = false;
+			};
 			input.Back.canceled += _ => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 				if (DebugConsole.IsKeyboardBusy()){
