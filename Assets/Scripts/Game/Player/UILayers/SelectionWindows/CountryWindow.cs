@@ -56,6 +56,9 @@ namespace Player {
 				Format.FormatLargeNumber(country.Sailors, Format.SevenDigits)
 			);
 			RefreshDiplomacy();
+			if (peaceNegociation != null){
+				peaceNegociation.Refresh();
+			}
 		}
 
 		private void SetupDiplomacy(){

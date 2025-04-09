@@ -99,7 +99,6 @@ namespace Player {
 					}
 					return;
 				case "own":
-					
 					if (UIStack.Instance.SelectedProvince == null){
 						AddConsoleResponse("Command 'own' failed. You must select a specific province to own.");
 						return;
@@ -109,7 +108,7 @@ namespace Player {
 						return;
 					}
 					UIStack.Instance.SelectedProvince.Land.Owner = UIStack.Instance.PlayerCountry;
-					UIStack.Instance.RefreshSelected();
+					UIStack.Instance.Refresh();
 					AddConsoleResponse($"{UIStack.Instance.PlayerCountry.Name} now own the province {UIStack.Instance.SelectedProvince}.");
 					return;
 				case "rich":
@@ -200,8 +199,7 @@ namespace Player {
 			(bool couldParse, T value) = parser(words[1]);
 			if (couldParse){
 				addfunction(value);
-				UIStack.Instance.RefreshHUDResource();
-				UIStack.Instance.RefreshSelected();
+				UIStack.Instance.Refresh();
 				AddConsoleResponse($"Added {words[1]} {words[0]} to {UIStack.Instance.PlayerCountry.Name}.");
 			} else {
 				AddConsoleResponse($"Command '{words[0]}' failed. Couldn't parse {words[1]} to {typeName}.");
@@ -249,7 +247,7 @@ namespace Player {
 			} while (Calendar.Instance.CurrentDate < date);
 			UIStack.Instance.CalendarPanel.EnableUpdate();
 			UIStack.Instance.CalendarPanel.UpdateDate();
-			UIStack.Instance.RefreshSelected();
+			UIStack.Instance.Refresh();
 			AddConsoleResponse($"Successfully changed the date to {date}.");
 		}
 		private void CreateMilitaryUnit(string command, string[] words, Func<Province, (string, bool)> tryStartCreating, string setenceSegment, string creatingVerb){
@@ -273,7 +271,7 @@ namespace Player {
 				}
 			}
 			(string typeName, bool didStartBuilding) = tryStartCreating(province);
-			UIStack.Instance.RefreshSelected();
+			UIStack.Instance.Refresh();
 			AddConsoleResponse(didStartBuilding ? $"Started {creatingVerb} {typeName}." : $"Failed to start {creatingVerb} {typeName}.");
 		}
 		private void AddConsoleResponse(string response){

@@ -71,10 +71,10 @@ namespace Player {
 			}
 			if (selectedRegimentType != null){
 				Player.TryStartRecruitingRegiment(selectedRegimentType, clickedProvince);
-				Refresh();
+				UI.Refresh();
 			} else if (selectedShipType != null){
 				Player.TryStartConstructingFleet(selectedShipType, GetHarbor(clickedProvince));
-				Refresh();
+				UI.Refresh();
 			} else {
 				return clickedProvince;
 			}

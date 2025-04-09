@@ -190,7 +190,7 @@ namespace Player {
 			PlayerCountry = country;
 			HasPlayerCountryChanged = true;
 			hud.RefreshCountry();
-			RefreshSelected();
+			Refresh();
 			HasPlayerCountryChanged = false;
 			if (country == null){
 				return;
@@ -198,11 +198,9 @@ namespace Player {
 			CameraMovement cameraMovement = CameraMovement.Instance;
 			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
 		}
-
-		public void RefreshHUDResource(){
+		
+		public void Refresh(){
 			hud.RefreshResources();
-		}
-		public void RefreshSelected(){
 			if (Selected is Province){
 				RefreshWindow<ProvinceWindow>();
 			} else if (Selected is Country){
