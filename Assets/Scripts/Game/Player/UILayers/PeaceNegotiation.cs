@@ -133,6 +133,7 @@ namespace Player {
 			UpdateTreatyTerms();
 		}
 		private void UpdateGoldTransfer(){
+			availableGold.text = $"/{Format.FormatLargeNumber(treaty.Loser.Gold, Format.FiveDigits)}<color=yellow>G</color>";
 			if (treaty.GoldTransfer <= 0){
 				treaty.GoldTransfer = 0;
 				payLess.interactable = false;
@@ -159,8 +160,7 @@ namespace Player {
 				reparationsRow.SetActive(false);
 				return;
 			}
-			StringBuilder builder = new();
-			builder.Append($"- {treaty.Loser} concedes defeat");
+			StringBuilder builder = new($"- {treaty.Loser} concedes defeat");
 			int annexedProvinceCount = treaty.AnnexedLands.Count(land => land.Owner == treaty.Loser);
 			if (0 < annexedProvinceCount){
 				builder.Append($"\n- {treaty.Winner} annexes {annexedProvinceCount} province{(annexedProvinceCount == 1 ? "" : 's')} from {treaty.Loser}");
