@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using AI;
 using Simulation;
 using Simulation.Military;
 using TMPro;
@@ -85,11 +86,10 @@ namespace Player {
 				return;
 			}
 			Calendar.Instance.OnDayTick.RemoveListener(AwaitAnswer);
-			// Random value as placeholder. TODO: Ask AI class to evaluate pendingTreaty.
-			int value = Random.Range(-200, +200);
-			if (value < 0){
+			int responseValue = AIController.EvaluatePeaceOffer(pendingTreaty); 
+			if (responseValue < 0){
 				sendButtonText.text = "Offer Peace";
-				acceptValue.text = Format.Signed(value);
+				acceptValue.text = Format.Signed(responseValue);
 				acceptDescription.text = "Peace Offer Rejected";
 				acceptDescription.color = acceptValue.color = Color.red;
 				daysUntilSendingUnblocked = rejectedSendBlockDays;
@@ -206,9 +206,7 @@ namespace Player {
 			button.interactable = false;
 		}
 		private void RefreshTreatyTerms(){
-			// Random value as placeholder. TODO: Ask AI class to evaluate treaty
-			int value = Random.Range(-200, +200);
-			RefreshAcceptance(value);
+			RefreshAcceptance();
 			if (treaty.IsWhitePeace){
 				SetTreatyTermsText("- White Peace");
 				reparationsRow.SetActive(false);
@@ -232,13 +230,14 @@ namespace Player {
 			}
 			treatyTerms.text = text;
 		}
-		private void RefreshAcceptance(int value){
+		private void RefreshAcceptance(){
 			// Don't updated the acceptance value when sending is blocked, keep the value that resulted in rejection visible until sending is available again.
 			if (daysUntilSendingUnblocked > 0 || daysUntilResponse > 0){
 				return;
 			}
-			acceptValue.text = Format.Signed(value);
-			if (value < 0){
+			int acceptanceValue = AIController.EvaluatePeaceOffer(treaty);
+			acceptValue.text = Format.Signed(acceptanceValue);
+			if (acceptanceValue < 0){
 				acceptDescription.text = "Would Reject Treaty";
 				acceptDescription.color = acceptValue.color = Color.red;
 			} else {
