@@ -25,6 +25,7 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI sendButtonText;
 		[SerializeField] private TextMeshProUGUI acceptDescription;
 		[SerializeField] private TextMeshProUGUI acceptValue;
+		[SerializeField] private TextMeshProUGUI sendingBlocked;
 		[Space]
 		[Header("Transfer Change Amounts")]
 		[SerializeField] private float baseChange;
@@ -35,10 +36,12 @@ namespace Player {
 		[SerializeField] private int rejectedSendBlockDays;
 		
 		private PeaceTreaty treaty;
+		private PeaceTreaty pendingTreaty;
 		private Country player;
 		private Country enemy;
 		private float otherCountryGoldTransfer;
 		private int daysUntilResponse;
+		private int daysUntilSendingUnblocked;
 		private bool isDone;
 		
 		private float ChangeAmount => baseChange*(UI.IsShiftHeld ? shiftMultiplier : 1)*(UI.IsControlHeld ? ctrlMultiplier : 1);
@@ -69,8 +72,10 @@ namespace Player {
 			});
 			
 			sendOffer.onClick.AddListener(() => {
+				sendOffer.interactable = false;
 				sendButtonText.text = "Awaiting Answer...";
 				daysUntilResponse = responseDays;
+				pendingTreaty = treaty.Copy();
 				Calendar.Instance.OnDayTick.AddListener(AwaitAnswer);
 			});
 		}
@@ -80,17 +85,37 @@ namespace Player {
 				return;
 			}
 			Calendar.Instance.OnDayTick.RemoveListener(AwaitAnswer);
-			// Random value as placeholder. TODO: Ask AI class to evaluate.
+			// Random value as placeholder. TODO: Ask AI class to evaluate pendingTreaty.
 			int value = Random.Range(-200, +200);
 			if (value < 0){
 				sendButtonText.text = "Offer Peace";
-				RefreshAcceptance(value);
+				acceptValue.text = Format.Signed(value);
+				acceptDescription.text = "Peace Offer Rejected";
+				acceptDescription.color = acceptValue.color = Color.red;
+				daysUntilSendingUnblocked = rejectedSendBlockDays;
+				RefreshTreatyTerms();
+				RefreshSendingBlockedText();
+				Calendar.Instance.OnDayTick.AddListener(BlockedCountdown);
 				return;
 			}
-			Player.EndWar(enemy, treaty);
+			Player.EndWar(enemy, pendingTreaty);
 			isDone = true;
 			UI.Deselect();
 			LayerBelow.OnEnd();
+		}
+		private void BlockedCountdown(){
+			daysUntilSendingUnblocked--;
+			if (daysUntilSendingUnblocked > 0){
+				RefreshSendingBlockedText();
+				return;
+			}
+			Calendar.Instance.OnDayTick.RemoveListener(BlockedCountdown);
+			sendOffer.interactable = true;
+			sendingBlocked.text = "";
+			RefreshTreatyTerms();
+		}
+		private void RefreshSendingBlockedText(){
+			sendingBlocked.text = $"May send another peace offer in {daysUntilSendingUnblocked} days";
 		}
 		
 		public void Init(Country enemyCountry){
@@ -181,11 +206,11 @@ namespace Player {
 			button.interactable = false;
 		}
 		private void RefreshTreatyTerms(){
-			// Random value as placeholder. TODO: Ask AI class to evaluate.
+			// Random value as placeholder. TODO: Ask AI class to evaluate treaty
 			int value = Random.Range(-200, +200);
 			RefreshAcceptance(value);
 			if (treaty.IsWhitePeace){
-				treatyTerms.text = "- White Peace";
+				SetTreatyTermsText("- White Peace");
 				reparationsRow.SetActive(false);
 				return;
 			}
@@ -197,10 +222,21 @@ namespace Player {
 			if (0 < treaty.GoldTransfer){
 				builder.Append($"\n- {treaty.Loser} pays {Format.FormatLargeNumber(treaty.GoldTransfer, Format.FiveDigits)} gold in reparations to {treaty.Winner}");
 			}
-			treatyTerms.text = builder.ToString();
+			SetTreatyTermsText(builder.ToString());
 			reparationsRow.SetActive(true);
 		}
+		private void SetTreatyTermsText(string text){
+			// Don't alter the text of the treaty if a response is pending.
+			if (daysUntilResponse > 0){
+				return;
+			}
+			treatyTerms.text = text;
+		}
 		private void RefreshAcceptance(int value){
+			// Don't updated the acceptance value when sending is blocked, keep the value that resulted in rejection visible until sending is available again.
+			if (daysUntilSendingUnblocked > 0 || daysUntilResponse > 0){
+				return;
+			}
 			acceptValue.text = Format.Signed(value);
 			if (value < 0){
 				acceptDescription.text = "Would Reject Treaty";
@@ -213,6 +249,7 @@ namespace Player {
 		
 		public override void OnEnd(){
 			Calendar.Instance.OnDayTick.RemoveListener(AwaitAnswer);
+			Calendar.Instance.OnDayTick.RemoveListener(BlockedCountdown);
 			foreach (Land land in treaty.AnnexedLands){
 				land.Province.OnDeselect();
 			}
