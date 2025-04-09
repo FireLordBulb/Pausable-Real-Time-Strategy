@@ -26,6 +26,18 @@ namespace Simulation {
 				return Mathf.Max((int)sum, truceData.MinTruceLength);
 			}
 		}
+
+		public PeaceTreaty Copy(){
+			PeaceTreaty treaty = new(initiator, recipient, truceData){
+				IsWhitePeace = IsWhitePeace
+			};
+			if (!treaty.IsWhitePeace){
+				treaty.GoldTransfer = GoldTransfer;
+				treaty.DidTreatyInitiatorWin = DidTreatyInitiatorWin;
+				treaty.AnnexedLands.UnionWith(AnnexedLands);
+			}
+			return treaty;
+		}
 		
 		internal PeaceTreaty(Country initiatingCountry, Country receivingCountry, TruceData truceLengthData){
 			initiator = initiatingCountry;
