@@ -69,6 +69,8 @@ namespace Simulation {
 		}
 		public IEnumerable<Military.RegimentType> RegimentTypes => regimentTypes;
 		public IEnumerable<Military.ShipType> ShipTypes => shipTypes;
+		public IEnumerable<Military.Regiment> Regiments => regiments;
+		public IEnumerable<Military.Ship> Ships => ships;
 		public IEnumerable<Land> Provinces => provinces;
 		public IEnumerable<Land> Occupations => occupations;
 		public IEnumerable<Land> ControlledLand {
