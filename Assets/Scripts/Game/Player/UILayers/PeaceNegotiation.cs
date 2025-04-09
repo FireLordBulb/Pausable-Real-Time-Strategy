@@ -30,19 +30,20 @@ namespace Player {
 		[SerializeField] private float baseChange;
 		[SerializeField] private float shiftMultiplier;
 		[SerializeField] private float ctrlMultiplier;
+		[Header("Offer Peace Times")]
+		[SerializeField] private int responseDays;
+		[SerializeField] private int rejectedSendBlockDays;
 		
 		private PeaceTreaty treaty;
 		private Country player;
 		private Country enemy;
 		private float otherCountryGoldTransfer;
+		private int daysUntilResponse;
 		private bool isDone;
-
+		
 		private float ChangeAmount => baseChange*(UI.IsShiftHeld ? shiftMultiplier : 1)*(UI.IsControlHeld ? ctrlMultiplier : 1);
 		
 		private void Awake(){
-			player = Player;
-			UI.Selected.OnDeselect();
-			
 			makeDemands.onClick.AddListener(() => {
 				SetWinner(true);
 			});
@@ -52,7 +53,7 @@ namespace Player {
 				foreach (Land land in treaty.AnnexedLands){
 					land.Province.OnDeselect();
 				}
-				UpdateTreatyTerms();
+				RefreshTreatyTerms();
 			});
 			giveConcessions.onClick.AddListener(() => {
 				SetWinner(false);
@@ -68,25 +69,40 @@ namespace Player {
 			});
 			
 			sendOffer.onClick.AddListener(() => {
-				Player.EndWar(enemy, treaty);
-				isDone = true;
-				UI.Deselect();
-				LayerBelow.OnEnd();
+				sendButtonText.text = "Awaiting Answer...";
+				daysUntilResponse = responseDays;
+				Calendar.Instance.OnDayTick.AddListener(AwaitAnswer);
 			});
+		}
+		private void AwaitAnswer(){
+			daysUntilResponse--;
+			if (daysUntilResponse > 0){
+				return;
+			}
+			Calendar.Instance.OnDayTick.RemoveListener(AwaitAnswer);
+			// Random value as placeholder. TODO: Ask AI class to evaluate.
+			int value = Random.Range(-200, +200);
+			if (value < 0){
+				sendButtonText.text = "Offer Peace";
+				RefreshAcceptance(value);
+				return;
+			}
+			Player.EndWar(enemy, treaty);
+			isDone = true;
+			UI.Deselect();
+			LayerBelow.OnEnd();
 		}
 		
 		public void Init(Country enemyCountry){
+			player = Player;
 			enemy = enemyCountry;
 			treaty = Player.NewPeaceTreaty(enemy);
 			playerPanel.SetCountry(player, Close);
 			enemyPanel.SetCountry(enemy, Close);
 			Refresh();
+			UI.Selected.OnDeselect();
 		}
-
-		public void Refresh(){
-			UpdateGoldTransfer();
-			UpdateTreatyTerms();
-		}
+		
 		public override ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
 			Province clickedProvince = clickedSelectable as Province ?? (clickedSelectable as IUnit)?.Province;
 			if (clickedProvince == null || clickedProvince.IsSea){
@@ -113,19 +129,18 @@ namespace Player {
 				treaty.AnnexedLands.Add(land);
 				land.Province.OnSelect();
 			}
-			UpdateTreatyTerms();
+			RefreshTreatyTerms();
 			return UI.Selected;
 		}
 		public override void OnDrag(bool isRightClick){
 			// Do nothing when dragging with this panel open.
 		}
-		
 		private void SetWinner(bool isPlayer){
 			treaty.IsWhitePeace = false;
 			if (treaty.DidTreatyInitiatorWin != isPlayer){
 				treaty.DidTreatyInitiatorWin = isPlayer;
 				(treaty.GoldTransfer, otherCountryGoldTransfer) = (otherCountryGoldTransfer, treaty.GoldTransfer);
-				UpdateGoldTransfer();
+				RefreshGoldTransfer();
 			}
 			SetSelectedButton(isPlayer ? makeDemands : giveConcessions);
 			foreach (Land land in treaty.AnnexedLands){
@@ -136,9 +151,14 @@ namespace Player {
 				}
 			}
 			reparationsRow.SetActive(true);
-			UpdateTreatyTerms();
+			RefreshTreatyTerms();
 		}
-		private void UpdateGoldTransfer(){
+		
+		public void Refresh(){
+			RefreshGoldTransfer();
+			RefreshTreatyTerms();
+		}
+		private void RefreshGoldTransfer(){
 			availableGold.text = $"/{Format.FormatLargeNumber(treaty.Loser.Gold, Format.FiveDigits)}<color=yellow>G</color>";
 			if (treaty.GoldTransfer <= 0){
 				treaty.GoldTransfer = 0;
@@ -160,7 +180,10 @@ namespace Player {
 			giveConcessions.interactable = true;
 			button.interactable = false;
 		}
-		private void UpdateTreatyTerms(){
+		private void RefreshTreatyTerms(){
+			// Random value as placeholder. TODO: Ask AI class to evaluate.
+			int value = Random.Range(-200, +200);
+			RefreshAcceptance(value);
 			if (treaty.IsWhitePeace){
 				treatyTerms.text = "- White Peace";
 				reparationsRow.SetActive(false);
@@ -177,8 +200,19 @@ namespace Player {
 			treatyTerms.text = builder.ToString();
 			reparationsRow.SetActive(true);
 		}
+		private void RefreshAcceptance(int value){
+			acceptValue.text = Format.Signed(value);
+			if (value < 0){
+				acceptDescription.text = "Would Reject Treaty";
+				acceptDescription.color = acceptValue.color = Color.red;
+			} else {
+				acceptDescription.text = "Would Accept Treaty";
+				acceptDescription.color = acceptValue.color = Color.green;
+			}
+		}
 		
 		public override void OnEnd(){
+			Calendar.Instance.OnDayTick.RemoveListener(AwaitAnswer);
 			foreach (Land land in treaty.AnnexedLands){
 				land.Province.OnDeselect();
 			}

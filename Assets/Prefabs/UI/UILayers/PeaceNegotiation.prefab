@@ -1199,6 +1199,8 @@ MonoBehaviour:
   baseChange: 10
   shiftMultiplier: 5
   ctrlMultiplier: 10
+  responseDays: 7
+  rejectedSendBlockDays: 30
 --- !u!223 &8791179991314321868
 Canvas:
   m_ObjectHideFlags: 0
