@@ -30,7 +30,7 @@ namespace Simulation {
 			}
 			// Types not in the priority Dictionary get lower priority than all Types in it.
 			if (ContainsKey(left) || ContainsKey(right)){
-				return 1;
+				return -1;
 			}
 			int result = GetPriority(left)-GetPriority(right);
 			// Equal priority does not count as equality so result isn't allowed to be 0.
