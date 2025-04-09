@@ -28,8 +28,11 @@ namespace Player {
 		}
 		
 		public static string SignedPercent(float value){
+			return $"{Signed(Mathf.RoundToInt(value*Cent))}%";
+		}
+		public static string Signed(int value){
 			char sign = value < 0 ? '-' : '+';
-			return $"{sign}{Mathf.RoundToInt(Mathf.Abs(value)*Cent)}%";
+			return $"{sign}{Mathf.Abs(value)}";
 		}
 	}
 }
