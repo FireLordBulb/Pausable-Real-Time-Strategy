@@ -307,6 +307,10 @@ namespace Simulation {
 				land.Province.OnDeselect();
 			}
 		}
+		
+		public override string ToString(){
+			return Name;
+		}
 	}
 
 	[Serializable]

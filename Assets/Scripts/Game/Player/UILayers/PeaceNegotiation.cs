@@ -1,5 +1,8 @@
+using System.Linq;
+using System.Text;
 using Simulation;
 using Simulation.Military;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,6 +13,7 @@ namespace Player {
 		[SerializeField] private Button makeDemands;
 		[SerializeField] private Button whitePeace;
 		[SerializeField] private Button giveConcessions;
+		[SerializeField] private TextMeshProUGUI treatyTerms;
 		[SerializeField] private Button sendOffer;
 		
 		private PeaceTreaty treaty;
@@ -29,6 +33,7 @@ namespace Player {
 				foreach (Land land in treaty.AnnexedLands){
 					land.Province.OnDeselect();
 				}
+				treatyTerms.text = "- White Peace";
 			});
 			giveConcessions.onClick.AddListener(() => {
 				SetWinner(false);
@@ -77,6 +82,7 @@ namespace Player {
 				treaty.AnnexedLands.Add(land);
 				land.Province.OnSelect();
 			}
+			UpdateTreatyTerms();
 			return UI.Selected;
 		}
 		public override void OnDrag(bool isRightClick){
@@ -94,12 +100,25 @@ namespace Player {
 					land.Province.OnDeselect();
 				}
 			}
+			UpdateTreatyTerms();
 		}
 		private void SetSelectedButton(Button button){
 			makeDemands.interactable = true;
 			whitePeace.interactable = true;
 			giveConcessions.interactable = true;
 			button.interactable = false;
+		}
+		private void UpdateTreatyTerms(){
+			StringBuilder builder = new();
+			builder.Append($"- {treaty.Loser} concedes defeat");
+			int annexedProvinceCount = treaty.AnnexedLands.Count(land => land.Owner == treaty.Loser);
+			if (0 < annexedProvinceCount){
+				builder.Append($"\n- {treaty.Winner} annexes {annexedProvinceCount} province{(annexedProvinceCount == 1 ? "" : 's')} from {treaty.Loser}");
+			}
+			if (0 < treaty.GoldTransfer){
+				builder.Append($"\n- {treaty.Loser} pays {treaty.GoldTransfer} gold in reparations to {treaty.Winner}");
+			}
+			treatyTerms.text = builder.ToString();
 		}
 		
 		public override void OnEnd(){

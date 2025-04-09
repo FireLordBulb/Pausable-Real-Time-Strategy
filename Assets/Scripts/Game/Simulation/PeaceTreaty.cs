@@ -13,6 +13,7 @@ namespace Simulation {
 		private readonly TruceData truceData;
 		
 		public Country Loser => DidTreatyInitiatorWin ? recipient : initiator;
+		public Country Winner => DidTreatyInitiatorWin ? initiator : recipient;
 		
 		public int TruceLength {
 			get {
