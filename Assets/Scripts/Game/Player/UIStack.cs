@@ -102,7 +102,10 @@ namespace Player {
 			Push(hud);
 			Push(countrySelection);
 		}
-
+		private void Start(){
+			Calendar.Instance.OnMonthTick.AddListener(Refresh);
+		}
+		
 		private void OnClick(InputAction.CallbackContext context, bool isRightClick){
 			bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
 			if (hoveredSelectable == null){

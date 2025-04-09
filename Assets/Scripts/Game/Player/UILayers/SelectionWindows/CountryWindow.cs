@@ -32,7 +32,6 @@ namespace Player {
 			SetupDiplomacy();
 			SetupSelectButton();
 			Refresh();
-			Calendar.Instance.OnMonthTick.AddListener(Refresh);
 			select.onClick.AddListener(() => {
 				UI.PlayAs(country);
 				UI.Deselect();
@@ -138,7 +137,6 @@ namespace Player {
 				peaceNegociation.OnEnd();
 			}
 			country.OnDeselect();
-			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
 			Calendar.Instance.OnDayTick.RemoveListener(RefreshDiplomacy);
 			base.OnEnd();
 		}

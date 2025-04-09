@@ -41,7 +41,6 @@ namespace Player {
 			gameObject.SetActive(true);
 			RefreshCountry();
 			SetButtonsInteractable();
-			Calendar.Instance.OnMonthTick.AddListener(RefreshResources);
 		}
 		public void RefreshCountry(){
 			if (Player == null){
@@ -59,6 +58,9 @@ namespace Player {
 			RefreshResources();
 		}
 		public void RefreshResources(){
+			if (Player == null){
+				return;
+			}
 			gold.text = Format.FormatLargeNumber(Player.Gold, Format.FiveDigits);
 			manpower.text = Format.FormatLargeNumber(Player.Manpower, Format.SevenDigits);
 			sailors.text = Format.FormatLargeNumber(Player.Sailors, Format.SevenDigits);

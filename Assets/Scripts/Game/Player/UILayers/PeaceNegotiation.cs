@@ -65,8 +65,6 @@ namespace Player {
 				UI.Deselect();
 				LayerBelow.OnEnd();
 			});
-
-			Calendar.Instance.OnMonthTick.AddListener(Refresh);
 		}
 		
 		public void Init(Country enemyCountry){
@@ -177,7 +175,6 @@ namespace Player {
 				land.Province.OnDeselect();
 			}
 			UI.Selected?.OnSelect();
-			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
 			base.OnEnd();
 		}
 		public override bool IsDone(){

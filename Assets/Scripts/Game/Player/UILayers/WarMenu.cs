@@ -13,9 +13,6 @@ namespace Player {
 		private RegimentType selectedRegimentType;
 		private ShipType selectedShipType;
 		
-		private void Awake(){
-			Calendar.Instance.OnMonthTick.AddListener(Refresh);
-		}
 		public override void OnBegin(bool isFirstTime){
 			if (!isFirstTime){
 				return;
@@ -91,7 +88,6 @@ namespace Player {
 		}
 		
 		public override void OnEnd(){
-			Calendar.Instance.OnMonthTick.RemoveListener(Refresh);
 			base.OnEnd();
 		}
 		public override bool IsDone(){
