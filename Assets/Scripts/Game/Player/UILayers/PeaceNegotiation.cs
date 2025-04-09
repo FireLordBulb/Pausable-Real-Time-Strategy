@@ -14,6 +14,11 @@ namespace Player {
 		[SerializeField] private Button whitePeace;
 		[SerializeField] private Button giveConcessions;
 		[SerializeField] private TextMeshProUGUI treatyTerms;
+		[SerializeField] private GameObject reparationsRow;
+		[SerializeField] private TextMeshProUGUI goldTransfer;
+		[SerializeField] private TextMeshProUGUI availableGold;
+		[SerializeField] private Button payLess;
+		[SerializeField] private Button payMore;
 		[SerializeField] private Button sendOffer;
 		
 		private PeaceTreaty treaty;

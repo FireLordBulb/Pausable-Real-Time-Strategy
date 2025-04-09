@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 777438699694792025}
   - component: {fileID: 8923406309369299206}
   m_Layer: 0
-  m_Name: AvailableMoney
+  m_Name: AvailableGold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: /69420
+  m_text: /69420<color=yellow>G</color>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -611,7 +611,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 999000G
+  m_text: 999000<color=yellow>G</color>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -875,6 +875,11 @@ MonoBehaviour:
   whitePeace: {fileID: 243031296762548006}
   giveConcessions: {fileID: 1086586266832730892}
   treatyTerms: {fileID: 3732560358670834046}
+  reparationsRow: {fileID: 7145701254843412373}
+  goldTransfer: {fileID: 2498479112276148309}
+  availableGold: {fileID: 8923406309369299206}
+  payLess: {fileID: 1090654598941244527}
+  payMore: {fileID: 7928878882657891007}
   sendOffer: {fileID: 2160446813731652184}
 --- !u!223 &8791179991314321868
 Canvas:
