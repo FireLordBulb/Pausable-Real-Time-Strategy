@@ -69,3 +69,4 @@ MonoBehaviour:
   - Player.CountryWindow, Player
   - Player.RegimentWindow, Player
   - Player.ShipWindow, Player
+  - Player.PeaceNegotiation, Player
