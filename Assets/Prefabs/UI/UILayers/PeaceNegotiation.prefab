@@ -747,8 +747,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '(hold shift/ctrl/both when clicking <b>+</b>/<b>-</b> to change by a larger
-    amount)
+  m_text: '(hold shift/ctrl/both when clicking <b>+</b>/<b>-</b> to change by larger
+    amounts)
 
 '
   m_isRightToLeft: 0

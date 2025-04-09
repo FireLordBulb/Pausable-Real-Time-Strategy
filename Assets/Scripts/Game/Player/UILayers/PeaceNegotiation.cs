@@ -30,6 +30,8 @@ namespace Player {
 		private Country enemy;
 		private float otherCountryGoldTransfer;
 		private bool isDone;
+
+		private float ChangeAmount => baseChange*(UI.IsShiftHeld ? shiftMultiplier : 1)*(UI.IsControlHeld ? ctrlMultiplier : 1);
 		
 		private void Awake(){
 			player = Player;
@@ -51,11 +53,11 @@ namespace Player {
 			});
 			
 			payLess.onClick.AddListener(() => {
-				treaty.GoldTransfer -= baseChange;
+				treaty.GoldTransfer -= ChangeAmount;
 				Refresh();
 			});
 			payMore.onClick.AddListener(() => {
-				treaty.GoldTransfer += baseChange;
+				treaty.GoldTransfer += ChangeAmount;
 				Refresh();
 			});
 			
