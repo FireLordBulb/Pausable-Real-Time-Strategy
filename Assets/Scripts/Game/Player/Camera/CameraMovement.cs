@@ -30,6 +30,7 @@ namespace Player {
         private float currentAlpha;
 
         public Camera Camera {get; private set;}
+        public MapGraph Map {private get; set;}
         
         public int MaxZoom => zoomLevels.Length-1;
         private bool IsMouseLocked => isDragging || previousZoom != targetZoom;
@@ -167,7 +168,7 @@ namespace Player {
             if (Mathf.Abs(currentAlpha-previousAlpha) < Vector2.kEpsilon){
                 return;
             }
-            foreach (Province province in Land.AllProvinces){
+            foreach (Province province in Map.LandProvinces){
                 province.Alpha = currentAlpha;
             }
         }

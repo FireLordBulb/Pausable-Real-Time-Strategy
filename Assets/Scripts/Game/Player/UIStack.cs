@@ -13,6 +13,7 @@ namespace Player {
 		public static UIStack Instance {get; private set;}
 		#region SerializedFields
 		[Header("Scene Init Prefabs")]
+		[SerializeField] private MapGraph map;
 		[SerializeField] private CameraInput cameraInput;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 		[SerializeField] private DebugConsole debugConsole;
@@ -48,6 +49,7 @@ namespace Player {
 		public bool IsControlHeld {get; private set;}
 		#endregion
 		#region Getter Properties
+		public MapGraph Map => map;
 		public CalendarPanel CalendarPanel => hud.CalendarPanel;
 		public Province SelectedProvince => Selected as Province;
 		public Country SelectedCountry => Selected as Country;
@@ -66,7 +68,11 @@ namespace Player {
 			SpawnUI();
 		}
 		private void InitScene(){
+			map = Instantiate(map);
+			map.gameObject.name = "Map";
 			cameraInput = Instantiate(cameraInput);
+			cameraInput.gameObject.name = "MainCamera";
+			cameraInput.Movement.Map = map;
 		}
 		private void EnableInput(){
 			input = new Input().UI;

@@ -15,7 +15,7 @@ namespace Player {
 		public override void OnBegin(bool isFirstTime){
 #if UNITY_EDITOR
 			if (doAutoSelect){
-				UI.PlayAs(isObserver ? null : Country.Get(autoSelectedCountryName));
+				UI.PlayAs(isObserver ? null : UI.Map.GetCountry(autoSelectedCountryName));
 				isDone = true;
 			}
 #endif

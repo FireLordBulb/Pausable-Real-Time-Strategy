@@ -69,7 +69,7 @@ namespace Player {
 						AddConsoleResponse("Incomplete command: 'play_as' requires country name as argument.");
 						return;
 					}
-					Country country = Country.Get(words[1]);
+					Country country = UIStack.Instance.Map.GetCountry(words[1]);
 					if (country != null){
 						UIStack.Instance.PlayAs(country);
 						AddConsoleResponse($"Switching to {country.name}.");
@@ -87,7 +87,7 @@ namespace Player {
 						AddConsoleResponse("Incomplete command: 'peace_with' requires country name as argument.");
 						return;
 					}
-					Country opponent = Country.Get(words[1]);
+					Country opponent = UIStack.Instance.Map.GetCountry(words[1]);
 					if (opponent != null){
 						UIStack.Instance.PlayerCountry.EndWar(opponent, UIStack.Instance.PlayerCountry.NewPeaceTreaty(opponent));
 						AddConsoleResponse($"Ending war with {opponent.name}.");

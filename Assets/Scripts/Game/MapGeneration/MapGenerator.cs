@@ -42,10 +42,6 @@ namespace MapGeneration {
         private Vector3 provinceScale;
         
         private void Awake(){
-#if UNITY_EDITOR // Clearing static collections to avoid having to reload domain.
-            Land.ClearProvinceList();
-            Country.ClearCountryDictionary();
-#endif
             mapGraph = GetComponent<MapGraph>();
             mapPixels = mapImage.GetPixels32();
             
@@ -184,7 +180,6 @@ namespace MapGeneration {
                 }
                 province.transform.localScale = provinceScale;
                 provinceNeighbors.Add((province, (provinceGenerator.Neighbors, provinceGenerator.TriPointIndices)));
-                mapGraph.Add(province);
 
                 province.TriPointIndices = provinceGenerator.TriPointIndices;
                 province.Vertices = provinceGenerator.Vertices;

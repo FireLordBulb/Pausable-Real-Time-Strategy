@@ -6,34 +6,6 @@ using UnityEngine;
 
 namespace Simulation {
 	public class Country : MonoBehaviour, ISelectable {
-		private static Transform militaryUnitParent;
-		private static readonly Dictionary<string, Country> Countries = new();
-		private static readonly Dictionary<(Country, Country), DiplomaticStatus> DiplomaticStatuses = new();
-		public static Country Get(string key){
-			Countries.TryGetValue(key, out Country country);
-			return country;
-		}
-		private static DiplomaticStatus GetDiplomaticStatus(Country a, Country b){
-			if (a == b){
-				return null;
-			}
-			if (DiplomaticStatuses.TryGetValue((a, b), out DiplomaticStatus diplomaticStatus)){
-				return diplomaticStatus;
-			}
-			if (DiplomaticStatuses.TryGetValue((b, a), out diplomaticStatus)){
-				return diplomaticStatus;
-			}
-			diplomaticStatus = new DiplomaticStatus();
-			DiplomaticStatuses.Add((a, b), diplomaticStatus);
-			return diplomaticStatus;
-		}
-#if UNITY_EDITOR
-		public static void ClearCountryDictionary(){
-			Countries.Clear();
-			DiplomaticStatuses.Clear();
-		}
-#endif
-		
 		[SerializeField] private Military.RegimentType[] regimentTypes;
 		[SerializeField] private Military.ShipType[] shipTypes;
 		[SerializeField] private TruceData truceData;
@@ -46,6 +18,7 @@ namespace Simulation {
 		private readonly HashSet<Land> occupations = new();
 		private readonly List<Military.Regiment> regiments = new();
 		private readonly List<Military.Ship> ships = new();
+		private MapGraph map;
 		private bool wasBorderChanged;
 		
 		public Color MapColor {get; private set;}
@@ -53,20 +26,8 @@ namespace Simulation {
 		public float Gold {get; private set;}
 		public int Manpower {get; private set;}
 		public int Sailors {get; private set;}
+		public Transform MilitaryUnitParent {get; private set;}
 		
-		public Transform MilitaryUnitParent {
-			get {
-				if (militaryUnitParent == null){
-					militaryUnitParent = new GameObject("MilitaryUnits"){
-						transform = {
-							// TODO: Replace with passed down reference when singletons are removed.
-							parent = transform.parent.parent
-						}
-					}.transform;
-				}
-				return militaryUnitParent;
-			}
-		}
 		public IEnumerable<Military.RegimentType> RegimentTypes => regimentTypes;
 		public IEnumerable<Military.ShipType> ShipTypes => shipTypes;
 		public IEnumerable<Military.Regiment> Regiments => regiments;
@@ -91,17 +52,24 @@ namespace Simulation {
 		public int ShipCount => ships.Count;
 		public string Name => gameObject.name;
 		
-		public void Init(CountryData data, MapGraph map){
+		public void Init(CountryData data, MapGraph mapGraph){
 			gameObject.name = data.Name;
 			MapColor = data.MapColor;
+			map = mapGraph;
+			map.Add(this);
 			foreach (Color32 province in data.Provinces){
 				map[province].Land.Owner = this;
 			}
+			MilitaryUnitParent = new GameObject(gameObject.name){
+				transform = {
+					parent = map.MilitaryUnitRoot
+				}
+			}.transform;
+			
 			Color borderColor = MapColor*borderBrightnessFactor;
 			borderColor.a = 1;
 			borderMeshRenderer.material.color = borderColor;
 			RegenerateBorder();
-			Countries.Add(Name, this);
 		}
 		private void RegenerateBorder(){
 			DestroyImmediate(borderMeshFilter.sharedMesh);
@@ -294,7 +262,7 @@ namespace Simulation {
 		}
 		
 		public DiplomaticStatus GetDiplomaticStatus(Country other){
-			return GetDiplomaticStatus(this, other);
+			return map.GetDiplomaticStatus(this, other);
 		}
 		public PeaceTreaty NewPeaceTreaty(Country recipient){
 			return new PeaceTreaty(this, recipient, truceData);

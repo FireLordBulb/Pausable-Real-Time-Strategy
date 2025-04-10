@@ -1,17 +1,9 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Simulation {
 	[RequireComponent(typeof(Province))]
 	public class Land : MonoBehaviour {
-		private static readonly List<Province> ProvinceList = new();
-		public static IEnumerable<Province> AllProvinces => ProvinceList;
-#if UNITY_EDITOR
-		public static void ClearProvinceList(){
-			ProvinceList.Clear();
-		}
-#endif
 		[SerializeField] private int occupationMaterialIndex;
 		[SerializeField] private float siegeDaysPerDevelopment;
 		
@@ -56,8 +48,7 @@ namespace Simulation {
 		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
 			Province = GetComponent<Province>();
 			// All land is assumed LandLocked by default, is updated to Coast if a Link to a sea tile is added.
-			Province.Init(colorKey, mapGraph, Province.Type.LandLocked, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh);
-			ProvinceList.Add(Province);
+			Province.Init(colorKey, mapGraph, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh);
 
 			occupationMaterial = Province.MeshRenderer.sharedMaterials[occupationMaterialIndex];
 			occupationMaterial.color = Color.clear;

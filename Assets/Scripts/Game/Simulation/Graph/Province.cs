@@ -60,14 +60,15 @@ namespace Simulation {
             meshCollider = GetComponent<MeshCollider>();
             Land = GetComponent<Land>();
             Sea = GetComponent<Sea>();
-            Debug.Assert(Land == null ^ Sea == null, $"Province {gameObject.name} is both land and sea, or neither!");
+            Debug.Assert(Land == null ^ Sea == null, $"FATAL: Province {gameObject.name} is both land and sea, or neither!");
+            type = Land == null ? Type.Sea : Type.LandLocked;
         }
-        public void Init(Color32 colorKey, MapGraph mapGraph, Type provinceType, Terrain terrain, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
+        public void Init(Color32 colorKey, MapGraph mapGraph, Terrain terrain, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
             ColorKey = colorKey;
             gameObject.name = $"R:{colorKey.r}, G:{colorKey.g}, B:{colorKey.b}";
             Graph = mapGraph;
+            mapGraph.Add(this);
             
-            type = provinceType;
             Terrain = terrain;
             Name = $"Rural {Terrain.Name}";
             baseColor = mapColor;
@@ -144,7 +145,7 @@ namespace Simulation {
             return Name;
         }
 
-        public enum Type {
+        private enum Type {
             Sea,
             LandLocked,
             Coast
