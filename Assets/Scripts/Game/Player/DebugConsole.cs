@@ -67,6 +67,7 @@ namespace Player {
 					UIStack.Instance.PlayAs(null);
 					AddConsoleResponse("Activated observer mode. Deactivate by selecting a country.");
 					return;
+				case "play":
 				case "play_as":
 					if (words.Length == 1){
 						AddConsoleResponse("Incomplete command: 'play_as' requires country name as argument.");
