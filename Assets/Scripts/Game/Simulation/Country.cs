@@ -267,8 +267,8 @@ namespace Simulation {
 			opponent.Unoccupy(this);
 			treaty.Apply();
 			diplomaticStatus.EndWar(treaty.TruceLength);
-			this.RetreatFrom(opponent);
-			opponent.RetreatFrom(this);
+			this.RetreatHome();
+			opponent.RetreatHome();
 		}
 		private void Unoccupy(Country other){
 			foreach (Land occupiedLand in occupations.ToArray()){
@@ -277,9 +277,10 @@ namespace Simulation {
 				}
 			}
 		}
-		private void RetreatFrom(Country other){
+		private void RetreatHome(){
 			foreach (Military.Regiment regiment in regiments){
-				if (regiment.Location.Province.Land.Owner == other){
+				Country owner = regiment.Location.Province.Land.Owner;
+				if (owner != this && !GetDiplomaticStatus(owner).IsAtWar){
 					regiment.RetreatHome();
 				}
 			}
