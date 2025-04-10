@@ -676,13 +676,16 @@ MonoBehaviour:
   doUseAutoCommands: 0
   autoCommands:
   - play_as Olpeka
-  - rich
+  - gold 100
+  - manpower 5000
   - reg 1
   - reg 2
   - play_as Zum
-  - rich
+  - gold 100
+  - manpower 5000
   - reg 2
   - reg 1
+  - sailors 1000
   - ship 3
   - skip 200
 --- !u!223 &5417892655479546527
