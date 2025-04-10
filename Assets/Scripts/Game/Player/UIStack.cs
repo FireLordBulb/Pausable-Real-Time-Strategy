@@ -10,8 +10,8 @@ namespace Player {
 	[RequireComponent(typeof(Canvas))]
 	public class UIStack : ActionStack<UILayer> {
 		private const float ActivationThreshold = 0.5f;
-		
 		public static UIStack Instance {get; private set;}
+		#region SerializedFields
 		[Header("Scene Init Prefabs")]
 		[SerializeField] private CameraInput cameraInput;
 		[SerializeField] private DebugConsole debugConsole;
@@ -26,7 +26,8 @@ namespace Player {
 		[SerializeField] private Button closeButton;
 		[SerializeField] private LayerMask mapClickMask;
 		[SerializeField] private int maxSelectHistory;
-		
+		#endregion
+		#region Private Fields
 		private Input.UIActions input;
 		private UILayer layerToPush;
 		private readonly LinkedList<ISelectable> selectedHistory = new();
@@ -34,7 +35,8 @@ namespace Player {
 		private ISelectable hoveredSelectable;
 		private ISelectable mouseDownSelectable;
 		private bool isSelectClickRight;
-		
+		#endregion
+		#region Auto-Properties
 		public bool CanSwitchCountry {get; internal set;}
 		public Country PlayerCountry {get; private set;}
 		public bool HasPlayerCountryChanged {get; private set;}
@@ -42,12 +44,14 @@ namespace Player {
 		public Vector3 MouseWorldPosition {get; private set;}
 		public bool IsShiftHeld {get; private set;}
 		public bool IsControlHeld {get; private set;}
-		
+		#endregion
+		#region Getter Properties
 		public CalendarPanel CalendarPanel => hud.CalendarPanel;
 		public Province SelectedProvince => Selected as Province;
 		public Country SelectedCountry => Selected as Country;
 		private Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
-		
+		#endregion
+
 		private void Awake(){
 			if (Instance != null){
 				Destroy(gameObject);
@@ -294,7 +298,7 @@ namespace Player {
 			selectHistoryCount = 0;
 		}
 
-		// Different from CurrentAction since that might be null right after a new layer has been pushed.
+		// Different from getter property CurrentAction since that might be null right after a new layer has been pushed.
 		public UILayer GetTopLayer(){
 			return StackList[^1];
 		}
