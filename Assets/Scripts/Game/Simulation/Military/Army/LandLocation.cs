@@ -38,7 +38,7 @@ namespace Simulation.Military {
 				} else {
 					SiegeIsPausedBecauseMovement = false;
 					foreach (Regiment regiment in Units){
-						if (regiment.IsMoving){
+						if (CannotBeSiegedBy(regiment)){
 							continue;
 						}
 						Sieger = regiment.Owner;
@@ -48,7 +48,7 @@ namespace Simulation.Military {
 				}
 			} else {
 				foreach (Regiment regiment in Units){
-					if (regiment.Owner == Land.Controller || regiment.IsMoving){
+					if (CannotBeSiegedBy(regiment)){
 						continue;
 					}
 					Sieger = regiment.Owner;
@@ -59,6 +59,9 @@ namespace Simulation.Military {
 					break;
 				}
 			}
+		}
+		private bool CannotBeSiegedBy(Regiment regiment){
+			return regiment.Owner == Land.Controller || regiment.IsMoving || !regiment.Owner.GetDiplomaticStatus(Land.Controller).IsAtWar;
 		}
 
 		private void TickSiege(){
