@@ -10,7 +10,7 @@ namespace Player {
 		
 		private Input.CalendarActions input;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-		public DebugConsole DebugConsole {private get; set;}
+		internal DebugConsole DebugConsole {private get; set;}
 #endif
 		
 		private void Awake(){

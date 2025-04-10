@@ -9,7 +9,7 @@ namespace Player {
 
         public CameraMovement Movement {get; private set;}
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-        public DebugConsole DebugConsole {private get; set;}
+        internal DebugConsole DebugConsole {private get; set;}
 #endif
         
         private void Awake(){

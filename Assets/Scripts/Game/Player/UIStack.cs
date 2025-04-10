@@ -50,7 +50,6 @@ namespace Player {
 		#endregion
 		#region Getter Properties
 		public MapGraph Map => map;
-		public CalendarPanel CalendarPanel => hud.CalendarPanel;
 		public Province SelectedProvince => Selected as Province;
 		public Country SelectedCountry => Selected as Country;
 		private Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
@@ -116,6 +115,7 @@ namespace Player {
 			};
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			debugConsole = Instantiate(debugConsole, transform);
+			debugConsole.CalendarPanel = hud.CalendarPanel;
 			cameraInput.DebugConsole = debugConsole;
 			bool debugWasDeactivated = false;
 			input.Debug.canceled += _ => {

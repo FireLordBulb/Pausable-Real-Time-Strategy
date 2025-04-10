@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace Player {
-	public class DebugConsole : MonoBehaviour {
+	internal class DebugConsole : MonoBehaviour {
 		// ReSharper disable thrice InconsistentNaming
 		private const int YYYY_MM_DD = 3;
 		private const int MM_DD = 2;
@@ -19,7 +19,8 @@ namespace Player {
 		[SerializeField] private bool doUseAutoCommands;
 		[SerializeField] private string[] autoCommands;
 		
-		public bool IsKeyboardBusy => inputField.gameObject == EventSystem.current.currentSelectedGameObject;
+		internal CalendarPanel CalendarPanel {private get; set;}
+		internal bool IsKeyboardBusy => inputField.gameObject == EventSystem.current.currentSelectedGameObject;
 		
 		private void Awake(){
 			inputField.onSubmit.AddListener(message => {
@@ -43,11 +44,11 @@ namespace Player {
 			}
 		}
 		
-		public void Enable(){
+		internal void Enable(){
 			gameObject.SetActive(true);
 			inputField.ActivateInputField();
 		}
-		public void Disable(){
+		internal void Disable(){
 			gameObject.SetActive(false);
 			EventSystem.current.SetSelectedGameObject(null);
 		}
@@ -227,7 +228,7 @@ namespace Player {
 			if (date < Calendar.Instance.CurrentDate){
 				AddConsoleResponse($"Changing the date to the past will not modify the simulation.");
 				Calendar.Instance.SetDate(date);
-				UIStack.Instance.CalendarPanel.UpdateDate();
+				CalendarPanel.UpdateDate();
 				AddConsoleResponse($"Set the date to {date}.");
 				return;
 			}
@@ -238,12 +239,12 @@ namespace Player {
 			AddConsoleResponse($"Will change the date to {date}. This may cause a lag spike.");
 			// Wait a bit to let the lag spike warning render to the screen.
 			await Task.Delay(100);
-			UIStack.Instance.CalendarPanel.DisableUpdate();
+			CalendarPanel.DisableUpdate();
 			do {
 				Calendar.Instance.ToNextDay();
 			} while (Calendar.Instance.CurrentDate < date);
-			UIStack.Instance.CalendarPanel.EnableUpdate();
-			UIStack.Instance.CalendarPanel.UpdateDate();
+			CalendarPanel.EnableUpdate();
+			CalendarPanel.UpdateDate();
 			UIStack.Instance.Refresh();
 			AddConsoleResponse($"Successfully changed the date to {date}.");
 		}
