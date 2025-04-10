@@ -8,6 +8,9 @@ namespace Player {
         private Input.CameraActions input;
 
         public CameraMovement Movement {get; private set;}
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        public DebugConsole DebugConsole {private get; set;}
+#endif
         
         private void Awake(){
             Movement = GetComponent<CameraMovement>();
@@ -16,7 +19,7 @@ namespace Player {
 
             Action<InputAction.CallbackContext> directionalMovement = context => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-                if (DebugConsole.IsKeyboardBusy()){
+                if (DebugConsole.IsKeyboardBusy){
                     return;
                 }
 #endif
@@ -42,7 +45,7 @@ namespace Player {
         }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private void Update(){
-            if (DebugConsole.IsKeyboardBusy()){
+            if (DebugConsole.IsKeyboardBusy){
                 Movement.DirectionalMovement(Vector2.zero);
             } else {
                 Movement.DirectionalMovement(input.DirectionalMovement.ReadValue<Vector2>());

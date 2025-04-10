@@ -14,7 +14,9 @@ namespace Player {
 		#region SerializedFields
 		[Header("Scene Init Prefabs")]
 		[SerializeField] private CameraInput cameraInput;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 		[SerializeField] private DebugConsole debugConsole;
+#endif
 		[Header("Layer Prefabs")]
 		[SerializeField] private HUD hud;
 		[SerializeField] private UILayer countrySelection;
@@ -85,7 +87,7 @@ namespace Player {
 			};
 			input.Back.canceled += _ => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-				if (DebugConsole.IsKeyboardBusy()){
+				if (debugConsole.IsKeyboardBusy){
 					return;
 				}
 #endif
@@ -98,7 +100,7 @@ namespace Player {
 			};
 			input.Cancel.canceled += _ => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-				if (DebugConsole.IsKeyboardBusy()){
+				if (debugConsole.IsKeyboardBusy){
 					return;
 				}
 #endif
@@ -108,6 +110,7 @@ namespace Player {
 			};
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			debugConsole = Instantiate(debugConsole, transform);
+			cameraInput.DebugConsole = debugConsole;
 			bool debugWasDeactivated = false;
 			input.Debug.canceled += _ => {
 				if (debugConsole.gameObject.activeSelf){
@@ -130,6 +133,9 @@ namespace Player {
 		}
 		private void SpawnUI(){
 			hud = Instantiate(hud, transform);
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+			hud.CalendarPanel.DebugConsole = debugConsole;
+#endif
 			Push(hud);
 			Push(countrySelection);
 		}

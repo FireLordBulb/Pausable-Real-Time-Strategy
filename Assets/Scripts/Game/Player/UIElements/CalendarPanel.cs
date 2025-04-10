@@ -1,7 +1,6 @@
 using Simulation;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Player {
@@ -10,6 +9,9 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI date;
 		
 		private Input.CalendarActions input;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+		public DebugConsole DebugConsole {private get; set;}
+#endif
 		
 		private void Awake(){
 			input = new Input().Calendar;
@@ -20,7 +22,7 @@ namespace Player {
 				int index = i;
 				speeds[i].performed += _ => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-					if (DebugConsole.IsKeyboardBusy()){
+					if (DebugConsole.IsKeyboardBusy){
 						return;
 					}
 #endif
@@ -30,7 +32,7 @@ namespace Player {
 			
 			input.ChangeSpeed.performed += context => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-				if (DebugConsole.IsKeyboardBusy()){
+				if (DebugConsole.IsKeyboardBusy){
 					return;
 				}
 #endif
@@ -40,7 +42,7 @@ namespace Player {
 
 			input.Pause.performed += _ => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-				if (DebugConsole.IsKeyboardBusy()){
+				if (DebugConsole.IsKeyboardBusy){
 					return;
 				}
 #endif

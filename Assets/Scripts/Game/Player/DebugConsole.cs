@@ -1,3 +1,4 @@
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,7 +9,6 @@ using UnityEngine.EventSystems;
 
 namespace Player {
 	public class DebugConsole : MonoBehaviour {
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
 		// ReSharper disable thrice InconsistentNaming
 		private const int YYYY_MM_DD = 3;
 		private const int MM_DD = 2;
@@ -18,11 +18,8 @@ namespace Player {
 		[SerializeField] private TMP_InputField inputField;
 		[SerializeField] private bool doUseAutoCommands;
 		[SerializeField] private string[] autoCommands;
-
-		private static GameObject InputFieldGameObject;
-		public static bool IsKeyboardBusy(){
-			return InputFieldGameObject == EventSystem.current.currentSelectedGameObject;
-		}
+		
+		public bool IsKeyboardBusy => inputField.gameObject == EventSystem.current.currentSelectedGameObject;
 		
 		private void Awake(){
 			inputField.onSubmit.AddListener(message => {
@@ -35,7 +32,6 @@ namespace Player {
 				}
 			});
 			inputField.onValueChanged.AddListener(message => inputField.text = message.TrimEnd('\n').TrimEnd('\v'));
-			InputFieldGameObject = inputField.gameObject;
 		}
 		private void Start(){
 			gameObject.SetActive(false);
@@ -278,6 +274,6 @@ namespace Player {
 		private void AddConsoleResponse(string response){
 			consoleText.text += $"\n> {response}";
 		}
-#endif
 	}
 }
+#endif
