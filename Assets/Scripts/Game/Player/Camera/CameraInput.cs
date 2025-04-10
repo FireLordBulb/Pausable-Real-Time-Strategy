@@ -1,15 +1,16 @@
 using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Player {
     [RequireComponent(typeof(CameraMovement))]
     public class CameraInput : MonoBehaviour {
-        private CameraMovement cameraMovement;
         private Input.CameraActions input;
+
+        public CameraMovement Movement {get; private set;}
+        
         private void Awake(){
-            cameraMovement = GetComponent<CameraMovement>();
+            Movement = GetComponent<CameraMovement>();
             input = new Input().Camera;
             input.Enable();
 
@@ -19,32 +20,32 @@ namespace Player {
                     return;
                 }
 #endif
-                cameraMovement.DirectionalMovement(context.ReadValue<Vector2>());
+                Movement.DirectionalMovement(context.ReadValue<Vector2>());
             };
             input.DirectionalMovement.performed += directionalMovement;
             input.DirectionalMovement.canceled += directionalMovement;
 
             input.ScrollWheel.performed += context => {
-                cameraMovement.ChangeZoom(Mathf.RoundToInt(context.ReadValue<Vector2>().y));
+                Movement.ChangeZoom(Mathf.RoundToInt(context.ReadValue<Vector2>().y));
             };
             
             input.MiddleClick.performed += _ => {
-                cameraMovement.StartDragging();
+                Movement.StartDragging();
             };
             input.MiddleClick.canceled += _ => {
-                cameraMovement.ReleaseDragging();
+                Movement.ReleaseDragging();
             };
 
             input.MousePosition.performed += context => {
-                cameraMovement.UpdateMousePosition(context.ReadValue<Vector2>());
+                Movement.UpdateMousePosition(context.ReadValue<Vector2>());
             };
         }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private void Update(){
             if (DebugConsole.IsKeyboardBusy()){
-                cameraMovement.DirectionalMovement(Vector2.zero);
+                Movement.DirectionalMovement(Vector2.zero);
             } else {
-                cameraMovement.DirectionalMovement(input.DirectionalMovement.ReadValue<Vector2>());
+                Movement.DirectionalMovement(input.DirectionalMovement.ReadValue<Vector2>());
             }
         }
 #endif

@@ -6,7 +6,6 @@ using UnityEngine;
 namespace Player {
     [RequireComponent(typeof(Camera))]
     public class CameraMovement : MonoBehaviour {
-        public static CameraMovement Instance {get; private set;}
         private const float Opaque = 1;
         private static readonly Vector3 Center = new(0.5f, 0.5f);
         
@@ -37,11 +36,6 @@ namespace Player {
         private Ray MouseRay => Camera.ScreenPointToRay(mousePosition);
         
         private void Awake(){
-            if (Instance != null){
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
             Camera = GetComponent<Camera>();
 
             Vector3 position = transform.position;

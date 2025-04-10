@@ -10,16 +10,19 @@ namespace Player {
 	[RequireComponent(typeof(Canvas))]
 	public class UIStack : ActionStack<UILayer> {
 		private const float ActivationThreshold = 0.5f;
-
-		public static UIStack Instance {get; private set;}
 		
+		public static UIStack Instance {get; private set;}
+		[Header("Scene Init Prefabs")]
+		[SerializeField] private CameraInput cameraInput;
+		[SerializeField] private DebugConsole debugConsole;
+		[Header("Layer Prefabs")]
 		[SerializeField] private HUD hud;
 		[SerializeField] private UILayer countrySelection;
 		[SerializeField] private UILayer provinceWindow;
 		[SerializeField] private UILayer countryWindow;
 		[SerializeField] private UILayer regimentWindow;
 		[SerializeField] private UILayer shipWindow;
-		[SerializeField] private DebugConsole debugConsole;
+		[Space]
 		[SerializeField] private Button closeButton;
 		[SerializeField] private LayerMask mapClickMask;
 		[SerializeField] private int maxSelectHistory;
@@ -51,6 +54,15 @@ namespace Player {
 				return;
 			}
 			Instance = this;
+
+			InitScene();
+			EnableInput();
+			SpawnUI();
+		}
+		private void InitScene(){
+			cameraInput = Instantiate(cameraInput);
+		}
+		private void EnableInput(){
 			input = new Input().UI;
 			input.Enable();
 			input.Click.performed      += context => OnClick(context, false);
@@ -111,7 +123,8 @@ namespace Player {
 				debugConsole.Disable();
 			};
 #endif
-			
+		}
+		private void SpawnUI(){
 			hud = Instantiate(hud, transform);
 			Push(hud);
 			Push(countrySelection);
@@ -191,7 +204,7 @@ namespace Player {
 				hit = new RaycastHit();
 				return false;
 			}
-			return Physics.Raycast(CameraMovement.Instance.Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, mapClickMask);
+			return Physics.Raycast(cameraInput.Movement.Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, mapClickMask);
 		}
 		private void EndHover(){
 			if (hoveredSelectable == null){
@@ -212,7 +225,7 @@ namespace Player {
 			if (country == null){
 				return;
 			}
-			CameraMovement cameraMovement = CameraMovement.Instance;
+			CameraMovement cameraMovement = cameraInput.Movement;
 			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
 		}
 		
