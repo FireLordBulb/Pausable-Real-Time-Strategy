@@ -88,12 +88,12 @@ namespace AI {
 		private static float RegimentStrength(Regiment regiment){
 			return (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness);
 		}
-		private static float GetOccupationValue(Country country, Country other){
+		private static float GetOccupationValue(Country occupier, Country target){
 			float value = 0;
-			float totalDevelopment = TotalDevelopment(country);
-			foreach (Land occupation in country.Occupations.Where(occupation => occupation.Owner == other)){
+			float totalDevelopment = TotalDevelopment(target);
+			foreach (Land occupation in occupier.Occupations.Where(occupation => occupation.Owner == target)){
 				float development = 1+occupation.Terrain.DevelopmentModifier;
-				value += AcceptanceFromProvinceHeld/country.ProvinceCount*development*AcceptanceFromDevelopmentHeld/totalDevelopment;
+				value += AcceptanceFromProvinceHeld/occupier.ProvinceCount*development*AcceptanceFromDevelopmentHeld/totalDevelopment;
 			}
 			return value;
 		}
