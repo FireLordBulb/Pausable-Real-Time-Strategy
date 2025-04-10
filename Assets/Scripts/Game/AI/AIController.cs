@@ -1,105 +1,131 @@
 using System;
 using System.Linq;
 using Simulation;
+using Simulation.Military;
 using UnityEngine;
 
 namespace AI {
 	public class AIController : MonoBehaviour {
 		// TODO: Move constants to be serialized fields of a ScriptableObject when AIController gets added to the country prefab.
+		// Also move acceptance logic into that SO (it can get the AIController as a parameter if needed)
 		private const float BasePeaceReluctance = -10;
-		private const float AcceptancePerMilitaryStrengthDifference = 10;
-		private const float MinMilitaryStrengthForAcceptanceMath = 10000;
-		private const float AcceptancePerProvinceHeld = 2;
-		private const float AcceptancePerDevelopmentHeld = 10;
 		private const float MaxAcceptanceDecreaseFromResources = -20;
-		private const float AcceptancePerGoldAvailable = -0.1f;
-		private const float AcceptancePerManpowerAvailable = -0.01f;
-		private const float AcceptancePerProvinceDemanded = -1;
-		private const float AcceptancePerDevelopmentDemanded = -3;
-		private const float UnoccupiedAcceptanceMultiplier = 5;
-		private const float AcceptanceFromProvinceProportion = -10;
-		private const float AcceptanceFromDevelopmentProportion = -30;
+		private const float AcceptancePerGoldAvailable = -0.02f;
+		private const float AcceptancePerManpowerAvailable = -0.002f;
+		
+		private const float AcceptanceFromMilitaryStrength = 10;
+		private const float MaxAcceptanceFromMilitaryStrength = 30;
+		private const float MinMilitaryStrengthForAcceptanceMath = 5000;
+		private const float AcceptanceFromProvinceHeld = 10;
+		private const float AcceptanceFromDevelopmentHeld = 30;
+		
+		private const float AcceptanceFromProvincesDemanded = -5;
+		private const float AcceptanceFromDevelopmentDemanded = -40;
+		private const float UnoccupiedAcceptanceMultiplier = 3;
 		private const float AcceptancePerGoldDemanded = -0.05f;
-		private const float ForceAcceptance = 1000;
+		
+		private const float AlwaysAccept = 1000;
+		private const float NeverAccept = -1000;
 		
 		public static int EvaluatePeaceOffer(PeaceTreaty treaty){
-			// White peace logic
+			float acceptance;
+			// Count white peaces as wins (besides war goals being ignored, off course).
 			if (treaty.IsWhitePeace){
-				(Country loser, Country winner) = treaty.DidTreatyInitiatorWin ? (treaty.Loser, treaty.Winner) : (treaty.Winner, treaty.Loser);
-				return CalculateDefeatAcceptance(treaty, loser, winner, CalculateReluctance(loser, winner));
+				treaty.DidTreatyInitiatorWin = true;
 			}
+			bool isLoserDefeated = IsFullyDefeated(treaty.Loser, treaty.Winner);
+			bool isWinnerDefeated = IsFullyDefeated(treaty.Winner, treaty.Loser);
 			// Losing logic
 			if (treaty.DidTreatyInitiatorWin){
-				return CalculateDefeatAcceptance(treaty, treaty.Loser, treaty.Winner, CalculateReluctance(treaty.Loser, treaty.Winner));
+				acceptance = Reluctance(treaty.Loser, treaty.Winner);
+				if (isLoserDefeated){
+					acceptance += AlwaysAccept;
+				} else if (isWinnerDefeated){
+					acceptance += NeverAccept;
+				}
+				if (!treaty.IsWhitePeace){
+					// If not fully defeated, always refuse full annexation.
+					if (!isLoserDefeated && IsFullAnnexationDemanded(treaty)){
+						acceptance += NeverAccept;
+					}
+					acceptance += WarGoalCost(treaty);
+				}
+			} else { // Winning logic
+				acceptance = Reluctance(treaty.Winner, treaty.Loser);
+				if (IsFullAnnexationDemanded(treaty) || isWinnerDefeated){
+					acceptance += AlwaysAccept;
+				} else if (isLoserDefeated){
+					acceptance += NeverAccept;
+				}
+				acceptance -= WarGoalCost(treaty);
 			}
-			// Winning logic
-			// If the AI would refuse the peace deal if the countries were switched then it must be favourable to the winner.
-			return -CalculateDefeatAcceptance(treaty, treaty.Winner, treaty.Loser, -CalculateReluctance(treaty.Winner, treaty.Loser));
+			return (int)acceptance;
 		}
-		private static float CalculateReluctance(Country loser, Country winner){
+		
+		private static float Reluctance(Country decider, Country other){
 			float acceptance = BasePeaceReluctance;
 			
-			float fromResources = loser.Gold*AcceptancePerGoldAvailable+loser.Manpower*AcceptancePerManpowerAvailable;
+			float fromResources = decider.Gold*AcceptancePerGoldAvailable+decider.Manpower*AcceptancePerManpowerAvailable;
 			fromResources = Math.Max(fromResources, MaxAcceptanceDecreaseFromResources);
 			acceptance += fromResources;
 			
 			// TODO Factor in own & opponent other ongoing wars after war dec logic added.
 			// TODO: Factor in navy when navy combat is added.
 			
-			float loserMilitaryStrength = GetMilitaryStrength(loser);
-			float winnerMilitaryStrength = GetMilitaryStrength(winner);
-			acceptance += (winnerMilitaryStrength/loserMilitaryStrength-1)*AcceptancePerMilitaryStrengthDifference; 
+			float deciderMilitaryStrength = GetMilitaryStrength(decider);
+			float otherMilitaryStrength = GetMilitaryStrength(other);
+			acceptance += Mathf.Min((otherMilitaryStrength/deciderMilitaryStrength-1)*AcceptanceFromMilitaryStrength, MaxAcceptanceFromMilitaryStrength); 
 
-			float loserOccupationValue = GetOccupationValue(loser, winner);
-			float winnerOccupationValue = GetOccupationValue(winner, loser);
-			acceptance += winnerOccupationValue-loserOccupationValue;
+			float deciderOccupationValue = GetOccupationValue(decider, other);
+			float otherOccupationValue = GetOccupationValue(other, decider);
+			acceptance += otherOccupationValue-deciderOccupationValue;
 			
 			return acceptance;
 		}
-		private static int CalculateDefeatAcceptance(PeaceTreaty treaty, Country loser, Country winner, float reluctance){
-			float acceptance = reluctance;
-			if (treaty.IsWhitePeace){
-				return (int)acceptance;
+		private static float GetMilitaryStrength(Country country){
+			return Math.Max(country.Regiments.Sum(RegimentStrength), MinMilitaryStrengthForAcceptanceMath);
+		}
+		private static float RegimentStrength(Regiment regiment){
+			return (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness);
+		}
+		private static float GetOccupationValue(Country country, Country other){
+			float value = 0;
+			float totalDevelopment = TotalDevelopment(country);
+			foreach (Land occupation in country.Occupations.Where(occupation => occupation.Owner == other)){
+				float development = 1+occupation.Terrain.DevelopmentModifier;
+				value += AcceptanceFromProvinceHeld/country.ProvinceCount*development*AcceptanceFromDevelopmentHeld/totalDevelopment;
 			}
+			return value;
+		}
+		
+		private static bool IsFullyDefeated(Country decider, Country other){
+			return decider.Provinces.All(land => land.Occupier == other) &&
+			       other.Provinces.All(land => land.Occupier != decider) &&
+			       decider.Regiments.All(regiment => regiment.Province.Land.Owner != other && regiment.Province.Land.Owner != decider);
+		}
+		private static bool IsFullAnnexationDemanded(PeaceTreaty treaty){
+			return treaty.Loser.ProvinceCount == treaty.AnnexedLands.Count(land => land.Owner == treaty.Loser);
+		}
+		
+		private static float WarGoalCost(PeaceTreaty treaty){
+			float acceptance = 0;
 			
-			int demandedProvinceCount = 0;
-			float demandedDevelopment = 0;
+			float totalLoserDevelopment = TotalDevelopment(treaty.Loser);
 			foreach (Land land in treaty.AnnexedLands.Where(annexedLand => annexedLand.Owner == treaty.Loser)){
-				demandedProvinceCount++;
 				float development = 1+land.Terrain.DevelopmentModifier;
-				demandedDevelopment += development;
-				float provinceCost = AcceptancePerProvinceDemanded+development*AcceptancePerDevelopmentDemanded;
-				if (land.Occupier != winner){
+				float provinceCost = AcceptanceFromProvincesDemanded/treaty.Loser.ProvinceCount+development*AcceptanceFromDevelopmentDemanded/totalLoserDevelopment;
+				if (land.Occupier != treaty.Winner){
 					provinceCost *= UnoccupiedAcceptanceMultiplier;
 				}
 				acceptance += provinceCost;
 			}
-			acceptance += AcceptanceFromProvinceProportion*demandedProvinceCount/loser.ProvinceCount;
-			float totalLoserDevelopment = loser.Provinces.Sum(land => 1+land.Terrain.DevelopmentModifier);
-			acceptance += AcceptanceFromDevelopmentProportion*demandedDevelopment/totalLoserDevelopment;
 			
 			acceptance += AcceptancePerGoldDemanded*treaty.GoldTransfer;
 			
-			// Always accept if fully occupied and all armies are defeated.
-			if (loser.Provinces.All(land => land.Occupier == winner) && loser.Regiments.All(regiment => regiment.Province.Land.Owner != winner && regiment.Province.Land.Owner != loser)){
-				acceptance += ForceAcceptance;
-			// Otherwise always refuse full annexation.
-			} else if (demandedProvinceCount == loser.ProvinceCount){
-				acceptance -= ForceAcceptance;
-			}
-			
 			return (int)acceptance;
 		}
-		private static float GetMilitaryStrength(Country country){
-			return Math.Max(country.Regiments.Sum(regiment => regiment.CurrentManpower*(regiment.AttackPower+regiment.Toughness)), MinMilitaryStrengthForAcceptanceMath);
-		}
-		private static float GetOccupationValue(Country country, Country other){
-			float value = 0;
-			foreach (Land occupation in country.Occupations.Where(occupation => occupation.Owner == other)){
-				float development = 1+occupation.Terrain.DevelopmentModifier;
-				value += AcceptancePerProvinceHeld*development*AcceptancePerDevelopmentHeld;
-			}
-			return value;
-		}
+		
+		// TODO: Keep cached in Country after proper development values are added.
+		private static float TotalDevelopment(Country country) => country.Provinces.Sum(land => 1+land.Terrain.DevelopmentModifier);
 	}
 }
