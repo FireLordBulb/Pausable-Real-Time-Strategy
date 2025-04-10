@@ -17,13 +17,13 @@ namespace Simulation {
 		
 		public int TruceLength {
 			get {
-				float sum = 0;
-				sum += truceData.DaysPerProvince*AnnexedLands.Count;
+				float days = truceData.BaseTruceDays;
+				days += truceData.DaysPerProvince*AnnexedLands.Count;
 				foreach (Land annexedLand in AnnexedLands){
-					sum += truceData.DaysPerDevelopment*(1+annexedLand.Terrain.DevelopmentModifier);
+					days += truceData.DaysPerDevelopment*(1+annexedLand.Terrain.DevelopmentModifier);
 				}
-				sum += truceData.DaysPerGold*GoldTransfer;
-				return Mathf.Max((int)sum, truceData.MinTruceLength);
+				days += truceData.DaysPerGold*GoldTransfer;
+				return Mathf.Clamp((int)days, truceData.MinTruceDays, truceData.MaxTruceDays);
 			}
 		}
 

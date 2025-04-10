@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1578b934250344ab965f6df6a4072232, type: 3}
   m_Name: TruceData
   m_EditorClassIdentifier: 
-  minTruceDays: 1826
-  daysPerProvince: 10
-  daysPerDevelopment: 25
+  baseTruceDays: 180
+  minTruceDays: 365
+  maxTruceDays: 3653
+  daysPerProvince: 30
+  daysPerDevelopment: 60
   daysPerGold: 0.5
