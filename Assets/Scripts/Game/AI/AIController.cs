@@ -23,6 +23,7 @@ namespace AI {
 		private const float AcceptanceFromDevelopmentDemanded = -40;
 		private const float UnoccupiedAcceptanceMultiplier = 3;
 		private const float AcceptancePerGoldDemanded = -0.05f;
+		private const float MaxAcceptanceDecreaseFromGoldDemanded = -50;
 		
 		private const float AlwaysAccept = 1000;
 		private const float NeverAccept = -1000;
@@ -48,7 +49,7 @@ namespace AI {
 					if (!isLoserDefeated && IsFullAnnexationDemanded(treaty)){
 						acceptance += NeverAccept;
 					}
-					acceptance += WarGoalCost(treaty);
+					acceptance += WarGoalCost(treaty, NeverAccept/2);
 				}
 			} else { // Winning logic
 				acceptance = Reluctance(treaty.Winner, treaty.Loser);
@@ -57,9 +58,9 @@ namespace AI {
 				} else if (isLoserDefeated){
 					acceptance += NeverAccept;
 				}
-				acceptance -= WarGoalCost(treaty);
+				acceptance -= WarGoalCost(treaty, MaxAcceptanceDecreaseFromGoldDemanded);
 			}
-			return (int)acceptance;
+			return Mathf.RoundToInt(acceptance);
 		}
 		
 		private static float Reluctance(Country decider, Country other){
@@ -107,7 +108,7 @@ namespace AI {
 			return treaty.Loser.ProvinceCount == treaty.AnnexedLands.Count(land => land.Owner == treaty.Loser);
 		}
 		
-		private static float WarGoalCost(PeaceTreaty treaty){
+		private static float WarGoalCost(PeaceTreaty treaty, float maxGoldAcceptanceDecrease){
 			float acceptance = 0;
 			
 			float totalLoserDevelopment = TotalDevelopment(treaty.Loser);
@@ -120,9 +121,9 @@ namespace AI {
 				acceptance += provinceCost;
 			}
 			
-			acceptance += AcceptancePerGoldDemanded*treaty.GoldTransfer;
+			acceptance += Math.Max(AcceptancePerGoldDemanded*treaty.GoldTransfer, maxGoldAcceptanceDecrease);
 			
-			return (int)acceptance;
+			return acceptance;
 		}
 		
 		// TODO: Keep cached in Country after proper development values are added.
