@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Simulation {
 	public class Country : MonoBehaviour, ISelectable {
+		#region Serialized Fields
 		[SerializeField] private Military.RegimentType[] regimentTypes;
 		[SerializeField] private Military.ShipType[] shipTypes;
 		[SerializeField] private TruceData truceData;
@@ -13,21 +14,24 @@ namespace Simulation {
 		[SerializeField] private MeshRenderer borderMeshRenderer;
 		[SerializeField] private float borderHalfWidth;
 		[SerializeField] private float borderBrightnessFactor;
-		
+		#endregion
+		#region Private Fields
 		private readonly HashSet<Land> provinces = new();
 		private readonly HashSet<Land> occupations = new();
 		private readonly List<Military.Regiment> regiments = new();
 		private readonly List<Military.Ship> ships = new();
 		private MapGraph map;
 		private bool wasBorderChanged;
-		
+		#endregion
+		#region Auto-Properties
 		public Color MapColor {get; private set;}
 		public int ProvinceCount {get; private set;}
 		public float Gold {get; private set;}
 		public int Manpower {get; private set;}
 		public int Sailors {get; private set;}
 		public Transform MilitaryUnitParent {get; private set;}
-		
+		#endregion
+		#region Getter Properties
 		public IEnumerable<Military.RegimentType> RegimentTypes => regimentTypes;
 		public IEnumerable<Military.ShipType> ShipTypes => shipTypes;
 		public IEnumerable<Military.Regiment> Regiments => regiments;
@@ -51,7 +55,9 @@ namespace Simulation {
 		public int RegimentCount => regiments.Count;
 		public int ShipCount => ships.Count;
 		public string Name => gameObject.name;
+		#endregion
 		
+		#region Initialization
 		public void Init(CountryData data, MapGraph mapGraph){
 			gameObject.name = data.Name;
 			MapColor = data.MapColor;
@@ -71,6 +77,9 @@ namespace Simulation {
 			borderMeshRenderer.material.color = borderColor;
 			RegenerateBorder();
 		}
+		#endregion
+		
+		#region Regenerating the Border Mesh
 		private void RegenerateBorder(){
 			DestroyImmediate(borderMeshFilter.sharedMesh);
 			if (provinces.Count == 0){
@@ -82,19 +91,22 @@ namespace Simulation {
 			borderMeshFilter.sharedMesh = borderMeshData.ToMesh();
 			wasBorderChanged = false;
 		}
-		
 		private void Update(){
 			if (wasBorderChanged){
 				RegenerateBorder();
 			}
 		}
+		#endregion
 		
+		#region Changing Resource Amounts
 		public void GainResources(float gold, int manpower, int sailors){
 			Gold += gold;
 			Manpower += manpower;
 			Sailors += sailors;
 		}
+		#endregion
 		
+		#region Annexing and Occupying Land
 		internal void GainProvince(Land province){
 			if (province.Occupier == this){
 				province.Unoccupy();
@@ -117,7 +129,9 @@ namespace Simulation {
 		internal void LoseOccupation(Land province){
 			occupations.Remove(province);
 		}
-
+		#endregion
+		
+		#region Public Interface for Military Units
 		public bool TryStartRecruitingRegiment(Military.RegimentType type, Province province){
 			if (!regimentTypes.Contains(type) || province.IsSea || province.Land.Controller != this){
 				return false;
@@ -161,7 +175,9 @@ namespace Simulation {
 			}
 			return ship.MoveTo(location);
 		}
-
+		#endregion
+		
+		#region Ending Wars
 		public void EndWar(Country opponent, PeaceTreaty treaty){
 			DiplomaticStatus diplomaticStatus = GetDiplomaticStatus(opponent);
 			if (!diplomaticStatus.IsAtWar){
@@ -189,21 +205,27 @@ namespace Simulation {
 				}
 			}
 		}
+		#endregion
 		
+		#region Losing Military Units
 		internal void RemoveRegiment(Military.Regiment regiment){
 			regiments.Remove(regiment);
 		}
 		internal void RemoveShip(Military.Ship ship){
 			ships.Remove(ship);
 		}
+		#endregion
 		
+		#region Getter Methods
 		public DiplomaticStatus GetDiplomaticStatus(Country other){
 			return map.GetDiplomaticStatus(this, other);
 		}
 		public PeaceTreaty NewPeaceTreaty(Country recipient){
 			return new PeaceTreaty(this, recipient, truceData);
 		}
+		#endregion
 		
+		#region Selection Interface for the UI
 		public void OnSelect(){
 			foreach (Land land in Provinces){
 				land.Province.OnSelect();
@@ -214,6 +236,7 @@ namespace Simulation {
 				land.Province.OnDeselect();
 			}
 		}
+		#endregion
 		
 		public override string ToString(){
 			return Name;
