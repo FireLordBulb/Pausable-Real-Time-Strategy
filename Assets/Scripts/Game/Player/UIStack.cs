@@ -57,8 +57,8 @@ namespace Player {
 
 		private void Awake(){
 			InitScene();
-			EnableInput();
 			SpawnUI();
+			EnableInput();
 		}
 		private void InitScene(){
 			map = Instantiate(map);
@@ -66,6 +66,21 @@ namespace Player {
 			cameraInput = Instantiate(cameraInput);
 			cameraInput.gameObject.name = "MainCamera";
 			cameraInput.Movement.Map = map;
+		}	
+		private void SpawnUI(){
+			Links = new Links(Select);
+			hud = Instantiate(hud, transform);
+			hud.CalendarPanel.Calendar = Map.Calendar;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+			debugConsole = Instantiate(debugConsole, transform);
+			debugConsole.UI = this;
+			debugConsole.Calendar = Map.Calendar;
+			debugConsole.CalendarPanel = hud.CalendarPanel;
+			cameraInput.DebugConsole = debugConsole;
+			hud.CalendarPanel.DebugConsole = debugConsole;
+#endif
+			Push(hud);
+			Push(countrySelection);
 		}
 		private void EnableInput(){
 			input = new Input().UI;
@@ -108,11 +123,6 @@ namespace Player {
 				}
 			};
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
-			debugConsole = Instantiate(debugConsole, transform);
-			debugConsole.UI = this;
-			debugConsole.Calendar = Map.Calendar;
-			debugConsole.CalendarPanel = hud.CalendarPanel;
-			cameraInput.DebugConsole = debugConsole;
 			bool debugWasDeactivated = false;
 			input.Debug.canceled += _ => {
 				if (debugConsole.gameObject.activeSelf){
@@ -132,16 +142,6 @@ namespace Player {
 				debugConsole.Disable();
 			};
 #endif
-		}
-		private void SpawnUI(){
-			Links = new Links(Select);
-			hud = Instantiate(hud, transform);
-			hud.CalendarPanel.Calendar = Map.Calendar;
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-			hud.CalendarPanel.DebugConsole = debugConsole;
-#endif
-			Push(hud);
-			Push(countrySelection);
 		}
 		private void Start(){
 			Map.Calendar.OnMonthTick.AddListener(Refresh);
