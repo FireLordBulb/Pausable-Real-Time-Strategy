@@ -37,8 +37,6 @@ namespace Player {
 			SetupDiplomacy();
 			SetupSelectButton();
 			Refresh();
-			
-			Selected.OnSelect();
 		}
 		
 		public override void Refresh(){
@@ -134,16 +132,8 @@ namespace Player {
 			if (peaceNegotiation != null){
 				peaceNegotiation.OnEnd();
 			}
-			Selected.OnDeselect();
 			Calendar.OnDayTick.RemoveListener(RefreshDiplomacy);
 			base.OnEnd();
-		}
-		public override bool IsDone(){
-			base.IsDone();
-			return UI.SelectedCountry != Selected;
-		}
-		public override void Close(){
-			UI.Deselect(Selected);
 		}
 	}
 }

@@ -27,7 +27,6 @@ namespace Player {
 				valueTable.Generate(-1, valueNames);
 				Refresh();
 			}
-			Selected.OnSelect();
 		}
 		public override void Refresh(){
 			if (Selected.IsSea){
@@ -36,17 +35,6 @@ namespace Player {
 			Terrain terrain = Selected.Terrain;
 			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentModifier, terrain.MoveSpeedModifier, terrain.DefenderAdvantage);
 			countryPanel.SetCountry(Selected.Land.Owner, UI);
-		}
-		public override void OnEnd(){
-			Selected.OnDeselect();
-			base.OnEnd();
-		}
-		public override bool IsDone(){
-			base.IsDone();
-			return UI.SelectedProvince != Selected;
-		}
-		public override void Close(){
-			UI.Deselect(Selected);
 		}
 	}
 }

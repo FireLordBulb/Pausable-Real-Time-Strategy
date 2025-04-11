@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using Simulation;
 
 namespace Player {
@@ -10,6 +11,19 @@ namespace Player {
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
 			Selected = UI.Selected as TSelectable;
+			Debug.Assert(Selected != null, $"SelectionWindow {gameObject.name} was instantiated without an object of its TargetType ({TargetType}) being selected!");
+			Selected.OnSelect();
+		}
+		public override void OnEnd(){
+			Selected.OnDeselect();
+			base.OnEnd();
+		}
+		public override bool IsDone(){
+			base.IsDone();
+			return !ReferenceEquals(UI.Selected, Selected);
+		}
+		public override void Close(){
+			UI.Deselect(Selected);
 		}
 	}
 	public abstract class SelectionWindow : UILayer, IRefreshable, IClosableWindow {

@@ -92,12 +92,5 @@ namespace Player {
 			Calendar.OnDayTick.RemoveListener(Refresh);
 			base.OnEnd();
 		}
-		public override bool IsDone(){
-			base.IsDone();
-			return !ReferenceEquals(UI.Selected, Selected);
-		}
-		public override void Close(){
-			UI.Deselect(Selected);
-		}
 	}
 }
