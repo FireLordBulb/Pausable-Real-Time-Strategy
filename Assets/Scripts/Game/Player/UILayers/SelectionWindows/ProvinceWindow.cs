@@ -16,10 +16,8 @@ namespace Player {
 		private Province province;
 		private Country linkedCountry;
 
-		public override void OnBegin(bool isFirstTime){
-			if (!isFirstTime){
-				return;
-			}
+		internal override void Init(UIStack uiStack){
+			base.Init(uiStack);
 			province = UI.SelectedProvince;
 			title.text = $"{province}";
 			Texture2D texture = (Texture2D)province.Terrain.Material.mainTexture;

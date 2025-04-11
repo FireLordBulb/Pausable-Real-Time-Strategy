@@ -17,11 +17,8 @@ namespace Player {
 
 		protected TUnit Unit;
 		
-		// ReSharper disable Unity.PerformanceAnalysis // OnBegin is called very rarely.
-		public override void OnBegin(bool isFirstTime){
-			if (!isFirstTime){
-				return;
-			}
+		internal override void Init(UIStack uiStack){
+			base.Init(uiStack);
 			Unit = (TUnit)UI.Selected;
 			title.text = $"{Unit.Type.name}";
 			countryPanel.SetCountry(Unit.Owner, UI);
@@ -94,7 +91,6 @@ namespace Player {
 			message.text = text;
 		}
 		
-		// ReSharper disable Unity.PerformanceAnalysis // This doesn't ever call the performance-intensive Refresh, it only removes it as a listener. 
 		public override void OnEnd(){
 			Calendar.OnDayTick.RemoveListener(Refresh);
 			base.OnEnd();

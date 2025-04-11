@@ -24,6 +24,7 @@ namespace Player {
 			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
 			Add(rectTransform, selectable, action);
 		}
+		// ReSharper disable Unity.PerformanceAnalysis // The expensive AddComponent won't be called every frame because existingLinks keeps track of it there already is a link.
 		public void Add(Component linkComponent, ISelectable selectable, Action action = null){
 			if (existingLinks.TryGetValue(linkComponent.gameObject, out (UILink link, ISelectable selectable) tuple)){
 				if (tuple.selectable == selectable){

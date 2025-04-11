@@ -15,7 +15,7 @@ namespace Player {
 		protected Country Player => UI.PlayerCountry;
 		protected Calendar Calendar => UI.Map.Calendar;
 
-		internal void Init(UIStack uiStack){
+		internal virtual void Init(UIStack uiStack){
 			UI = uiStack;
 		}
 		

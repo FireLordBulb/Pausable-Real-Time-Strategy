@@ -25,16 +25,17 @@ namespace Player {
 		
 		public CalendarPanel CalendarPanel => calendarPanel;
 		
-		// ReSharper disable Unity.PerformanceAnalysis // OnBegin isn't called every frame.
-		public override void OnBegin(bool isFirstTime){
-			if (!isFirstTime){
-				return;
-			}
+		private void Awake(){
 			warButton.onClick.AddListener(() => SidePanelButtonClick(warButton, warMenu));
 			economyButton.onClick.AddListener(() => SidePanelButtonClick(economyButton, economyMenu));
-			gameObject.SetActive(true);
+		}
+		internal override void Init(UIStack uiStack){
+			base.Init(uiStack);
 			RefreshCountry();
 			SetButtonsInteractable();
+		}
+		public override void OnBegin(bool isFirstTime){
+			gameObject.SetActive(true);
 		}
 		private void SidePanelButtonClick(Button clickedButton, UILayer menuPrefab){
 			DestroyImmediate(sidePanelMenuGameObject);

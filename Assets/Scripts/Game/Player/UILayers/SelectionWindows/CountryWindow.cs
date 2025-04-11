@@ -19,12 +19,17 @@ namespace Player {
 		
 		private Country country;
 		private DiplomaticStatus diplomaticStatus;
-		private PeaceNegotiation peaceNegociation;
+		private PeaceNegotiation peaceNegotiation;
 		
-		public override void OnBegin(bool isFirstTime){
-			if (!isFirstTime){
-				return;
-			}
+		private void Awake(){
+			select.onClick.AddListener(() => {
+				UI.PlayAs(country);
+				UI.Deselect(country);
+				UI.ClearSelectHistory();
+			});
+		}
+		internal override void Init(UIStack uiStack){
+			base.Init(uiStack);
 			country = UI.SelectedCountry;
 			title.text = $"{country.Name}";
 			flag.material = new Material(flag.material){
@@ -35,15 +40,10 @@ namespace Player {
 			SetupDiplomacy();
 			SetupSelectButton();
 			Refresh();
-			select.onClick.AddListener(() => {
-				UI.PlayAs(country);
-				UI.Deselect(country);
-				UI.ClearSelectHistory();
-			});
 			
 			country.OnSelect();
 		}
-
+		
 		public void Refresh(){
 			if (UI.HasPlayerCountryChanged){
 				SetupDiplomacy();
@@ -58,8 +58,8 @@ namespace Player {
 				Format.FormatLargeNumber(country.Sailors, Format.SevenDigits)
 			);
 			RefreshDiplomacy();
-			if (peaceNegociation != null){
-				peaceNegociation.Refresh();
+			if (peaceNegotiation != null){
+				peaceNegotiation.Refresh();
 			}
 		}
 
@@ -71,12 +71,11 @@ namespace Player {
 					RefreshDiplomacy();
 				});
 				makePeace.onClick.AddListener(() => {
-					if (peaceNegociation == null){
+					if (peaceNegotiation == null){
 						UI.Push(peaceNegociationPrefab);
-						peaceNegociation = (PeaceNegotiation)UI.GetTopLayer();
-						peaceNegociation.Init(country);
+						peaceNegotiation = (PeaceNegotiation)UI.GetTopLayer();
 					} else {
-						peaceNegociation.Close();
+						peaceNegotiation.Close();
 					}
 				});
 			} else {
@@ -136,8 +135,8 @@ namespace Player {
 		}
 		
 		public override void OnEnd(){
-			if (peaceNegociation != null){
-				peaceNegociation.OnEnd();
+			if (peaceNegotiation != null){
+				peaceNegotiation.OnEnd();
 			}
 			country.OnDeselect();
 			Calendar.OnDayTick.RemoveListener(RefreshDiplomacy);

@@ -11,11 +11,8 @@ namespace Player {
 
 		private bool isDone;
 		
-		// ReSharper disable Unity.PerformanceAnalysis // This is editor only AND OnBegin isn't called even near every frame.
-		public override void OnBegin(bool isFirstTime){
-			if (!isFirstTime){
-				return;
-			}
+		internal override void Init(UIStack uiStack){
+			base.Init(uiStack);
 #if UNITY_EDITOR
 			if (doAutoSelect){
 				UI.PlayAs(isObserver ? null : UI.Map.GetCountry(autoSelectedCountryName));

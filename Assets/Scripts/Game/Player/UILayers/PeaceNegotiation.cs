@@ -47,10 +47,7 @@ namespace Player {
 		
 		private float ChangeAmount => baseChange*(UI.IsShiftHeld ? shiftMultiplier : 1)*(UI.IsControlHeld ? ctrlMultiplier : 1);
 		
-		public override void OnBegin(bool isFirstTime){
-			if (!isFirstTime){
-				return;
-			}
+		private void Awake(){
 			makeDemands.onClick.AddListener(() => {
 				SetWinner(true);
 			});
@@ -121,9 +118,10 @@ namespace Player {
 			sendingBlocked.text = $"May send another peace offer in {daysUntilSendingUnblocked} days";
 		}
 		
-		public void Init(Country enemyCountry){
+		internal override void Init(UIStack uiStack){
+			base.Init(uiStack);
 			player = Player;
-			enemy = enemyCountry;
+			enemy = UI.SelectedCountry;
 			treaty = Player.NewPeaceTreaty(enemy);
 			playerPanel.SetCountry(player, UI, Close);
 			enemyPanel.SetCountry(enemy, UI, Close);

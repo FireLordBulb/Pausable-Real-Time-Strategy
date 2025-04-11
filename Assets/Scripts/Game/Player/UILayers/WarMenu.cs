@@ -13,10 +13,7 @@ namespace Player {
 		private RegimentType selectedRegimentType;
 		private ShipType selectedShipType;
 		
-		public override void OnBegin(bool isFirstTime){
-			if (!isFirstTime){
-				return;
-			}
+		private void Awake(){
 			RectTransform parent = army;
 			foreach (RegimentType regimentType in Player.RegimentTypes){
 				parent = SetupButton(regimentType, parent);
