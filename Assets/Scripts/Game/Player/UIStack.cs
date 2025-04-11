@@ -149,40 +149,7 @@ namespace Player {
 			};
 #endif
 		}
-		private void OnClick(InputAction.CallbackContext context, bool isRightClick){
-			bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
-			if (hoveredSelectable == null){
-				return;
-			}
-			if (isMouseDown){
-				mouseDownSelectable = hoveredSelectable;
-				isSelectClickRight = isRightClick;
-				return;
-			}
-			// Ignore mouse up for the mouse button pressed down less recently, if both mouse buttons, were down.
-			if (isSelectClickRight != isRightClick){
-				return;
-			}
-			if (mouseDownSelectable == hoveredSelectable){
-				Select(CurrentAction.OnSelectableClicked(mouseDownSelectable, isRightClick));
-			}
-			mouseDownSelectable = null;
-		}
 		#endregion
-		
-		public TLayer Push<TLayer>(TLayer layer) where TLayer : UILayer {
-			// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
-			if (!layer.gameObject.scene.IsValid()){
-				layer = Instantiate(layer, transform);
-				if (layer is IClosableWindow closableWindow){
-					Button button = Instantiate(closeButton, layer.transform);
-					button.onClick.AddListener(closableWindow.Close);
-				}
-			}
-			layer.Init(this);
-			base.Push(layer);
-			return layer;
-		}
 		
 		#region Update
 		protected override void Update(){
@@ -226,6 +193,19 @@ namespace Player {
 		#endregion
 
 		#region Public Void Methods
+		public TLayer Push<TLayer>(TLayer layer) where TLayer : UILayer {
+			// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
+			if (!layer.gameObject.scene.IsValid()){
+				layer = Instantiate(layer, transform);
+				if (layer is IClosableWindow closableWindow){
+					Button button = Instantiate(closeButton, layer.transform);
+					button.onClick.AddListener(closableWindow.Close);
+				}
+			}
+			layer.Init(this);
+			base.Push(layer);
+			return layer;
+		}
 		public void PlayAs(Country country){
 			PlayerCountry = country;
 			selectedHistory.Clear();
@@ -260,7 +240,26 @@ namespace Player {
 		}
 		#endregion
 		
-		#region On Click
+		#region Clicking to Select
+		private void OnClick(InputAction.CallbackContext context, bool isRightClick){
+			bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
+			if (hoveredSelectable == null){
+				return;
+			}
+			if (isMouseDown){
+				mouseDownSelectable = hoveredSelectable;
+				isSelectClickRight = isRightClick;
+				return;
+			}
+			// Ignore mouse up for the mouse button pressed down less recently, if both mouse buttons, were down.
+			if (isSelectClickRight != isRightClick){
+				return;
+			}
+			if (mouseDownSelectable == hoveredSelectable){
+				Select(CurrentAction.OnSelectableClicked(mouseDownSelectable, isRightClick));
+			}
+			mouseDownSelectable = null;
+		}
 		private void Select(ISelectable selectable){
 			SelectWithoutHistoryUpdate(selectable);
 			UpdateSelectedHistory();
@@ -301,7 +300,7 @@ namespace Player {
 		}
 		#endregion
 		
-		#region Getting Functions
+		#region Getter Functions
 		public UILayer GetLayerBelow(UILayer layer){
 			StackList.RemoveAll(l => l == null);
 			int index = StackList.FindIndex(l => l == layer);
