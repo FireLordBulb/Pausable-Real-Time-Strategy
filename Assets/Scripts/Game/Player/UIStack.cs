@@ -1,9 +1,6 @@
-using System;
 using System.Collections.Generic;
 using ActionStackSystem;
-using Mathematics;
 using Simulation;
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -47,6 +44,7 @@ namespace Player {
 		public Country PlayerCountry {get; private set;}
 		public bool HasPlayerCountryChanged {get; private set;}
 		public ISelectable Selected {get; private set;}
+		public Links Links {get; private set;}
 		public bool IsShiftHeld {get; private set;}
 		public bool IsControlHeld {get; private set;}
 		#endregion
@@ -136,6 +134,7 @@ namespace Player {
 #endif
 		}
 		private void SpawnUI(){
+			Links = new Links(Select);
 			hud = Instantiate(hud, transform);
 			hud.CalendarPanel.Calendar = Map.Calendar;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -264,7 +263,7 @@ namespace Player {
 			}
 		}
 		
-		public void Select(ISelectable selectable){
+		private void Select(ISelectable selectable){
 			SelectWithoutHistoryUpdate(selectable);
 			UpdateSelectedHistory();
 		}
@@ -321,35 +320,6 @@ namespace Player {
 				return null;
 			}
 			return StackList[index-1];
-		}
-		
-		private readonly Dictionary<GameObject, (UILink link, ISelectable selectable)> links = new();
-		public void SetSelectLink(TextMeshProUGUI linkText, ISelectable selectable, Action action = null){
-			if (links.TryGetValue(linkText.gameObject, out (UILink, ISelectable selectable) tuple) && tuple.selectable == selectable){
-				return;
-			}
-			linkText.ForceMeshUpdate();
-			RectTransform rectTransform = (RectTransform)linkText.transform;
-			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
-			SetSelectLink(rectTransform, selectable, action);
-		}
-		public void SetSelectLink(Component linkComponent, ISelectable selectable, Action action = null){
-			if (links.TryGetValue(linkComponent.gameObject, out (UILink link, ISelectable selectable) tuple)){
-				if (tuple.selectable == selectable){
-					return;
-				}
-				links.Remove(linkComponent.gameObject);
-				DestroyImmediate(tuple.link);
-			}
-			UILink link = linkComponent.gameObject.AddComponent<UILink>();
-			link.Link(action == null ? 
-				() => Select(selectable) :
-				() => {
-					Select(selectable);
-					action();
-				}
-			);
-			links.Add(linkComponent.gameObject, (link, selectable));
 		}
 		
 		public Simulation.Military.Harbor GetHarbor(Province province){

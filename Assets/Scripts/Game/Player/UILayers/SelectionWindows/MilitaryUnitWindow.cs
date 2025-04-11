@@ -33,7 +33,7 @@ namespace Player {
 			if (Unit.IsBuilt && Unit.IsMoving){
 				SetLeftOfLinkText("Moving to ", action, location);
 				location.text = Unit.NextLocation.Name;
-				UI.SetSelectLink(location, Unit.NextLocation.Province);
+				UI.Links.Add(location, Unit.NextLocation.Province);
 				days.text = Unit.DaysToNextLocation.ToString();
 				daysLeftText.SetActive(true);
 				if (Unit.NextLocation == Unit.TargetLocation){
@@ -41,12 +41,12 @@ namespace Player {
 				} else {
 					destination.SetActive(true);
 					destinationLocation.text = Unit.TargetLocation.Name;
-					UI.SetSelectLink(destinationLocation, Unit.TargetLocation.Province);
+					UI.Links.Add(destinationLocation, Unit.TargetLocation.Province);
 				}
 			} else if (Unit.IsBuilt && !Unit.IsMoving){
 				SetLeftOfLinkText("Located at ", action, location);
 				location.text = Unit.Location.Name;
-				UI.SetSelectLink(location, Unit.Location.Province);
+				UI.Links.Add(location, Unit.Location.Province);
 				days.text = "";
 				daysLeftText.SetActive(false);
 				destination.SetActive(false);

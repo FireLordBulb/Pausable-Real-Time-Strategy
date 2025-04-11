@@ -18,11 +18,11 @@ namespace Player {
 			}
 			linkedCountry = country;
 			countryName.text = linkedCountry.Name;
-			ui.SetSelectLink(countryName, linkedCountry, action);
+			ui.Links.Add(countryName, linkedCountry, action);
 			flag.material = new Material(flag.material){
 				color = country.MapColor
 			};
-			ui.SetSelectLink(flag, linkedCountry, action);
+			ui.Links.Add(flag, linkedCountry, action);
 		}
 	}
 }
