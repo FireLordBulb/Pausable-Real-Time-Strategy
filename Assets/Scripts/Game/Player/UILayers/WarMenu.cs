@@ -13,7 +13,8 @@ namespace Player {
 		private RegimentType selectedRegimentType;
 		private ShipType selectedShipType;
 		
-		private void Awake(){
+		internal override void Init(UIStack uiStack){
+			base.Init(uiStack);
 			RectTransform parent = army;
 			foreach (RegimentType regimentType in Player.RegimentTypes){
 				parent = SetupButton(regimentType, parent);
