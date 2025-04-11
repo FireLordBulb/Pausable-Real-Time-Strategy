@@ -47,7 +47,10 @@ namespace Player {
 		
 		private float ChangeAmount => baseChange*(UI.IsShiftHeld ? shiftMultiplier : 1)*(UI.IsControlHeld ? ctrlMultiplier : 1);
 		
-		private void Awake(){
+		public override void OnBegin(bool isFirstTime){
+			if (!isFirstTime){
+				return;
+			}
 			makeDemands.onClick.AddListener(() => {
 				SetWinner(true);
 			});
@@ -122,8 +125,8 @@ namespace Player {
 			player = Player;
 			enemy = enemyCountry;
 			treaty = Player.NewPeaceTreaty(enemy);
-			playerPanel.SetCountry(player, Close);
-			enemyPanel.SetCountry(enemy, Close);
+			playerPanel.SetCountry(player, UI, Close);
+			enemyPanel.SetCountry(enemy, UI, Close);
 			Refresh();
 			UI.Selected.OnDeselect();
 		}

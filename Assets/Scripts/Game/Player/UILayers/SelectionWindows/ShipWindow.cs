@@ -7,7 +7,7 @@ namespace Player {
 			if (province.IsSea){
 				result = Player.MoveFleetTo(Unit, province.Sea.NavyLocation);
 			} else if (province.IsCoast){
-				result = Player.MoveFleetTo(Unit, GetHarbor(province));
+				result = Player.MoveFleetTo(Unit, UI.GetHarbor(province));
 			} else {
 				result = MoveOrderResult.InvalidTarget;
 			}

@@ -21,7 +21,10 @@ namespace Player {
 		private DiplomaticStatus diplomaticStatus;
 		private PeaceNegotiation peaceNegociation;
 		
-		private void Awake(){
+		public override void OnBegin(bool isFirstTime){
+			if (!isFirstTime){
+				return;
+			}
 			country = UI.SelectedCountry;
 			title.text = $"{country.Name}";
 			flag.material = new Material(flag.material){

@@ -24,9 +24,17 @@ namespace Player {
 		private IRefreshable sidePanelMenuRefreshable;
 		
 		public CalendarPanel CalendarPanel => calendarPanel;
-		private void Awake(){
+		
+		// ReSharper disable Unity.PerformanceAnalysis // OnBegin isn't called every frame.
+		public override void OnBegin(bool isFirstTime){
+			if (!isFirstTime){
+				return;
+			}
 			warButton.onClick.AddListener(() => SidePanelButtonClick(warButton, warMenu));
 			economyButton.onClick.AddListener(() => SidePanelButtonClick(economyButton, economyMenu));
+			gameObject.SetActive(true);
+			RefreshCountry();
+			SetButtonsInteractable();
 		}
 		private void SidePanelButtonClick(Button clickedButton, UILayer menuPrefab){
 			DestroyImmediate(sidePanelMenuGameObject);
@@ -36,12 +44,7 @@ namespace Player {
 			sidePanelMenuGameObject = UI.GetTopLayer().gameObject;
 			sidePanelMenuRefreshable = sidePanelMenuGameObject.GetComponent<IRefreshable>();
 		}
-		// ReSharper disable Unity.PerformanceAnalysis // OnBegin isn't called every frame.
-		public override void OnBegin(bool isFirstTime){
-			gameObject.SetActive(true);
-			RefreshCountry();
-			SetButtonsInteractable();
-		}
+		
 		public void RefreshCountry(){
 			if (Player == null){
 				countryFlag.material = new Material(countryFlag.material){

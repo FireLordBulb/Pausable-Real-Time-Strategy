@@ -16,7 +16,10 @@ namespace Player {
 		private Province province;
 		private Country linkedCountry;
 
-		private void Awake(){
+		public override void OnBegin(bool isFirstTime){
+			if (!isFirstTime){
+				return;
+			}
 			province = UI.SelectedProvince;
 			title.text = $"{province}";
 			Texture2D texture = (Texture2D)province.Terrain.Material.mainTexture;
@@ -36,7 +39,7 @@ namespace Player {
 			}
 			Terrain terrain = province.Terrain;
 			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentModifier, terrain.MoveSpeedModifier, terrain.DefenderAdvantage);
-			countryPanel.SetCountry(province.Land.Owner);
+			countryPanel.SetCountry(province.Land.Owner, UI);
 		}
 		public override void OnEnd(){
 			province.OnDeselect();

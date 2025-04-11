@@ -1,6 +1,9 @@
+using System;
 using System.Collections.Generic;
 using ActionStackSystem;
+using Mathematics;
 using Simulation;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -10,7 +13,6 @@ namespace Player {
 	[RequireComponent(typeof(Canvas))]
 	public class UIStack : ActionStack<UILayer> {
 		private const float ActivationThreshold = 0.5f;
-		public static UIStack Instance {get; private set;}
 		#region SerializedFields
 		[Header("Scene Init Prefabs")]
 		[SerializeField] private MapGraph map;
@@ -56,12 +58,6 @@ namespace Player {
 		#endregion
 
 		private void Awake(){
-			if (Instance != null){
-				Destroy(gameObject);
-				return;
-			}
-			Instance = this;
-
 			InitScene();
 			EnableInput();
 			SpawnUI();
@@ -115,6 +111,7 @@ namespace Player {
 			};
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			debugConsole = Instantiate(debugConsole, transform);
+			debugConsole.UI = this;
 			debugConsole.Calendar = Map.Calendar;
 			debugConsole.CalendarPanel = hud.CalendarPanel;
 			cameraInput.DebugConsole = debugConsole;
@@ -185,6 +182,7 @@ namespace Player {
 					button.onClick.AddListener(closableWindow.Close);
 				}
 			}
+			layer.Init(this);
 			base.Push(layer);
 		}
 		protected override void Update(){
@@ -323,6 +321,58 @@ namespace Player {
 				return null;
 			}
 			return StackList[index-1];
+		}
+		
+		private readonly Dictionary<GameObject, (UILink link, ISelectable selectable)> links = new();
+		public void SetSelectLink(TextMeshProUGUI linkText, ISelectable selectable, Action action = null){
+			if (links.TryGetValue(linkText.gameObject, out (UILink, ISelectable selectable) tuple) && tuple.selectable == selectable){
+				return;
+			}
+			linkText.ForceMeshUpdate();
+			RectTransform rectTransform = (RectTransform)linkText.transform;
+			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
+			SetSelectLink(rectTransform, selectable, action);
+		}
+		public void SetSelectLink(Component linkComponent, ISelectable selectable, Action action = null){
+			if (links.TryGetValue(linkComponent.gameObject, out (UILink link, ISelectable selectable) tuple)){
+				if (tuple.selectable == selectable){
+					return;
+				}
+				links.Remove(linkComponent.gameObject);
+				DestroyImmediate(tuple.link);
+			}
+			UILink link = linkComponent.gameObject.AddComponent<UILink>();
+			link.Link(action == null ? 
+				() => Select(selectable) :
+				() => {
+					Select(selectable);
+					action();
+				}
+			);
+			links.Add(linkComponent.gameObject, (link, selectable));
+		}
+		
+		public Simulation.Military.Harbor GetHarbor(Province province){
+			if (!province.IsCoast){
+				return null;
+			} 
+			Simulation.Military.Harbor closestHarbor = null;
+			float closestSquareDistance = float.MaxValue;
+			foreach (ProvinceLink provinceLink in province.Links){
+				if (provinceLink is not ShallowsLink shallowsLink){
+					continue;
+				}
+				Simulation.Military.Harbor harbor = shallowsLink.Harbor;
+				float squareDistance = (harbor.WorldPosition-MouseWorldPosition).sqrMagnitude;
+				if (closestSquareDistance < squareDistance){
+					continue;
+				}
+				closestHarbor = harbor;
+				closestSquareDistance = squareDistance;
+			}
+			// All coastal provinces have at least one harbor.
+			Debug.Assert(closestHarbor != null);
+			return closestHarbor;
 		}
 	}
 }

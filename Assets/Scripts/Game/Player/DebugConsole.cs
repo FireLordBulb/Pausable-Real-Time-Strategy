@@ -19,6 +19,7 @@ namespace Player {
 		[SerializeField] private bool doUseAutoCommands;
 		[SerializeField] private string[] autoCommands;
 		
+		internal UIStack UI {private get; set;}
 		internal Calendar Calendar {private get; set;}
 		internal CalendarPanel CalendarPanel {private get; set;}
 		internal bool IsKeyboardBusy => inputField.gameObject == EventSystem.current.currentSelectedGameObject;
@@ -58,11 +59,11 @@ namespace Player {
 			string[] words = command.Split(" ");
 			switch(words[0].ToLower()){
 				case "country_switching":
-					UIStack.Instance.CanSwitchCountry = !UIStack.Instance.CanSwitchCountry;
-					AddConsoleResponse($"Free country switching is now {(UIStack.Instance.CanSwitchCountry ? "Enabled" : "Disabled")}.");
+					UI.CanSwitchCountry = !UI.CanSwitchCountry;
+					AddConsoleResponse($"Free country switching is now {(UI.CanSwitchCountry ? "Enabled" : "Disabled")}.");
 					return;
 				case "observe":
-					UIStack.Instance.PlayAs(null);
+					UI.PlayAs(null);
 					AddConsoleResponse("Activated observer mode. Deactivate by selecting a country.");
 					return;
 				case "play":
@@ -71,9 +72,9 @@ namespace Player {
 						AddConsoleResponse("Incomplete command: 'play_as' requires country name as argument.");
 						return;
 					}
-					Country country = UIStack.Instance.Map.GetCountry(words[1]);
+					Country country = UI.Map.GetCountry(words[1]);
 					if (country != null){
-						UIStack.Instance.PlayAs(country);
+						UI.PlayAs(country);
 						AddConsoleResponse($"Switching to {country.name}.");
 					} else {
 						AddConsoleResponse($"Command 'play_as' failed. No country has the name '{words[1]}'.");
@@ -81,7 +82,7 @@ namespace Player {
 					return;
 				case "peace_with":
 				case "peace":
-					if (UIStack.Instance.PlayerCountry == null){
+					if (UI.PlayerCountry == null){
 						AddConsoleResponse("Command 'peace_with' failed. Must be playing as a country to end a war.");
 						return;
 					}
@@ -89,26 +90,26 @@ namespace Player {
 						AddConsoleResponse("Incomplete command: 'peace_with' requires country name as argument.");
 						return;
 					}
-					Country opponent = UIStack.Instance.Map.GetCountry(words[1]);
+					Country opponent = UI.Map.GetCountry(words[1]);
 					if (opponent != null){
-						UIStack.Instance.PlayerCountry.EndWar(opponent, UIStack.Instance.PlayerCountry.NewPeaceTreaty(opponent));
+						UI.PlayerCountry.EndWar(opponent, UI.PlayerCountry.NewPeaceTreaty(opponent));
 						AddConsoleResponse($"Ending war with {opponent.name}.");
 					} else {
 						AddConsoleResponse($"Command 'peace_with' failed. No country has the name '{words[1]}'.");
 					}
 					return;
 				case "own":
-					if (UIStack.Instance.SelectedProvince == null){
+					if (UI.SelectedProvince == null){
 						AddConsoleResponse("Command 'own' failed. You must select a specific province to own.");
 						return;
 					}
-					if (UIStack.Instance.SelectedProvince.IsSea){
+					if (UI.SelectedProvince.IsSea){
 						AddConsoleResponse("Command 'own' failed. You cannot own sea provinces.");
 						return;
 					}
-					UIStack.Instance.SelectedProvince.Land.Owner = UIStack.Instance.PlayerCountry;
-					UIStack.Instance.Refresh();
-					AddConsoleResponse($"{UIStack.Instance.PlayerCountry.Name} now own the province {UIStack.Instance.SelectedProvince}.");
+					UI.SelectedProvince.Land.Owner = UI.PlayerCountry;
+					UI.Refresh();
+					AddConsoleResponse($"{UI.PlayerCountry.Name} now own the province {UI.SelectedProvince}.");
 					return;
 				case "rich":
 					RunCommand("gold 999900");
@@ -118,21 +119,21 @@ namespace Player {
 				case "gold": {
 					AddResource(words, "a float",
 						s => (float.TryParse(s, out float value), value),
-						gold => UIStack.Instance.PlayerCountry.GainResources(gold, 0, 0)
+						gold => UI.PlayerCountry.GainResources(gold, 0, 0)
 					);
 					return;
 				}
 				case "manpower": {
 					AddResource(words, "an int",
 						s => (int.TryParse(s, out int value), value),
-						manpower => UIStack.Instance.PlayerCountry.GainResources(0, manpower, 0)
+						manpower => UI.PlayerCountry.GainResources(0, manpower, 0)
 					);
 					return;
 				}
 				case "sailors": {
 					AddResource(words, "an int",
 						s => (int.TryParse(s, out int value), value),
-						sailors => UIStack.Instance.PlayerCountry.GainResources(0, 0, sailors)
+						sailors => UI.PlayerCountry.GainResources(0, 0, sailors)
 					);
 					return;
 				}
@@ -171,15 +172,15 @@ namespace Player {
 				case "regiment":
 				case "reg": {
 					CreateMilitaryUnit("regiment", words, province => {
-						Simulation.Military.RegimentType type = UIStack.Instance.PlayerCountry.RegimentTypes.First();
-						return (type.name, UIStack.Instance.PlayerCountry.TryStartRecruitingRegiment(type, province));
+						Simulation.Military.RegimentType type = UI.PlayerCountry.RegimentTypes.First();
+						return (type.name, UI.PlayerCountry.TryStartRecruitingRegiment(type, province));
 					}, "recruit a regiment", "recruiting");
 					return;
 				}
 				case "ship": {
 					CreateMilitaryUnit("ship", words, province => {
-						Simulation.Military.ShipType type = UIStack.Instance.PlayerCountry.ShipTypes.First();
-						return (type.name, UIStack.Instance.PlayerCountry.TryStartConstructingFleet(type, UILayer.GetHarbor(province)));
+						Simulation.Military.ShipType type = UI.PlayerCountry.ShipTypes.First();
+						return (type.name, UI.PlayerCountry.TryStartConstructingFleet(type, UI.GetHarbor(province)));
 					}, "construct a ship", "constructing");
 					return;
 				}
@@ -187,7 +188,7 @@ namespace Player {
 			AddConsoleResponse($"Invalid command: {words[0]}");
 		}
 		private void AddResource<T>(string[] words, string typeName, Func<string, (bool, T)> parser, Action<T> addfunction){
-			if (UIStack.Instance.PlayerCountry == null){
+			if (UI.PlayerCountry == null){
 				AddConsoleResponse($"Command '{words[0]}' failed. Must be playing as a country to add resources to it.");
 				return;
 			}
@@ -198,8 +199,8 @@ namespace Player {
 			(bool couldParse, T value) = parser(words[1]);
 			if (couldParse){
 				addfunction(value);
-				UIStack.Instance.Refresh();
-				AddConsoleResponse($"Added {words[1]} {words[0]} to {UIStack.Instance.PlayerCountry.Name}.");
+				UI.Refresh();
+				AddConsoleResponse($"Added {words[1]} {words[0]} to {UI.PlayerCountry.Name}.");
 			} else {
 				AddConsoleResponse($"Command '{words[0]}' failed. Couldn't parse {words[1]} to {typeName}.");
 			}
@@ -226,7 +227,7 @@ namespace Player {
 			return true;
 		}
 		private async void SetDate(Date date){
-			if (date < UIStack.Instance.Map.Calendar.CurrentDate){
+			if (date < UI.Map.Calendar.CurrentDate){
 				AddConsoleResponse($"Changing the date to the past will not modify the simulation.");
 				Calendar.SetDate(date);
 				CalendarPanel.UpdateDate();
@@ -246,22 +247,22 @@ namespace Player {
 			} while (Calendar.CurrentDate < date);
 			CalendarPanel.EnableUpdate();
 			CalendarPanel.UpdateDate();
-			UIStack.Instance.Refresh();
+			UI.Refresh();
 			AddConsoleResponse($"Successfully changed the date to {date}.");
 		}
 		private void CreateMilitaryUnit(string command, string[] words, Func<Province, (string, bool)> tryStartCreating, string setenceSegment, string creatingVerb){
-			if (UIStack.Instance.PlayerCountry == null){
+			if (UI.PlayerCountry == null){
 				AddConsoleResponse($"Command '{command}' failed. Must be playing as a country to {setenceSegment}.");
 				return;
 			}
 			Province province;
 			if (words.Length == 1){
-				province = UIStack.Instance.PlayerCountry.Capital.Province;
+				province = UI.PlayerCountry.Capital.Province;
 			} else {
 				if (int.TryParse(words[1], out int index)){
-					province = UIStack.Instance.PlayerCountry.Provinces.ElementAtOrDefault(index)?.Province;
+					province = UI.PlayerCountry.Provinces.ElementAtOrDefault(index)?.Province;
 					if (province == null){
-						AddConsoleResponse($"Command '{command}' failed. {words[1]} isn't smaller than {UIStack.Instance.PlayerCountry.Name}'s province count.");
+						AddConsoleResponse($"Command '{command}' failed. {words[1]} isn't smaller than {UI.PlayerCountry.Name}'s province count.");
 						return;
 					}
 				} else {
@@ -270,7 +271,7 @@ namespace Player {
 				}
 			}
 			(string typeName, bool didStartBuilding) = tryStartCreating(province);
-			UIStack.Instance.Refresh();
+			UI.Refresh();
 			AddConsoleResponse(didStartBuilding ? $"Started {creatingVerb} {typeName}." : $"Failed to start {creatingVerb} {typeName}.");
 		}
 		private void AddConsoleResponse(string response){

@@ -17,10 +17,14 @@ namespace Player {
 
 		protected TUnit Unit;
 		
-		private void Awake(){
+		// ReSharper disable Unity.PerformanceAnalysis // OnBegin is called very rarely.
+		public override void OnBegin(bool isFirstTime){
+			if (!isFirstTime){
+				return;
+			}
 			Unit = (TUnit)UI.Selected;
 			title.text = $"{Unit.Type.name}";
-			countryPanel.SetCountry(Unit.Owner);
+			countryPanel.SetCountry(Unit.Owner, UI);
 			Refresh();
 			message.text = "";
 			Calendar.OnDayTick.AddListener(Refresh);
@@ -29,7 +33,7 @@ namespace Player {
 			if (Unit.IsBuilt && Unit.IsMoving){
 				SetLeftOfLinkText("Moving to ", action, location);
 				location.text = Unit.NextLocation.Name;
-				SetSelectLink(location, Unit.NextLocation.Province);
+				UI.SetSelectLink(location, Unit.NextLocation.Province);
 				days.text = Unit.DaysToNextLocation.ToString();
 				daysLeftText.SetActive(true);
 				if (Unit.NextLocation == Unit.TargetLocation){
@@ -37,12 +41,12 @@ namespace Player {
 				} else {
 					destination.SetActive(true);
 					destinationLocation.text = Unit.TargetLocation.Name;
-					SetSelectLink(destinationLocation, Unit.TargetLocation.Province);
+					UI.SetSelectLink(destinationLocation, Unit.TargetLocation.Province);
 				}
 			} else if (Unit.IsBuilt && !Unit.IsMoving){
 				SetLeftOfLinkText("Located at ", action, location);
 				location.text = Unit.Location.Name;
-				SetSelectLink(location, Unit.Location.Province);
+				UI.SetSelectLink(location, Unit.Location.Province);
 				days.text = "";
 				daysLeftText.SetActive(false);
 				destination.SetActive(false);

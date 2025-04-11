@@ -70,7 +70,7 @@ namespace Player {
 				Player.TryStartRecruitingRegiment(selectedRegimentType, clickedProvince);
 				UI.Refresh();
 			} else if (selectedShipType != null){
-				Player.TryStartConstructingFleet(selectedShipType, GetHarbor(clickedProvince));
+				Player.TryStartConstructingFleet(selectedShipType, UI.GetHarbor(clickedProvince));
 				UI.Refresh();
 			} else {
 				return clickedProvince;
@@ -87,9 +87,6 @@ namespace Player {
 			selectedShipType = null;
 		}
 		
-		public override void OnEnd(){
-			base.OnEnd();
-		}
 		public override bool IsDone(){
 			base.IsDone();
 			return isDone || Player == null;

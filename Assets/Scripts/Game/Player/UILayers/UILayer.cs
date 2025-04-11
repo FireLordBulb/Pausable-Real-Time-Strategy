@@ -1,24 +1,23 @@
-using System;
-using System.Collections.Generic;
 using ActionStackSystem;
-using Mathematics;
 using Simulation;
-using TMPro;
-using UnityEngine;
 
 namespace Player {
 	public abstract class UILayer : ActionBehaviour {
 		private UILayer layerBelow;
 		
+		protected UIStack UI {get; private set;}
 		protected UILayer LayerBelow {get {
 			if (layerBelow == null){
 				layerBelow = UI.GetLayerBelow(this);
 			}
 			return layerBelow;
 		}}
-		protected static UIStack UI => UIStack.Instance;
-		protected static Country Player => UI.PlayerCountry;
-		protected static Calendar Calendar => UI.Map.Calendar;
+		protected Country Player => UI.PlayerCountry;
+		protected Calendar Calendar => UI.Map.Calendar;
+
+		internal void Init(UIStack uiStack){
+			UI = uiStack;
+		}
 		
 		public override void OnBegin(bool isFirstTime){}
 		
@@ -39,59 +38,6 @@ namespace Player {
 				LayerBelow.OnEnd();
 			}
 			return false;
-		}
-		
-		// Subclass Sandbox. |>-------------------------------------------------------------------------------------------
-		private static readonly Dictionary<GameObject, (UILink link, ISelectable selectable)> Links = new();
-		public static void SetSelectLink(TextMeshProUGUI linkText, ISelectable selectable, Action action = null){
-			if (Links.TryGetValue(linkText.gameObject, out (UILink, ISelectable selectable) tuple) && tuple.selectable == selectable){
-				return;
-			}
-			linkText.ForceMeshUpdate();
-			RectTransform rectTransform = (RectTransform)linkText.transform;
-			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
-			SetSelectLink(rectTransform, selectable, action);
-		}
-		public static void SetSelectLink(Component linkComponent, ISelectable selectable, Action action = null){
-			if (Links.TryGetValue(linkComponent.gameObject, out (UILink link, ISelectable selectable) tuple)){
-				if (tuple.selectable == selectable){
-					return;
-				}
-				Links.Remove(linkComponent.gameObject);
-				DestroyImmediate(tuple.link);
-			}
-			UILink link = linkComponent.gameObject.AddComponent<UILink>();
-			link.Link(action == null ? 
-				() => UI.Select(selectable) :
-				() => {
-					UI.Select(selectable);
-					action();
-				}
-			);
-			Links.Add(linkComponent.gameObject, (link, selectable));
-		}
-		
-		public static Simulation.Military.Harbor GetHarbor(Province province){
-			if (!province.IsCoast){
-				return null;
-			} 
-			Simulation.Military.Harbor closestHarbor = null;
-			float closestSquareDistance = float.MaxValue;
-			foreach (ProvinceLink provinceLink in province.Links){
-				if (provinceLink is not ShallowsLink shallowsLink){
-					continue;
-				}
-				Simulation.Military.Harbor harbor = shallowsLink.Harbor;
-				float squareDistance = (harbor.WorldPosition-UI.MouseWorldPosition).sqrMagnitude;
-				if (closestSquareDistance < squareDistance){
-					continue;
-				}
-				closestHarbor = harbor;
-				closestSquareDistance = squareDistance;
-			}
-			// All coastal provinces have at least one harbor.
-			Debug.Assert(closestHarbor != null);
-			return closestHarbor;
 		}
 	}
 }
