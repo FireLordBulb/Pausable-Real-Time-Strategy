@@ -3,7 +3,7 @@ using Simulation.Military;
 namespace Player {
 	public class RegimentWindow : MilitaryUnitWindow<Regiment> {
 		protected override void OrderMove(Province province){
-			MoveOrderResult result = Player.MoveRegimentTo(Unit, province);
+			MoveOrderResult result = Player.MoveRegimentTo(Selected, province);
 			SetMessage(result switch {
 				MoveOrderResult.BusyRetreating => "Cannot interrupt retreat movement!",
 				MoveOrderResult.NotBuilt => "Cannot move an army before it has finished recruiting!",

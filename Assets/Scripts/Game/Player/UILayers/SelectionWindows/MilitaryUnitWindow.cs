@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 namespace Player {
-	public abstract class MilitaryUnitWindow<TUnit> : UILayer, IRefreshable, IClosableWindow where TUnit : Unit<TUnit> {
+	public abstract class MilitaryUnitWindow<TUnit> : SelectionWindow<TUnit> where TUnit : Unit<TUnit> {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private TextMeshProUGUI action;
 		[SerializeField] private TextMeshProUGUI location;
@@ -14,43 +14,40 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI destinationLocation;
 		[SerializeField] private TextMeshProUGUI message;
 		[SerializeField] private CountryPanel countryPanel;
-
-		protected TUnit Unit;
 		
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
-			Unit = (TUnit)UI.Selected;
-			title.text = $"{Unit.Type.name}";
-			countryPanel.SetCountry(Unit.Owner, UI);
+			title.text = $"{Selected.Type.name}";
+			countryPanel.SetCountry(Selected.Owner, UI);
 			Refresh();
 			message.text = "";
 			Calendar.OnDayTick.AddListener(Refresh);
 		}
-		public void Refresh(){
-			if (Unit.IsBuilt && Unit.IsMoving){
+		public override void Refresh(){
+			if (Selected.IsBuilt && Selected.IsMoving){
 				SetLeftOfLinkText("Moving to ", action, location);
-				location.text = Unit.NextLocation.Name;
-				UI.Links.Add(location, Unit.NextLocation.Province);
-				days.text = Unit.DaysToNextLocation.ToString();
+				location.text = Selected.NextLocation.Name;
+				UI.Links.Add(location, Selected.NextLocation.Province);
+				days.text = Selected.DaysToNextLocation.ToString();
 				daysLeftText.SetActive(true);
-				if (Unit.NextLocation == Unit.TargetLocation){
+				if (Selected.NextLocation == Selected.TargetLocation){
 					destination.SetActive(false);
 				} else {
 					destination.SetActive(true);
-					destinationLocation.text = Unit.TargetLocation.Name;
-					UI.Links.Add(destinationLocation, Unit.TargetLocation.Province);
+					destinationLocation.text = Selected.TargetLocation.Name;
+					UI.Links.Add(destinationLocation, Selected.TargetLocation.Province);
 				}
-			} else if (Unit.IsBuilt && !Unit.IsMoving){
+			} else if (Selected.IsBuilt && !Selected.IsMoving){
 				SetLeftOfLinkText("Located at ", action, location);
-				location.text = Unit.Location.Name;
-				UI.Links.Add(location, Unit.Location.Province);
+				location.text = Selected.Location.Name;
+				UI.Links.Add(location, Selected.Location.Province);
 				days.text = "";
 				daysLeftText.SetActive(false);
 				destination.SetActive(false);
 			} else {
-				action.text = Unit.CreatingVerb;
+				action.text = Selected.CreatingVerb;
 				location.text = "";
-				days.text = Unit.BuildDaysLeft.ToString();
+				days.text = Selected.BuildDaysLeft.ToString();
 				daysLeftText.SetActive(true);
 				destination.SetActive(false);
 			}
@@ -71,10 +68,10 @@ namespace Player {
 			switch(clickedSelectable){
 				case Province province:
 					MoveTo(province);
-					return Unit;
-				case IUnit clickedUnit when !ReferenceEquals(Unit, clickedUnit):
+					return Selected;
+				case IUnit clickedUnit when !ReferenceEquals(Selected, clickedUnit):
 					MoveTo(clickedUnit.Province);
-					return Unit;
+					return Selected;
 				default:
 					return null;
 			}
@@ -97,10 +94,10 @@ namespace Player {
 		}
 		public override bool IsDone(){
 			base.IsDone();
-			return !ReferenceEquals(UI.Selected, Unit);
+			return !ReferenceEquals(UI.Selected, Selected);
 		}
-		public void Close(){
-			UI.Deselect(Unit);
+		public override void Close(){
+			UI.Deselect(Selected);
 		}
 	}
 }

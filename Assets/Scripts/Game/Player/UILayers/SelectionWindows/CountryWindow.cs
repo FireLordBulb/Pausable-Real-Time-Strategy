@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Player {
-	public class CountryWindow : UILayer, IRefreshable, IClosableWindow {
+	public class CountryWindow : SelectionWindow<Country> {
 		[SerializeField] private PeaceNegotiation peaceNegociationPrefab;
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image flag;
@@ -17,22 +17,20 @@ namespace Player {
 		[SerializeField] private Button makePeace;
 		[SerializeField] private Button select;
 		
-		private Country country;
 		private DiplomaticStatus diplomaticStatus;
 		private PeaceNegotiation peaceNegotiation;
 		
 		private void Awake(){
 			select.onClick.AddListener(() => {
-				UI.PlayAs(country);
-				UI.Deselect(country);
+				UI.PlayAs(Selected);
+				UI.Deselect(Selected);
 			});
 		}
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
-			country = UI.SelectedCountry;
-			title.text = $"{country.Name}";
+			title.text = $"{Selected.Name}";
 			flag.material = new Material(flag.material){
-				color = country.MapColor
+				color = Selected.MapColor
 			};
 			
 			valueTable.Generate(-1, valueNames);
@@ -40,21 +38,21 @@ namespace Player {
 			SetupSelectButton();
 			Refresh();
 			
-			country.OnSelect();
+			Selected.OnSelect();
 		}
 		
-		public void Refresh(){
+		public override void Refresh(){
 			if (UI.HasPlayerCountryChanged){
 				SetupDiplomacy();
 				SetupSelectButton();
 			}
 			valueTable.UpdateColumn(0, (
-				Format.FormatLargeNumber(country.ProvinceCount, Format.SevenDigits)),	
-				Format.FormatLargeNumber(country.RegimentCount, Format.FiveDigits),	
-				Format.FormatLargeNumber(country.ShipCount, Format.FiveDigits),	
-				Format.FormatLargeNumber(country.Gold, Format.FiveDigits),	
-				Format.FormatLargeNumber(country.Manpower, Format.SevenDigits),	
-				Format.FormatLargeNumber(country.Sailors, Format.SevenDigits)
+				Format.FormatLargeNumber(Selected.ProvinceCount, Format.SevenDigits)),	
+				Format.FormatLargeNumber(Selected.RegimentCount, Format.FiveDigits),	
+				Format.FormatLargeNumber(Selected.ShipCount, Format.FiveDigits),	
+				Format.FormatLargeNumber(Selected.Gold, Format.FiveDigits),	
+				Format.FormatLargeNumber(Selected.Manpower, Format.SevenDigits),	
+				Format.FormatLargeNumber(Selected.Sailors, Format.SevenDigits)
 			);
 			RefreshDiplomacy();
 			if (peaceNegotiation != null){
@@ -63,8 +61,8 @@ namespace Player {
 		}
 
 		private void SetupDiplomacy(){
-			if (Player != null && Player != country){
-				diplomaticStatus = Player.GetDiplomaticStatus(country);
+			if (Player != null && Player != Selected){
+				diplomaticStatus = Player.GetDiplomaticStatus(Selected);
 				declareWar.onClick.AddListener(() => {
 					diplomaticStatus.DeclareWar();
 					RefreshDiplomacy();
@@ -92,7 +90,7 @@ namespace Player {
 				return;
 			}
 			diplomacy.SetActive(true);
-			if (Player == country){
+			if (Player == Selected){
 				statusLabel.text = "This is your country";
 				statusDescription.text = "";
 				declareWar.gameObject.SetActive(false);
@@ -136,16 +134,16 @@ namespace Player {
 			if (peaceNegotiation != null){
 				peaceNegotiation.OnEnd();
 			}
-			country.OnDeselect();
+			Selected.OnDeselect();
 			Calendar.OnDayTick.RemoveListener(RefreshDiplomacy);
 			base.OnEnd();
 		}
 		public override bool IsDone(){
 			base.IsDone();
-			return UI.SelectedCountry != country;
+			return UI.SelectedCountry != Selected;
 		}
-		public void Close(){
-			UI.Deselect(country);
+		public override void Close(){
+			UI.Deselect(Selected);
 		}
 	}
 }

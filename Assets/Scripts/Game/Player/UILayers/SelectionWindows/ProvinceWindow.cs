@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using Terrain = Simulation.Terrain;
 
 namespace Player {
-	public class ProvinceWindow : UILayer, IRefreshable, IClosableWindow {
+	public class ProvinceWindow : SelectionWindow<Province> {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image terrainImage;
 		[SerializeField] private GameObject terrainValuesTable;
@@ -13,42 +13,40 @@ namespace Player {
 		[SerializeField] private string[] valueNames;
 		[SerializeField] private CountryPanel countryPanel;
 		
-		private Province province;
 		private Country linkedCountry;
 
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
-			province = UI.SelectedProvince;
-			title.text = $"{province}";
-			Texture2D texture = (Texture2D)province.Terrain.Material.mainTexture;
+			title.text = $"{Selected}";
+			Texture2D texture = (Texture2D)Selected.Terrain.Material.mainTexture;
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
-			if (province.IsSea){
+			if (Selected.IsSea){
 				terrainValuesTable.SetActive(false);
 				countryPanel.gameObject.SetActive(false);
 			} else {
 				valueTable.Generate(-1, valueNames);
 				Refresh();
 			}
-			province.OnSelect();
+			Selected.OnSelect();
 		}
-		public void Refresh(){
-			if (province.IsSea){
+		public override void Refresh(){
+			if (Selected.IsSea){
 				return;
 			}
-			Terrain terrain = province.Terrain;
+			Terrain terrain = Selected.Terrain;
 			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentModifier, terrain.MoveSpeedModifier, terrain.DefenderAdvantage);
-			countryPanel.SetCountry(province.Land.Owner, UI);
+			countryPanel.SetCountry(Selected.Land.Owner, UI);
 		}
 		public override void OnEnd(){
-			province.OnDeselect();
+			Selected.OnDeselect();
 			base.OnEnd();
 		}
 		public override bool IsDone(){
 			base.IsDone();
-			return UI.SelectedProvince != province;
+			return UI.SelectedProvince != Selected;
 		}
-		public void Close(){
-			UI.Deselect(province);
+		public override void Close(){
+			UI.Deselect(Selected);
 		}
 	}
 }

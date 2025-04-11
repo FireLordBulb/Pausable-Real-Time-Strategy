@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using ActionStackSystem;
 using Simulation;
@@ -20,10 +21,7 @@ namespace Player {
 		[Header("Layer Prefabs")]
 		[SerializeField] private HUD hud;
 		[SerializeField] private UILayer countrySelection;
-		[SerializeField] private UILayer provinceWindow;
-		[SerializeField] private UILayer countryWindow;
-		[SerializeField] private UILayer regimentWindow;
-		[SerializeField] private UILayer shipWindow;
+		[SerializeField] private SelectionWindow[] selectionWindows;
 		[Space]
 		[SerializeField] private Button closeButton;
 		[SerializeField] private LayerMask mapClickMask;
@@ -31,6 +29,8 @@ namespace Player {
 		#endregion
 		#region Private Fields
 		private Input.UIActions input;
+		private readonly Dictionary<Type, SelectionWindow> selectionWindowMap = new();
+		private SelectionWindow activeSelectionWindow;
 		private CameraMovement cameraMovement;
 		private Camera mainCamera;
 		private Vector3 mouseWorldPosition;
@@ -86,6 +86,9 @@ namespace Player {
 #endif
 			Push(hud);
 			Push(countrySelection);
+			foreach (SelectionWindow selectionWindow in selectionWindows){
+				selectionWindowMap.Add(selectionWindow.TargetType, selectionWindow);
+			}
 			map.Calendar.OnMonthTick.AddListener(Refresh);
 		}
 		private void EnableInput(){
@@ -219,23 +222,10 @@ namespace Player {
 			}
 			cameraMovement.SetZoom(cameraMovement.MaxZoom, mainCamera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
 		}
-		
 		public void Refresh(){
 			hud.RefreshResources();
-			if (Selected is Province){
-				RefreshWindow<ProvinceWindow>();
-			} else if (Selected is Country){
-				RefreshWindow<CountryWindow>();
-			} else if (Selected is Simulation.Military.Regiment){
-				RefreshWindow<RegimentWindow>();
-			}
-		}
-		private void RefreshWindow<T>() where T : IRefreshable {
-			for (int i = StackList.Count-1; i > 0; i--){
-				if (StackList[i] is T window){
-					window.Refresh();
-					break;
-				}
+			if (activeSelectionWindow != null){
+				activeSelectionWindow.Refresh();
 			}
 		}
 		#endregion
@@ -269,22 +259,14 @@ namespace Player {
 				return;
 			}
 			Selected = selectable;
-			// Delay the push until after the next OnUpdate() so the current window can remove itself first.
-			if (Selected is Province){
-				Push(provinceWindow);
-			} else if (Selected is Country){
-				Push(countryWindow);
-			} else if (Selected is Simulation.Military.Regiment){
-				Push(regimentWindow);
-			} else if (Selected is Simulation.Military.Ship){
-				Push(shipWindow);
-			}
+			activeSelectionWindow = Selected != null ? Push(selectionWindowMap[Selected.GetType()]) : null;
 		}
 		public void Deselect(ISelectable selectable){
 			if (Selected != selectable){
 				return;
 			}
 			Selected = null;
+			activeSelectionWindow = null;
 			UpdateSelectedHistory();
 		}
 		private void UpdateSelectedHistory(){

@@ -5,9 +5,9 @@ namespace Player {
 		protected override void OrderMove(Province province){
 			MoveOrderResult result;
 			if (province.IsSea){
-				result = Player.MoveFleetTo(Unit, province.Sea.NavyLocation);
+				result = Player.MoveFleetTo(Selected, province.Sea.NavyLocation);
 			} else if (province.IsCoast){
-				result = Player.MoveFleetTo(Unit, UI.GetHarbor(province));
+				result = Player.MoveFleetTo(Selected, UI.GetHarbor(province));
 			} else {
 				result = MoveOrderResult.InvalidTarget;
 			}
