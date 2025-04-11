@@ -119,21 +119,21 @@ namespace Player {
 				case "gold": {
 					AddResource(words, "a float",
 						s => (float.TryParse(s, out float value), value),
-						gold => UI.PlayerCountry.GainResources(gold, 0, 0)
+						gold => UI.PlayerCountry.ChangeResources(gold, 0, 0)
 					);
 					return;
 				}
 				case "manpower": {
 					AddResource(words, "an int",
 						s => (int.TryParse(s, out int value), value),
-						manpower => UI.PlayerCountry.GainResources(0, manpower, 0)
+						manpower => UI.PlayerCountry.ChangeResources(0, manpower, 0)
 					);
 					return;
 				}
 				case "sailors": {
 					AddResource(words, "an int",
 						s => (int.TryParse(s, out int value), value),
-						sailors => UI.PlayerCountry.GainResources(0, 0, sailors)
+						sailors => UI.PlayerCountry.ChangeResources(0, 0, sailors)
 					);
 					return;
 				}

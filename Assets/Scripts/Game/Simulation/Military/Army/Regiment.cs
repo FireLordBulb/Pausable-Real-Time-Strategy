@@ -53,7 +53,7 @@ namespace Simulation.Military {
 				return;
 			}
 			int reinforcementAmount = Mathf.Min(maxMonthlyReinforcement, Owner.Manpower, MaxManpower-CurrentManpower);
-			Owner.GainResources(0, -reinforcementAmount, 0);
+			Owner.ChangeResources(0, -reinforcementAmount, 0);
 			CurrentManpower += reinforcementAmount;
 		}
 		private bool IsUnsafe(Location<Regiment> location){

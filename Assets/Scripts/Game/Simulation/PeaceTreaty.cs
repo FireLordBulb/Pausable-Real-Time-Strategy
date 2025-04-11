@@ -52,8 +52,8 @@ namespace Simulation {
 			}
 			(Country winner, Country loser) = DidTreatyInitiatorWin ? (initiator, recipient) : (recipient, initiator);
 			float actualGoldTransfer = Mathf.Min(GoldTransfer, loser.Gold);
-			loser.GainResources(-actualGoldTransfer, 0, 0);
-			winner.GainResources(+actualGoldTransfer, 0, 0);
+			loser.ChangeResources(-actualGoldTransfer, 0, 0);
+			winner.ChangeResources(+actualGoldTransfer, 0, 0);
 			foreach (Land annexedLand in AnnexedLands){
 				// Note that a country can give up land occupied by a third party in a peace deal, but it stays occupied by the third party.
 				if (annexedLand.Owner == loser){
