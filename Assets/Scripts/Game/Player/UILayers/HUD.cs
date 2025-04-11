@@ -13,15 +13,14 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI manpower;
 		[SerializeField] private TextMeshProUGUI sailors;
 		[Header("SidePanel")]
-		[SerializeField] private UILayer warMenu;
-		[SerializeField] private UILayer economyMenu;
+		[SerializeField] private SidePanelMenu warMenu;
+		[SerializeField] private SidePanelMenu economyMenu;
 		[SerializeField] private Button warButton;
 		[SerializeField] private Button economyButton;
 		[Header("CalendarPanel")]
 		[SerializeField] private CalendarPanel calendarPanel;
 		
-		private GameObject sidePanelMenuGameObject;
-		private IRefreshable sidePanelMenuRefreshable;
+		private SidePanelMenu sidePanelMenu;
 		
 		public CalendarPanel CalendarPanel => calendarPanel;
 		
@@ -37,13 +36,13 @@ namespace Player {
 		public override void OnBegin(bool isFirstTime){
 			gameObject.SetActive(true);
 		}
-		private void SidePanelButtonClick(Button clickedButton, UILayer menuPrefab){
-			DestroyImmediate(sidePanelMenuGameObject);
+		private void SidePanelButtonClick(Button clickedButton, SidePanelMenu menuPrefab){
+			if (sidePanelMenu != null){
+				sidePanelMenu.Close();
+			}
 			SetButtonsInteractable();
 			clickedButton.interactable = false;
-			UI.Push(menuPrefab);
-			sidePanelMenuGameObject = UI.GetTopLayer().gameObject;
-			sidePanelMenuRefreshable = sidePanelMenuGameObject.GetComponent<IRefreshable>();
+			sidePanelMenu = UI.Push(menuPrefab);
 		}
 		
 		public void RefreshCountry(){
@@ -68,7 +67,9 @@ namespace Player {
 			gold.text = Format.FormatLargeNumber(Player.Gold, Format.FiveDigits);
 			manpower.text = Format.FormatLargeNumber(Player.Manpower, Format.SevenDigits);
 			sailors.text = Format.FormatLargeNumber(Player.Sailors, Format.SevenDigits);
-			sidePanelMenuRefreshable?.Refresh();
+			if (sidePanelMenu != null){
+				sidePanelMenu.Refresh();
+			}
 		}
 		private void SetButtonsInteractable(){
 			bool mayInteract = Player != null;
@@ -79,8 +80,8 @@ namespace Player {
 			Calendar.OnPauseToggle.AddListener(pauseLabel.SetActive);
 			pauseLabel.SetActive(Calendar.IsPaused);
 		}
-		private void Update(){
-			if (sidePanelMenuGameObject == null){
+		public override void OnUpdate(){
+			if (sidePanelMenu == null){
 				SetButtonsInteractable();
 			}
 		}

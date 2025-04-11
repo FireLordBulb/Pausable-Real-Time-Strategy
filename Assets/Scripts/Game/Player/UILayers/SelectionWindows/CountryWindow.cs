@@ -72,8 +72,7 @@ namespace Player {
 				});
 				makePeace.onClick.AddListener(() => {
 					if (peaceNegotiation == null){
-						UI.Push(peaceNegociationPrefab);
-						peaceNegotiation = (PeaceNegotiation)UI.GetTopLayer();
+						peaceNegotiation = UI.Push(peaceNegociationPrefab);
 					} else {
 						peaceNegotiation.Close();
 					}

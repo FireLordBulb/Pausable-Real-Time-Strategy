@@ -3,12 +3,11 @@ using Simulation.Military;
 using UnityEngine;
 
 namespace Player {
-	public class WarMenu : UILayer, IRefreshable, IClosableWindow {
+	public class WarMenu : SidePanelMenu {
 		[SerializeField] private MilitaryUnitButton militaryUnitButton;
 		[SerializeField] private RectTransform army;
 		[SerializeField] private RectTransform navy;
 
-		private bool isDone;
 		private MilitaryUnitButton selectedButton;
 		private RegimentType selectedRegimentType;
 		private ShipType selectedShipType;
@@ -48,7 +47,7 @@ namespace Player {
 			selectedButton.ShowInfoBox();
 		}
 		
-		public void Refresh(){
+		public override void Refresh(){
 			if (selectedRegimentType != null){
 				Refresh(selectedRegimentType);
 			} else if (selectedShipType != null){
@@ -83,14 +82,6 @@ namespace Player {
 			}
 			selectedRegimentType = null;
 			selectedShipType = null;
-		}
-		
-		public override bool IsDone(){
-			base.IsDone();
-			return isDone || Player == null;
-		}
-		public void Close(){
-			isDone = true;
 		}
 	}
 }

@@ -167,11 +167,8 @@ namespace Player {
 			mouseDownSelectable = null;
 		}
 		
-		public void DelayedPush(UILayer layer) {
-			layerToPush = layer;
-		}
 		// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
-		public override void Push(UILayer layer){
+		public TLayer Push<TLayer>(TLayer layer) where TLayer : UILayer {
 			if (!layer.gameObject.scene.IsValid()){
 				layer = Instantiate(layer, transform);
 				if (layer is IClosableWindow closableWindow){
@@ -181,6 +178,7 @@ namespace Player {
 			}
 			layer.Init(this);
 			base.Push(layer);
+			return layer;
 		}
 		protected override void Update(){
 			UpdateHover();
@@ -272,13 +270,13 @@ namespace Player {
 			Selected = selectable;
 			// Delay the push until after the next OnUpdate() so the current window can remove itself first.
 			if (Selected is Province){
-				DelayedPush(provinceWindow);
+				Push(provinceWindow);
 			} else if (Selected is Country){
-				DelayedPush(countryWindow);
+				Push(countryWindow);
 			} else if (Selected is Simulation.Military.Regiment){
-				DelayedPush(regimentWindow);
+				Push(regimentWindow);
 			} else if (Selected is Simulation.Military.Ship){
-				DelayedPush(shipWindow);
+				Push(shipWindow);
 			}
 		}
 		public void Deselect(ISelectable selectable){
@@ -305,10 +303,6 @@ namespace Player {
 			selectHistoryCount = 0;
 		}
 		
-		// Different from getter property CurrentAction since that might be null right after a new layer has been pushed.
-		public UILayer GetTopLayer(){
-			return StackList[^1];
-		}
 		public UILayer GetLayerBelow(UILayer layer){
 			StackList.RemoveAll(l => l == null);
 			int index = StackList.FindIndex(l => l == layer);
