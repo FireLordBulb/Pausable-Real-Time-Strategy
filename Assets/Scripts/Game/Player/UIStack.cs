@@ -35,6 +35,7 @@ namespace Player {
 		#region Private Fields
 		private Input.UIActions input;
 		private UILayer layerToPush;
+		private Vector3 mouseWorldPosition;
 		private readonly LinkedList<ISelectable> selectedHistory = new();
 		private int selectHistoryCount;
 		private ISelectable hoveredSelectable;
@@ -46,7 +47,6 @@ namespace Player {
 		public Country PlayerCountry {get; private set;}
 		public bool HasPlayerCountryChanged {get; private set;}
 		public ISelectable Selected {get; private set;}
-		public Vector3 MouseWorldPosition {get; private set;}
 		public bool IsShiftHeld {get; private set;}
 		public bool IsControlHeld {get; private set;}
 		#endregion
@@ -199,7 +199,7 @@ namespace Player {
 				EndHover();
 				return;
 			}
-			MouseWorldPosition = hit.point;
+			mouseWorldPosition = hit.point;
 			if (!hit.collider.TryGetComponent(out Province province)){
 				EndHover();
 				// TODO: hovering world-space UI elements.
@@ -363,7 +363,7 @@ namespace Player {
 					continue;
 				}
 				Simulation.Military.Harbor harbor = shallowsLink.Harbor;
-				float squareDistance = (harbor.WorldPosition-MouseWorldPosition).sqrMagnitude;
+				float squareDistance = (harbor.WorldPosition-mouseWorldPosition).sqrMagnitude;
 				if (closestSquareDistance < squareDistance){
 					continue;
 				}
