@@ -72,8 +72,8 @@ namespace Player {
 			economyButton.interactable = mayInteract;
 		}
 		private void Start(){
-			Calendar.Instance.OnPauseToggle.AddListener(pauseLabel.SetActive);
-			pauseLabel.SetActive(Calendar.Instance.IsPaused);
+			Calendar.OnPauseToggle.AddListener(pauseLabel.SetActive);
+			pauseLabel.SetActive(Calendar.IsPaused);
 		}
 		private void Update(){
 			if (sidePanelMenuGameObject == null){

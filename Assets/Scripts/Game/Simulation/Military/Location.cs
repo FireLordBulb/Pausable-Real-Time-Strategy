@@ -89,7 +89,7 @@ namespace Simulation.Military {
 			if (!IsBattleOngoing){
 				return;
 			}
-			Calendar.Instance.OnDayTick.RemoveListener(BattleTick);
+			Province.Calendar.OnDayTick.RemoveListener(BattleTick);
 			IsBattleOngoing = false;
 			bool didDefenderWin = result == BattleResult.DefenderWon;
 			foreach (TUnit unit in DefendingUnits){
@@ -139,7 +139,7 @@ namespace Simulation.Military {
 				unit.StopMoving();
 			}
 			IsBattleOngoing = true;
-			Calendar.Instance.OnDayTick.AddListener(BattleTick);
+			Province.Calendar.OnDayTick.AddListener(BattleTick);
 		}
 		protected virtual void SpecificStartupLogic(){}
 		internal virtual void UpdateListeners(){}

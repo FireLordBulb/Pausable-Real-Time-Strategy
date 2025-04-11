@@ -1,7 +1,14 @@
 namespace Simulation {
 	public class DiplomaticStatus {
+		private readonly Calendar calendar;
+		
 		public bool IsAtWar {get; private set;}
 		public int TruceDaysLeft {get; private set;}
+
+		public DiplomaticStatus(Calendar calendarReference){
+			calendar = calendarReference;
+		}
+		
 		public bool CanDeclareWar(){
 			return !IsAtWar && TruceDaysLeft <= 0;
 		}
@@ -13,7 +20,7 @@ namespace Simulation {
 		internal void EndWar(int truceLength){
 			IsAtWar = false;
 			TruceDaysLeft = truceLength;
-			Calendar.Instance.OnDayTick.AddListener(TickTruce);
+			calendar.OnDayTick.AddListener(TickTruce);
 		}
 		private void TickTruce(){
 			TruceDaysLeft--;
@@ -21,7 +28,7 @@ namespace Simulation {
 				return;
 			}
 			TruceDaysLeft = 0;
-			Calendar.Instance.OnDayTick.RemoveListener(TickTruce);
+			calendar.OnDayTick.RemoveListener(TickTruce);
 		}
 	}
 }

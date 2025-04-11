@@ -3,6 +3,7 @@ using Graphs;
 using UnityEngine;
 
 namespace Simulation {
+	[RequireComponent(typeof(Calendar))]
 	public class MapGraph : MonoBehaviour, ISearchableGraph<Province, ProvinceLink> {
 		[SerializeField] private Transform militaryUnitRoot;
 
@@ -10,6 +11,8 @@ namespace Simulation {
 		private readonly List<Province> landProvinces = new();
 		private readonly Dictionary<string, Country> countries = new();
 		private readonly Dictionary<(Country, Country), DiplomaticStatus> diplomaticStatuses = new();
+
+		public Calendar Calendar {get; private set;}
 		
 		public Transform MilitaryUnitRoot => militaryUnitRoot;
 		public Province this[Color32 color]{
@@ -20,6 +23,10 @@ namespace Simulation {
 		}
 		public IEnumerable<Province> Nodes => provinces.Values;
 		public IEnumerable<Province> LandProvinces => landProvinces;
+		
+		private void Awake(){
+			Calendar = GetComponent<Calendar>();
+		}
 		
 		public Country GetCountry(string countryName){
 			countries.TryGetValue(countryName, out Country country);
@@ -35,7 +42,7 @@ namespace Simulation {
 			if (diplomaticStatuses.TryGetValue((b, a), out diplomaticStatus)){
 				return diplomaticStatus;
 			}
-			diplomaticStatus = new DiplomaticStatus();
+			diplomaticStatus = new DiplomaticStatus(Calendar);
 			diplomaticStatuses.Add((a, b), diplomaticStatus);
 			return diplomaticStatus;
 		}

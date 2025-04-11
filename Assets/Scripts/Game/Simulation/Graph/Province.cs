@@ -27,7 +27,6 @@ namespace Simulation {
         
         public Color32 ColorKey {get; private set;}
         public MapGraph Graph {get; private set;}
-        public MeshRenderer MeshRenderer => shapeMeshRenderer;
         public Terrain Terrain {get; private set;}
         public string Name {get; private set;}
         public Vector2 MapPosition {get; private set;}
@@ -45,6 +44,8 @@ namespace Simulation {
             UpdateColors();
         }}
         
+        public Calendar Calendar => Graph.Calendar;
+        public MeshRenderer MeshRenderer => shapeMeshRenderer;
         public Vector3 WorldPosition => transform.position;
         public bool IsSea => type == Type.Sea;
         public bool IsCoast => type == Type.Coast;

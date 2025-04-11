@@ -9,6 +9,7 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI date;
 		
 		private Input.CalendarActions input;
+		internal Calendar Calendar {private get; set;}
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 		internal DebugConsole DebugConsole {private get; set;}
 #endif
@@ -36,7 +37,7 @@ namespace Player {
 					return;
 				}
 #endif
-				Calendar.Instance.ChangeSpeed(Mathf.RoundToInt(context.ReadValue<float>()));
+				Calendar.ChangeSpeed(Mathf.RoundToInt(context.ReadValue<float>()));
 				UpdateSpeed();
 			};
 
@@ -46,7 +47,7 @@ namespace Player {
 					return;
 				}
 #endif
-				Calendar.Instance.TogglePause();
+				Calendar.TogglePause();
 			};
 		}
 		private void Start(){
@@ -56,21 +57,21 @@ namespace Player {
 		}
 		
 		public void EnableUpdate(){
-			Calendar.Instance.OnDayTick.AddListener(UpdateDate);
+			Calendar.OnDayTick.AddListener(UpdateDate);
 		}
 		public void DisableUpdate(){
-			Calendar.Instance.OnDayTick.RemoveListener(UpdateDate);
+			Calendar.OnDayTick.RemoveListener(UpdateDate);
 		}
 		public void UpdateDate(){
-			date.text = Calendar.Instance.CurrentDate.ToString();
+			date.text = Calendar.CurrentDate.ToString();
 		}
 		
 		private void SetSpeed(int index){
-			Calendar.Instance.SpeedIndex = index;
+			Calendar.SpeedIndex = index;
 			UpdateSpeed();
 		}
 		private void UpdateSpeed(){
-			speed.text = $"Speed: {Calendar.Instance.SpeedIndex+1}";
+			speed.text = $"Speed: {Calendar.SpeedIndex+1}";
 		}
 	}
 }

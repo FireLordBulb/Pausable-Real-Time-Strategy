@@ -115,6 +115,7 @@ namespace Player {
 			};
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			debugConsole = Instantiate(debugConsole, transform);
+			debugConsole.Calendar = Map.Calendar;
 			debugConsole.CalendarPanel = hud.CalendarPanel;
 			cameraInput.DebugConsole = debugConsole;
 			bool debugWasDeactivated = false;
@@ -139,6 +140,7 @@ namespace Player {
 		}
 		private void SpawnUI(){
 			hud = Instantiate(hud, transform);
+			hud.CalendarPanel.Calendar = Map.Calendar;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			hud.CalendarPanel.DebugConsole = debugConsole;
 #endif
@@ -146,7 +148,7 @@ namespace Player {
 			Push(countrySelection);
 		}
 		private void Start(){
-			Calendar.Instance.OnMonthTick.AddListener(Refresh);
+			Map.Calendar.OnMonthTick.AddListener(Refresh);
 		}
 		
 		private void OnClick(InputAction.CallbackContext context, bool isRightClick){

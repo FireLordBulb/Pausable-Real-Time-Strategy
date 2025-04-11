@@ -77,7 +77,7 @@ namespace Player {
 				sendButtonText.text = "Awaiting Answer...";
 				daysUntilResponse = responseDays;
 				pendingTreaty = treaty.Copy();
-				Calendar.Instance.OnDayTick.AddListener(AwaitAnswer);
+				Calendar.OnDayTick.AddListener(AwaitAnswer);
 			});
 		}
 		private void AwaitAnswer(){
@@ -85,7 +85,7 @@ namespace Player {
 			if (daysUntilResponse > 0){
 				return;
 			}
-			Calendar.Instance.OnDayTick.RemoveListener(AwaitAnswer);
+			Calendar.OnDayTick.RemoveListener(AwaitAnswer);
 			int responseValue = AIController.EvaluatePeaceOffer(pendingTreaty); 
 			if (responseValue < 0){
 				sendButtonText.text = "Offer Peace";
@@ -95,7 +95,7 @@ namespace Player {
 				daysUntilSendingUnblocked = rejectedSendBlockDays;
 				RefreshTreatyTerms();
 				RefreshSendingBlockedText();
-				Calendar.Instance.OnDayTick.AddListener(BlockedCountdown);
+				Calendar.OnDayTick.AddListener(BlockedCountdown);
 				return;
 			}
 			Player.EndWar(enemy, pendingTreaty);
@@ -109,7 +109,7 @@ namespace Player {
 				RefreshSendingBlockedText();
 				return;
 			}
-			Calendar.Instance.OnDayTick.RemoveListener(BlockedCountdown);
+			Calendar.OnDayTick.RemoveListener(BlockedCountdown);
 			sendOffer.interactable = true;
 			sendingBlocked.text = "";
 			RefreshTreatyTerms();
@@ -247,8 +247,8 @@ namespace Player {
 		}
 		
 		public override void OnEnd(){
-			Calendar.Instance.OnDayTick.RemoveListener(AwaitAnswer);
-			Calendar.Instance.OnDayTick.RemoveListener(BlockedCountdown);
+			Calendar.OnDayTick.RemoveListener(AwaitAnswer);
+			Calendar.OnDayTick.RemoveListener(BlockedCountdown);
 			foreach (Land land in treaty.AnnexedLands){
 				land.Province.OnDeselect();
 			}

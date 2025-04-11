@@ -23,7 +23,7 @@ namespace Player {
 			countryPanel.SetCountry(Unit.Owner);
 			Refresh();
 			message.text = "";
-			Calendar.Instance.OnDayTick.AddListener(Refresh);
+			Calendar.OnDayTick.AddListener(Refresh);
 		}
 		public void Refresh(){
 			if (Unit.IsBuilt && Unit.IsMoving){
@@ -92,7 +92,7 @@ namespace Player {
 		
 		// ReSharper disable Unity.PerformanceAnalysis // This doesn't ever call the performance-intensive Refresh, it only removes it as a listener. 
 		public override void OnEnd(){
-			Calendar.Instance.OnDayTick.RemoveListener(Refresh);
+			Calendar.OnDayTick.RemoveListener(Refresh);
 			base.OnEnd();
 		}
 		public override bool IsDone(){

@@ -19,6 +19,7 @@ namespace Player {
 		[SerializeField] private bool doUseAutoCommands;
 		[SerializeField] private string[] autoCommands;
 		
+		internal Calendar Calendar {private get; set;}
 		internal CalendarPanel CalendarPanel {private get; set;}
 		internal bool IsKeyboardBusy => inputField.gameObject == EventSystem.current.currentSelectedGameObject;
 		
@@ -142,7 +143,7 @@ namespace Player {
 						return;
 					}
 					if (int.TryParse(words[1], out int days)){
-						Date date = Calendar.Instance.CurrentDate;
+						Date date = Calendar.CurrentDate;
 						date.day += days;
 						date.Validate();
 						SetDate(date);
@@ -216,23 +217,23 @@ namespace Player {
 					SetDate(new Date(ints[0], ints[1]-1, ints[2]));
 					break;
 				case MM_DD:
-					SetDate(new Date(Calendar.Instance.CurrentDate.year, ints[0]-1, ints[1]));
+					SetDate(new Date(Calendar.CurrentDate.year, ints[0]-1, ints[1]));
 					break;
 				case YYYY:
-					SetDate(new Date(ints[0], Calendar.Instance.CurrentDate.month, Calendar.Instance.CurrentDate.day));
+					SetDate(new Date(ints[0], Calendar.CurrentDate.month, Calendar.CurrentDate.day));
 					break;
 			}
 			return true;
 		}
 		private async void SetDate(Date date){
-			if (date < Calendar.Instance.CurrentDate){
+			if (date < UIStack.Instance.Map.Calendar.CurrentDate){
 				AddConsoleResponse($"Changing the date to the past will not modify the simulation.");
-				Calendar.Instance.SetDate(date);
+				Calendar.SetDate(date);
 				CalendarPanel.UpdateDate();
 				AddConsoleResponse($"Set the date to {date}.");
 				return;
 			}
-			if (date == Calendar.Instance.CurrentDate){
+			if (date == Calendar.CurrentDate){
 				AddConsoleResponse($"Desired date is already current date.");
 				return;
 			}
@@ -241,8 +242,8 @@ namespace Player {
 			await Task.Delay(100);
 			CalendarPanel.DisableUpdate();
 			do {
-				Calendar.Instance.ToNextDay();
-			} while (Calendar.Instance.CurrentDate < date);
+				Calendar.ToNextDay();
+			} while (Calendar.CurrentDate < date);
 			CalendarPanel.EnableUpdate();
 			CalendarPanel.UpdateDate();
 			UIStack.Instance.Refresh();

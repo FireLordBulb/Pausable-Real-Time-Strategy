@@ -126,9 +126,9 @@ namespace Player {
 			}
 			isRefreshingDiplomacyDaily = doRefresh;
 			if (isRefreshingDiplomacyDaily){
-				Calendar.Instance.OnDayTick.AddListener(RefreshDiplomacy);
+				Calendar.OnDayTick.AddListener(RefreshDiplomacy);
 			} else {
-				Calendar.Instance.OnDayTick.RemoveListener(RefreshDiplomacy);
+				Calendar.OnDayTick.RemoveListener(RefreshDiplomacy);
 			}
 		}
 		
@@ -137,7 +137,7 @@ namespace Player {
 				peaceNegociation.OnEnd();
 			}
 			country.OnDeselect();
-			Calendar.Instance.OnDayTick.RemoveListener(RefreshDiplomacy);
+			Calendar.OnDayTick.RemoveListener(RefreshDiplomacy);
 			base.OnEnd();
 		}
 		public override bool IsDone(){

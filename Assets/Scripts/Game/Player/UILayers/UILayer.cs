@@ -18,6 +18,7 @@ namespace Player {
 		}}
 		protected static UIStack UI => UIStack.Instance;
 		protected static Country Player => UI.PlayerCountry;
+		protected static Calendar Calendar => UI.Map.Calendar;
 		
 		public override void OnBegin(bool isFirstTime){}
 		
