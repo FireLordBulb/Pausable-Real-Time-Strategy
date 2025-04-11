@@ -31,8 +31,10 @@ namespace Player {
 		#endregion
 		#region Private Fields
 		private Input.UIActions input;
-		private UILayer layerToPush;
+		private CameraMovement cameraMovement;
+		private Camera mainCamera;
 		private Vector3 mouseWorldPosition;
+		
 		private readonly LinkedList<ISelectable> selectedHistory = new();
 		private int selectHistoryCount;
 		private ISelectable hoveredSelectable;
@@ -52,9 +54,10 @@ namespace Player {
 		public MapGraph Map => map;
 		public Province SelectedProvince => Selected as Province;
 		public Country SelectedCountry => Selected as Country;
-		private Vector2 MousePosition => input.MousePosition.ReadValue<Vector2>();
+		private Vector3 MousePosition => input.MousePosition.ReadValue<Vector2>();
 		#endregion
 
+		#region Awake
 		private void Awake(){
 			InitScene();
 			SpawnUI();
@@ -65,22 +68,25 @@ namespace Player {
 			map.gameObject.name = "Map";
 			cameraInput = Instantiate(cameraInput);
 			cameraInput.gameObject.name = "MainCamera";
-			cameraInput.Movement.Map = map;
+			cameraMovement = cameraInput.Movement;
+			cameraMovement.Map = map;
+			mainCamera = cameraMovement.Camera;
 		}	
 		private void SpawnUI(){
 			Links = new Links(Select);
 			hud = Instantiate(hud, transform);
-			hud.CalendarPanel.Calendar = Map.Calendar;
+			hud.CalendarPanel.Calendar = map.Calendar;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			debugConsole = Instantiate(debugConsole, transform);
 			debugConsole.UI = this;
-			debugConsole.Calendar = Map.Calendar;
+			debugConsole.Calendar = map.Calendar;
 			debugConsole.CalendarPanel = hud.CalendarPanel;
 			cameraInput.DebugConsole = debugConsole;
 			hud.CalendarPanel.DebugConsole = debugConsole;
 #endif
 			Push(hud);
 			Push(countrySelection);
+			map.Calendar.OnMonthTick.AddListener(Refresh);
 		}
 		private void EnableInput(){
 			input = new Input().UI;
@@ -143,10 +149,6 @@ namespace Player {
 			};
 #endif
 		}
-		private void Start(){
-			Map.Calendar.OnMonthTick.AddListener(Refresh);
-		}
-		
 		private void OnClick(InputAction.CallbackContext context, bool isRightClick){
 			bool isMouseDown = ActivationThreshold < context.ReadValue<float>();
 			if (hoveredSelectable == null){
@@ -166,9 +168,10 @@ namespace Player {
 			}
 			mouseDownSelectable = null;
 		}
+		#endregion
 		
-		// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
 		public TLayer Push<TLayer>(TLayer layer) where TLayer : UILayer {
+			// If the pushed layer is a prefab (thus not part of a valid scene), instantiate it before actually pushing it.
 			if (!layer.gameObject.scene.IsValid()){
 				layer = Instantiate(layer, transform);
 				if (layer is IClosableWindow closableWindow){
@@ -180,17 +183,18 @@ namespace Player {
 			base.Push(layer);
 			return layer;
 		}
+		
+		#region Update
 		protected override void Update(){
 			UpdateHover();
 			base.Update();
-			if (layerToPush == null){
-				return;
-			}
-			Push(layerToPush);
-			layerToPush = null;
 		}
 		private void UpdateHover(){
-			if (!MouseRaycast(out RaycastHit hit)){
+			if (EventSystem.current.IsPointerOverGameObject()){
+				EndHover();
+				return;
+			}
+			if (!Physics.Raycast(mainCamera.ScreenPointToRay(MousePosition), out RaycastHit hit, float.MaxValue, mapClickMask)){
 				EndHover();
 				return;
 			}
@@ -210,13 +214,6 @@ namespace Player {
 			province.OnHoverEnter();
 			hoveredSelectable = province;
 		}
-		private bool MouseRaycast(out RaycastHit hit){
-			if (EventSystem.current.IsPointerOverGameObject()){
-				hit = new RaycastHit();
-				return false;
-			}
-			return Physics.Raycast(cameraInput.Movement.Camera.ScreenPointToRay(MousePosition), out hit, float.MaxValue, mapClickMask);
-		}
 		private void EndHover(){
 			if (hoveredSelectable == null){
 				return;
@@ -226,7 +223,9 @@ namespace Player {
 			}
 			hoveredSelectable = null;
 		}
+		#endregion
 
+		#region Public Void Methods
 		public void PlayAs(Country country){
 			PlayerCountry = country;
 			HasPlayerCountryChanged = true;
@@ -236,8 +235,7 @@ namespace Player {
 			if (country == null){
 				return;
 			}
-			CameraMovement cameraMovement = cameraInput.Movement;
-			cameraMovement.SetZoom(cameraMovement.MaxZoom, cameraMovement.Camera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
+			cameraMovement.SetZoom(cameraMovement.MaxZoom, mainCamera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
 		}
 		
 		public void Refresh(){
@@ -258,7 +256,9 @@ namespace Player {
 				}
 			}
 		}
+		#endregion
 		
+		#region On Click
 		private void Select(ISelectable selectable){
 			SelectWithoutHistoryUpdate(selectable);
 			UpdateSelectedHistory();
@@ -302,7 +302,9 @@ namespace Player {
 			selectedHistory.Clear();
 			selectHistoryCount = 0;
 		}
+		#endregion
 		
+		#region Getting Functions
 		public UILayer GetLayerBelow(UILayer layer){
 			StackList.RemoveAll(l => l == null);
 			int index = StackList.FindIndex(l => l == layer);
@@ -311,7 +313,6 @@ namespace Player {
 			}
 			return StackList[index-1];
 		}
-		
 		public Simulation.Military.Harbor GetHarbor(Province province){
 			if (!province.IsCoast){
 				return null;
@@ -334,5 +335,6 @@ namespace Player {
 			Debug.Assert(closestHarbor != null);
 			return closestHarbor;
 		}
+		#endregion
 	}
 }
