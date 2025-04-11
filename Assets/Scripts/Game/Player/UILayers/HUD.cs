@@ -90,9 +90,9 @@ namespace Player {
 				return clickedSelectable == UI.Selected ? null : clickedSelectable;
 			}
 			if (isRightClick){
-				return clickedProvince.IsSea ? null : clickedProvince.Land.Owner == UI.SelectedCountry ? null : clickedProvince.Land.Owner;
+				return clickedProvince.IsSea ? null : ReferenceEquals(clickedProvince.Land.Owner, UI.Selected) ? null : clickedProvince.Land.Owner;
 			}
-			return clickedProvince == UI.SelectedProvince ? null : clickedProvince;
+			return ReferenceEquals(clickedProvince, UI.Selected) ? null : clickedProvince;
 		}
 		public override bool IsDone(){
 			return false;

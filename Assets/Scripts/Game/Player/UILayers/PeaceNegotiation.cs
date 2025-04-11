@@ -121,7 +121,7 @@ namespace Player {
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
 			player = Player;
-			enemy = UI.SelectedCountry;
+			enemy = (Country)UI.Selected;
 			treaty = Player.NewPeaceTreaty(enemy);
 			playerPanel.SetCountry(player, UI, Close);
 			enemyPanel.SetCountry(enemy, UI, Close);
@@ -254,7 +254,7 @@ namespace Player {
 			base.OnEnd();
 		}
 		public override bool IsDone(){
-			return isDone || Player != player || UI.SelectedCountry != enemy;
+			return isDone || Player != player || !ReferenceEquals(UI.Selected, enemy);
 		}
 		public void Close(){
 			isDone = true;

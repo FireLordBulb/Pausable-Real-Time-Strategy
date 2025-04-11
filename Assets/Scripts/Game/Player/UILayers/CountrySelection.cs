@@ -27,7 +27,7 @@ namespace Player {
 			if (clickedSelectable is not Province clickedProvince){
 				return null;
 			}
-			return clickedProvince.IsSea ? null : clickedProvince.Land.Owner == UI.SelectedCountry ? null : clickedProvince.Land.Owner;
+			return clickedProvince.IsSea ? null : ReferenceEquals(clickedProvince.Land.Owner, UI.Selected) ? null : clickedProvince.Land.Owner;
 		}
 		public override bool IsDone(){
 			base.IsDone();

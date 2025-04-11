@@ -52,8 +52,6 @@ namespace Player {
 		#endregion
 		#region Getter Properties
 		public MapGraph Map => map;
-		public Province SelectedProvince => Selected as Province;
-		public Country SelectedCountry => Selected as Country;
 		private Vector3 MousePosition => input.MousePosition.ReadValue<Vector2>();
 		#endregion
 

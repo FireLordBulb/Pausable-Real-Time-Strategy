@@ -99,17 +99,17 @@ namespace Player {
 					}
 					return;
 				case "own":
-					if (UI.SelectedProvince == null){
+					if (UI.Selected is not Province selectedProvince){
 						AddConsoleResponse("Command 'own' failed. You must select a specific province to own.");
 						return;
 					}
-					if (UI.SelectedProvince.IsSea){
+					if (selectedProvince.IsSea){
 						AddConsoleResponse("Command 'own' failed. You cannot own sea provinces.");
 						return;
 					}
-					UI.SelectedProvince.Land.Owner = UI.PlayerCountry;
+					selectedProvince.Land.Owner = UI.PlayerCountry;
 					UI.Refresh();
-					AddConsoleResponse($"{UI.PlayerCountry.Name} now own the province {UI.SelectedProvince}.");
+					AddConsoleResponse($"{UI.PlayerCountry.Name} now own the province {selectedProvince}.");
 					return;
 				case "rich":
 					RunCommand("gold 999900");
