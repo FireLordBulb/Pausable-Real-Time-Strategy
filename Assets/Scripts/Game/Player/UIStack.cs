@@ -228,6 +228,8 @@ namespace Player {
 		#region Public Void Methods
 		public void PlayAs(Country country){
 			PlayerCountry = country;
+			selectedHistory.Clear();
+			selectHistoryCount = 0;
 			HasPlayerCountryChanged = true;
 			hud.RefreshCountry();
 			Refresh();
@@ -286,7 +288,6 @@ namespace Player {
 			Selected = null;
 			UpdateSelectedHistory();
 		}
-		
 		private void UpdateSelectedHistory(){
 			if (selectHistoryCount != 0 && selectedHistory.First.Value == Selected){
 				return;
@@ -297,10 +298,6 @@ namespace Player {
 				selectedHistory.RemoveLast();
 				selectHistoryCount--;
 			}
-		}
-		public void ClearSelectHistory(){
-			selectedHistory.Clear();
-			selectHistoryCount = 0;
 		}
 		#endregion
 		

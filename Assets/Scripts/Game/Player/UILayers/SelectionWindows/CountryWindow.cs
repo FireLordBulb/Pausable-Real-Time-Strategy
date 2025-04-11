@@ -25,7 +25,6 @@ namespace Player {
 			select.onClick.AddListener(() => {
 				UI.PlayAs(country);
 				UI.Deselect(country);
-				UI.ClearSelectHistory();
 			});
 		}
 		internal override void Init(UIStack uiStack){
