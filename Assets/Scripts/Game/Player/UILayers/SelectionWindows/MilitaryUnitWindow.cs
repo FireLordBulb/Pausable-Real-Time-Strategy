@@ -104,7 +104,7 @@ namespace Player {
 			return !ReferenceEquals(UI.Selected, Unit);
 		}
 		public void Close(){
-			UI.Deselect();
+			UI.Deselect(Unit);
 		}
 	}
 }

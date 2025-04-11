@@ -103,7 +103,7 @@ namespace Player {
 			}
 			Player.EndWar(enemy, pendingTreaty);
 			isDone = true;
-			UI.Deselect();
+			UI.Deselect(enemy);
 			LayerBelow.OnEnd();
 		}
 		private void BlockedCountdown(){
@@ -159,9 +159,6 @@ namespace Player {
 			}
 			RefreshTreatyTerms();
 			return UI.Selected;
-		}
-		public override void OnDrag(bool isRightClick){
-			// Do nothing when dragging with this panel open.
 		}
 		private void SetWinner(bool isPlayer){
 			treaty.IsWhitePeace = false;

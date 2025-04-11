@@ -32,10 +32,6 @@ namespace Player {
 			}
 			return clickedProvince.IsSea ? null : clickedProvince.Land.Owner == UI.SelectedCountry ? null : clickedProvince.Land.Owner;
 		}
-		public override void OnEnd(){
-			UI.Deselect();
-			base.OnEnd();
-		}
 		public override bool IsDone(){
 			base.IsDone();
 			return Player != null || isDone;

@@ -163,8 +163,6 @@ namespace Player {
 			}
 			if (mouseDownSelectable == hoveredSelectable){
 				Select(CurrentAction.OnSelectableClicked(mouseDownSelectable, isRightClick));
-			} else {
-				CurrentAction.OnDrag(isRightClick);
 			}
 			mouseDownSelectable = null;
 		}
@@ -284,15 +282,13 @@ namespace Player {
 			}
 		}
 		public void Deselect(ISelectable selectable){
-			if (Selected == selectable){
-				Deselect();
+			if (Selected != selectable){
+				return;
 			}
-		}
-		public void Deselect(){
 			Selected = null;
 			UpdateSelectedHistory();
 		}
-
+		
 		private void UpdateSelectedHistory(){
 			if (selectHistoryCount != 0 && selectedHistory.First.Value == Selected){
 				return;
@@ -308,7 +304,7 @@ namespace Player {
 			selectedHistory.Clear();
 			selectHistoryCount = 0;
 		}
-
+		
 		// Different from getter property CurrentAction since that might be null right after a new layer has been pushed.
 		public UILayer GetTopLayer(){
 			return StackList[^1];

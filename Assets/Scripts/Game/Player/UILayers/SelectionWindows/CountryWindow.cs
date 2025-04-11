@@ -37,7 +37,7 @@ namespace Player {
 			Refresh();
 			select.onClick.AddListener(() => {
 				UI.PlayAs(country);
-				UI.Deselect();
+				UI.Deselect(country);
 				UI.ClearSelectHistory();
 			});
 			
