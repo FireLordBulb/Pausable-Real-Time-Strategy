@@ -14,7 +14,7 @@ namespace AI {
 			calendar.OnDayTick.AddListener(DayTick);
 		}
 		public void Disable(){
-			calendar.OnMonthTick.RemoveListener(DayTick);
+			calendar.OnDayTick.RemoveListener(DayTick);
 		}
 		// Don't update the nodes in regular Update.
 		public override Node.State Update(){
@@ -24,7 +24,7 @@ namespace AI {
 			base.Update();
 		}
 		private void OnDestroy(){
-			calendar.OnMonthTick.RemoveListener(DayTick);
+			calendar.OnDayTick.RemoveListener(DayTick);
 		}
 	}
 }
