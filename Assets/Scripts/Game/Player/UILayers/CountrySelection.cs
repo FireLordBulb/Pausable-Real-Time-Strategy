@@ -21,6 +21,7 @@ namespace Player {
 #endif
 			observe.onClick.AddListener(() => {
 				isDone = true;
+				UI.PlayAs(null);
 			});
 		}
 		public override ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){

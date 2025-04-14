@@ -224,6 +224,8 @@ namespace Player {
 				playerAI = PlayerCountry.GetComponent<AIController>();
 				playerAI.enabled = false;
 			}
+			Selected = null;
+			activeSelectionWindow = null;
 			selectedHistory.Clear();
 			selectHistoryCount = 0;
 			HasPlayerCountryChanged = true;
