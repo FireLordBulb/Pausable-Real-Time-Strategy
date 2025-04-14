@@ -347,3 +347,11 @@ MonoBehaviour:
   - Simulation.Military.SeaLocation
   - Simulation.Military.Harbor
   - Simulation.DiplomaticStatus
+  - AI.AIController, AI
+  - AI.TickTree, AI
+  - Player.HUD, Player
+  - Player.CalendarPanel, Player
+  - Player.WarMenu, Player
+  - Player.CountryWindow, Player
+  - Player.RegimentWindow, Player
+  - Player.ShipWindow, Player
