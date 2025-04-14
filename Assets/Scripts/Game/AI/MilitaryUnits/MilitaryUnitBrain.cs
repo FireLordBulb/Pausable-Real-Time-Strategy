@@ -21,15 +21,15 @@ namespace AI {
 				enabled = false;
 			}
 		}
-		private void OnEnable(){
+		protected void OnEnable(){
 			if (tickTree != null){
 				tickTree.Enable();
 			}
 		}
-		private void OnDisable(){
+		protected void OnDisable(){
 			tickTree.Disable();
 		}
-		private void OnDestroy(){
+		protected void OnDestroy(){
 			Destroy(tickTree);
 		}
 	}
