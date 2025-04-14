@@ -7,9 +7,8 @@ using System.Linq;
 using BehaviourTree.Nodes;
 
 namespace BehaviourTree {
-	public class TreeView : GraphView {
-		public new class UxmlFactory : UxmlFactory<TreeView, UxmlTraits> {}
-
+	[UxmlElement("TreeView")]
+	public partial class TreeView : GraphView {
 		private Tree tree;
 
 		public TreeView(){
