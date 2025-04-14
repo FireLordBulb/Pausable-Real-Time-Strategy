@@ -5,6 +5,7 @@ using Simulation.Military;
 using UnityEngine;
 
 namespace AI {
+	[RequireComponent(typeof(Country))]
 	public class AIController : MonoBehaviour {
 		// TODO: Move constants to be serialized fields of a ScriptableObject when AIController gets added to the country prefab.
 		// Also move acceptance logic into that SO (it can get the AIController as a parameter if needed)
@@ -128,5 +129,35 @@ namespace AI {
 		
 		// TODO: Keep cached in Country after proper development values are added.
 		private static float TotalDevelopment(Country country) => country.Provinces.Sum(land => 1+land.Terrain.DevelopmentModifier);
+
+		private Calendar calendar;
+		
+		public Country Country {get; private set;}
+		
+		public void Init(){
+			Country = GetComponent<Country>();
+			calendar = Country.Map.Calendar;
+			enabled = true;
+		}
+		private void OnEnable(){
+			calendar.OnDayTick.AddListener(DayTick);
+			calendar.OnMonthTick.AddListener(MonthTick);
+			calendar.OnYearTick.AddListener(YearTick);
+		}
+		private void OnDisable(){
+			calendar.OnDayTick.RemoveListener(DayTick);
+			calendar.OnMonthTick.RemoveListener(MonthTick);
+			calendar.OnYearTick.RemoveListener(YearTick);
+		}
+
+		private void DayTick(){
+			
+		}
+		private void MonthTick(){
+			
+		}
+		private void YearTick(){
+			
+		}
 	}
 }

@@ -23,6 +23,7 @@ namespace Simulation {
 		}
 		public IEnumerable<Province> Nodes => provinces.Values;
 		public IEnumerable<Province> LandProvinces => landProvinces;
+		public IEnumerable<Country> Countries => countries.Values;
 		
 		private void Awake(){
 			Calendar = GetComponent<Calendar>();

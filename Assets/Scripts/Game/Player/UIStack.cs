@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ActionStackSystem;
+using AI;
 using Simulation;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -33,6 +34,7 @@ namespace Player {
 		private SelectionWindow activeSelectionWindow;
 		private CameraMovement cameraMovement;
 		private Camera mainCamera;
+		private AIController playerAI;
 		private Vector3 mouseWorldPosition;
 		
 		private readonly LinkedList<ISelectable> selectedHistory = new();
@@ -59,6 +61,7 @@ namespace Player {
 		private void Awake(){
 			InitScene();
 			SpawnUI();
+			InitAI();
 			EnableInput();
 		}
 		private void InitScene(){
@@ -88,6 +91,11 @@ namespace Player {
 				selectionWindowMap.Add(selectionWindow.TargetType, selectionWindow);
 			}
 			map.Calendar.OnMonthTick.AddListener(Refresh);
+		}
+		private void InitAI(){
+			foreach (Country country in map.Countries){
+				country.GetComponent<AIController>().Init();
+			}
 		}
 		private void EnableInput(){
 			input = new Input().UI;
@@ -208,7 +216,14 @@ namespace Player {
 			return layer;
 		}
 		public void PlayAs(Country country){
+			if (playerAI != null){
+				playerAI.enabled = true;
+			}
 			PlayerCountry = country;
+			if (PlayerCountry != null){
+				playerAI = PlayerCountry.GetComponent<AIController>();
+				playerAI.enabled = false;
+			}
 			selectedHistory.Clear();
 			selectHistoryCount = 0;
 			HasPlayerCountryChanged = true;

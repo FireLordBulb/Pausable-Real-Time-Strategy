@@ -20,7 +20,6 @@ namespace Simulation {
 		private readonly HashSet<Land> occupations = new();
 		private readonly List<Military.Regiment> regiments = new();
 		private readonly List<Military.Ship> ships = new();
-		private MapGraph map;
 		private bool wasBorderChanged;
 		#endregion
 		#region Auto-Properties
@@ -29,6 +28,7 @@ namespace Simulation {
 		public float Gold {get; private set;}
 		public int Manpower {get; private set;}
 		public int Sailors {get; private set;}
+		public MapGraph Map {get; private set;}
 		public Transform MilitaryUnitParent {get; private set;}
 		#endregion
 		#region Getter Properties
@@ -61,14 +61,14 @@ namespace Simulation {
 		public void Init(CountryData data, MapGraph mapGraph){
 			gameObject.name = data.Name;
 			MapColor = data.MapColor;
-			map = mapGraph;
-			map.Add(this);
+			Map = mapGraph;
+			Map.Add(this);
 			foreach (Color32 province in data.Provinces){
-				map[province].Land.Owner = this;
+				Map[province].Land.Owner = this;
 			}
 			MilitaryUnitParent = new GameObject(gameObject.name){
 				transform = {
-					parent = map.MilitaryUnitRoot
+					parent = Map.MilitaryUnitRoot
 				}
 			}.transform;
 			
@@ -232,7 +232,7 @@ namespace Simulation {
 		
 		#region Getter Methods
 		public DiplomaticStatus GetDiplomaticStatus(Country other){
-			return map.GetDiplomaticStatus(this, other);
+			return Map.GetDiplomaticStatus(this, other);
 		}
 		public PeaceTreaty NewPeaceTreaty(Country recipient){
 			return new PeaceTreaty(this, recipient, truceData);
