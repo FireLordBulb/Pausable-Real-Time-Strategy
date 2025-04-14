@@ -25,6 +25,7 @@ MonoBehaviour:
   developmentDemanded: -40
   unoccupiedMultiplier: 3
   goldDemanded: -0.05
-  goldDemandedMin: -50
+  winGoldDemandedMin: -50
+  loseGoldDemandedMin: -500
   always: 1000
   never: -1000

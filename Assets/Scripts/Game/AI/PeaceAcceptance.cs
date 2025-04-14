@@ -23,7 +23,8 @@ namespace AI {
 		[SerializeField] private float developmentDemanded;
 		[SerializeField] private float unoccupiedMultiplier;
 		[SerializeField] private float goldDemanded;
-		[SerializeField] private float goldDemandedMin;
+		[SerializeField] private float winGoldDemandedMin;
+		[SerializeField] private float loseGoldDemandedMin;
 		[Space]
 		[SerializeField] private float always;
 		[SerializeField] private float never;
@@ -49,7 +50,7 @@ namespace AI {
 					if (!isLoserDefeated && IsFullAnnexationDemanded(treaty)){
 						acceptance += never;
 					}
-					acceptance += WarGoalCost(treaty, never/2);
+					acceptance += WarGoalCost(treaty, loseGoldDemandedMin);
 				}
 			} else { // Winning logic
 				acceptance = Reluctance(treaty.Winner, treaty.Loser);
@@ -58,7 +59,7 @@ namespace AI {
 				} else if (isLoserDefeated){
 					acceptance += never;
 				}
-				acceptance -= WarGoalCost(treaty, goldDemandedMin);
+				acceptance -= WarGoalCost(treaty, winGoldDemandedMin);
 			}
 			return Mathf.RoundToInt(acceptance);
 		}
