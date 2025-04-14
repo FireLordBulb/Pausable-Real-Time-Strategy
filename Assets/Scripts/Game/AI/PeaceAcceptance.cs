@@ -31,6 +31,7 @@ namespace AI {
 		
 		public int EvaluatePeaceOffer(PeaceTreaty treaty){
 			float acceptance;
+			bool didInitiatorWin = treaty.DidTreatyInitiatorWin;
 			// Count white peaces as wins (besides war goals being ignored, off course).
 			if (treaty.IsWhitePeace){
 				treaty.DidTreatyInitiatorWin = true;
@@ -61,6 +62,8 @@ namespace AI {
 				}
 				acceptance -= WarGoalCost(treaty, winGoldDemandedMin);
 			}
+			// Assign back to the original value so that evaluating doesn't permanently modify anything in the treaty. 
+			treaty.DidTreatyInitiatorWin = didInitiatorWin;
 			return Mathf.RoundToInt(acceptance);
 		}
 		
