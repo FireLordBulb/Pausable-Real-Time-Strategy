@@ -64,8 +64,7 @@ namespace Simulation.Military {
 				unit.FinishBuilding();
 				return unit;
 			}
-			unit.BuildDaysLeft = type.DaysToBuild;
-			unit.Province.Calendar.OnDayTick.AddListener(unit.TickBuild);
+			unit.StartBuilding();
 			return unit;
 		}
 		private void Awake(){
@@ -86,9 +85,13 @@ namespace Simulation.Military {
 			}
 		}
 		
+		private void StartBuilding(){
+			BuildDaysLeft = Type.DaysToBuild;
+			Province.Calendar.OnDayTick.AddListener(TickBuild);
+		}
 		private void TickBuild(){
 			BuildDaysLeft--;
-			if (BuildDaysLeft == 0){
+			if (BuildDaysLeft <= 0){
 				FinishBuilding();
 			}
 		}
