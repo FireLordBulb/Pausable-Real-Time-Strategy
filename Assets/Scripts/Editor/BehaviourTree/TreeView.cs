@@ -18,7 +18,7 @@ namespace BehaviourTree {
 			this.AddManipulator(new ContentDragger());
 			this.AddManipulator(new SelectionDragger());
 			this.AddManipulator(new RectangleSelector());
-			StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Editor/AI/BehaviourTreeEditor.uss");
+			StyleSheet styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/Scripts/Editor/BehaviourTree/TreeEditor.uss");
 			styleSheets.Add(styleSheet);
 			Undo.undoRedoPerformed += OnUndoRedo;
 		}

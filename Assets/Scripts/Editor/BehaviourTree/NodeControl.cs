@@ -12,7 +12,7 @@ namespace BehaviourTree {
 		public Port Input {get; private set;}
 		public Port Output {get; private set;}
 
-		public NodeControl(Nodes.Node node) : base("Assets/Editor/AI/NodeControl.uxml"){
+		public NodeControl(Nodes.Node node) : base("Assets/Scripts/Editor/BehaviourTree/NodeControl.uxml"){
 			Node = node;
 			title = node.name;
 			viewDataKey = node.ID.ToString();

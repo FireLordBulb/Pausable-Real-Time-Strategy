@@ -8,11 +8,6 @@ namespace BehaviourTree {
 	public class TreeEditor : EditorWindow {
 		[SerializeField] private VisualTreeAsset visualTreeAsset;
 		private TreeView view;
-		[MenuItem("AICourse/Behaviour Tree Editor")]
-		public static void ShowBehaviourTreeEditor(){
-			TreeEditor wnd = GetWindow<TreeEditor>();
-			wnd.titleContent = new GUIContent("BT");
-		}
 		[OnOpenAsset]
 		public static bool OpenAITree(int instanceID, int line){
 			Tree tree = EditorUtility.InstanceIDToObject(instanceID) as Tree;

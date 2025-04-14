@@ -3,7 +3,7 @@ using UnityEngine;
 using BehaviourTree.Nodes;
 
 namespace BehaviourTree {
-	[CreateAssetMenu(fileName = "BehaviourTree", menuName = "AICourse/BehaviourTree")]
+	[CreateAssetMenu(fileName = "BehaviourTree", menuName = "ScriptableObjects/AI/BehaviourTree")]
 	public class Tree : ScriptableObject {
 		[SerializeField] public List<Node> nodes = new();
 		[SerializeField] public Node root;
