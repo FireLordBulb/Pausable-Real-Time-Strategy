@@ -4,6 +4,8 @@ using UnityEngine;
 namespace AI {
 	[RequireComponent(typeof(Country))]
 	public class AIController : MonoBehaviour {
+		[SerializeField] private PeaceAcceptance peaceAcceptance;
+		
 		private Calendar calendar;
 		
 		public Country Country {get; private set;}
@@ -34,8 +36,8 @@ namespace AI {
 			
 		}
 
-		public static int EvaluatePeaceOffer(PeaceTreaty treaty){
-			return PeaceAcceptance.EvaluatePeaceOffer(treaty);
+		public int EvaluatePeaceOffer(PeaceTreaty treaty){
+			return peaceAcceptance.EvaluatePeaceOffer(treaty);
 		}
 	}
 }

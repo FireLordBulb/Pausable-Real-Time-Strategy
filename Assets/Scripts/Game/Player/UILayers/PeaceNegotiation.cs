@@ -40,6 +40,7 @@ namespace Player {
 		private PeaceTreaty pendingTreaty;
 		private Country player;
 		private Country enemy;
+		private AIController enemyAI;
 		private float otherCountryGoldTransfer;
 		private int daysUntilResponse;
 		private int daysUntilSendingUnblocked;
@@ -86,7 +87,7 @@ namespace Player {
 				return;
 			}
 			Calendar.OnDayTick.RemoveListener(AwaitAnswer);
-			int responseValue = AIController.EvaluatePeaceOffer(pendingTreaty); 
+			int responseValue = enemyAI.EvaluatePeaceOffer(pendingTreaty); 
 			if (responseValue < 0){
 				sendButtonText.text = "Offer Peace";
 				acceptValue.text = Format.Signed(responseValue);
@@ -122,6 +123,7 @@ namespace Player {
 			base.Init(uiStack);
 			player = Player;
 			enemy = (Country)UI.Selected;
+			enemyAI = enemy.GetComponent<AIController>();
 			treaty = Player.NewPeaceTreaty(enemy);
 			playerPanel.SetCountry(player, UI, Close);
 			enemyPanel.SetCountry(enemy, UI, Close);
@@ -233,7 +235,7 @@ namespace Player {
 			if (daysUntilSendingUnblocked > 0 || daysUntilResponse > 0){
 				return;
 			}
-			int acceptanceValue = AIController.EvaluatePeaceOffer(treaty);
+			int acceptanceValue = enemyAI.EvaluatePeaceOffer(treaty);
 			acceptValue.text = Format.Signed(acceptanceValue);
 			if (acceptanceValue < 0){
 				acceptDescription.text = "Would Reject Treaty";

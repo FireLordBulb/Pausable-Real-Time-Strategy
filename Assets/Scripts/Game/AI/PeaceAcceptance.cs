@@ -7,27 +7,28 @@ using UnityEngine;
 namespace AI {
 	[CreateAssetMenu(fileName = "PeaceAcceptance", menuName = "ScriptableObjects/AI/PeaceAcceptance")]
 	public class PeaceAcceptance : ScriptableObject {
-		private const float BasePeaceReluctance = -10;
-		private const float MaxAcceptanceDecreaseFromResources = -20;
-		private const float AcceptancePerGoldAvailable = -0.02f;
-		private const float AcceptancePerManpowerAvailable = -0.002f;
+		[Header("Reluctance")]
+		[SerializeField] private float baseReluctance;
+		[SerializeField] private float resourcesMin;
+		[SerializeField] private float goldAvailable;
+		[SerializeField] private float manpowerAvailable;
+		[Header("War Situation")]
+		[SerializeField] private float militaryStrength;
+		[SerializeField] private float militaryStrengthMax;
+		[SerializeField] private float minMilitaryStrengthValue;
+		[SerializeField] private float provinceHeld;
+		[SerializeField] private float developmentHeld;
+		[Header("Harshness of Treaty Demands")]
+		[SerializeField] private float provincesDemanded;
+		[SerializeField] private float developmentDemanded;
+		[SerializeField] private float unoccupiedMultiplier;
+		[SerializeField] private float goldDemanded;
+		[SerializeField] private float goldDemandedMin;
+		[Space]
+		[SerializeField] private float always;
+		[SerializeField] private float never;
 		
-		private const float AcceptanceFromMilitaryStrength = 10;
-		private const float MaxAcceptanceFromMilitaryStrength = 30;
-		private const float MinMilitaryStrengthForAcceptanceMath = 5000;
-		private const float AcceptanceFromProvinceHeld = 10;
-		private const float AcceptanceFromDevelopmentHeld = 30;
-		
-		private const float AcceptanceFromProvincesDemanded = -5;
-		private const float AcceptanceFromDevelopmentDemanded = -40;
-		private const float UnoccupiedAcceptanceMultiplier = 3;
-		private const float AcceptancePerGoldDemanded = -0.05f;
-		private const float MaxAcceptanceDecreaseFromGoldDemanded = -50;
-		
-		private const float AlwaysAccept = 1000;
-		private const float NeverAccept = -1000;
-		
-		public static int EvaluatePeaceOffer(PeaceTreaty treaty){
+		public int EvaluatePeaceOffer(PeaceTreaty treaty){
 			float acceptance;
 			// Count white peaces as wins (besides war goals being ignored, off course).
 			if (treaty.IsWhitePeace){
@@ -39,34 +40,34 @@ namespace AI {
 			if (treaty.DidTreatyInitiatorWin){
 				acceptance = Reluctance(treaty.Loser, treaty.Winner);
 				if (isLoserDefeated){
-					acceptance += AlwaysAccept;
+					acceptance += always;
 				} else if (isWinnerDefeated){
-					acceptance += NeverAccept;
+					acceptance += never;
 				}
 				if (!treaty.IsWhitePeace){
 					// If not fully defeated, always refuse full annexation.
 					if (!isLoserDefeated && IsFullAnnexationDemanded(treaty)){
-						acceptance += NeverAccept;
+						acceptance += never;
 					}
-					acceptance += WarGoalCost(treaty, NeverAccept/2);
+					acceptance += WarGoalCost(treaty, never/2);
 				}
 			} else { // Winning logic
 				acceptance = Reluctance(treaty.Winner, treaty.Loser);
 				if (IsFullAnnexationDemanded(treaty) || isWinnerDefeated){
-					acceptance += AlwaysAccept;
+					acceptance += always;
 				} else if (isLoserDefeated){
-					acceptance += NeverAccept;
+					acceptance += never;
 				}
-				acceptance -= WarGoalCost(treaty, MaxAcceptanceDecreaseFromGoldDemanded);
+				acceptance -= WarGoalCost(treaty, goldDemandedMin);
 			}
 			return Mathf.RoundToInt(acceptance);
 		}
 		
-		private static float Reluctance(Country decider, Country other){
-			float acceptance = BasePeaceReluctance;
+		private float Reluctance(Country decider, Country other){
+			float acceptance = baseReluctance;
 			
-			float fromResources = decider.Gold*AcceptancePerGoldAvailable+decider.Manpower*AcceptancePerManpowerAvailable;
-			fromResources = Math.Max(fromResources, MaxAcceptanceDecreaseFromResources);
+			float fromResources = decider.Gold*goldAvailable+decider.Manpower*manpowerAvailable;
+			fromResources = Math.Max(fromResources, resourcesMin);
 			acceptance += fromResources;
 			
 			// TODO Factor in own & opponent other ongoing wars after war dec logic added.
@@ -74,7 +75,7 @@ namespace AI {
 			
 			float deciderMilitaryStrength = GetMilitaryStrength(decider);
 			float otherMilitaryStrength = GetMilitaryStrength(other);
-			acceptance += Mathf.Min((otherMilitaryStrength/deciderMilitaryStrength-1)*AcceptanceFromMilitaryStrength, MaxAcceptanceFromMilitaryStrength); 
+			acceptance += Mathf.Min((otherMilitaryStrength/deciderMilitaryStrength-1)*militaryStrength, militaryStrengthMax); 
 
 			float deciderOccupationValue = GetOccupationValue(decider, other);
 			float otherOccupationValue = GetOccupationValue(other, decider);
@@ -82,18 +83,18 @@ namespace AI {
 			
 			return acceptance;
 		}
-		private static float GetMilitaryStrength(Country country){
-			return Math.Max(country.Regiments.Sum(RegimentStrength), MinMilitaryStrengthForAcceptanceMath);
+		private float GetMilitaryStrength(Country country){
+			return Math.Max(country.Regiments.Sum(RegimentStrength), minMilitaryStrengthValue);
 		}
 		private static float RegimentStrength(Regiment regiment){
 			return (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness);
 		}
-		private static float GetOccupationValue(Country occupier, Country target){
+		private float GetOccupationValue(Country occupier, Country target){
 			float value = 0;
 			float totalDevelopment = TotalDevelopment(target);
 			foreach (Land occupation in occupier.Occupations.Where(occupation => occupation.Owner == target)){
 				float development = 1+occupation.Terrain.DevelopmentModifier;
-				value += AcceptanceFromProvinceHeld/occupier.ProvinceCount*development*AcceptanceFromDevelopmentHeld/totalDevelopment;
+				value += provinceHeld/occupier.ProvinceCount*development*developmentHeld/totalDevelopment;
 			}
 			return value;
 		}
@@ -107,20 +108,20 @@ namespace AI {
 			return treaty.Loser.ProvinceCount == treaty.AnnexedLands.Count(land => land.Owner == treaty.Loser);
 		}
 		
-		private static float WarGoalCost(PeaceTreaty treaty, float maxGoldAcceptanceDecrease){
+		private float WarGoalCost(PeaceTreaty treaty, float maxGoldAcceptanceDecrease){
 			float acceptance = 0;
 			
 			float totalLoserDevelopment = TotalDevelopment(treaty.Loser);
 			foreach (Land land in treaty.AnnexedLands.Where(annexedLand => annexedLand.Owner == treaty.Loser)){
 				float development = 1+land.Terrain.DevelopmentModifier;
-				float provinceCost = AcceptanceFromProvincesDemanded/treaty.Loser.ProvinceCount+development*AcceptanceFromDevelopmentDemanded/totalLoserDevelopment;
+				float provinceCost = provincesDemanded/treaty.Loser.ProvinceCount+development*developmentDemanded/totalLoserDevelopment;
 				if (land.Occupier != treaty.Winner){
-					provinceCost *= UnoccupiedAcceptanceMultiplier;
+					provinceCost *= unoccupiedMultiplier;
 				}
 				acceptance += provinceCost;
 			}
 			
-			acceptance += Math.Max(AcceptancePerGoldDemanded*treaty.GoldTransfer, maxGoldAcceptanceDecrease);
+			acceptance += Math.Max(goldDemanded*treaty.GoldTransfer, maxGoldAcceptanceDecrease);
 			
 			return acceptance;
 		}
