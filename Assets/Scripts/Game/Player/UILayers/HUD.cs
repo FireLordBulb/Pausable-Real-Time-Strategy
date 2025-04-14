@@ -80,7 +80,7 @@ namespace Player {
 			Calendar.OnPauseToggle.AddListener(pauseLabel.SetActive);
 			pauseLabel.SetActive(Calendar.IsPaused);
 		}
-		public override void OnUpdate(){
+		private void Update(){
 			if (sidePanelMenu == null){
 				SetButtonsInteractable();
 			}
