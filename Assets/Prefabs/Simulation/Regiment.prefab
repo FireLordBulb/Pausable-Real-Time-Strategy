@@ -168,6 +168,7 @@ GameObject:
   - component: {fileID: 5329449309241042523}
   - component: {fileID: 4774899881842561818}
   - component: {fileID: 1517114082226002071}
+  - component: {fileID: 2811920218938529675}
   m_Layer: 0
   m_Name: Regiment
   m_TagString: Untagged
@@ -229,6 +230,19 @@ MonoBehaviour:
   renderers:
   - {fileID: 147349929639401619}
   - {fileID: 4721911538617885388}
+--- !u!114 &2811920218938529675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6372061799994669380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8338d74ca1b41b2bca06f47612a8ac7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tree: {fileID: 11400000, guid: 2319605006c9aa84f87a21f6852df8cc, type: 2}
 --- !u!1001 &3970222755663569147
 PrefabInstance:
   m_ObjectHideFlags: 0

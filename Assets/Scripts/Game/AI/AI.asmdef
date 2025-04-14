@@ -2,7 +2,8 @@
     "name": "AI",
     "rootNamespace": "AI",
     "references": [
-        "GUID:49aaa38406a57a144be43c76aab328f4"
+        "GUID:49aaa38406a57a144be43c76aab328f4",
+        "GUID:f1165b2b8e2deb74994d75a662987cd8"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

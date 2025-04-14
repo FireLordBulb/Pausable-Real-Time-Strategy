@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6007488337768929752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fc2f6884b12eca41a3023e55fc994ae, type: 3}
+  m_Name: Root
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {x: 0, y: -45.24}
+  child: {fileID: -635528506594934898}
+--- !u!114 &-635528506594934898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c79a12ad0cf854da4830e56f5ef9da, type: 3}
+  m_Name: DebugLog
+  m_EditorClassIdentifier: 
+  id: 1725289290
+  position: {x: 0, y: 106.56}
+  message: TEST!
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd04e7b8bd5144ca8ef85ef5430a22f6, type: 3}
+  m_Name: RegimentBehaviourTree
+  m_EditorClassIdentifier: 
+  nodes:
+  - {fileID: -6007488337768929752}
+  - {fileID: -635528506594934898}
+  root: {fileID: -6007488337768929752}
