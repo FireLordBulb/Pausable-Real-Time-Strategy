@@ -77,7 +77,9 @@ namespace Simulation.Military {
 				return;
 			}
 			EndSiege();
+			Land.Controller.SiegeEnded.Invoke(Land);
 			Land.MakeOccupiedBy(Sieger);
+			Land.Controller.SiegeEnded.Invoke(Land);
 		}
 
 		private void EndSiege(){
