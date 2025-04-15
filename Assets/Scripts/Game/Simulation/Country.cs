@@ -25,7 +25,7 @@ namespace Simulation {
 		
 		internal readonly UnityEvent<Military.Regiment> RegimentBuilt = new();
 		internal readonly UnityEvent<Military.Ship> ShipBuilt = new();
-		internal readonly UnityEvent<Military.LandLocation> LandBattleEnded = new();
+		internal readonly UnityEvent<Military.Location<Military.Regiment>> LandBattleEnded = new();
 		internal readonly UnityEvent<Military.Location<Military.Ship>> SeaBattleEnded = new();
 		internal readonly UnityEvent<Land> SiegeEnded = new();
 		#endregion
@@ -235,10 +235,10 @@ namespace Simulation {
 		public void ShipBuiltRemoveListener(UnityAction<Military.Ship> action){
 			ShipBuilt.RemoveListener(action);
 		}
-		public void LandBattleEndedAddListener(UnityAction<Military.LandLocation> action){
+		public void LandBattleEndedAddListener(UnityAction<Military.Location<Military.Regiment>> action){
 			LandBattleEnded.AddListener(action);
 		}
-		public void LandBattleEndedRemoveListener(UnityAction<Military.LandLocation> action){
+		public void LandBattleEndedRemoveListener(UnityAction<Military.Location<Military.Regiment>> action){
 			LandBattleEnded.RemoveListener(action);
 		}
 		public void SeaBattleEndedAddListener(UnityAction<Military.Location<Military.Ship>> action){
