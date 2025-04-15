@@ -11,6 +11,7 @@ namespace Simulation {
 			callbacks = new SortedSet<Action>(sorter);
 		}
 		
+		// ReSharper disable Unity.PerformanceAnalysis
 		public void AddListener(Action callback){
 			if (isIterating){
 				callbackChangeBuffer.Enqueue((callback, true));
@@ -18,6 +19,7 @@ namespace Simulation {
 				callbacks.Add(callback);
 			}
 		}
+		// ReSharper disable Unity.PerformanceAnalysis
 		public void RemoveListener(Action callback){
 			if (isIterating){
 				callbackChangeBuffer.Enqueue((callback, false));
@@ -25,7 +27,7 @@ namespace Simulation {
 				callbacks.Remove(callback);
 			}
 		}
-		public void Invoke(){
+		internal void Invoke(){
 			GoThroughBuffer();
 			isIterating = true;
 			foreach (Action callback in callbacks){
