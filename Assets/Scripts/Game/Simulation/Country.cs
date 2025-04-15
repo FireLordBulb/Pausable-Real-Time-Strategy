@@ -101,7 +101,7 @@ namespace Simulation {
 			if (regiment.Owner != this){
 				return Military.MoveOrderResult.NotOwner;
 			}
-			if (province.IsSea){
+			if (province == null || province.IsSea){
 				return Military.MoveOrderResult.InvalidTarget;
 			}
 			if (province.Land.Owner != this && !GetDiplomaticStatus(province.Land.Owner).IsAtWar){
@@ -124,7 +124,7 @@ namespace Simulation {
 			if (ship.Owner != this){
 				return Military.MoveOrderResult.NotOwner;
 			}
-			if (location.Province.IsLand && location.Province.Land.Owner != this && !GetDiplomaticStatus(location.Province.Land.Owner).IsAtWar){
+			if (location == null || location.Province.IsLand && location.Province.Land.Owner != this && !GetDiplomaticStatus(location.Province.Land.Owner).IsAtWar){
 				return Military.MoveOrderResult.NoAccess;
 			}
 			return ship.MoveTo(location);
