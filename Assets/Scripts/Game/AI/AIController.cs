@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Simulation;
 using Simulation.Military;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace AI {
 		[SerializeField] private PeaceAcceptance peaceAcceptance;
 		
 		private Calendar calendar;
+		private readonly List<Country> warEnemies = new();
 		
 		public Country Country {get; private set;}
 		
@@ -49,6 +51,23 @@ namespace AI {
 			
 		}
 
+		public void OnWarDeclared(Country declarer){
+			warEnemies.Add(declarer);
+			RegroupRegiments();
+		}
+		public void OnWarEnd(Country other){
+			warEnemies.Remove(other);
+			RegroupRegiments();
+		}
+		private void RegroupRegiments(){
+			for (int i = 0; i < Country.Regiments.Count; i++){
+				Regiment regiment = Country.Regiments[i];
+				RegimentBrain brain = regiment.GetComponent<RegimentBrain>();
+				Country enemy = warEnemies.Count == 0 ? null : warEnemies[i*warEnemies.Count/Country.Regiments.Count];
+				brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
+			}
+		}
+		
 		public int EvaluatePeaceOffer(PeaceTreaty treaty){
 			return peaceAcceptance.EvaluatePeaceOffer(treaty);
 		}

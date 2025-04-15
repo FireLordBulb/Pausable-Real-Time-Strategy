@@ -100,6 +100,7 @@ namespace Player {
 				return;
 			}
 			Player.EndWar(enemy, pendingTreaty);
+			enemyAI.OnWarEnd(Player);
 			isDone = true;
 			UI.Deselect(enemy);
 			LayerBelow.OnEnd();

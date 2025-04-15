@@ -1,3 +1,4 @@
+using AI;
 using Simulation;
 using TMPro;
 using UnityEngine;
@@ -63,6 +64,7 @@ namespace Player {
 				diplomaticStatus = Player.GetDiplomaticStatus(Selected);
 				declareWar.onClick.AddListener(() => {
 					diplomaticStatus.DeclareWar();
+					Selected.GetComponent<AIController>().OnWarDeclared(Player);
 					RefreshDiplomacy();
 				});
 				makePeace.onClick.AddListener(() => {
