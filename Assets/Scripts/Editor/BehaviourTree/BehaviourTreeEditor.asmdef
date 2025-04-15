@@ -2,7 +2,8 @@
     "name": "BehaviourTreeEditor",
     "rootNamespace": "BehaviourTree",
     "references": [
-        "GUID:f1165b2b8e2deb74994d75a662987cd8"
+        "GUID:f1165b2b8e2deb74994d75a662987cd8",
+        "GUID:64dd2aa7a23f99044860f4baa5f23146"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
