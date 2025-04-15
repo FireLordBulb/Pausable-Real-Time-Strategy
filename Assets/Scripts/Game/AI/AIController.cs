@@ -71,8 +71,12 @@ namespace AI {
 			for (int i = 0; i < Country.Regiments.Count; i++){
 				Regiment regiment = Country.Regiments[i];
 				RegimentBrain brain = regiment.GetComponent<RegimentBrain>();
-				Country enemy = warEnemies.Count == 0 ? null : warEnemies[i*warEnemies.Count/Country.Regiments.Count];
-				brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
+				if (warEnemies.Count == 0){
+					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
+				} else {
+					Country enemy = warEnemies[i*warEnemies.Count/Country.Regiments.Count];
+					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
+				}
 			}
 		}
 		
