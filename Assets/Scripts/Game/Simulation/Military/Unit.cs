@@ -184,10 +184,10 @@ namespace Simulation.Military {
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
 		protected abstract bool LinkEvaluator(ProvinceLink link);
 		
-		internal void StartupBattleRandomness(){
+		internal void CommanderBattleStartUp(){
 			daysUntilReroll = 0;
 		}
-		internal void RerollBattleRandomness(){
+		internal void CommanderBattleTick(){
 			daysUntilReroll--;
 			if (0 < daysUntilReroll){
 				return;
@@ -195,6 +195,8 @@ namespace Simulation.Military {
 			daysUntilReroll = Random.Range(minRerollDays, maxRerollDays);
 			RandomDamageMultiplier = Random.Range(1, 1+maxDamageBoost);
 		}
+		// Pass the location in since battles can end from a unit changing to a different location.
+		internal abstract void CommanderOnBattleEnd(bool didWin, Location<TUnit> location);
 		internal abstract BattleResult DoBattle(List<TUnit> defenders, List<TUnit> attackers);
 		internal abstract void OnBattleEnd(bool didWin);
 		internal abstract void StackWipe();

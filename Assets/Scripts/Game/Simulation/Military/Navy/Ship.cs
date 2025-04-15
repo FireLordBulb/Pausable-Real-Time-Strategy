@@ -28,9 +28,12 @@ namespace Simulation.Military {
 		protected override bool LinkEvaluator(ProvinceLink link){
 			return link is SeaLink or CoastLink or ShallowsLink;
 		}
-		
+
 		internal override BattleResult DoBattle(List<Ship> defenders, List<Ship> attackers){
 			return BattleResult.DefenderWon;
+		}
+		internal override void CommanderOnBattleEnd(bool didWin, Location<Ship> location){
+			Owner.SeaBattleEnded.Invoke(location);
 		}
 		internal override void OnBattleEnd(bool didWin){
 			if (!didWin){

@@ -138,6 +138,9 @@ namespace Simulation.Military {
 				}
 			}
 		}
+		internal override void CommanderOnBattleEnd(bool didWin, Location<Regiment> location){
+			Owner.LandBattleEnded.Invoke(location);
+		}
 		internal override void OnBattleEnd(bool didWin){
 			CurrentManpower += DemoralizedManpower;
 			DemoralizedManpower = 0;
