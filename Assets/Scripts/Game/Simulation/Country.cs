@@ -32,10 +32,10 @@ namespace Simulation {
 		public Transform MilitaryUnitParent {get; private set;}
 		#endregion
 		#region Getter Properties
-		public IEnumerable<Military.RegimentType> RegimentTypes => regimentTypes;
-		public IEnumerable<Military.ShipType> ShipTypes => shipTypes;
-		public IEnumerable<Military.Regiment> Regiments => regiments;
-		public IEnumerable<Military.Ship> Ships => ships;
+		public IReadOnlyList<Military.RegimentType> RegimentTypes => regimentTypes;
+		public IReadOnlyList<Military.ShipType> ShipTypes => shipTypes;
+		public IReadOnlyList<Military.Regiment> Regiments => regiments;
+		public IReadOnlyList<Military.Ship> Ships => ships;
 		public IEnumerable<Land> Provinces => provinces;
 		public IEnumerable<Land> Occupations => occupations;
 		public IEnumerable<Land> ControlledLand {
@@ -52,8 +52,6 @@ namespace Simulation {
 		}
 		// TODO: Assign a specific province as capital from country data.
 		public Land Capital => provinces.First();
-		public int RegimentCount => regiments.Count;
-		public int ShipCount => ships.Count;
 		public string Name => gameObject.name;
 		#endregion
 		

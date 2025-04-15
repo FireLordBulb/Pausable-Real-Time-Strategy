@@ -46,8 +46,8 @@ namespace Player {
 			}
 			valueTable.UpdateColumn(0, (
 				Format.FormatLargeNumber(Selected.ProvinceCount, Format.SevenDigits)),	
-				Format.FormatLargeNumber(Selected.RegimentCount, Format.FiveDigits),	
-				Format.FormatLargeNumber(Selected.ShipCount, Format.FiveDigits),	
+				Format.FormatLargeNumber(Selected.Regiments.Count, Format.FiveDigits),	
+				Format.FormatLargeNumber(Selected.Ships.Count, Format.FiveDigits),	
 				Format.FormatLargeNumber(Selected.Gold, Format.FiveDigits),	
 				Format.FormatLargeNumber(Selected.Manpower, Format.SevenDigits),	
 				Format.FormatLargeNumber(Selected.Sailors, Format.SevenDigits)
