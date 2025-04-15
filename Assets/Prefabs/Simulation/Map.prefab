@@ -348,7 +348,8 @@ MonoBehaviour:
   - Simulation.Military.Harbor
   - Simulation.DiplomaticStatus
   - AI.AIController, AI
-  - AI.TickTree, AI
+  - AI.RegimentBrain, AI
+  - AI.ShipBrain, AI
   - Player.HUD, Player
   - Player.CalendarPanel, Player
   - Player.WarMenu, Player
