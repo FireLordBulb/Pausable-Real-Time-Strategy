@@ -1,6 +1,8 @@
+using Simulation;
+
 namespace AI {
 	public abstract class MilitaryUnitBrain<TUnit> : BehaviourTree.Brain where TUnit : Simulation.Military.Unit<TUnit> {
-		private TickTree tickTree;
+		private Calendar calendar;
 		
 		public AIController Controller {get; private set;}
 		public TUnit Unit {get; private set;}
@@ -16,25 +18,30 @@ namespace AI {
 		protected override void Start(){
 			base.Start();
 			Controller = Unit.Owner.GetComponent<AIController>();
-			tickTree = (TickTree)Tree;
-			tickTree.Init(Unit.Province.Calendar);
-			
+			calendar = Unit.Province.Calendar;
 			if (Controller.enabled){
 				OnEnable();
 			} else {
 				enabled = false;
 			}
 		}
+		protected override void Update(){
+			// Do nothing in regular Update.
+		}
+		// Use the daily tick instead.
+		private void DayTick(){
+			base.Update();
+		}
 		protected void OnEnable(){
-			if (tickTree != null){
-				tickTree.Enable();
+			if (calendar != null){
+				calendar.OnDayTick.AddListener(DayTick);
 			}
 		}
 		protected void OnDisable(){
-			tickTree.Disable();
+			calendar.OnDayTick.RemoveListener(DayTick);
 		}
 		protected void OnDestroy(){
-			Destroy(tickTree);
+			Destroy(Tree);
 		}
 	}
 }

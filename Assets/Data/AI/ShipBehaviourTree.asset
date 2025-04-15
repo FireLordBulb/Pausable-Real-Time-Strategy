@@ -39,7 +39,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd04e7b8bd5144ca8ef85ef5430a22f6, type: 3}
+  m_Script: {fileID: 11500000, guid: d0d6fdce714eec3428ecb9f2abf21a9f, type: 3}
   m_Name: ShipBehaviourTree
   m_EditorClassIdentifier: 
   nodes:

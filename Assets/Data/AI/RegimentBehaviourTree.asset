@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3c94e233df5bc489a27465e28af396, type: 3}
   m_Name: Sequence
   m_EditorClassIdentifier: 
-  id: 0
+  id: 1409247588
   position: {x: -99, y: 444}
   children:
   - {fileID: -3738300134499669887}
@@ -86,7 +86,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd04e7b8bd5144ca8ef85ef5430a22f6, type: 3}
+  m_Script: {fileID: 11500000, guid: d0d6fdce714eec3428ecb9f2abf21a9f, type: 3}
   m_Name: RegimentBehaviourTree
   m_EditorClassIdentifier: 
   nodes:
