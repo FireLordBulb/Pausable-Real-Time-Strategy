@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8626318509899413655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 414e0d88516606c468a1c87270dc741d, type: 3}
+  m_Name: Selector
+  m_EditorClassIdentifier: 
+  id: -1376138131
+  position: {x: 0, y: 174}
+  children:
+  - {fileID: 1943787106600910695}
 --- !u!114 &-8031824893725201951
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,7 +30,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 36123351
   position: {x: 0, y: 58}
-  child: {fileID: 981950929858499535}
+  child: {fileID: -8626318509899413655}
+--- !u!114 &-7810320611985856505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db3c94e233df5bc489a27465e28af396, type: 3}
+  m_Name: Sequence
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {x: -99, y: 444}
+  children:
+  - {fileID: -3738300134499669887}
+  - {fileID: 1857901228431769341}
 --- !u!114 &-6007488337768929752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42,8 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db600c45a6c436cb5280cb0ee569dce, type: 3}
   m_Name: FindSiegeTarget
   m_EditorClassIdentifier: 
-  id: 0
-  position: {x: -108, y: 304}
+  id: 1499098105
+  position: {x: -192, y: 566}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,27 +92,12 @@ MonoBehaviour:
   nodes:
   - {fileID: -6007488337768929752}
   - {fileID: -8031824893725201951}
-  - {fileID: 981950929858499535}
   - {fileID: -3738300134499669887}
   - {fileID: 1857901228431769341}
+  - {fileID: 1943787106600910695}
+  - {fileID: -8626318509899413655}
+  - {fileID: -7810320611985856505}
   root: {fileID: -6007488337768929752}
---- !u!114 &981950929858499535
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db3c94e233df5bc489a27465e28af396, type: 3}
-  m_Name: Sequence
-  m_EditorClassIdentifier: 
-  id: 0
-  position: {x: 0, y: 176}
-  children:
-  - {fileID: -3738300134499669887}
-  - {fileID: 1857901228431769341}
 --- !u!114 &1857901228431769341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,5 +110,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a352d96a8f9844cbb4fbd5d5f2f5798c, type: 3}
   m_Name: MarchToTarget
   m_EditorClassIdentifier: 
-  id: 0
-  position: {x: 117, y: 304}
+  id: 1085141928
+  position: {x: 0, y: 566}
+--- !u!114 &1943787106600910695
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc76835ea223dc428b3c66cf0deab5a, type: 3}
+  m_Name: HasValue
+  m_EditorClassIdentifier: 
+  id: -435977880
+  position: {x: -99, y: 312.5}
+  child: {fileID: -7810320611985856505}
+  key: enemyCountry
+  doInvert: 0
+  doCheckEveryFrame: 1
