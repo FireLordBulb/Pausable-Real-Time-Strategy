@@ -18,6 +18,5 @@ namespace AI.Nodes {
 			}
 			return CurrentState;
 		}
-		protected override void OnStop(){}
 	}
 }

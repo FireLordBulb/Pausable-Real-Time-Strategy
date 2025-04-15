@@ -5,9 +5,7 @@ namespace AI.Nodes {
 		protected override void OnStart(){
 			Brain = (MilitaryUnitBrain<TUnit>)Tree.TargetBrain;
 		}
-		protected override void OnStop(){
-			
-		}
+		protected override void OnStop(){}
 		protected override State OnUpdate(){
 			return CurrentState;	
 		}

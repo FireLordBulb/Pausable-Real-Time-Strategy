@@ -24,6 +24,5 @@ namespace AI.Nodes {
 		protected override State OnUpdate(){
 			return CurrentState;
 		}
-		protected override void OnStop(){}
 	}
 }
