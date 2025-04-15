@@ -64,7 +64,7 @@ namespace Player {
 				diplomaticStatus = Player.GetDiplomaticStatus(Selected);
 				declareWar.onClick.AddListener(() => {
 					diplomaticStatus.DeclareWar();
-					Selected.GetComponent<AIController>().OnWarDeclared(Player);
+					AIController.OnWarStart(UI.GetAI(Player), UI.GetAI(Selected));
 					RefreshDiplomacy();
 				});
 				makePeace.onClick.AddListener(() => {

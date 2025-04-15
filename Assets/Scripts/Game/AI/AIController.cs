@@ -51,12 +51,20 @@ namespace AI {
 			
 		}
 
-		public void OnWarDeclared(Country declarer){
-			warEnemies.Add(declarer);
+		public static void OnWarStart(AIController declarer, AIController target){
+			declarer.OnWarStart(target);
+			target.OnWarStart(declarer);
+		}
+		private void OnWarStart(AIController other){
+			warEnemies.Add(other.Country);
 			RegroupRegiments();
 		}
-		public void OnWarEnd(Country other){
-			warEnemies.Remove(other);
+		public static void OnWarEnd(AIController initiator, AIController receiver){
+			initiator.OnWarEnd(receiver);
+			receiver.OnWarEnd(initiator);
+		}
+		public void OnWarEnd(AIController other){
+			warEnemies.Remove(other.Country);
 			RegroupRegiments();
 		}
 		private void RegroupRegiments(){

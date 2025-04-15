@@ -100,7 +100,7 @@ namespace Player {
 				return;
 			}
 			Player.EndWar(enemy, pendingTreaty);
-			enemyAI.OnWarEnd(Player);
+			AIController.OnWarEnd(UI.GetAI(Player), enemyAI);
 			isDone = true;
 			UI.Deselect(enemy);
 			LayerBelow.OnEnd();
@@ -124,7 +124,7 @@ namespace Player {
 			base.Init(uiStack);
 			player = Player;
 			enemy = (Country)UI.Selected;
-			enemyAI = enemy.GetComponent<AIController>();
+			enemyAI = UI.GetAI(enemy);
 			treaty = Player.NewPeaceTreaty(enemy);
 			playerPanel.SetCountry(player, UI, Close);
 			enemyPanel.SetCountry(enemy, UI, Close);
