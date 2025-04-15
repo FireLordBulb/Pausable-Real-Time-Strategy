@@ -17,6 +17,7 @@ namespace AI {
 		
 		public void Init(){
 			Country = GetComponent<Country>();
+			Country.RegimentBuiltAddListener(_ => RegroupRegiments());
 			calendar = Country.Map.Calendar;
 			enabled = true;
 		}
