@@ -38,11 +38,17 @@ namespace Simulation.Military {
 			return (GetLocation(link), GetTravelDays(link));
 		}
 		private int GetTravelDays(ProvinceLink link){
+			return GetTravelDays(link, MovementSpeed);
+		}
+		public static int GetTravelDays(ProvinceLink link, float movementSpeed){
 			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
-			return Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier));
+			return Mathf.CeilToInt(link.Distance/(movementSpeed*terrainSpeedMultiplier));
 		}
 		protected override bool LinkEvaluator(ProvinceLink link){
-			return link is LandLink landLink && (IsRetreating || Owner == landLink.TargetLand.Owner || Owner.GetDiplomaticStatus(landLink.TargetLand.Owner).IsAtWar);
+			return LinkEvaluator(link, IsRetreating, Owner);
+		}
+		public static bool LinkEvaluator(ProvinceLink link, bool doIgnoreOwner, Country owner){
+			return link is LandLink landLink && (doIgnoreOwner || owner == landLink.TargetLand.Owner || owner.GetDiplomaticStatus(landLink.TargetLand.Owner).IsAtWar);
 		}
 		
 		private void Reinforce(){

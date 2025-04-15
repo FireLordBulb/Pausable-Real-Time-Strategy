@@ -156,7 +156,10 @@ namespace Simulation.Military {
 			return MoveOrderResult.Success;
 		}
 		protected List<ProvinceLink> GetPathTo(Location<TUnit> end){
-			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(Location.Province.Graph, Location.Province, end.SearchTargetProvince, LinkEvaluator);
+			return GetPath(Location, end, LinkEvaluator);
+		}
+		public static List<ProvinceLink> GetPath(Location<TUnit> start, Location<TUnit> end, GraphAlgorithms<Province, ProvinceLink>.LinkEvaluator linkEvaluator){
+			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(start.Province.Graph, start.Province, end.SearchTargetProvince, linkEvaluator);
 			if (nodes == null){
 				return null;
 			}
