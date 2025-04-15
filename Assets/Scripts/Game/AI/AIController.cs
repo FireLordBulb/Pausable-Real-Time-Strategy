@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Simulation;
 using Simulation.Military;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace AI {
 		
 		private Calendar calendar;
 		private readonly List<Country> warEnemies = new();
+		private readonly Dictionary<Country, List<Province>> enemiesClosestProvinces = new();
 		
 		public Country Country {get; private set;}
 		
@@ -47,8 +49,11 @@ namespace AI {
 		private void MonthTick(){
 			
 		}
+		// Recalculate this occasionally since both sides could have gained/lost land in other wars.
 		private void YearTick(){
-			
+			foreach (Country warEnemy in warEnemies){
+				CalculateClosestProvinces(warEnemy);
+			}
 		}
 
 		public static void OnWarStart(AIController declarer, AIController target){
@@ -56,7 +61,10 @@ namespace AI {
 			target.OnWarStart(declarer);
 		}
 		private void OnWarStart(AIController other){
-			warEnemies.Add(other.Country);
+			Country enemy = other.Country;
+			warEnemies.Add(enemy);
+			enemiesClosestProvinces.Add(enemy, new List<Province>());
+			CalculateClosestProvinces(enemy);
 			RegroupRegiments();
 		}
 		public static void OnWarEnd(AIController initiator, AIController receiver){
@@ -65,6 +73,7 @@ namespace AI {
 		}
 		public void OnWarEnd(AIController other){
 			warEnemies.Remove(other.Country);
+			enemiesClosestProvinces.Remove(other.Country);
 			RegroupRegiments();
 		}
 		private void RegroupRegiments(){
@@ -79,9 +88,27 @@ namespace AI {
 				}
 			}
 		}
+		// Heavy calculation, don't do often.
+		private void CalculateClosestProvinces(Country enemy){
+			const float speedIsIrrelevantForSorting = 1;
+			LandLocation capital = Country.Capital.ArmyLocation;
+			List<Province> closestProvinces = enemiesClosestProvinces[enemy];
+			closestProvinces.Clear();
+			Dictionary<Province, int> distances = new();
+			foreach (Land land in enemy.Provinces){
+				closestProvinces.Add(land.Province);
+				List<ProvinceLink> path = Regiment.GetPath(capital, land.ArmyLocation, link => Regiment.LinkEvaluator(link, false, Country));
+				distances[land.Province] = path.Sum(link => Regiment.GetTravelDays(link, speedIsIrrelevantForSorting));
+			}
+			closestProvinces.Sort((left, right) => distances[left]-distances[right]);
+		}
 		
 		public int EvaluatePeaceOffer(PeaceTreaty treaty){
 			return peaceAcceptance.EvaluatePeaceOffer(treaty);
+		}
+
+		internal IReadOnlyList<Province> GetClosestProvinces(Country country){
+			return enemiesClosestProvinces[country];
 		}
 	}
 }
