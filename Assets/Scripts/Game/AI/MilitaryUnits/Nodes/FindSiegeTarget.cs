@@ -5,19 +5,19 @@ using Simulation.Military;
 using UnityEngine;
 
 namespace AI.Nodes {
-	[CreateAssetMenu(fileName = "MoveRegiment", menuName = "ScriptableObjects/AI/Nodes/MoveRegiment")]
-	public class Move : MilitaryUnitNode<Regiment> {
+	[CreateAssetMenu(fileName = "FindSiegeTarget", menuName = "ScriptableObjects/AI/Nodes/FindSiegeTarget")]
+	public class FindSiegeTarget : MilitaryUnitNode<Regiment> {
 		protected override void OnStart(){
 			base.OnStart();
+			
 			IEnumerable<ProvinceLink> links = Brain.Unit.Location.Province.Links;
 			Province target = links.ElementAt(Random.Range(0, links.Count())).Target;
-			Brain.Controller.Country.MoveRegimentTo(Brain.Unit, target);
-		}
-		protected override void OnStop(){
-			
+			Tree.Blackboard.SetValue(Brain.Target, target);
+			CurrentState = State.Success;
 		}
 		protected override State OnUpdate(){
-			return Brain.Unit.IsMoving ? State.Running : State.Success;
+			return CurrentState;
 		}
+		protected override void OnStop(){}
 	}
 }

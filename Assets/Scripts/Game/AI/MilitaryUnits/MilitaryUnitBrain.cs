@@ -5,6 +5,9 @@ namespace AI {
 		public AIController Controller {get; private set;}
 		public TUnit Unit {get; private set;}
 		
+		// String names for blackboard stored here to remove need for string literals in specific node implementations.
+		public string Target => "target";
+		
 		private void Awake(){
 			// Enforce with [RequireComponent] in concrete implementations.
 			Unit = GetComponent<TUnit>();
