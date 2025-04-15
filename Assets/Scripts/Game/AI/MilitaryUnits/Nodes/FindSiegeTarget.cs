@@ -8,16 +8,17 @@ namespace AI.Nodes {
 	public class FindSiegeTarget : MilitaryUnitNode<Regiment> {
 		protected override void OnStart(){
 			base.OnStart();
+			Country regimentCountry = Brain.Unit.Owner;
 			Country enemyCountry = Tree.Blackboard.GetValue<Country>(Brain.EnemyCountry, null);
-			IReadOnlyList<Province> provinces = Brain.Controller.GetClosestProvinces(enemyCountry);
-			Province target = Brain.Unit.Province;
-			foreach (Province province in provinces){
-				if (target.Land.Owner == enemyCountry && target.Land.Occupier != Brain.Unit.Owner){
+			IReadOnlyList<Land> provinces = Brain.Controller.GetClosestProvinces(enemyCountry);
+			Land targetLand = Brain.Unit.Province.Land;
+			foreach (Land land in provinces){
+				if (targetLand.Controller != regimentCountry && (targetLand.Owner == enemyCountry || targetLand.Owner == regimentCountry)){
 					break;
 				}
-				target = province;
+				targetLand = land;
 			}
-			Tree.Blackboard.SetValue(Brain.Target, target);
+			Tree.Blackboard.SetValue(Brain.Target, targetLand.Province);
 			CurrentState = State.Success;
 		}
 		protected override State OnUpdate(){
