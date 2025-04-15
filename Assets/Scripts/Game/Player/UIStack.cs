@@ -34,6 +34,7 @@ namespace Player {
 		private SelectionWindow activeSelectionWindow;
 		private CameraMovement cameraMovement;
 		private Camera mainCamera;
+		private readonly Dictionary<Country, AIController> aiControllers = new();
 		private AIController playerAI;
 		private Vector3 mouseWorldPosition;
 		
@@ -94,7 +95,9 @@ namespace Player {
 		}
 		private void InitAI(){
 			foreach (Country country in map.Countries){
-				country.GetComponent<AIController>().Init();
+				AIController aiController = country.GetComponent<AIController>();
+				aiController.Init();
+				aiControllers.Add(country, aiController);
 			}
 		}
 		private void EnableInput(){
@@ -221,7 +224,7 @@ namespace Player {
 			}
 			PlayerCountry = country;
 			if (PlayerCountry != null){
-				playerAI = PlayerCountry.GetComponent<AIController>();
+				playerAI = GetAI(PlayerCountry);
 				playerAI.enabled = false;
 			}
 			Selected = null;
@@ -327,6 +330,9 @@ namespace Player {
 			// All coastal provinces have at least one harbor.
 			Debug.Assert(closestHarbor != null);
 			return closestHarbor;
+		}
+		public AIController GetAI(Country country){
+			return aiControllers[country];
 		}
 		#endregion
 	}
