@@ -174,7 +174,9 @@ namespace Simulation.Military {
 		internal override void StackWipe(){
 			Owner.RemoveRegiment(this);
 			Location.Remove(this);
-			Destroy(gameObject);
+			if (this != null){
+				Destroy(gameObject);
+			}
 		}
 	}
 }
