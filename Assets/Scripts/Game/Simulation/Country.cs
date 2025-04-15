@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ProceduralMeshes;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Simulation {
 	public class Country : MonoBehaviour, ISelectable {
@@ -21,6 +22,12 @@ namespace Simulation {
 		private readonly List<Military.Regiment> regiments = new();
 		private readonly List<Military.Ship> ships = new();
 		private bool wasBorderChanged;
+		
+		internal readonly UnityEvent<Military.Regiment> RegimentBuilt = new();
+		internal readonly UnityEvent<Military.Ship> ShipBuilt = new();
+		internal readonly UnityEvent<Military.LandLocation> LandBattleEnded = new();
+		internal readonly UnityEvent<Military.Location<Military.Ship>> SeaBattleEnded = new();
+		internal readonly UnityEvent<Land> SiegeEnded = new();
 		#endregion
 		#region Auto-Properties
 		public Color MapColor {get; private set;}
@@ -213,6 +220,39 @@ namespace Simulation {
 			wasBorderChanged = false;
 		}
 		
+		#endregion
+
+		#region Public Interface for Internal UnityEvents
+		public void RegimentBuiltAddListener(UnityAction<Military.Regiment> action){
+			RegimentBuilt.AddListener(action);
+		}
+		public void RegimentBuiltRemoveListener(UnityAction<Military.Regiment> action){
+			RegimentBuilt.RemoveListener(action);
+		}
+		public void ShipBuiltAddListener(UnityAction<Military.Ship> action){
+			ShipBuilt.AddListener(action);
+		}
+		public void ShipBuiltRemoveListener(UnityAction<Military.Ship> action){
+			ShipBuilt.RemoveListener(action);
+		}
+		public void LandBattleEndedAddListener(UnityAction<Military.LandLocation> action){
+			LandBattleEnded.AddListener(action);
+		}
+		public void LandBattleEndedRemoveListener(UnityAction<Military.LandLocation> action){
+			LandBattleEnded.RemoveListener(action);
+		}
+		public void SeaBattleEndedAddListener(UnityAction<Military.Location<Military.Ship>> action){
+			SeaBattleEnded.AddListener(action);
+		}
+		public void SeaBattleEndedRemoveListener(UnityAction<Military.Location<Military.Ship>> action){
+			SeaBattleEnded.RemoveListener(action);
+		}
+		public void SiegeEndedAddListener(UnityAction<Land> action){
+			SiegeEnded.AddListener(action);
+		}
+		public void SiegeEndedRemoveListener(UnityAction<Land> action){
+			SiegeEnded.RemoveListener(action);
+		}
 		#endregion
 		
 		#region Selection Interface for the UI
