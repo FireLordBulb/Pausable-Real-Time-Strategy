@@ -98,6 +98,10 @@ namespace AI {
 			foreach (Land land in enemy.Provinces){
 				closestProvinces.Add(land.Province);
 				List<ProvinceLink> path = Regiment.GetPath(capital, land.ArmyLocation, link => Regiment.LinkEvaluator(link, false, Country));
+				if (path == null){
+					distances[land.Province] = int.MaxValue;
+					continue;
+				}
 				distances[land.Province] = path.Sum(link => Regiment.GetTravelDays(link, speedIsIrrelevantForSorting));
 			}
 			closestProvinces.Sort((left, right) => distances[left]-distances[right]);
