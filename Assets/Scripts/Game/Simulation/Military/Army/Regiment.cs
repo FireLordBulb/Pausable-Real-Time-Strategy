@@ -29,6 +29,9 @@ namespace Simulation.Military {
 			maxMonthlyReinforcement = (int)(MaxManpower*monthlyReinforcementRate);
 			Province.Calendar.OnMonthTick.AddListener(Reinforce);
 		}
+		protected override void OnFinishBuilding(){
+			Owner.RegimentBuilt.Invoke(this);
+		}
 		
 		protected override Location<Regiment> GetLocation(ProvinceLink link){
 			return link.Target.Land.ArmyLocation;

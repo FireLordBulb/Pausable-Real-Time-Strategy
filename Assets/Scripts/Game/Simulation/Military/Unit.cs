@@ -98,8 +98,10 @@ namespace Simulation.Military {
 		private void FinishBuilding(){
 			IsBuilt = true;
 			Province.Calendar.OnDayTick.RemoveListener(TickBuild);
+			OnFinishBuilding();
 			Province.Calendar.OnDayTick.AddListener(OnDayTick);
 		}
+		protected abstract void OnFinishBuilding();
 		private void OnDayTick(){
 			if (!IsMoving){
 				return;

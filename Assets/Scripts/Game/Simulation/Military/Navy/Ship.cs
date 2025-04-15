@@ -5,6 +5,10 @@ namespace Simulation.Military {
 	public class Ship : Unit<Ship> {
 		public override string CreatingVerb => "Constructing";
 		
+		protected override void OnFinishBuilding(){
+			Owner.ShipBuilt.Invoke(this);
+		}
+		
 		protected override Location<Ship> GetLocation(ProvinceLink link){
 			return link switch {
 				CoastLink coastLink => coastLink.Harbor,
