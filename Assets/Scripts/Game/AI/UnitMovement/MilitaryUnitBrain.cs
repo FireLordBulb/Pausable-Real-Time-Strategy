@@ -1,3 +1,4 @@
+using System.Linq;
 using Simulation;
 
 namespace AI {
@@ -42,6 +43,10 @@ namespace AI {
 		}
 		protected void OnDestroy(){
 			Destroy(Tree);
+		}
+
+		internal bool IsReinforceableBattleOngoing(Simulation.Military.Location<TUnit> location){
+			return location.IsBattleOngoing && location.Units.Any(regiment => regiment.Owner == Unit.Owner && !regiment.IsRetreating);
 		}
 	}
 }

@@ -8,14 +8,9 @@ namespace AI.Nodes {
 		private Province target;
 		protected override void OnStart(){
 			base.OnStart();
-			if (CannotBesiege()){
-				CurrentState = State.Failure;
-			}
+			CurrentState = CannotBesiege() ? State.Failure : State.Success;
 		}
 		protected override State OnUpdate(){
-			if (CurrentState == State.Running && CannotBesiege()){
-				CurrentState = State.Success;
-			}
 			return CurrentState;
 		}
 		private bool CannotBesiege(){
