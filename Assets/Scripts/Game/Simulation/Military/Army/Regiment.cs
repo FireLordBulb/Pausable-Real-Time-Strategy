@@ -67,10 +67,10 @@ namespace Simulation.Military {
 		}
 		private bool IsUnsafe(Location<Regiment> location){
 			if (location.IsBattleOngoing){
-				return false;
+				return true;
 			}
-			Land nextProvince = location.Province.Land;
-			return nextProvince.Owner != Owner || nextProvince.IsOccupied;
+			Land land = location.Province.Land;
+			return land.Owner != Owner || land.IsOccupied;
 		}
 		
 		internal override BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers){
