@@ -4,8 +4,8 @@ using Simulation.Military;
 using UnityEngine;
 
 namespace AI.Nodes {
-	[CreateAssetMenu(fileName = "MoveRegiment", menuName = "ScriptableObjects/AI/Nodes/MoveRegiment")]
-	public class MarchToTarget : MilitaryUnitNode<Regiment> {
+	[CreateAssetMenu(fileName = "MoveToSiege", menuName = "ScriptableObjects/AI/Nodes/MoveToSiege")]
+	public class MoveToSiege : MilitaryUnitNode<Regiment> {
 		private List<ProvinceLink> pathToTarget;
 		private Province nextProvince;
 		private int pathIndex;
