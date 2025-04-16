@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 821fb7208ce2450daa6bcc36051c76f9, type: 3}
   m_Name: KeepBesieging
   m_EditorClassIdentifier: 
-  id: 0
+  id: 1736683734
   position: {x: 726, y: 656}
 --- !u!114 &-3738300134499669887
 MonoBehaviour:
@@ -109,6 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1499098105
   position: {x: 826, y: 778}
+  maxStrengthMultiplier: 1.5
 --- !u!114 &-2989987493595913188
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -122,6 +122,20 @@ namespace AI {
 			return enemiesClosestProvinces[country];
 		}
 		
+		internal static float RelativeStrength(Regiment attacker, params Regiment[] defenders){
+			float defenderStrength = defenders.Sum(RegimentStrength);
+			float attackerStrength = RegimentStrength(attacker);
+
+			Land battleLand = defenders[0].Province.Land;
+			// Attacker gets the defender advantage if they control the province the defender is in.
+			if (battleLand.Controller == attacker.Owner){
+				attackerStrength *= 1+battleLand.Terrain.DefenderAdvantage;
+			// Otherwise the defender gets the defender advantage as expected.
+			} else {
+				defenderStrength *= 1+battleLand.Terrain.DefenderAdvantage;
+			}
+			return defenderStrength/attackerStrength;
+		}
 		internal static float RegimentStrength(Regiment regiment){
 			return (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness);
 		}
