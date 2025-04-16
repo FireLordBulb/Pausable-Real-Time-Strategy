@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Simulation;
 using Simulation.Military;
 using UnityEngine;
@@ -31,8 +30,11 @@ namespace AI.Nodes {
 			CurrentState = State.Failure;
 		}
 		private bool IsGoodSiegeTarget(Land land, out List<ProvinceLink> path){
+			path = null;
 			if (land.Controller == regimentCountry || land.Owner != enemyCountry && land.Owner != regimentCountry){
-				path = null;
+				return false;
+			}
+			if (Brain.Controller.HasBesiegerAlready(land, Brain.Unit)){
 				return false;
 			}
 			path = Brain.Unit.GetPathTo(land.ArmyLocation, link => {

@@ -123,6 +123,18 @@ namespace AI {
 			return enemiesClosestProvinces[country];
 		}
 		
+		internal bool HasBesiegerAlready(Land land, Regiment regiment){
+			foreach (Regiment presentRegiment in land.ArmyLocation.Units){
+				// If the regiment itself is present in the siege and it's first in the enumeration order, it gets to stay.
+				if (presentRegiment == regiment){
+					return false;
+				}
+				if (!presentRegiment.IsMoving && presentRegiment.Owner == Country){
+					return true;
+				}
+			}
+			return false;
+		}
 		internal bool ShouldAvoidArmyAt(Province province, Regiment regiment){
 			IReadOnlyList<Regiment> unitsAtLocation = province.Land.ArmyLocation.Units;
 			if (unitsAtLocation.All(unit => unit.Owner == Country)){

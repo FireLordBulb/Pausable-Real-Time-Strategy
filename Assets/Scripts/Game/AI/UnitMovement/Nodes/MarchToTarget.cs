@@ -39,6 +39,11 @@ namespace AI.Nodes {
 			pathIndex++;
 			if (pathIndex < pathToTarget.Count){
 				nextProvince = pathToTarget[pathIndex].Target;
+				// Don't move too the final province of the path if a different army got to the siege first.
+				if (pathIndex == pathToTarget.Count-1 && Brain.Controller.HasBesiegerAlready(nextProvince.Land, Brain.Unit)){
+					CurrentState = State.Failure;
+					return;
+				}
 				MoveOrderResult result = Brain.Controller.Country.MoveRegimentTo(Brain.Unit, nextProvince);
 				if (result != MoveOrderResult.Success){
 					CurrentState = State.Failure;
