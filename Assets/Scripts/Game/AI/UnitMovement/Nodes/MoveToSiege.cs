@@ -6,14 +6,18 @@ using UnityEngine;
 namespace AI.Nodes {
 	[CreateAssetMenu(fileName = "MoveToSiege", menuName = "ScriptableObjects/AI/Nodes/MoveToSiege")]
 	public class MoveToSiege : MilitaryUnitNode<Regiment> {
-		private List<ProvinceLink> pathToTarget;
 		private Province nextProvince;
 		private int pathIndex;
 		protected override void OnStart(){
 			base.OnStart();
-			pathToTarget = Tree.Blackboard.GetValue(Brain.PathToTarget, new List<ProvinceLink>());
-			pathIndex = -1;
-			nextProvince = Brain.Unit.Province;
+			List<ProvinceLink> pathToTarget = Tree.Blackboard.GetValue(Brain.PathToTarget, new List<ProvinceLink>());
+			if (pathToTarget.Count == 0){
+				nextProvince = Brain.Unit.Province;
+				return;
+			}
+			nextProvince = pathToTarget[0].Target;
+			MoveOrderResult result = Brain.Controller.Country.MoveRegimentTo(Brain.Unit, nextProvince);
+			CurrentState = result == MoveOrderResult.Success ? State.Success : State.Failure;
 		}
 		protected override State OnUpdate(){
 			UpdateCurrentState();
@@ -30,27 +34,7 @@ namespace AI.Nodes {
 			if (Brain.Unit.IsMoving){
 				return;
 			}
-			// This case can only happen if something besides this node is giving move orders to the regiment, don't do that.
-			if (Brain.Unit.Province != nextProvince){
-				CurrentState = State.Failure;
-				return;
-			}
-			// Either start moving toward the next province in the path or conclude with State.Success if the path has ended.
-			pathIndex++;
-			if (pathIndex < pathToTarget.Count){
-				nextProvince = pathToTarget[pathIndex].Target;
-				// Don't move too the final province of the path if a different army got to the siege first.
-				if (pathIndex == pathToTarget.Count-1 && Brain.Controller.HasBesiegerAlready(nextProvince.Land, Brain.Unit)){
-					CurrentState = State.Failure;
-					return;
-				}
-				MoveOrderResult result = Brain.Controller.Country.MoveRegimentTo(Brain.Unit, nextProvince);
-				if (result != MoveOrderResult.Success){
-					CurrentState = State.Failure;
-				}
-				return;
-			}
-			CurrentState = State.Success;
+			CurrentState = Brain.Unit.Province == nextProvince ? State.Success : State.Failure;
 		}
 	}
 }
