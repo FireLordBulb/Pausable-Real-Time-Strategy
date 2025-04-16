@@ -158,7 +158,7 @@ namespace AI {
 			return defenderStrength/attackerStrength;
 		}
 		internal static float RegimentStrength(Regiment regiment){
-			return (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness);
+			return regiment.IsBuilt ? (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness) : 0;
 		}
 	}
 }
