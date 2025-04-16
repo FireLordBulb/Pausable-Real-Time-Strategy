@@ -34,6 +34,7 @@ MonoBehaviour:
   position: {x: 825, y: 263}
   children:
   - {fileID: 1943787106600910695}
+  - {fileID: 2481145487142478207}
   doCheckMultipleInSingleUpdate: 1
 --- !u!114 &-8031824893725201951
 MonoBehaviour:
@@ -88,6 +89,20 @@ MonoBehaviour:
   - {fileID: -5699460448000968801}
   - {fileID: -7810320611985856505}
   doCheckMultipleInSingleUpdate: 1
+--- !u!114 &-6014542892888168241
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a352d96a8f9844cbb4fbd5d5f2f5798c, type: 3}
+  m_Name: MoveToTarget
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {x: 924, y: 511}
 --- !u!114 &-6007488337768929752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b6e87a491141d7b2d5a61c25afe6f9, type: 3}
   m_Name: BattleIsOngoing
   m_EditorClassIdentifier: 
-  id: 0
+  id: -1899512782
   position: {x: 716, y: 793}
   child: {fileID: -2917123644311900657}
 --- !u!114 &11400000
@@ -216,6 +231,8 @@ MonoBehaviour:
   - {fileID: -2917123644311900657}
   - {fileID: -3212476315368323452}
   - {fileID: -2315195916751192561}
+  - {fileID: 2481145487142478207}
+  - {fileID: -6014542892888168241}
   root: {fileID: -6007488337768929752}
 --- !u!114 &1943787106600910695
 MonoBehaviour:
@@ -250,6 +267,24 @@ MonoBehaviour:
   id: -1679136019
   position: {x: 1116, y: 793}
   child: {fileID: 4297629965508596998}
+--- !u!114 &2481145487142478207
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc76835ea223dc428b3c66cf0deab5a, type: 3}
+  m_Name: HasValue
+  m_EditorClassIdentifier: 
+  id: -1498547709
+  position: {x: 924, y: 402}
+  child: {fileID: -6014542892888168241}
+  key: enemyCountry
+  doInvert: 1
+  doCheckEveryFrame: 1
 --- !u!114 &4297629965508596998
 MonoBehaviour:
   m_ObjectHideFlags: 0
