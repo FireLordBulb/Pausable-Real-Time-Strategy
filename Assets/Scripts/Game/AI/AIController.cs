@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Simulation;
@@ -8,9 +9,12 @@ namespace AI {
 	[RequireComponent(typeof(Country))]
 	public class AIController : MonoBehaviour {
 		[SerializeField] private PeaceAcceptance peaceAcceptance;
+		[SerializeField] private Task[] monthlyTasks;
+		[SerializeField] private Task[] yearlyTasks;
 		[SerializeField] private float maxStrengthMultiplier;
 		
 		private Calendar calendar;
+		private Task[] allTasks;
 		private readonly List<Country> warEnemies = new();
 		private readonly Dictionary<Country, List<Land>> enemiesClosestProvinces = new();
 		private readonly List<Land> borderProvinces = new();
@@ -23,6 +27,16 @@ namespace AI {
 			calendar = Country.Map.Calendar;
 			enabled = true;
 			CalculateBorderProvinces();
+			allTasks = new Task[monthlyTasks.Length+yearlyTasks.Length];
+			InitTasks(monthlyTasks, 0);
+			InitTasks(yearlyTasks, monthlyTasks.Length);
+		}
+		private void InitTasks(Task[] tasks, int offset){
+			for (int i = 0; i < tasks.Length; i++){
+				tasks[i] = Instantiate(tasks[i]);
+				tasks[i].Init(this);
+				allTasks[i+offset] = tasks[i];
+			}
 		}
 		private void OnEnable(){
 			calendar.OnDayTick.AddListener(DayTick);
@@ -51,12 +65,33 @@ namespace AI {
 			
 		}
 		private void MonthTick(){
-			
+			UpdateTasks(monthlyTasks);
+			SortTasks();
+			PerformTasks();
 		}
 		// Recalculate this occasionally since both sides could have gained/lost land in other wars.
 		private void YearTick(){
 			foreach (Country warEnemy in warEnemies){
 				CalculateClosestProvinces(warEnemy);
+			}
+			UpdateTasks(yearlyTasks);
+		}
+		private static void UpdateTasks(Task[] tasks){
+			foreach (Task task in tasks){
+				task.RecalculatePriority();
+			}
+		}
+		private void SortTasks(){
+			Array.Sort(allTasks);
+		}
+		private void PerformTasks(){
+			while (allTasks[0].CanBePerformed()){
+				allTasks[0].Perform();
+				allTasks[0].RecalculatePriority();
+				// Shift the performed task down in the list based on its new priority without re-sorting the entire list.
+				for (int i = 1; i < allTasks.Length && allTasks[i-1].CompareTo(allTasks[i]) <= 0; i++){
+					(allTasks[i-1], allTasks[i]) = (allTasks[i], allTasks[i-1]);
+				}
 			}
 		}
 
