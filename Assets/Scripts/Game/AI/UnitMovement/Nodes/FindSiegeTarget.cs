@@ -15,26 +15,29 @@ namespace AI.Nodes {
 			base.OnStart();
 			regimentCountry = Brain.Unit.Owner;
 			enemyCountry = Tree.Blackboard.GetValue<Country>(Brain.EnemyCountry, null);
-			IReadOnlyList<Land> provinces = Brain.Controller.GetClosestProvinces(enemyCountry);
-			Land currentLand = Brain.Unit.Province.Land;
-			if (IsGoodSiegeTarget(currentLand)){
-				SetTarget(currentLand);
-				return;
-			}
-			foreach (Land land in provinces){
-				if (IsGoodSiegeTarget(land)){
-					SetTarget(land);
+			{
+				Land currentLand = Brain.Unit.Province.Land;
+				if (IsGoodSiegeTarget(currentLand, out List<ProvinceLink> path)){
+					SetPathToTarget(path);
 					return;
 				}
 			}
-			Tree.Blackboard.RemoveValue(Brain.Target);
+			IReadOnlyList<Land> provinces = Brain.Controller.GetClosestProvinces(enemyCountry);
+			foreach (Land land in provinces){
+				if (IsGoodSiegeTarget(land, out List<ProvinceLink> path)){
+					SetPathToTarget(path);
+					return;
+				}
+			}
+			Tree.Blackboard.RemoveValue(Brain.PathToTarget);
 			CurrentState = State.Failure;
 		}
-		private bool IsGoodSiegeTarget(Land land){
+		private bool IsGoodSiegeTarget(Land land, out List<ProvinceLink> path){
 			if (land.Controller == regimentCountry || land.Owner != enemyCountry && land.Owner != regimentCountry){
+				path = null;
 				return false;
 			}
-			List<ProvinceLink> path = Brain.Unit.GetPathTo(land.ArmyLocation, link => {
+			path = Brain.Unit.GetPathTo(land.ArmyLocation, link => {
 				bool canEnter = Regiment.LinkEvaluator(link, false, regimentCountry);
 				if (!canEnter){
 					return false;
@@ -48,8 +51,8 @@ namespace AI.Nodes {
 			});
 			return path != null;
 		}
-		private void SetTarget(Land land){
-			Tree.Blackboard.SetValue(Brain.Target, land.Province);
+		private void SetPathToTarget(List<ProvinceLink> path){
+			Tree.Blackboard.SetValue(Brain.PathToTarget, path);
 			CurrentState = State.Success;
 		}
 		protected override State OnUpdate(){

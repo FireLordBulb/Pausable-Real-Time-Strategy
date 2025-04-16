@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Simulation;
 using Simulation.Military;
 using UnityEngine;
@@ -5,16 +6,19 @@ using UnityEngine;
 namespace AI.Nodes {
 	[CreateAssetMenu(fileName = "MoveRegiment", menuName = "ScriptableObjects/AI/Nodes/MoveRegiment")]
 	public class MarchToTarget : MilitaryUnitNode<Regiment> {
-		private Province target;
+		private List<ProvinceLink> pathToTarget;
 		protected override void OnStart(){
 			base.OnStart();
-			target = Tree.Blackboard.GetValue<Province>(Brain.Target, null);
-			MoveOrderResult result = Brain.Controller.Country.MoveRegimentTo(Brain.Unit, target);
+			pathToTarget = Tree.Blackboard.GetValue(Brain.PathToTarget, new List<ProvinceLink>());
+			if (pathToTarget.Count == 0){
+				return;
+			}
+			MoveOrderResult result = Brain.Controller.Country.MoveRegimentTo(Brain.Unit, pathToTarget[^1].Target);
 			CurrentState = result == MoveOrderResult.Success ? State.Running : State.Failure;
 		}
 		protected override State OnUpdate(){
 			if (!Brain.Unit.IsMoving){
-				CurrentState = Brain.Unit.Province == target ? State.Success : State.Failure;
+				CurrentState = pathToTarget.Count == 0 || Brain.Unit.Province == pathToTarget[^1].Target ? State.Success : State.Failure;
 			}
 			return CurrentState;
 		}
