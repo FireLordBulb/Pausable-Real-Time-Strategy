@@ -13,11 +13,11 @@ namespace AI {
 		public string EnemyCountry => "enemyCountry";
 		
 		private void Awake(){
+			base.Start();
 			// Enforce with [RequireComponent] in concrete implementations.
 			Unit = GetComponent<TUnit>();
 		}
 		protected override void Start(){
-			base.Start();
 			Controller = Unit.Owner.GetComponent<AIController>();
 			calendar = Unit.Province.Calendar;
 			if (Controller.enabled){
