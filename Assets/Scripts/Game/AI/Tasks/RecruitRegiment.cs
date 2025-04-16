@@ -1,11 +1,12 @@
 using System.Linq;
 using Simulation;
+using Simulation.Military;
 using UnityEngine;
 
 namespace AI {
 	[CreateAssetMenu(fileName = "RecruitRegiment", menuName = "ScriptableObjects/AI/Tasks/RecruitRegiment")]
 	public class RecruitRegiment : Task {
-		[SerializeField] private Simulation.Military.RegimentType regimentType;
+		[SerializeField] private RegimentType regimentType;
 		private Land recruitmentProvince;
 		
 		protected override int CurrentPriority(){
@@ -25,10 +26,16 @@ namespace AI {
 		}
 
 		private bool RegimentProvinceIsValid(){
-			return recruitmentProvince != null && !recruitmentProvince.IsOccupied && recruitmentProvince.Owner == Controller.Country;
+			return recruitmentProvince != null &&
+			       recruitmentProvince.Owner == Controller.Country &&
+			       IsSafe(recruitmentProvince);
 		}
 		private Land GetRecruitmentProvince(){
-			return Controller.Country.Provinces.FirstOrDefault(land => !land.IsOccupied);
+			return Controller.Country.Provinces.FirstOrDefault(IsSafe);
+		}
+		private bool IsSafe(Land land){
+			return !land.IsOccupied &&
+			       land.ArmyLocation.Units.All(regiment => regiment.Owner == Controller.Country);
 		}
 	}
 }
