@@ -673,7 +673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   consoleText: {fileID: 8264708232965290729}
   inputField: {fileID: 1131140191030279549}
-  doUseAutoCommands: 0
+  doUseAutoCommands: 1
   autoCommands:
   - play_as Olpeka
   - gold 100
@@ -681,13 +681,14 @@ MonoBehaviour:
   - reg 1
   - reg 2
   - play_as Zum
-  - gold 100
+  - gold 140
   - manpower 5000
   - reg 2
   - reg 1
   - sailors 1000
   - ship 3
   - skip 200
+  - observe
 --- !u!223 &5417892655479546527
 Canvas:
   m_ObjectHideFlags: 0
