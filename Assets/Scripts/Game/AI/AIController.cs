@@ -121,5 +121,9 @@ namespace AI {
 		internal IReadOnlyList<Land> GetClosestProvinces(Country country){
 			return enemiesClosestProvinces[country];
 		}
+		
+		internal static float RegimentStrength(Regiment regiment){
+			return (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness);
+		}
 	}
 }

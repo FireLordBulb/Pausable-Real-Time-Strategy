@@ -88,10 +88,7 @@ namespace AI {
 			return acceptance;
 		}
 		private float GetMilitaryStrength(Country country){
-			return Math.Max(country.Regiments.Sum(RegimentStrength), minMilitaryStrengthValue);
-		}
-		private static float RegimentStrength(Regiment regiment){
-			return (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness);
+			return Math.Max(country.Regiments.Sum(AIController.RegimentStrength), minMilitaryStrengthValue);
 		}
 		private float GetOccupationValue(Country occupier, Country target){
 			float value = 0;
