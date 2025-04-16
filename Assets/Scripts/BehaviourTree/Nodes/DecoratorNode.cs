@@ -7,6 +7,7 @@ namespace BehaviourTree.Nodes {
 
 		protected override void OnStart(){}
 		protected override void OnStop(){}
+		// ReSharper disable Unity.PerformanceAnalysis // The child node could be performance intensive, but that's not relevant here.
 		protected override State OnUpdate(){
 			return child.Update();
 		}
