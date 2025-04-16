@@ -157,4 +157,5 @@ MonoBehaviour:
   monthlyTasks:
   - {fileID: 11400000, guid: 222a02ca9a96ef84a9cce09f45b8a498, type: 2}
   yearlyTasks: []
+  maxTasksPerTick: 50
   maxStrengthMultiplier: 1.5

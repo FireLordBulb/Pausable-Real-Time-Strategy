@@ -11,6 +11,7 @@ namespace AI {
 		[SerializeField] private PeaceAcceptance peaceAcceptance;
 		[SerializeField] private Task[] monthlyTasks;
 		[SerializeField] private Task[] yearlyTasks;
+		[SerializeField] private int maxTasksPerTick;
 		[SerializeField] private float maxStrengthMultiplier;
 		
 		private Calendar calendar;
@@ -85,13 +86,15 @@ namespace AI {
 			Array.Sort(allTasks);
 		}
 		private void PerformTasks(){
-			while (allTasks[0].CanBePerformed()){
+			int count = 0;
+			while (allTasks[0].CanBePerformed() && count < maxTasksPerTick){
 				allTasks[0].Perform();
 				allTasks[0].RecalculatePriority();
 				// Shift the performed task down in the list based on its new priority without re-sorting the entire list.
 				for (int i = 1; i < allTasks.Length && allTasks[i-1].CompareTo(allTasks[i]) <= 0; i++){
 					(allTasks[i-1], allTasks[i]) = (allTasks[i], allTasks[i-1]);
 				}
+				count++;
 			}
 		}
 
