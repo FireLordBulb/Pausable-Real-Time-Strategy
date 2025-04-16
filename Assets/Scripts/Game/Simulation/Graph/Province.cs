@@ -143,7 +143,7 @@ namespace Simulation {
         }
         
         public override string ToString(){
-            return Name;
+            return $"{Name} ({gameObject.name})";
         }
 
         private enum Type {

@@ -18,7 +18,7 @@ namespace Simulation.Military {
 			Sea = coastLink.Sea;
 			Land = coastLink.Land;
 			coast = coastLink;
-			Name = $"Harbor in {Land.Province}";
+			Name = $"Harbor in {Land.Province.Name}";
 		}
 		public override void AdjustPath(List<ProvinceLink> path){
 			path.Add(coast);

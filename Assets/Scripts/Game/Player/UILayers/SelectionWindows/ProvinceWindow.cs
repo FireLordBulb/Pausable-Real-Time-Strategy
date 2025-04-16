@@ -17,7 +17,7 @@ namespace Player {
 
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
-			title.text = $"{Selected}";
+			title.text = $"{Selected.Name}";
 			Texture2D texture = (Texture2D)Selected.Terrain.Material.mainTexture;
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 			if (Selected.IsSea){
