@@ -9,17 +9,22 @@ namespace BehaviourTree.Nodes {
 			if (children.Count == 0){
 				return State.Success;
 			}
-			Node node = children[currentChildIndex];
-			switch(node.Update()){
-				case State.Running:
-					return State.Running;
-				case State.Success:
-					currentChildIndex++;
-					break;
-				case State.Failure:
-					return State.Failure;
-			}
-			return currentChildIndex == children.Count ? State.Success : State.Running;
+			do {
+				Node node = children[currentChildIndex];
+				switch(node.Update()){
+					case State.Running:
+						return State.Running;
+					case State.Success:
+						currentChildIndex++;
+						break;
+					case State.Failure:
+						return State.Failure;
+				}
+				if (currentChildIndex == children.Count){
+					return State.Success;
+				}
+			} while (doCheckMultipleInSingleUpdate);
+			return State.Running;
 		}
 	}
 }

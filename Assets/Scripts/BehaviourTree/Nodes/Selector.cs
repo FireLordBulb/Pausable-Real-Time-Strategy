@@ -1,25 +1,30 @@
 namespace BehaviourTree.Nodes {
 	public class Selector : CompositeNode {
-		private int currentChild;
+		private int currentChildIndex;
 		protected override void OnStart(){
-			currentChild = 0;
+			currentChildIndex = 0;
 		}
 		protected override void OnStop(){}
 		protected override State OnUpdate(){
 			if (children.Count == 0){
 				return State.Failure;
 			}
-			Node node = children[currentChild];
-			switch(node.Update()){
-				case State.Running:
-					return State.Running;
-				case State.Success:
-					return State.Success;
-				case State.Failure:
-					currentChild++;
-					break;
-			}
-			return currentChild == children.Count ? State.Failure : State.Running;
+			do {
+				Node node = children[currentChildIndex];
+				switch(node.Update()){
+					case State.Running:
+						return State.Running;
+					case State.Success:
+						return State.Success;
+					case State.Failure:
+						currentChildIndex++;
+						break;
+				}
+				if (currentChildIndex == children.Count){
+					return State.Failure;
+				}
+			} while (doCheckMultipleInSingleUpdate);
+			return State.Running;
 		}
 	}
 }

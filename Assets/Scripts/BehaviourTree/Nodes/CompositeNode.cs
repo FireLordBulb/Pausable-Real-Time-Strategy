@@ -3,6 +3,7 @@ using System.Collections.Generic;
 namespace BehaviourTree.Nodes {
 	public abstract class CompositeNode : Node {
 		public List<Node> children = new();
+		public bool doCheckMultipleInSingleUpdate;
 		
 		public override Node Clone(){
 			CompositeNode clone = (CompositeNode)base.Clone();
