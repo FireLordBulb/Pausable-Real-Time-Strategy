@@ -157,8 +157,11 @@ namespace Simulation.Military {
 			Location.UpdateListeners();
 			return MoveOrderResult.Success;
 		}
-		protected List<ProvinceLink> GetPathTo(Location<TUnit> end){
+		public List<ProvinceLink> GetPathTo(Location<TUnit> end){
 			return GetPath(Location, end, LinkEvaluator);
+		}
+		public List<ProvinceLink> GetPathTo(Location<TUnit> end, GraphAlgorithms<Province, ProvinceLink>.LinkEvaluator linkEvaluator){
+			return GetPath(Location, end, linkEvaluator);
 		}
 		public static List<ProvinceLink> GetPath(Location<TUnit> start, Location<TUnit> end, GraphAlgorithms<Province, ProvinceLink>.LinkEvaluator linkEvaluator){
 			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(start.Province.Graph, start.Province, end.SearchTargetProvince, linkEvaluator);

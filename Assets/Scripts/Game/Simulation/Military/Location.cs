@@ -16,7 +16,7 @@ namespace Simulation.Military {
 		public abstract Vector3 WorldPosition {get;}
 		public bool IsBattleOngoing {get; private set;}
 		
-		public IEnumerable<TUnit> Units => units;
+		public IReadOnlyList<TUnit> Units => units;
 		
 		public void Add(TUnit unit){
 			if (unit.IsRetreating){
