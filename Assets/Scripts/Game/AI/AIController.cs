@@ -13,6 +13,7 @@ namespace AI {
 		private Calendar calendar;
 		private readonly List<Country> warEnemies = new();
 		private readonly Dictionary<Country, List<Land>> enemiesClosestProvinces = new();
+		private readonly List<Land> borderProvinces = new();
 		
 		public Country Country {get; private set;}
 		
@@ -21,6 +22,7 @@ namespace AI {
 			Country.RegimentBuiltAddListener(_ => RegroupRegiments());
 			calendar = Country.Map.Calendar;
 			enabled = true;
+			CalculateBorderProvinces();
 		}
 		private void OnEnable(){
 			calendar.OnDayTick.AddListener(DayTick);
@@ -76,7 +78,16 @@ namespace AI {
 		public void OnWarEnd(AIController other){
 			warEnemies.Remove(other.Country);
 			enemiesClosestProvinces.Remove(other.Country);
+			CalculateBorderProvinces();
 			RegroupRegiments();
+		}
+		private void CalculateBorderProvinces(){
+			borderProvinces.Clear();
+			foreach (Land province in Country.Provinces){
+				if (province.Province.Links.Any(link => link.Target.IsLand && link.Target.Land.Owner != Country)){
+					borderProvinces.Add(province);
+				}
+			}
 		}
 		private void RegroupRegiments(){
 			for (int i = 0; i < Country.Regiments.Count; i++){
@@ -84,6 +95,7 @@ namespace AI {
 				RegimentBrain brain = regiment.GetComponent<RegimentBrain>();
 				if (warEnemies.Count == 0){
 					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
+					brain.Tree.Blackboard.SetValue(brain.Target, borderProvinces[i%borderProvinces.Count].Province);
 				} else {
 					Country enemy = warEnemies[i*warEnemies.Count/Country.Regiments.Count];
 					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
