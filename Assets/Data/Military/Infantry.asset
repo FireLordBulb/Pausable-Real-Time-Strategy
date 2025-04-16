@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 4774899881842561818, guid: f1d06fe5c1792ef4da0233acb24fd736, type: 3}
   daysToBuild: 90
-  goldCost: 15
+  goldCost: 35
   manpower: 1000
   attackPower: 1
   toughness: 10

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 8767289471516083093, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
   daysToBuild: 180
-  goldCost: 35
+  goldCost: 50
   sailors: 400
