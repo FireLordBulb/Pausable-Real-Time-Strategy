@@ -10,7 +10,7 @@ namespace AI.Nodes {
 			base.OnStart();
 			targetProvince = Tree.Blackboard.GetValue<Province>(Brain.Target, null);
 			MoveOrderResult result = Brain.Controller.Country.MoveRegimentTo(Brain.Unit, targetProvince);
-			CurrentState = result == MoveOrderResult.Success ? State.Success : State.Failure;
+			CurrentState = result == MoveOrderResult.Success ? State.Running : State.Failure;
 		}
 		protected override State OnUpdate(){
 			if (!Brain.Unit.IsMoving){
