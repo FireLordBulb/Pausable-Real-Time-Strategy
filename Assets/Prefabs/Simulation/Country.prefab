@@ -154,3 +154,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   peaceAcceptance: {fileID: 11400000, guid: 4ada707a41052364fa4500583dd2243d, type: 2}
+  maxStrengthMultiplier: 1.5

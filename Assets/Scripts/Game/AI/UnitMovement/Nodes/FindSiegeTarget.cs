@@ -7,8 +7,6 @@ using UnityEngine;
 namespace AI.Nodes {
 	[CreateAssetMenu(fileName = "FindSiegeTarget", menuName = "ScriptableObjects/AI/Nodes/FindSiegeTarget")]
 	public class FindSiegeTarget : MilitaryUnitNode<Regiment> {
-		[SerializeField] private float maxStrengthMultiplier;
-		
 		private Country regimentCountry;
 		private Country enemyCountry;
 		protected override void OnStart(){
@@ -39,15 +37,7 @@ namespace AI.Nodes {
 			}
 			path = Brain.Unit.GetPathTo(land.ArmyLocation, link => {
 				bool canEnter = Regiment.LinkEvaluator(link, false, regimentCountry);
-				if (!canEnter){
-					return false;
-				}
-				IReadOnlyList<Regiment> unitsAtLocation = link.Target.Land.ArmyLocation.Units;
-				if (unitsAtLocation.All(unit => unit.Owner == regimentCountry)){
-					return true;
-				}
-				Regiment[] enemyRegiments = unitsAtLocation.Where(unit => unit.Owner != regimentCountry).ToArray();
-				return AIController.RelativeStrength(Brain.Unit, enemyRegiments) < maxStrengthMultiplier;
+				return canEnter && !Brain.Controller.ShouldAvoidArmyAt(link.Target, Brain.Unit);
 			});
 			return path != null;
 		}

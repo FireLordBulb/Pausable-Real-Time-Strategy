@@ -109,7 +109,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1499098105
   position: {x: 826, y: 778}
-  maxStrengthMultiplier: 1.5
 --- !u!114 &-2989987493595913188
 MonoBehaviour:
   m_ObjectHideFlags: 0

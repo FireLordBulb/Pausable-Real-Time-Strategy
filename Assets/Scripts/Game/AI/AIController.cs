@@ -8,6 +8,7 @@ namespace AI {
 	[RequireComponent(typeof(Country))]
 	public class AIController : MonoBehaviour {
 		[SerializeField] private PeaceAcceptance peaceAcceptance;
+		[SerializeField] private float maxStrengthMultiplier;
 		
 		private Calendar calendar;
 		private readonly List<Country> warEnemies = new();
@@ -122,6 +123,14 @@ namespace AI {
 			return enemiesClosestProvinces[country];
 		}
 		
+		internal bool ShouldAvoidArmyAt(Province province, Regiment regiment){
+			IReadOnlyList<Regiment> unitsAtLocation = province.Land.ArmyLocation.Units;
+			if (unitsAtLocation.All(unit => unit.Owner == Country)){
+				return false;
+			}
+			Regiment[] enemyRegiments = unitsAtLocation.Where(unit => unit.Owner != Country).ToArray();
+			return maxStrengthMultiplier <= RelativeStrength(regiment, enemyRegiments);
+		}
 		internal static float RelativeStrength(Regiment attacker, params Regiment[] defenders){
 			float defenderStrength = defenders.Sum(RegimentStrength);
 			float attackerStrength = RegimentStrength(attacker);
