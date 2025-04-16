@@ -12,21 +12,20 @@ namespace AI.Nodes {
 			base.OnStart();
 			regimentCountry = Brain.Unit.Owner;
 			enemyCountry = Tree.Blackboard.GetValue<Country>(Brain.EnemyCountry, null);
-			{
-				Land currentLand = Brain.Unit.Province.Land;
-				if (IsGoodSiegeTarget(currentLand, out List<ProvinceLink> path)){
-					SetPathToTarget(path);
-					return;
-				}
+			
+			Land currentLand = Brain.Unit.Province.Land;
+			if (IsGoodSiegeTarget(currentLand, out _)){
+				SetTarget(currentLand.Province);
+				return;
 			}
 			IReadOnlyList<Land> provinces = Brain.Controller.GetClosestProvinces(enemyCountry);
 			foreach (Land land in provinces){
 				if (IsGoodSiegeTarget(land, out List<ProvinceLink> path)){
-					SetPathToTarget(path);
+					SetTarget(path[0].Target);
 					return;
 				}
 			}
-			Tree.Blackboard.RemoveValue(Brain.PathToTarget);
+			Tree.Blackboard.RemoveValue(Brain.Target);
 			CurrentState = State.Failure;
 		}
 		private bool IsGoodSiegeTarget(Land land, out List<ProvinceLink> path){
@@ -43,8 +42,8 @@ namespace AI.Nodes {
 			});
 			return path != null;
 		}
-		private void SetPathToTarget(List<ProvinceLink> path){
-			Tree.Blackboard.SetValue(Brain.PathToTarget, path);
+		private void SetTarget(Province province){
+			Tree.Blackboard.SetValue(Brain.Target, province);
 			CurrentState = State.Success;
 		}
 		protected override State OnUpdate(){
