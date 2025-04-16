@@ -49,6 +49,9 @@ namespace Simulation.Military {
 					DefendingUnits.Add(presentUnit);
 				}
 			}
+			if (DefendingUnits.Count == 0){
+				return;
+			}
 			AttackingUnits = new List<TUnit>{unit};
 			StartBattle();
 			for (int i = units.Count-1; i >= 0; i--){
@@ -135,7 +138,7 @@ namespace Simulation.Military {
 					AttackingUnits.Add(unit);
 				}
 			}
-			if (thirdParty != null){
+			if (AttackingUnits.Count > 0 && DefendingUnits.Count > 0){
 				StartBattle();
 			}
 		}
