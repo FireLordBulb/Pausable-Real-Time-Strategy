@@ -11,11 +11,17 @@ namespace AI {
 		[SerializeField] private PeaceAcceptance peaceAcceptance;
 		[SerializeField] private Task[] monthlyTasks;
 		[SerializeField] private Task[] yearlyTasks;
+		[SerializeField] private MakePeace makePeace;
 		[SerializeField] private int maxTasksPerTick;
 		[SerializeField] private float maxStrengthMultiplier;
 		
 		private Calendar calendar;
-		private Task[] allTasks;
+		private readonly List<Task> allTasks = new();
+		private readonly List<Task> monthlyTaskList = new();
+		private readonly List<Task> yearlyTaskList = new();
+		private readonly Queue<Task> finishedPeaceNegotiations = new();
+		
+		
 		private readonly List<Country> warEnemies = new();
 		private readonly Dictionary<Country, List<Land>> enemiesClosestProvinces = new();
 		private readonly List<Land> borderProvinces = new();
@@ -32,15 +38,15 @@ namespace AI {
 			calendar = Country.Map.Calendar;
 			enabled = true;
 			CalculateBorderProvinces();
-			allTasks = new Task[monthlyTasks.Length+yearlyTasks.Length];
-			InitTasks(monthlyTasks, 0);
-			InitTasks(yearlyTasks, monthlyTasks.Length);
+			InitTasks(monthlyTasks, monthlyTaskList);
+			InitTasks(yearlyTasks, yearlyTaskList);
 		}
-		private void InitTasks(Task[] tasks, int offset){
-			for (int i = 0; i < tasks.Length; i++){
-				tasks[i] = Instantiate(tasks[i]);
-				tasks[i].Init(this);
-				allTasks[i+offset] = tasks[i];
+		private void InitTasks(Task[] taskArray, List<Task> taskList){
+			foreach (Task task in taskArray){
+				Task taskInstance = Instantiate(task);
+				taskInstance.Init(this);
+				taskList.Add(taskInstance);
+				allTasks.Add(taskInstance);
 			}
 		}
 		private void OnEnable(){
@@ -70,7 +76,12 @@ namespace AI {
 			
 		}
 		private void MonthTick(){
-			UpdateTasks(monthlyTasks);
+			while (finishedPeaceNegotiations.Count > 0){
+				Task peaceNegotiations = finishedPeaceNegotiations.Dequeue();
+				allTasks.Remove(peaceNegotiations);
+				monthlyTaskList.Remove(peaceNegotiations);
+			}
+			UpdateTasks(monthlyTaskList);
 			SortTasks();
 			PerformTasks();
 		}
@@ -79,21 +90,21 @@ namespace AI {
 			foreach (Country warEnemy in warEnemies){
 				CalculateClosestProvinces(warEnemy);
 			}
-			UpdateTasks(yearlyTasks);
+			UpdateTasks(yearlyTaskList);
 		}
-		private static void UpdateTasks(Task[] tasks){
+		private static void UpdateTasks(List<Task> tasks){
 			foreach (Task task in tasks){
 				task.RecalculatePriority();
 			}
 		}
 		private void SortTasks(){
-			Array.Sort(allTasks);
+			allTasks.Sort();
 		}
 		private void PerformTasks(){
 			int count = 0;
 			int taskIndex = 0;
-			while (taskIndex < allTasks.Length && count < maxTasksPerTick){
-				while (!allTasks[taskIndex].CanBePerformed() && taskIndex < allTasks.Length-1){
+			while (taskIndex < allTasks.Count && count < maxTasksPerTick){
+				while (!allTasks[taskIndex].CanBePerformed() && taskIndex < allTasks.Count-1){
 					taskIndex++;
 				}
 				if (!allTasks[taskIndex].CanBePerformed()){
@@ -102,7 +113,7 @@ namespace AI {
 				allTasks[taskIndex].Perform();
 				allTasks[taskIndex].RecalculatePriority();
 				// Shift the performed task down in the list based on its new priority without re-sorting the entire list.
-				for (int shiftIndex = taskIndex+1; shiftIndex < allTasks.Length && allTasks[shiftIndex-1].CompareTo(allTasks[shiftIndex]) <= 0; shiftIndex++){
+				for (int shiftIndex = taskIndex+1; shiftIndex < allTasks.Count && allTasks[shiftIndex-1].CompareTo(allTasks[shiftIndex]) <= 0; shiftIndex++){
 					(allTasks[shiftIndex-1], allTasks[shiftIndex]) = (allTasks[shiftIndex], allTasks[shiftIndex-1]);
 				}
 				count++;
@@ -119,6 +130,11 @@ namespace AI {
 			enemiesClosestProvinces.Add(enemy, new List<Land>());
 			CalculateClosestProvinces(enemy);
 			RegroupRegiments();
+			MakePeace peaceNegotiations = Instantiate(makePeace);
+			peaceNegotiations.Init(this);
+			peaceNegotiations.Init(this, other);
+			allTasks.Add(peaceNegotiations);
+			monthlyTaskList.Add(peaceNegotiations);
 		}
 		public static void OnWarEnd(AIController initiator, AIController receiver){
 			initiator.OnWarEnd(receiver);
@@ -129,6 +145,8 @@ namespace AI {
 			enemiesClosestProvinces.Remove(other.Country);
 			CalculateBorderProvinces();
 			RegroupRegiments();
+			Task peaceNegotiations = allTasks.Find(task => task is MakePeace peaceNegotiations && peaceNegotiations.PeaceTargetAI == other);
+			finishedPeaceNegotiations.Enqueue(peaceNegotiations);
 		}
 		private void CalculateBorderProvinces(){
 			borderProvinces.Clear();

@@ -158,5 +158,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 222a02ca9a96ef84a9cce09f45b8a498, type: 2}
   yearlyTasks:
   - {fileID: 11400000, guid: 24c51773de01a8041b9b2a5e033385be, type: 2}
+  makePeace: {fileID: 11400000, guid: 9ca226f1b9713904da0db135e5c9d9c1, type: 2}
   maxTasksPerTick: 50
   maxStrengthMultiplier: 1.5
