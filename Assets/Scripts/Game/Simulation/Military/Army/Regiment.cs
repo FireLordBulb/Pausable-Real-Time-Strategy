@@ -154,6 +154,9 @@ namespace Simulation.Military {
 			}
 		}
 		internal void RetreatHome(){
+			if (Owner.ProvinceCount == 0){
+				return;
+			}
 			// If the battle was lost while a manual retreat was in progress, continue with it.
 			if (IsMoving){
 				return;

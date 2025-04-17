@@ -197,6 +197,10 @@ namespace AI {
 			closestProvinces.Sort((left, right) => distances[left]-distances[right]);
 		}
 		private void AddLandDistances(IEnumerable<Land> lands, List<Land> provinces, Dictionary<Land, int> distances){
+			if (Country.ProvinceCount == 0){
+				enabled = false;
+				return;
+			}
 			const float speedIsIrrelevantForSorting = 1;
 			LandLocation capital = Country.Capital.ArmyLocation;
 			foreach (Land land in lands){

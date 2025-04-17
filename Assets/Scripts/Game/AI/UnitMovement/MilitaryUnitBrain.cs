@@ -39,7 +39,9 @@ namespace AI {
 			}
 		}
 		protected void OnDisable(){
-			calendar.OnDayTick.RemoveListener(DayTick);
+			if (calendar != null){
+				calendar.OnDayTick.RemoveListener(DayTick);
+			}
 		}
 		protected void OnDestroy(){
 			Destroy(Tree);
