@@ -24,6 +24,7 @@ namespace AI {
 		
 		private readonly List<Country> warEnemies = new();
 		private readonly Dictionary<Country, List<Land>> enemiesClosestProvinces = new();
+		private readonly Dictionary<Country, int> enemiesMonthsOfWar = new();
 		private readonly List<Land> borderProvinces = new();
 		private readonly HashSet<Country> borderingCountries = new();
 
@@ -50,7 +51,6 @@ namespace AI {
 			}
 		}
 		private void OnEnable(){
-			calendar.OnDayTick.AddListener(DayTick);
 			calendar.OnMonthTick.AddListener(MonthTick);
 			calendar.OnYearTick.AddListener(YearTick);
 			foreach (Regiment regiment in Country.Regiments){
@@ -61,7 +61,6 @@ namespace AI {
 			}
 		}
 		private void OnDisable(){
-			calendar.OnDayTick.RemoveListener(DayTick);
 			calendar.OnMonthTick.RemoveListener(MonthTick);
 			calendar.OnYearTick.RemoveListener(YearTick);
 			foreach (Regiment regiment in Country.Regiments){
@@ -75,6 +74,9 @@ namespace AI {
 		private void MonthTick(){
 			if (!enabled){
 				return;
+			}
+			foreach (Country warEnemy in warEnemies){
+				enemiesMonthsOfWar[warEnemy]++;
 			}
 			while (monthlyTaskChanges.Count > 0){
 				(Task peaceNegotiations, bool isAdded) = monthlyTaskChanges.Dequeue();
@@ -130,7 +132,7 @@ namespace AI {
 		
 		public static void OnWarStart(AIController declarer, AIController target){
 			// If you declare war on a country at the tick it gets full annexed, ignore the declaration.
-			if (!target.Country.enabled){
+			if (!target.enabled){
 				return;
 			}
 			declarer.OnWarStart(target);
@@ -140,6 +142,7 @@ namespace AI {
 			Country enemy = other.Country;
 			warEnemies.Add(enemy);
 			enemiesClosestProvinces.Add(enemy, new List<Land>());
+			enemiesMonthsOfWar.Add(enemy, 0);
 			CalculateClosestProvinces(enemy);
 			RegroupRegiments();
 			MakePeace peaceNegotiations = Instantiate(makePeace);
@@ -154,6 +157,7 @@ namespace AI {
 		public void OnWarEnd(AIController other){
 			warEnemies.Remove(other.Country);
 			enemiesClosestProvinces.Remove(other.Country);
+			enemiesMonthsOfWar.Remove(other.Country);
 			Task peaceNegotiations = allTasks.Find(task => task is MakePeace peaceNegotiations && peaceNegotiations.PeaceTargetAI == other);
 			monthlyTaskChanges.Enqueue((peaceNegotiations, false));
 			if (!Country.enabled){
@@ -230,6 +234,9 @@ namespace AI {
 
 		internal IReadOnlyList<Land> GetClosestProvinces(Country country){
 			return enemiesClosestProvinces[country];
+		}
+		internal int GetMonthsOfWar(Country country){
+			return enemiesMonthsOfWar[country];
 		}
 		
 		internal bool HasBesiegerAlready(Land land, Regiment regiment){

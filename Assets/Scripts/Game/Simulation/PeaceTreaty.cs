@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Simulation {
 	public class PeaceTreaty {
-		public readonly HashSet<Land> AnnexedLands = new();
+		public readonly List<Land> AnnexedLands = new();
 		public float GoldTransfer;
 		public bool DidTreatyInitiatorWin;
 		public bool IsWhitePeace;
@@ -34,7 +34,7 @@ namespace Simulation {
 			if (!treaty.IsWhitePeace){
 				treaty.GoldTransfer = GoldTransfer;
 				treaty.DidTreatyInitiatorWin = DidTreatyInitiatorWin;
-				treaty.AnnexedLands.UnionWith(AnnexedLands);
+				treaty.AnnexedLands.AddRange(AnnexedLands);
 			}
 			return treaty;
 		}
