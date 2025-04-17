@@ -197,7 +197,7 @@ namespace AI {
 			closestProvinces.Sort((left, right) => distances[left]-distances[right]);
 		}
 		private void AddLandDistances(IEnumerable<Land> lands, List<Land> provinces, Dictionary<Land, int> distances){
-			if (Country.ProvinceCount == 0){
+			if (!Country.enabled){
 				enabled = false;
 				return;
 			}

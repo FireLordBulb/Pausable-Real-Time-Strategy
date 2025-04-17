@@ -255,6 +255,10 @@ namespace Player {
 				AddConsoleResponse($"Command '{command}' failed. Must be playing as a country to {setenceSegment}.");
 				return;
 			}
+			if (!UI.PlayerCountry.enabled){
+				AddConsoleResponse($"Command '{command}' failed. Cannot {setenceSegment} as a country without land.");
+				return;
+			}
 			Province province;
 			if (words.Length == 1){
 				province = UI.PlayerCountry.Capital.Province;

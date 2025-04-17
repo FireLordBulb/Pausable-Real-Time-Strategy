@@ -183,9 +183,26 @@ namespace Simulation {
 				province.Unoccupy();
 			}
 			ChangeProvinceCount(provinces.Add(province), +1);
+			if (ProvinceCount > 0){
+				enabled = true;
+			}
 		}
 		internal void LoseProvince(Land province){
 			ChangeProvinceCount(provinces.Remove(province), -1);
+			if (ProvinceCount > 0){
+				return;
+			}
+			foreach (Military.Regiment regiment in regiments.ToArray()){
+				regiment.StackWipe();
+			}
+			foreach (Military.Ship ship in ships.ToArray()){
+				ship.StackWipe();
+			}
+			foreach (Land land in occupations.ToArray()){
+				land.Unoccupy();
+			}
+			RegenerateBorder();
+			enabled = false;
 		}
 		private void ChangeProvinceCount(bool wasChanged, int change){
 			if (!wasChanged){

@@ -238,7 +238,9 @@ namespace Player {
 			if (country == null){
 				return;
 			}
-			cameraMovement.SetZoom(cameraMovement.MaxZoom, mainCamera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
+			if (country.enabled){
+				cameraMovement.SetZoom(cameraMovement.MaxZoom, mainCamera.WorldToScreenPoint(country.Capital.Province.WorldPosition));
+			}
 		}
 		public void Refresh(){
 			hud.RefreshResources();
