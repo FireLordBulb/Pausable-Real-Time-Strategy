@@ -156,6 +156,7 @@ MonoBehaviour:
   peaceAcceptance: {fileID: 11400000, guid: 4ada707a41052364fa4500583dd2243d, type: 2}
   monthlyTasks:
   - {fileID: 11400000, guid: 222a02ca9a96ef84a9cce09f45b8a498, type: 2}
-  yearlyTasks: []
+  yearlyTasks:
+  - {fileID: 11400000, guid: 24c51773de01a8041b9b2a5e033385be, type: 2}
   maxTasksPerTick: 50
   maxStrengthMultiplier: 1.5

@@ -19,6 +19,10 @@ namespace AI {
 		private readonly List<Country> warEnemies = new();
 		private readonly Dictionary<Country, List<Land>> enemiesClosestProvinces = new();
 		private readonly List<Land> borderProvinces = new();
+		private readonly HashSet<Country> borderingCountries = new();
+
+		public IReadOnlyList<Country> WarEnemies => warEnemies;
+		public IEnumerable<Country> BorderingCountries => borderingCountries;
 		
 		public Country Country {get; private set;}
 		
@@ -128,9 +132,19 @@ namespace AI {
 		}
 		private void CalculateBorderProvinces(){
 			borderProvinces.Clear();
+			borderingCountries.Clear();
 			foreach (Land province in Country.Provinces){
-				if (province.Province.Links.Any(link => link.Target.IsLand && link.Target.Land.Owner != Country)){
+				bool isBorderProvince = false;
+				foreach (ProvinceLink link in province.Province.Links){
+					if (link.Target.IsSea || link.Target.Land.Owner == Country){
+						continue;
+					}
+					borderingCountries.Add(link.Target.Land.Owner);
+					if (isBorderProvince){
+						continue;
+					}
 					borderProvinces.Add(province);
+					isBorderProvince = true;
 				}
 			}
 		}
