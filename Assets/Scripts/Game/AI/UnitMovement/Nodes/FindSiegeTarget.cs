@@ -7,18 +7,18 @@ namespace AI.Nodes {
 	[CreateAssetMenu(fileName = "FindSiegeTarget", menuName = "ScriptableObjects/AI/Nodes/FindSiegeTarget")]
 	public class FindSiegeTarget : MilitaryUnitNode<Regiment> {
 		private Country regimentCountry;
-		private Country enemyCountry;
+		private WarEnemy warEnemy;
 		protected override void OnStart(){
 			base.OnStart();
 			regimentCountry = Brain.Unit.Owner;
-			enemyCountry = Tree.Blackboard.GetValue<Country>(Brain.EnemyCountry, null);
+			warEnemy = Tree.Blackboard.GetValue<WarEnemy>(Brain.EnemyCountry, null);
 			
 			Land currentLand = Brain.Unit.Province.Land;
 			if (IsGoodSiegeTarget(currentLand, out _)){
 				SetTarget(currentLand.Province);
 				return;
 			}
-			IReadOnlyList<Land> provinces = Brain.Controller.GetClosestProvinces(enemyCountry);
+			IReadOnlyList<Land> provinces = warEnemy.ClosestProvinces;
 			foreach (Land land in provinces){
 				if (IsGoodSiegeTarget(land, out List<ProvinceLink> path)){
 					SetTarget(path[0].Target);
@@ -30,7 +30,7 @@ namespace AI.Nodes {
 		}
 		private bool IsGoodSiegeTarget(Land land, out List<ProvinceLink> path){
 			path = null;
-			if (land.Controller == regimentCountry || land.Owner != enemyCountry && land.Owner != regimentCountry){
+			if (land.Controller == regimentCountry || land.Owner != warEnemy.Country && land.Owner != regimentCountry){
 				return false;
 			}
 			if (Brain.Controller.HasBesiegerAlready(land, Brain.Unit)){

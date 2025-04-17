@@ -34,7 +34,7 @@ namespace AI {
 				}
 				float borderingCountryRegiments = Mathf.Max(borderingCountry.Regiments.Count, borderingCountry.ProvinceCount*assumedMinRegimentsPerProvince);
 				AIController borderingAI = borderingCountry.GetComponent<AIController>();
-				float borderingCountryEnemiesRegiments = borderingAI.WarEnemies.Sum(country => country.Regiments.Count);
+				float borderingCountryEnemiesRegiments = borderingAI.WarEnemies.Sum(enemy => enemy.Country.Regiments.Count);
 				borderingCountryRegiments -= borderingCountryEnemiesRegiments*enemyOfEnemyFactor;
 				if (weakestTargetFound < borderingCountryRegiments || maxTargetRegiments < borderingCountryRegiments){
 					continue;

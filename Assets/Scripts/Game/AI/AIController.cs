@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Simulation;
@@ -21,14 +20,11 @@ namespace AI {
 		private readonly List<Task> yearlyTaskList = new();
 		private readonly Queue<(Task task, bool isAdded)> monthlyTaskChanges = new();
 		
-		
-		private readonly List<Country> warEnemies = new();
-		private readonly Dictionary<Country, List<Land>> enemiesClosestProvinces = new();
-		private readonly Dictionary<Country, int> enemiesMonthsOfWar = new();
+		private readonly List<WarEnemy> warEnemies = new();
 		private readonly List<Land> borderProvinces = new();
 		private readonly HashSet<Country> borderingCountries = new();
-
-		public IReadOnlyList<Country> WarEnemies => warEnemies;
+		
+		public IReadOnlyList<WarEnemy> WarEnemies => warEnemies;
 		public IEnumerable<Country> BorderingCountries => borderingCountries;
 		
 		public Country Country {get; private set;}
@@ -75,8 +71,8 @@ namespace AI {
 			if (!enabled){
 				return;
 			}
-			foreach (Country warEnemy in warEnemies){
-				enemiesMonthsOfWar[warEnemy]++;
+			foreach (WarEnemy warEnemy in warEnemies){
+				warEnemy.TickMonth();
 			}
 			while (monthlyTaskChanges.Count > 0){
 				(Task peaceNegotiations, bool isAdded) = monthlyTaskChanges.Dequeue();
@@ -97,7 +93,7 @@ namespace AI {
 			if (!enabled){
 				return;
 			}
-			foreach (Country warEnemy in warEnemies){
+			foreach (WarEnemy warEnemy in warEnemies){
 				CalculateClosestProvinces(warEnemy);
 			}
 			UpdateTasks(yearlyTaskList);
@@ -139,15 +135,13 @@ namespace AI {
 			target.OnWarStart(declarer);
 		}
 		private void OnWarStart(AIController other){
-			Country enemy = other.Country;
+			WarEnemy enemy = new(other.Country);
 			warEnemies.Add(enemy);
-			enemiesClosestProvinces.Add(enemy, new List<Land>());
-			enemiesMonthsOfWar.Add(enemy, 0);
 			CalculateClosestProvinces(enemy);
 			RegroupRegiments();
 			MakePeace peaceNegotiations = Instantiate(makePeace);
 			peaceNegotiations.Init(this);
-			peaceNegotiations.Init(this, other);
+			peaceNegotiations.Init(this, enemy, other);
 			monthlyTaskChanges.Enqueue((peaceNegotiations, true));
 		}
 		public static void OnWarEnd(AIController initiator, AIController receiver){
@@ -155,15 +149,13 @@ namespace AI {
 			receiver.OnWarEnd(initiator);
 		}
 		public void OnWarEnd(AIController other){
-			warEnemies.Remove(other.Country);
-			enemiesClosestProvinces.Remove(other.Country);
-			enemiesMonthsOfWar.Remove(other.Country);
+			warEnemies.RemoveAll(enemy => enemy.Country == other.Country);
 			Task peaceNegotiations = allTasks.Find(task => task is MakePeace peaceNegotiations && peaceNegotiations.PeaceTargetAI == other);
 			monthlyTaskChanges.Enqueue((peaceNegotiations, false));
 			if (!Country.enabled){
 				enabled = false;
-				foreach (Country warEnemy in warEnemies.ToArray()){
-					Country.EndWar(warEnemy, Country.NewPeaceTreaty(warEnemy));
+				foreach (WarEnemy warEnemy in warEnemies.ToArray()){
+					Country.EndWar(warEnemy.Country, Country.NewPeaceTreaty(warEnemy.Country));
 				}
 				return;
 			}
@@ -198,17 +190,17 @@ namespace AI {
 						brain.Tree.Blackboard.SetValue(brain.Target, borderProvinces[i%borderProvinces.Count].Province);
 					}
 				} else {
-					Country enemy = warEnemies[i*warEnemies.Count/Country.Regiments.Count];
+					WarEnemy enemy = warEnemies[i*warEnemies.Count/Country.Regiments.Count];
 					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
 				}
 			}
 		}
 		// Heavy calculation, don't do often.
-		private void CalculateClosestProvinces(Country enemy){
-			List<Land> closestProvinces = enemiesClosestProvinces[enemy];
+		private void CalculateClosestProvinces(WarEnemy enemy){
+			List<Land> closestProvinces = enemy.ClosestProvinces;
 			closestProvinces.Clear();
 			Dictionary<Land, int> distances = new();
-			AddLandDistances(enemy.Provinces, closestProvinces, distances);
+			AddLandDistances(enemy.Country.Provinces, closestProvinces, distances);
 			// Add the provinces of the own country so that armies will unoccupy provinces besieged by enemies. 
 			AddLandDistances(Country.Provinces, closestProvinces, distances);
 			
@@ -230,13 +222,6 @@ namespace AI {
 		
 		public int EvaluatePeaceOffer(PeaceTreaty treaty){
 			return peaceAcceptance.EvaluatePeaceOffer(treaty);
-		}
-
-		internal IReadOnlyList<Land> GetClosestProvinces(Country country){
-			return enemiesClosestProvinces[country];
-		}
-		internal int GetMonthsOfWar(Country country){
-			return enemiesMonthsOfWar[country];
 		}
 		
 		internal bool HasBesiegerAlready(Land land, Regiment regiment){

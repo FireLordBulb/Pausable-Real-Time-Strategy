@@ -10,41 +10,41 @@ namespace AI {
 		[SerializeField] private float monthlyLandDemandDecrease;
 		[SerializeField, Min(0.01f)] private float goldTransferChunkSize;
 		
-		private Country peaceTarget;
+		private WarEnemy peaceTarget;
 		private AIController peaceTargetAI;
 		private DiplomaticStatus diplomaticStatus;
 		private PeaceTreaty peaceTreaty;
 		
 		internal AIController PeaceTargetAI => peaceTargetAI;
 		
-		internal void Init(AIController controller, AIController enemyAI){
+		internal void Init(AIController controller, WarEnemy enemy, AIController enemyAI){
 			Init(controller);
-			peaceTarget = enemyAI.Country; 
+			peaceTarget = enemy; 
 			peaceTargetAI = enemyAI; 
-			diplomaticStatus = Country.GetDiplomaticStatus(peaceTarget);
-			peaceTreaty = Country.NewPeaceTreaty(peaceTarget);
+			diplomaticStatus = Country.GetDiplomaticStatus(peaceTarget.Country);
+			peaceTreaty = Country.NewPeaceTreaty(peaceTarget.Country);
 			peaceTreaty.DidTreatyInitiatorWin = true;
 			peaceTreaty.IsWhitePeace = false;
 		}
 		protected override int CurrentPriority(){
-			if (!diplomaticStatus.IsAtWar || !peaceTarget.enabled){
+			if (!diplomaticStatus.IsAtWar || !peaceTarget.Country.enabled){
 				return defaultPriority;
 			}
 			peaceTreaty.AnnexedLands.Clear();
-			int occupiedProvinces = Country.Occupations.Count(land => land.Owner == peaceTarget);
+			int occupiedProvinces = Country.Occupations.Count(land => land.Owner == peaceTarget.Country);
 			if (occupiedProvinces == 0){
-				Land singleDemand = Controller.GetClosestProvinces(peaceTarget).FirstOrDefault(land => land.Owner == peaceTarget && !land.IsOccupied);
+				Land singleDemand = peaceTarget.ClosestProvinces.FirstOrDefault(land => land.Owner == peaceTarget.Country && !land.IsOccupied);
 				if (singleDemand != null){
 					peaceTreaty.AnnexedLands.Add(singleDemand);
 				}
-			} else foreach (Land land in Controller.GetClosestProvinces(peaceTarget)){
+			} else foreach (Land land in peaceTarget.ClosestProvinces){
 				// Demand all occupied lands or a single unoccupied land if none are occupied.
-				if (land.Owner == peaceTarget && land.Occupier == Country){
+				if (land.Owner == peaceTarget.Country && land.Occupier == Country){
 					peaceTreaty.AnnexedLands.Add(land);
 				}
 			}
 			// As the war grows longer, gradually become more willing to not demand every single occupied province.
-			float demandProportion = Mathf.Clamp01(1-monthlyLandDemandDecrease*Controller.GetMonthsOfWar(peaceTarget));
+			float demandProportion = Mathf.Clamp01(1-monthlyLandDemandDecrease*peaceTarget.MonthsOfWar);
 			int minAcceptableLands = Mathf.CeilToInt(peaceTreaty.AnnexedLands.Count*demandProportion);
 			while (minAcceptableLands < peaceTreaty.AnnexedLands.Count && !WouldAccept()){
 				peaceTreaty.AnnexedLands.RemoveAt(peaceTreaty.AnnexedLands.Count-1);
@@ -52,7 +52,7 @@ namespace AI {
 			// Demand as much extra gold as would be accepted.
 			float acceptableGold = 0;
 			peaceTreaty.GoldTransfer = 0;
-			while (acceptableGold <= peaceTarget.Gold && WouldAccept()){
+			while (acceptableGold <= peaceTarget.Country.Gold && WouldAccept()){
 				acceptableGold = peaceTreaty.GoldTransfer;
 				peaceTreaty.GoldTransfer += goldTransferChunkSize;
 			}
@@ -66,7 +66,7 @@ namespace AI {
 			return peaceTargetAI.EvaluatePeaceOffer(peaceTreaty) > (peaceTargetAI.enabled ? 0 : playerRequiredAcceptance);
 		}
 		internal override void Perform(){
-			Country.EndWar(peaceTarget, peaceTreaty);
+			Country.EndWar(peaceTarget.Country, peaceTreaty);
 			AIController.OnWarEnd(Controller, peaceTargetAI);
 		}
 	}
