@@ -14,6 +14,7 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI destinationLocation;
 		[SerializeField] private TextMeshProUGUI message;
 		[SerializeField] private CountryPanel countryPanel;
+		[SerializeField] private GameObject shiftTip;
 		
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
@@ -51,6 +52,7 @@ namespace Player {
 				daysLeftText.SetActive(true);
 				destination.SetActive(false);
 			}
+			shiftTip.SetActive(Selected.Owner == Player);
 		}
 		private void SetLeftOfLinkText(string newText, TMP_Text textMesh, TMP_Text link){
 			if (textMesh.text == newText){
