@@ -19,7 +19,7 @@ namespace AI {
 		private readonly List<Task> allTasks = new();
 		private readonly List<Task> monthlyTaskList = new();
 		private readonly List<Task> yearlyTaskList = new();
-		private readonly Queue<Task> finishedPeaceNegotiations = new();
+		private readonly Queue<(Task task, bool isAdded)> monthlyTaskChanges = new();
 		
 		
 		private readonly List<Country> warEnemies = new();
@@ -76,10 +76,15 @@ namespace AI {
 			
 		}
 		private void MonthTick(){
-			while (finishedPeaceNegotiations.Count > 0){
-				Task peaceNegotiations = finishedPeaceNegotiations.Dequeue();
-				allTasks.Remove(peaceNegotiations);
-				monthlyTaskList.Remove(peaceNegotiations);
+			while (monthlyTaskChanges.Count > 0){
+				(Task peaceNegotiations, bool isAdded) = monthlyTaskChanges.Dequeue();
+				if (isAdded){
+					allTasks.Add(peaceNegotiations);
+					monthlyTaskList.Add(peaceNegotiations);
+				} else {
+					allTasks.Remove(peaceNegotiations);
+					monthlyTaskList.Remove(peaceNegotiations);
+				}
 			}
 			UpdateTasks(monthlyTaskList);
 			SortTasks();
@@ -133,8 +138,7 @@ namespace AI {
 			MakePeace peaceNegotiations = Instantiate(makePeace);
 			peaceNegotiations.Init(this);
 			peaceNegotiations.Init(this, other);
-			allTasks.Add(peaceNegotiations);
-			monthlyTaskList.Add(peaceNegotiations);
+			monthlyTaskChanges.Enqueue((peaceNegotiations, true));
 		}
 		public static void OnWarEnd(AIController initiator, AIController receiver){
 			initiator.OnWarEnd(receiver);
@@ -146,7 +150,7 @@ namespace AI {
 			CalculateBorderProvinces();
 			RegroupRegiments();
 			Task peaceNegotiations = allTasks.Find(task => task is MakePeace peaceNegotiations && peaceNegotiations.PeaceTargetAI == other);
-			finishedPeaceNegotiations.Enqueue(peaceNegotiations);
+			monthlyTaskChanges.Enqueue((peaceNegotiations, false));
 		}
 		private void CalculateBorderProvinces(){
 			borderProvinces.Clear();
