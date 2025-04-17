@@ -45,10 +45,10 @@ namespace AI {
 			}
 			return warTarget == null ? neverDoPriority : defaultPriority;
 		}
-		public override bool CanBePerformed(){
+		internal override bool CanBePerformed(){
 			return warTarget != null && Country.GetDiplomaticStatus(warTarget).CanDeclareWar();
 		}
-		public override void Perform(){
+		internal override void Perform(){
 			Country.GetDiplomaticStatus(warTarget).DeclareWar();
 			AIController.OnWarStart(Controller, warTargetAI);
 		}

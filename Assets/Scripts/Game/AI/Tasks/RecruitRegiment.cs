@@ -24,7 +24,7 @@ namespace AI {
 			}
 			return defaultPriority;
 		}
-		public override bool CanBePerformed(){
+		internal override bool CanBePerformed(){
 			// Refuse to build any regiments if at max per province.
 			if (Priority == maxRegimentsPriority){
 				return false;
@@ -34,7 +34,7 @@ namespace AI {
 			}
 			return recruitmentProvince != null && regimentType.CanBeBuiltBy(Country);
 		}
-		public override void Perform(){
+		internal override void Perform(){
 			if (recruitmentProvince == null){
 				return;
 			}
