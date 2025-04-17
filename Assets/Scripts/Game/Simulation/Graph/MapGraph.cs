@@ -34,7 +34,7 @@ namespace Simulation {
 			return country;
 		}
 		internal DiplomaticStatus GetDiplomaticStatus(Country a, Country b){
-			if (a == b){
+			if (a == b || a == null || b == null){
 				return null;
 			}
 			if (diplomaticStatuses.TryGetValue((a, b), out DiplomaticStatus diplomaticStatus)){
