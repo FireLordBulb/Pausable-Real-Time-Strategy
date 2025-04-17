@@ -1,6 +1,5 @@
 using System.Linq;
 using Simulation;
-using Simulation.Military;
 using UnityEngine;
 
 namespace AI {
@@ -19,6 +18,7 @@ namespace AI {
 		
 		protected override int CurrentPriority(){
 			warTarget = null;
+			warTargetAI = null;
 			if (Controller.WarEnemies.Count != 0){
 				return neverDoPriority;
 			}
