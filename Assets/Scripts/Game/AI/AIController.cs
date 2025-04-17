@@ -87,17 +87,24 @@ namespace AI {
 		}
 		private void PerformTasks(){
 			int count = 0;
-			while (allTasks[0].CanBePerformed() && count < maxTasksPerTick){
-				allTasks[0].Perform();
-				allTasks[0].RecalculatePriority();
+			int taskIndex = 0;
+			while (taskIndex < allTasks.Length && count < maxTasksPerTick){
+				while (!allTasks[taskIndex].CanBePerformed() && taskIndex < allTasks.Length-1){
+					taskIndex++;
+				}
+				if (!allTasks[taskIndex].CanBePerformed()){
+					break;
+				}
+				allTasks[taskIndex].Perform();
+				allTasks[taskIndex].RecalculatePriority();
 				// Shift the performed task down in the list based on its new priority without re-sorting the entire list.
-				for (int i = 1; i < allTasks.Length && allTasks[i-1].CompareTo(allTasks[i]) <= 0; i++){
-					(allTasks[i-1], allTasks[i]) = (allTasks[i], allTasks[i-1]);
+				for (int shiftIndex = taskIndex+1; shiftIndex < allTasks.Length && allTasks[shiftIndex-1].CompareTo(allTasks[shiftIndex]) <= 0; shiftIndex++){
+					(allTasks[shiftIndex-1], allTasks[shiftIndex]) = (allTasks[shiftIndex], allTasks[shiftIndex-1]);
 				}
 				count++;
 			}
 		}
-
+		
 		public static void OnWarStart(AIController declarer, AIController target){
 			declarer.OnWarStart(target);
 			target.OnWarStart(declarer);
