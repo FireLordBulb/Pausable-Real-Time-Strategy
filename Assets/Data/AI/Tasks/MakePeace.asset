@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: MakePeace
   m_EditorClassIdentifier: 
   defaultPriority: 5
+  playerRequiredAcceptance: 300
   goldTransferChunkSize: 10

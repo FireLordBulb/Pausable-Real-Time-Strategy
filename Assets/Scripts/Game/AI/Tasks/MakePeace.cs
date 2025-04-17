@@ -5,6 +5,7 @@ namespace AI {
 	[CreateAssetMenu(fileName = "MakePeace", menuName = "ScriptableObjects/AI/Tasks/MakePeace")]
 	public class MakePeace : Task {
 		[Space]
+		[SerializeField] private int playerRequiredAcceptance;
 		[SerializeField, Min(0.01f)] private float goldTransferChunkSize;
 		
 		private Country peaceTarget;
@@ -37,7 +38,7 @@ namespace AI {
 			// Demand as much extra gold as would be accepted.
 			float acceptableGold = 0;
 			peaceTreaty.GoldTransfer = 0;
-			while (acceptableGold <= peaceTarget.Gold && peaceTargetAI.EvaluatePeaceOffer(peaceTreaty) > 0){
+			while (acceptableGold <= peaceTarget.Gold && WouldAccept()){
 				acceptableGold = peaceTreaty.GoldTransfer;
 				peaceTreaty.GoldTransfer += goldTransferChunkSize;
 			}
@@ -45,8 +46,11 @@ namespace AI {
 			return defaultPriority;
 		}
 		internal override bool CanBePerformed(){
-			return diplomaticStatus.IsAtWar && peaceTargetAI.EvaluatePeaceOffer(peaceTreaty) > 0;
-		} 
+			return diplomaticStatus.IsAtWar && WouldAccept();
+		}
+		private bool WouldAccept(){
+			return peaceTargetAI.EvaluatePeaceOffer(peaceTreaty) > (peaceTargetAI.enabled ? 0 : playerRequiredAcceptance);
+		}
 		internal override void Perform(){
 			Country.EndWar(peaceTarget, peaceTreaty);
 			AIController.OnWarEnd(Controller, peaceTargetAI);
