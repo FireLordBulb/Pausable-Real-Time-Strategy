@@ -167,6 +167,7 @@ namespace Player {
 		protected override void Update(){
 			UpdateHover();
 			base.Update();
+			PushUninstantiatedSelectionWindow();
 		}
 		private void UpdateHover(){
 			if (EventSystem.current.IsPointerOverGameObject()){
@@ -201,6 +202,12 @@ namespace Player {
 				province.OnHoverLeave();
 			}
 			hoveredSelectable = null;
+		}
+		// ReSharper disable Unity.PerformanceAnalysis // This is called in update but the if-statement blocks the performance-intensive part from being called in sequential frames.
+		private void PushUninstantiatedSelectionWindow(){
+			if (activeSelectionWindow != null && !activeSelectionWindow.gameObject.scene.IsValid()){
+				activeSelectionWindow = Push(activeSelectionWindow);
+			}
 		}
 		#endregion
 
@@ -279,7 +286,7 @@ namespace Player {
 				return;
 			}
 			Selected = selectable;
-			activeSelectionWindow = Selected != null ? Push(selectionWindowMap[Selected.GetType()]) : null;
+			activeSelectionWindow = Selected != null ? selectionWindowMap[Selected.GetType()] : null;
 		}
 		public void Deselect(ISelectable selectable){
 			if (Selected != selectable){
