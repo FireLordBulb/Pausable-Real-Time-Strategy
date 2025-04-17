@@ -16,8 +16,10 @@ namespace AI {
 		[SerializeField] private float militaryStrength;
 		[SerializeField] private float militaryStrengthMax;
 		[SerializeField] private float minMilitaryStrengthValue;
+		[SerializeField] private float thirdPartyMultiplier;
 		[SerializeField] private float provinceHeld;
 		[SerializeField] private float developmentHeld;
+		[SerializeField] private float allProvincesOccupied;
 		[Header("Harshness of Treaty Demands")]
 		[SerializeField] private float provincesDemanded;
 		[SerializeField] private float developmentDemanded;
@@ -36,8 +38,9 @@ namespace AI {
 			if (treaty.IsWhitePeace){
 				treaty.DidTreatyInitiatorWin = true;
 			}
-			bool isLoserDefeated = IsFullyDefeated(treaty.Loser, treaty.Winner);
+			bool isLoserDefeated  = IsFullyDefeated(treaty.Loser, treaty.Winner);
 			bool isWinnerDefeated = IsFullyDefeated(treaty.Winner, treaty.Loser);
+			
 			// Losing logic
 			if (treaty.DidTreatyInitiatorWin){
 				acceptance = Reluctance(treaty.Loser, treaty.Winner);
@@ -45,6 +48,8 @@ namespace AI {
 					acceptance += always;
 				} else if (isWinnerDefeated){
 					acceptance += never;
+				} else {
+					acceptance += FullOccupationAcceptance(treaty.Loser, treaty.Winner);
 				}
 				if (!treaty.IsWhitePeace){
 					// If not fully defeated, always refuse full annexation.
@@ -59,6 +64,8 @@ namespace AI {
 					acceptance += always;
 				} else if (isLoserDefeated){
 					acceptance += never;
+				} else {
+					acceptance -= FullOccupationAcceptance(treaty.Winner, treaty.Loser);
 				}
 				acceptance -= WarGoalCost(treaty, winGoldDemandedMin);
 			}
@@ -74,11 +81,10 @@ namespace AI {
 			fromResources = Math.Max(fromResources, resourcesMin);
 			acceptance += fromResources;
 			
-			// TODO Factor in own & opponent other ongoing wars after war dec logic added.
 			// TODO: Factor in navy when navy combat is added.
 			
-			float deciderMilitaryStrength = GetMilitaryStrength(decider);
-			float otherMilitaryStrength = GetMilitaryStrength(other);
+			float deciderMilitaryStrength = GetSituationalMilitaryStrength(decider, other);
+			float otherMilitaryStrength = GetSituationalMilitaryStrength(other, decider);
 			acceptance += Mathf.Min((otherMilitaryStrength/deciderMilitaryStrength-1)*militaryStrength, militaryStrengthMax); 
 
 			float deciderOccupationValue = GetOccupationValue(decider, other);
@@ -87,8 +93,17 @@ namespace AI {
 			
 			return acceptance;
 		}
+		private float GetSituationalMilitaryStrength(Country country, Country secondParty){
+			float strength = GetMilitaryStrength(country);
+			strength -= GetThirdPartyMilitaryStrength(country, secondParty)*thirdPartyMultiplier;
+			return Mathf.Max(strength, minMilitaryStrengthValue);
+		}
+		private float GetThirdPartyMilitaryStrength(Country country, Country secondParty){
+			AIController borderingAI = country.GetComponent<AIController>();
+			return borderingAI.WarEnemies.Sum(enemy => enemy.Country != secondParty ? GetMilitaryStrength(enemy.Country) : 0);
+		}
 		private float GetMilitaryStrength(Country country){
-			return Math.Max(country.Regiments.Sum(AIController.RegimentStrength), minMilitaryStrengthValue);
+			return country.Regiments.Sum(AIController.RegimentStrength);
 		}
 		private float GetOccupationValue(Country occupier, Country target){
 			float value = 0;
@@ -99,11 +114,28 @@ namespace AI {
 			}
 			return value;
 		}
-		
+
+		private float FullOccupationAcceptance(Country loser, Country winner){
+			if (IsFullyOccupied(loser, winner)){
+				return allProvincesOccupied;
+			}
+			if (IsFullyOccupied(winner, loser)){
+				return -allProvincesOccupied;
+			}
+			return 0;
+		}
 		private static bool IsFullyDefeated(Country decider, Country other){
 			return decider.Provinces.All(land => land.Occupier == other) &&
 			       other.Provinces.All(land => land.Occupier != decider) &&
-			       decider.Regiments.All(regiment => regiment.Province.Land.Owner != other && regiment.Province.Land.Owner != decider);
+			       AreRegimentsFullyDefeated(decider, other);
+		}
+		private static bool IsFullyOccupied(Country decider, Country other){
+			return decider.Provinces.All(land => land.IsOccupied) &&
+			       other.Provinces.All(land => land.Occupier != decider) &&
+			       AreRegimentsFullyDefeated(decider, other);
+		}
+		private static bool AreRegimentsFullyDefeated(Country decider, Country other){
+			return decider.Regiments.All(regiment => regiment.Province.Land.Owner != other && regiment.Province.Land.Owner != decider);
 		}
 		private static bool IsFullAnnexationDemanded(PeaceTreaty treaty){
 			return treaty.Loser.ProvinceCount == treaty.AnnexedLands.Count(land => land.Owner == treaty.Loser);

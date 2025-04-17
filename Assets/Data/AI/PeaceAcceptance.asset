@@ -19,8 +19,10 @@ MonoBehaviour:
   militaryStrength: 10
   militaryStrengthMax: 30
   minMilitaryStrengthValue: 5000
+  thirdPartyMultiplier: 0.5
   provinceHeld: 10
   developmentHeld: 30
+  allProvincesOccupied: 50
   provincesDemanded: -5
   developmentDemanded: -40
   unoccupiedMultiplier: 3
