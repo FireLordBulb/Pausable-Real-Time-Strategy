@@ -96,6 +96,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RegimentWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 8282914773381592739, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
+      propertyPath: m_text
+      value: Hold shift to move multiple regiments at the same time!
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
