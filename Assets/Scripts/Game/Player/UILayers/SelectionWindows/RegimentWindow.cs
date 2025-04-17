@@ -13,6 +13,14 @@ namespace Player {
 				MoveOrderResult.NotOwner => "You cannot move another country's units!",
 				_ => ""
 			});
+			if (!UI.IsShiftHeld){
+				return;
+			}
+			foreach (Regiment regiment in Selected.Location.Units){
+				if (regiment != Selected && regiment.Owner == Player){
+					Player.MoveRegimentTo(regiment, province);
+				}
+			}
 		}
 	}
 }

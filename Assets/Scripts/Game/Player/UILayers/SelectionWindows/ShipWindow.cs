@@ -3,14 +3,15 @@ using Simulation.Military;
 namespace Player {
 	public class ShipWindow : MilitaryUnitWindow<Ship> {
 		protected override void OrderMove(Province province){
-			MoveOrderResult result;
+			Location<Ship> location;
 			if (province.IsSea){
-				result = Player.MoveFleetTo(Selected, province.Sea.NavyLocation);
+				location = province.Sea.NavyLocation;
 			} else if (province.IsCoast){
-				result = Player.MoveFleetTo(Selected, UI.GetHarbor(province));
+				location = UI.GetHarbor(province);
 			} else {
-				result = MoveOrderResult.InvalidTarget;
+				location = null;
 			}
+			MoveOrderResult result = location == null ? MoveOrderResult.InvalidTarget : Player.MoveFleetTo(Selected, location);
 			SetMessage(result switch {
 				MoveOrderResult.BusyRetreating => "Cannot interrupt retreat movement!",
 				MoveOrderResult.NotBuilt => "Cannot move a navy before it has finished constructing!",
@@ -20,6 +21,14 @@ namespace Player {
 				MoveOrderResult.NotOwner => "You cannot move another country's units!",
 				_ => ""
 			});
+			if (!UI.IsShiftHeld || location == null){
+				return;
+			}
+			foreach (Ship ship in Selected.Location.Units){
+				if (ship != Selected && ship.Owner == Player){
+					Player.MoveFleetTo(ship, location);
+				}
+			}
 		}
 	}
 }
