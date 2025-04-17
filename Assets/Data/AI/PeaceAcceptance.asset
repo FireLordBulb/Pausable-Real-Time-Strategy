@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d62f7941f9fa41358551efba02234782, type: 3}
   m_Name: PeaceAcceptance
   m_EditorClassIdentifier: 
-  baseReluctance: -10
-  resourcesMin: -20
+  baseReluctance: -20
+  resourcesMin: -10
   goldAvailable: -0.02
   manpowerAvailable: -0.002
   militaryStrength: 10
-  militaryStrengthMax: 30
+  militaryStrengthMax: 40
   minMilitaryStrengthValue: 5000
   thirdPartyMultiplier: 0.5
   provinceHeld: 10
