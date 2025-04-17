@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa6a9428312c4fbaa9295229673a3bfd, type: 3}
   m_Name: RecruitInfantry
   m_EditorClassIdentifier: 
+  defaultPriority: 10
+  enoughRegimentsPriority: 0
+  maxRegimentsPriority: -10
   regimentType: {fileID: 11400000, guid: 8854755774e6f3e4b8ebb01f65ec371b, type: 2}
+  enoughRegimentsPerProvince: 1
+  maxRegimentsPerProvince: 3

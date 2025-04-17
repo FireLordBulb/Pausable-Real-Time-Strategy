@@ -1,11 +1,16 @@
 using System;
+using Simulation;
 using UnityEngine;
 
 namespace AI {
 	public abstract class Task : ScriptableObject, IComparable<Task> {
+		[SerializeField] protected int defaultPriority;
+		
 		protected AIController Controller;
 		
 		private int priority;
+		protected int Priority => priority;
+		protected Country Country => Controller.Country;
 
 		public void Init(AIController controller){
 			Controller = controller;
