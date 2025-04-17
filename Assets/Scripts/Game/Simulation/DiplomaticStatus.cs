@@ -9,11 +9,11 @@ namespace Simulation {
 			calendar = calendarReference;
 		}
 		
-		public bool CanDeclareWar(){
-			return !IsAtWar && TruceDaysLeft <= 0;
+		public bool CanDeclareWar(Country target){
+			return !IsAtWar && TruceDaysLeft <= 0 && target.enabled;
 		}
-		public void DeclareWar(){
-			if (CanDeclareWar()){
+		public void DeclareWar(Country target){
+			if (CanDeclareWar(target)){
 				IsAtWar = true;
 			}
 		}

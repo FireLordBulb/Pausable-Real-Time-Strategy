@@ -71,11 +71,11 @@ namespace AI {
 				ship.GetComponent<ShipBrain>().enabled = false;
 			}
 		}
-
-		private void DayTick(){
-			
-		}
+		
 		private void MonthTick(){
+			if (!enabled){
+				return;
+			}
 			while (monthlyTaskChanges.Count > 0){
 				(Task peaceNegotiations, bool isAdded) = monthlyTaskChanges.Dequeue();
 				if (isAdded){
@@ -92,6 +92,9 @@ namespace AI {
 		}
 		// Recalculate this occasionally since both sides could have gained/lost land in other wars.
 		private void YearTick(){
+			if (!enabled){
+				return;
+			}
 			foreach (Country warEnemy in warEnemies){
 				CalculateClosestProvinces(warEnemy);
 			}
@@ -126,6 +129,10 @@ namespace AI {
 		}
 		
 		public static void OnWarStart(AIController declarer, AIController target){
+			// If you declare war on a country at the tick it gets full annexed, ignore the declaration.
+			if (!target.Country.enabled){
+				return;
+			}
 			declarer.OnWarStart(target);
 			target.OnWarStart(declarer);
 		}
@@ -147,10 +154,17 @@ namespace AI {
 		public void OnWarEnd(AIController other){
 			warEnemies.Remove(other.Country);
 			enemiesClosestProvinces.Remove(other.Country);
-			CalculateBorderProvinces();
-			RegroupRegiments();
 			Task peaceNegotiations = allTasks.Find(task => task is MakePeace peaceNegotiations && peaceNegotiations.PeaceTargetAI == other);
 			monthlyTaskChanges.Enqueue((peaceNegotiations, false));
+			if (!Country.enabled){
+				enabled = false;
+				foreach (Country warEnemy in warEnemies.ToArray()){
+					Country.EndWar(warEnemy, Country.NewPeaceTreaty(warEnemy));
+				}
+				return;
+			}
+			CalculateBorderProvinces();
+			RegroupRegiments();
 		}
 		private void CalculateBorderProvinces(){
 			borderProvinces.Clear();
@@ -197,10 +211,6 @@ namespace AI {
 			closestProvinces.Sort((left, right) => distances[left]-distances[right]);
 		}
 		private void AddLandDistances(IEnumerable<Land> lands, List<Land> provinces, Dictionary<Land, int> distances){
-			if (!Country.enabled){
-				enabled = false;
-				return;
-			}
 			const float speedIsIrrelevantForSorting = 1;
 			LandLocation capital = Country.Capital.ArmyLocation;
 			foreach (Land land in lands){

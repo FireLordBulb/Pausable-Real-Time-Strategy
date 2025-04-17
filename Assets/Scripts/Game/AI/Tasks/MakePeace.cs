@@ -25,7 +25,7 @@ namespace AI {
 			peaceTreaty.IsWhitePeace = false;
 		}
 		protected override int CurrentPriority(){
-			if (!diplomaticStatus.IsAtWar){
+			if (!diplomaticStatus.IsAtWar || !peaceTarget.enabled){
 				return defaultPriority;
 			}
 			peaceTreaty.AnnexedLands.Clear();

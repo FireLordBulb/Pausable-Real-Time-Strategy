@@ -29,7 +29,7 @@ namespace AI {
 			float maxTargetRegiments = regiments*maxRegimentProportion;
 			float weakestTargetFound = float.MaxValue;
 			foreach (Country borderingCountry in Controller.BorderingCountries){
-				if (!Country.GetDiplomaticStatus(borderingCountry).CanDeclareWar()){
+				if (!Country.GetDiplomaticStatus(borderingCountry).CanDeclareWar(borderingCountry)){
 					continue;
 				}
 				float borderingCountryRegiments = Mathf.Max(borderingCountry.Regiments.Count, borderingCountry.ProvinceCount*assumedMinRegimentsPerProvince);
@@ -46,10 +46,10 @@ namespace AI {
 			return warTarget == null ? neverDoPriority : defaultPriority;
 		}
 		internal override bool CanBePerformed(){
-			return warTarget != null && Country.GetDiplomaticStatus(warTarget).CanDeclareWar();
+			return warTarget != null && Country.GetDiplomaticStatus(warTarget).CanDeclareWar(warTarget);
 		}
 		internal override void Perform(){
-			Country.GetDiplomaticStatus(warTarget).DeclareWar();
+			Country.GetDiplomaticStatus(warTarget).DeclareWar(warTarget);
 			AIController.OnWarStart(Controller, warTargetAI);
 		}
 	}

@@ -63,7 +63,7 @@ namespace Player {
 			if (Player != null && Player != Selected){
 				diplomaticStatus = Player.GetDiplomaticStatus(Selected);
 				declareWar.onClick.AddListener(() => {
-					diplomaticStatus.DeclareWar();
+					diplomaticStatus.DeclareWar(Selected);
 					AIController.OnWarStart(UI.GetAI(Player), UI.GetAI(Selected));
 					RefreshDiplomacy();
 				});
@@ -114,7 +114,7 @@ namespace Player {
 				}
 				declareWar.gameObject.SetActive(true);
 				makePeace.gameObject.SetActive(false);
-				declareWar.interactable = diplomaticStatus.CanDeclareWar();
+				declareWar.interactable = diplomaticStatus.CanDeclareWar(Selected);
 			}
 		}
 		private bool isRefreshingDiplomacyDaily;

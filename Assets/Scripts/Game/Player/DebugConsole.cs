@@ -1,11 +1,12 @@
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 using System;
 using System.Linq;
-using System.Threading.Tasks;
+using AI;
 using Simulation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Task = System.Threading.Tasks.Task;
 
 namespace Player {
 	internal class DebugConsole : MonoBehaviour {
@@ -93,6 +94,7 @@ namespace Player {
 					Country opponent = UI.Map.GetCountry(words[1]);
 					if (opponent != null){
 						UI.PlayerCountry.EndWar(opponent, UI.PlayerCountry.NewPeaceTreaty(opponent));
+						AIController.OnWarEnd(UI.GetAI(UI.PlayerCountry), UI.GetAI(opponent));
 						AddConsoleResponse($"Ending war with {opponent.name}.");
 					} else {
 						AddConsoleResponse($"Command 'peace_with' failed. No country has the name '{words[1]}'.");
