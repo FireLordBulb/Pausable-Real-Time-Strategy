@@ -9,8 +9,24 @@ namespace Simulation.Military {
 		[SerializeField] private float orderedRetreatDamageMultiplier;
 		[SerializeField] private AnimationCurve sinkingProbability;
 		
+		private int maxMonthlyReparation;
+		private float fullRepairGoldCost;
+		private int fullRepairSailorsCost;
+		
+		public float AttackPower {get; private set;}
+		public int MaxHull {get; private set;}
+		public int IntactHull {get; private set;}
+		
 		public override string CreatingVerb => "Constructing";
 		
+		internal void Init(float attackPower, int hull, float gold, int sailors){
+			AttackPower = attackPower;
+			IntactHull = MaxHull = hull;
+			maxMonthlyReparation = (int)(MaxHull*monthlyReparationRate);
+			fullRepairGoldCost = gold*reparationCostFraction;
+			fullRepairSailorsCost = (int)(sailors*reparationCostFraction);
+			Province.Calendar.OnMonthTick.AddListener(Repair);
+		}
 		protected override void OnFinishBuilding(){
 			Owner.ShipBuilt.Invoke(this);
 		}
@@ -35,6 +51,19 @@ namespace Simulation.Military {
 			return link is SeaLink or CoastLink or ShallowsLink;
 		}
 
+		private void Repair(){
+			if (IntactHull == MaxHull){
+				return;
+			}
+			if (IsMoving || Location.IsBattleOngoing || Location is not Harbor harbor || harbor.Land.IsOccupied || harbor.Land.Owner != Owner){
+				return;
+			}
+			float hullToRepair = Mathf.Min(maxMonthlyReparation, MaxHull-IntactHull);
+			hullToRepair = Mathf.Min(hullToRepair, hullToRepair*Owner.Gold/fullRepairGoldCost, hullToRepair*Owner.Sailors/fullRepairSailorsCost);
+			Owner.ChangeResources(-fullRepairGoldCost*hullToRepair/MaxHull, 0, -(int)(fullRepairSailorsCost*hullToRepair/MaxHull));
+			IntactHull += (int)(MaxHull*hullToRepair);
+		}
+		
 		internal override BattleResult DoBattle(List<Ship> defenders, List<Ship> attackers){
 			return BattleResult.DefenderWon;
 		}
