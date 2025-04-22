@@ -7,12 +7,13 @@ namespace Simulation.Military {
 		[Header("Combat")]
 		[SerializeField] private float attackPower;
 		[SerializeField] private int hull;
+		[SerializeField] private int size;
 		
 		public override bool CanBeBuiltBy(Country owner){
-			return sailors <= owner.Manpower && goldCost <= owner.Gold;
+			return sailors <= owner.Sailors && goldCost <= owner.Gold;
 		}
 		public override void ApplyValuesTo(Ship unit){
-			unit.Init(attackPower, hull, goldCost, sailors);
+			unit.Init(attackPower, hull, size, goldCost, sailors);
 		}
 		public override void ConsumeBuildCostFrom(Country owner){
 			owner.ChangeResources(-goldCost, 0, -sailors);

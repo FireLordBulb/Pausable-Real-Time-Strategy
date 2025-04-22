@@ -16,5 +16,6 @@ MonoBehaviour:
   daysToBuild: 180
   goldCost: 50
   sailors: 400
-  attackPower: 175
+  attackPower: 80
   hull: 1000
+  size: 1
