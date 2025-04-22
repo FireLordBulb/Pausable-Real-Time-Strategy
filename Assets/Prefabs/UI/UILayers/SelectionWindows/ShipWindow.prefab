@@ -177,6 +177,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5308984707064489158 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4474769053552256563, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
+  m_PrefabInstance: {fileID: 8625765238797222645}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5668017239021321120 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4115173430444964181, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
@@ -214,6 +219,7 @@ MonoBehaviour:
   destinationLocation: {fileID: 343655058317896634}
   message: {fileID: 1086763929909849860}
   countryPanel: {fileID: 5668017239021321120}
+  shiftTip: {fileID: 5308984707064489158}
 --- !u!114 &6622856954083316553 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3196925199810777532, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
