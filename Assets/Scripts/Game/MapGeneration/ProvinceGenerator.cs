@@ -81,7 +81,7 @@ namespace MapGeneration {
 				// Only add the current pixel if it's not on a straight line between the previous and next.
 				if (differenceFromPrevious-differenceToNext != Vector2Int.zero || isTriPointIndex){
 					AddEdgeVertex(currentPixel, differenceFromPrevious, differenceToNext);
-						
+					
 					// Convert each value in TriPointIndices from a OutlinePixels index to a Vertices index.
 					if (isTriPointIndex){
 						TriPointIndices[triPointIndexIndex] = Vertices.Count-1;
@@ -91,6 +91,13 @@ namespace MapGeneration {
 				
 				previousPixel = currentPixel;
 				currentPixel = nextPixel;
+			}
+			// Extremely strange edge case.
+			if (TriPointIndices[0] == 0){
+				TriPointIndices.RemoveAt(0);
+				TriPointIndices.Add(Vertices.Count-1);
+				Neighbors.Add(Neighbors[0]);
+				Neighbors.RemoveAt(0);
 			}
 		}
 		private void AddEdgeVertex(Vector2Int pixel, Vector2Int directionFromPrevious, Vector2Int directionToNext){
