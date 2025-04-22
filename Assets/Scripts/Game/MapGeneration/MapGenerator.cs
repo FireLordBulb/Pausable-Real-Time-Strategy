@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using Mathematics;
 using Simulation;
 using UnityEngine;
@@ -32,7 +30,7 @@ namespace MapGeneration {
         
         private Color32[] mapPixels;
         private readonly Dictionary<Color32, Vector2Int> provincePositions = new();
-        private (Color32, ProvinceGenerator)[] provinceGenerators;
+        private readonly Dictionary<Color32, ProvinceGenerator> provinceGenerators = new();
         private readonly Dictionary<Color32, ProvinceData> provinceDataDictionary = new();
         private readonly HashSet<(Province province, (List<Color32>, List<int>))> provinceNeighbors = new();
         
@@ -53,7 +51,8 @@ namespace MapGeneration {
             provinceScale = new Vector3(worldSpaceScale, 1, worldSpaceScale);
             
             FindProvincePositions();
-            GenerateProvinceMeshDataParallel();
+            GenerateProvinceVertices();
+            SyncOutlineSegmentVertices();
             PutSerializedProvinceDataInDictionary();
             SpawnProvinceGameObjects();
             LinkNeighboringProvinces();
@@ -74,25 +73,11 @@ namespace MapGeneration {
             }
         }
         
-        // Multithreading reduced time from 18ms to 11ms when tested on March 20th's provinces.png file.
-        private void GenerateProvinceMeshDataParallel(){
-            Thread[] threads = new Thread[Environment.ProcessorCount];
-            KeyValuePair<Color32, Vector2Int>[] provincePositionArray = provincePositions.ToArray();
-            provinceGenerators = new (Color32, ProvinceGenerator)[provincePositionArray.Length];
-            for (int i = 0; i < threads.Length; i++){
-                int startIndex = i;
-                threads[i] = new Thread(() => {
-                    for (int j = startIndex; j < provincePositionArray.Length; j += threads.Length){
-                        Color32 color = provincePositionArray[j].Key;
-                        ProvinceGenerator provinceGenerator = FindProvinceOutline(color, provincePositionArray[j].Value);
-                        provinceGenerator.GenerateData();
-                        provinceGenerators[j] = (color, provinceGenerator);
-                    }
-                });
-                threads[i].Start();
-            }
-            foreach (Thread thread in threads){
-                thread.Join();
+        private void GenerateProvinceVertices(){
+            foreach ((Color32 color, Vector2Int position) in provincePositions){
+                ProvinceGenerator provinceGenerator = FindProvinceOutline(color, position);
+                provinceGenerator.CreateVertices();
+                provinceGenerators.Add(color, provinceGenerator);
             }
         }
         private ProvinceGenerator FindProvinceOutline(Color32 color, Vector2Int startPosition){
@@ -157,6 +142,26 @@ namespace MapGeneration {
             return province;
         }
 
+        private void SyncOutlineSegmentVertices(){
+            foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
+                for (int i = 0; i < provinceGenerator.Neighbors.Count; i++){
+                    Color32 neighborColor = provinceGenerator.Neighbors[i];
+                    // When going through every neighbor of every province, each pair of provinces will be hit twice.
+                    // So skip each pair in one of the cases using an arbitrary but consistent criteria.
+                    if (ColorInt(neighborColor) < ColorInt(color)){
+                        return;
+                    }
+                    provinceGenerators.TryGetValue(neighborColor, out ProvinceGenerator neighbor);
+                    // change the vertex array of provinceGenerator
+                    // change the triPointIndices as well
+                    // change the positions of the two triPoints at the ends of the segment on the other neighbors as well.
+                }
+            }
+        }
+        private static int ColorInt(Color32 color){
+            return color.r+(color.g << 8)+(color.b << 16)+(color.a << 24);
+        }
+        
         private void PutSerializedProvinceDataInDictionary(){
             foreach (Provinces provinces in provinceData){
                 foreach (ProvinceData province in provinces.List){
@@ -167,6 +172,7 @@ namespace MapGeneration {
         
         private void SpawnProvinceGameObjects(){
             foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
+                provinceGenerator.GenerateData();
                 Vector3 worldPosition = ConvertToWorldSpace(provinceGenerator.Pivot);
                 Province province;
                 if (provinceDataDictionary.TryGetValue(color, out ProvinceData data)){

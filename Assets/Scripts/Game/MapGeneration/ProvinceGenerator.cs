@@ -51,14 +51,16 @@ namespace MapGeneration {
 			borderHalfWidth = borderWidth*0.5f;
 			textureScale = textureScaleValue;
 		}
-		
-		public void GenerateData(){
+
+		public void CreateVertices(){
 			if (OutlinePixels.Count <= 1){
 				Debug.LogError("Too few pixels in province!");
 				return;
 			}
 			GenerateVertexList();
 			CleanupVertexList();
+		}
+		public void GenerateData(){
 			CalculateBounds();
 			CalculateCenter();
 			GenerateOutlineMesh();
