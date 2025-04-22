@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public abstract class Unit<TUnit> : MonoBehaviour, IUnit where TUnit : Unit<TUnit> {
+		[Header("Movement")]
 		[SerializeField] private float movementSpeed;
 		[SerializeField] private float worldSpaceSpeed;
 		[SerializeField] private float worldSpaceMoveDirectionOffset;
 		[SerializeField] private float worldSpaceMaxOffsetProportion;
-		[Header("Battle randomness")]
+		[Header("Battle Randomness")]
 		[SerializeField] private float maxDamageBoost;
 		[SerializeField] private int minRerollDays;
 		[SerializeField] private int maxRerollDays;

@@ -4,7 +4,7 @@ namespace Simulation.Military {
 	[CreateAssetMenu(fileName = "RegimentType", menuName = "ScriptableObjects/Military/RegimentType")]
 	public class RegimentType : UnitType<Regiment> {
 		[SerializeField] private int manpower;
-		[Header("Combat values")]
+		[Header("Combat")]
 		[SerializeField] private float attackPower;
 		[SerializeField] private float toughness;
 		[SerializeField] private float killRate;

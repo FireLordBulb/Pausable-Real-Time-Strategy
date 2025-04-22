@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public class Regiment : Unit<Regiment> {
+		[Header("Regiment-specific Values")]
 		[SerializeField] private float monthlyReinforcementRate;
 		[SerializeField] private float orderedRetreatDamageMultiplier;
 		[SerializeField] private float stackWipeThreshold;

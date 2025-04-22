@@ -3,6 +3,12 @@ using UnityEngine;
 
 namespace Simulation.Military {
 	public class Ship : Unit<Ship> {
+		[Header("Ship-specific Values")]
+		[SerializeField] private float monthlyReparationRate;
+		[SerializeField] private float reparationCostFraction;
+		[SerializeField] private float orderedRetreatDamageMultiplier;
+		[SerializeField] private AnimationCurve sinkingProbability;
+		
 		public override string CreatingVerb => "Constructing";
 		
 		protected override void OnFinishBuilding(){
