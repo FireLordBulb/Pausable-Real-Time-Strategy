@@ -79,7 +79,7 @@ namespace Simulation {
 		private static void AddVerticesFromProvince(Province currentProvince, int segmentIndex, Province nextProvince, List<Vector2> vertexLoop){
 			while (true){
 				(int vertexIndex, int endIndex, ProvinceLink link) = currentProvince.OutlineSegments[segmentIndex];
-				if (link.Target == nextProvince){
+				if (link != null && link.Target == nextProvince){
 					break;
 				}
 				for (; vertexIndex != endIndex; vertexIndex = (vertexIndex+1)%currentProvince.Vertices.Count){
