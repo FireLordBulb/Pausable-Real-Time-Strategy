@@ -681,14 +681,21 @@ MonoBehaviour:
   - reg 1
   - reg 2
   - play_as Zum
-  - gold 140
+  - gold 300
   - manpower 5000
   - reg 2
   - reg 1
-  - sailors 1000
+  - sailors 1300
   - ship 3
+  - ship 3
+  - ship 3
+  - play_as Aldynis
+  - gold 170
+  - sailors 1300
+  - ship
+  - ship
+  - ship
   - skip 200
-  - observe
 --- !u!223 &5417892655479546527
 Canvas:
   m_ObjectHideFlags: 0
