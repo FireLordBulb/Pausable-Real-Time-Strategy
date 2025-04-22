@@ -133,7 +133,9 @@ namespace MapGeneration {
             }
             // Checking for a tri-point exactly where the loop connects.
             if (!firstNeighborColor.Equals(previousNeighborColor)){
-                triPointIndices.Add(outlinePixels.Count-1);
+                triPointIndices.Insert(0, 0);
+                neighbors.Insert(0, neighbors[^1]);
+                neighbors.RemoveAt(neighbors.Count-1);
             }
             
             province.OutlinePixels.AddRange(outlinePixels);
