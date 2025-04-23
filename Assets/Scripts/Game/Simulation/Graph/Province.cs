@@ -13,17 +13,14 @@ namespace Simulation {
         
         private MeshCollider meshCollider;
         private readonly Dictionary<Color32, ProvinceLink> links = new();
+        private readonly List<Vector2> vertexList = new();
+        private readonly List<(int startIndex, int endIndex, ProvinceLink link)> outlineSegments = new();
         private Type type;
         private Color baseColor;
         private Color hoverColor;
         private Color selectedColor;
         private bool isHovered;
         private bool isSelected;
-        
-        [NonSerialized] public List<int> TriPointIndices;
-        [NonSerialized] public List<Vector2> Vertices;
-        [NonSerialized] public readonly List<(int startIndex, int endIndex, ProvinceLink link)> OutlineSegments = new();
-        
         
         public Color32 ColorKey {get; private set;}
         public MapGraph Graph {get; private set;}
@@ -53,6 +50,8 @@ namespace Simulation {
         
         public IEnumerable<ProvinceLink> Links => links.Values;
         public ProvinceLink this[Color32 color] => links[color];
+        public IReadOnlyList<Vector2> Vertices => vertexList;
+        public IReadOnlyList<(int startIndex, int endIndex, ProvinceLink link)> OutlineSegments => outlineSegments;
         private Color SolidMaterialColor {
             set => shapeMeshRenderer.sharedMaterials[1].color = value;
         }
@@ -64,7 +63,7 @@ namespace Simulation {
             Debug.Assert(Land == null ^ Sea == null, $"FATAL: Province {gameObject.name} is both land and sea, or neither!");
             type = Land == null ? Type.Sea : Type.LandLocked;
         }
-        public void Init(Color32 colorKey, MapGraph mapGraph, Terrain terrain, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
+        public void Init(Color32 colorKey, MapGraph mapGraph, Terrain terrain, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
             ColorKey = colorKey;
             gameObject.name = $"R:{colorKey.r}, G:{colorKey.g}, B:{colorKey.b}";
             Graph = mapGraph;
@@ -82,6 +81,7 @@ namespace Simulation {
             outlineMeshFilter.sharedMesh = outlineMesh;
             meshCollider.sharedMesh = shapeMesh;
             shapeMeshFilter.sharedMesh = shapeMesh;
+            vertexList.AddRange(vertices);
         }
         public void AddNeighbor(Province neighbor, int triPointIndex){
             ProvinceLink newLink;
@@ -107,11 +107,11 @@ namespace Simulation {
                 newLink = null;
             }
             int previousTriPointIndex = OutlineSegments.Count == 0 ? -1 : OutlineSegments[^1].endIndex;
-            OutlineSegments.Add((previousTriPointIndex, triPointIndex, newLink));
+            outlineSegments.Add((previousTriPointIndex, triPointIndex, newLink));
         }
         public void CompleteSegmentLoop(){
             (int _, int endIndex, ProvinceLink link) = OutlineSegments[0];
-            OutlineSegments[0] = (OutlineSegments[^1].endIndex, endIndex, link);
+            outlineSegments[0] = (OutlineSegments[^1].endIndex, endIndex, link);
         }
         
         private void UpdateColors(){

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Simulation {
@@ -45,10 +46,10 @@ namespace Simulation {
 
 		public int SiegeDays => (int)(siegeDaysPerDevelopment*(1+Terrain.DevelopmentModifier));
 		
-		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh){
+		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
 			Province = GetComponent<Province>();
 			// All land is assumed LandLocked by default, is updated to Coast if a Link to a sea tile is added.
-			Province.Init(colorKey, mapGraph, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh);
+			Province.Init(colorKey, mapGraph, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh, vertices);
 
 			occupationMaterial = Province.MeshRenderer.sharedMaterials[occupationMaterialIndex];
 			occupationMaterial.color = Color.clear;
