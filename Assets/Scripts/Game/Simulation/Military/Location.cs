@@ -11,7 +11,7 @@ namespace Simulation.Military {
 		protected TUnit CommandingAttackingUnit;
 		
 		public abstract string Name {get;}
-		public virtual Province SearchTargetProvince => Province;
+		public virtual Province SearchProvince => Province;
 		public abstract Province Province {get;}
 		public abstract Vector3 WorldPosition {get;}
 		public bool IsBattleOngoing {get; private set;}
@@ -161,7 +161,8 @@ namespace Simulation.Military {
 		protected virtual void SpecificStartupLogic(){}
 		internal virtual void UpdateListeners(){}
 		
-		public virtual void AdjustPath(List<ProvinceLink> path){}
+		public virtual void AdjustPathStart(List<ProvinceLink> path){}
+		public virtual void AdjustPathEnd(List<ProvinceLink> path){}
 		public override string ToString(){
 			return Name;
 		}

@@ -9,7 +9,7 @@ namespace Simulation.Military {
 		
 		public override string Name {get;}
 		
-		public override Province SearchTargetProvince => Sea.Province;
+		public override Province SearchProvince => Sea.Province;
 		public override Province Province => Land.Province;
 		public override Vector3 WorldPosition => coast.WorldPosition;
 		
@@ -19,7 +19,10 @@ namespace Simulation.Military {
 			coast = coastLink;
 			Name = $"Harbor in {Land.Province.Name}";
 		}
-		public override void AdjustPath(List<ProvinceLink> path){
+		public override void AdjustPathStart(List<ProvinceLink> path){
+			path.Insert(0, coast.Reverse);
+		}
+		public override void AdjustPathEnd(List<ProvinceLink> path){
 			path.Add(coast);
 		}
 	}

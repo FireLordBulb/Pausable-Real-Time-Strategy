@@ -166,7 +166,7 @@ namespace Simulation.Military {
 			return GetPath(Location, end, linkEvaluator);
 		}
 		public static List<ProvinceLink> GetPath(Location<TUnit> start, Location<TUnit> end, GraphAlgorithms<Province, ProvinceLink>.LinkEvaluator linkEvaluator){
-			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(start.Province.Graph, start.Province, end.SearchTargetProvince, linkEvaluator);
+			List<Province> nodes = GraphAlgorithms<Province, ProvinceLink>.FindShortestPath_AStar(start.SearchProvince.Graph, start.SearchProvince, end.SearchProvince, linkEvaluator);
 			if (nodes == null){
 				return null;
 			}
@@ -174,7 +174,8 @@ namespace Simulation.Military {
 			for (int i = 1; i < nodes.Count; i++){
 				path.Add(nodes[i-1][nodes[i].ColorKey]);
 			}
-			end.AdjustPath(path);
+			start.AdjustPathStart(path);
+			end.AdjustPathEnd(path);
 			return path;
 		}
 		private void NextPathLocation(){
