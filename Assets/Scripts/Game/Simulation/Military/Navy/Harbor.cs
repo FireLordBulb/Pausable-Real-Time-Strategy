@@ -11,8 +11,7 @@ namespace Simulation.Military {
 		
 		public override Province SearchTargetProvince => Sea.Province;
 		public override Province Province => Land.Province;
-		// TODO: Replace with intersection-point of straight line between pivots and the outline segment.
-		public override Vector3 WorldPosition => 0.5f*(Sea.transform.position+Land.transform.position);
+		public override Vector3 WorldPosition => coast.WorldPosition;
 		
 		public Harbor(CoastLink coastLink){
 			Sea = coastLink.Sea;

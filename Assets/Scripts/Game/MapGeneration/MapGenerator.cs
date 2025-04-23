@@ -241,9 +241,9 @@ namespace MapGeneration {
         private void LinkNeighboringProvinces(){
             foreach ((Province province, (List<Color32> neighborColors, List<int> triPointIndices)) in provinceNeighbors){
                 for (int i = 0; i < neighborColors.Count; i++){
-                    province.AddNeighbor(mapGraph[neighborColors[i]], triPointIndices[i]);
+                    province.AddNeighbor(mapGraph[neighborColors[i]], triPointIndices[i], ConvertToWorldSpace);
                 }
-                province.CompleteSegmentLoop();
+                province.CompleteSegmentLoop(ConvertToWorldSpace);
             }
         }
         

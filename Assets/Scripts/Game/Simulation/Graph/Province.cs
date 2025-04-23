@@ -83,7 +83,7 @@ namespace Simulation {
             shapeMeshFilter.sharedMesh = shapeMesh;
             vertexList.AddRange(vertices);
         }
-        public void AddNeighbor(Province neighbor, int triPointIndex){
+        public void AddNeighbor(Province neighbor, int triPointIndex, Func<Vector2, Vector3> worldSpaceConverter){
             ProvinceLink newLink;
             if (neighbor != null){
                 if (type == Type.LandLocked && neighbor.type == Type.Sea){
@@ -106,12 +106,17 @@ namespace Simulation {
             } else {
                 newLink = null;
             }
-            int previousTriPointIndex = OutlineSegments.Count == 0 ? -1 : OutlineSegments[^1].endIndex;
-            outlineSegments.Add((previousTriPointIndex, triPointIndex, newLink));
+            if (OutlineSegments.Count == 0){
+                outlineSegments.Add((-1, triPointIndex, newLink));
+            } else {
+                outlineSegments.Add((OutlineSegments[^1].endIndex, triPointIndex, newLink));
+                newLink?.Init(worldSpaceConverter);
+            }
         }
-        public void CompleteSegmentLoop(){
+        public void CompleteSegmentLoop(Func<Vector2, Vector3> worldSpaceConverter){
             (int _, int endIndex, ProvinceLink link) = OutlineSegments[0];
             outlineSegments[0] = (OutlineSegments[^1].endIndex, endIndex, link);
+            link?.Init(worldSpaceConverter);
         }
         
         private void UpdateColors(){
