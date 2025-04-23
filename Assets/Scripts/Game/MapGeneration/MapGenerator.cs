@@ -181,9 +181,8 @@ namespace MapGeneration {
                             }
                         }
                     }
-                    // change the positions of the two triPoints at the ends of the segment on the other neighbors as well.
-                    //FixCorner(segmentIndex-1, -1, provinceGenerator, color, neighbor.Vertices[newSegment.endIndex]);
-                    //FixCorner(segmentIndex+1, +0, provinceGenerator, color, neighbor.Vertices[newSegment.startIndex]);
+                    FixCorner(segmentIndex-1, -1, provinceGenerator, color, neighbor.Vertices[newSegment.endIndex]);
+                    FixCorner(segmentIndex+1, +0, provinceGenerator, color, neighbor.Vertices[newSegment.startIndex]);
                 }
                 provinceGenerator.RemoveDuplicateVertices();
             }
@@ -197,17 +196,7 @@ namespace MapGeneration {
             }
             int neighborSegmentIndex = Mod(neighbor.Neighbors.FindIndex(color32 => color32.Equals(color))+indexOffset, neighbor.Neighbors);
             int index = neighbor.TriPointIndices[neighborSegmentIndex];
-            if (neighbor.Vertices[Mod(index+1, neighbor.Vertices)] == vertex){
-                return;
-            }
-            if (neighbor.Vertices[Mod(index-1, neighbor.Vertices)] == vertex){
-                return;
-            }
-            Vector2 saved = neighbor.Vertices[index];
             neighbor.Vertices[index] = vertex;
-            if (saved != neighbor.Vertices[index]){
-                //print($"Corner fix: {neighbor.Vertices[index]-saved}");
-            }
         }
         private static (int, int, int) GetSegment(ProvinceGenerator provinceGenerator, int segmentIndex){
             int startIndex = provinceGenerator.TriPointIndices[Mod(segmentIndex-1, provinceGenerator.Neighbors)];
