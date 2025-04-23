@@ -73,12 +73,13 @@ namespace Player {
 						AddConsoleResponse("Incomplete command: 'play_as' requires country name as argument.");
 						return;
 					}
-					Country country = UI.Map.GetCountry(words[1]);
+					string countryName = command.TrimStart(words[0].ToCharArray()).TrimStart(' ');
+					Country country = UI.Map.GetCountry(countryName);
 					if (country != null){
 						UI.PlayAs(country);
 						AddConsoleResponse($"Switching to {country.name}.");
 					} else {
-						AddConsoleResponse($"Command 'play_as' failed. No country has the name '{words[1]}'.");
+						AddConsoleResponse($"Command 'play_as' failed. No country has the name '{countryName}'.");
 					}
 					return;
 				case "peace_with":
@@ -91,13 +92,14 @@ namespace Player {
 						AddConsoleResponse("Incomplete command: 'peace_with' requires country name as argument.");
 						return;
 					}
-					Country opponent = UI.Map.GetCountry(words[1]);
+					string opponentName = command.TrimStart(words[0].ToCharArray()).TrimStart(' ');
+					Country opponent = UI.Map.GetCountry(opponentName);
 					if (opponent != null){
 						UI.PlayerCountry.EndWar(opponent, UI.PlayerCountry.NewPeaceTreaty(opponent));
 						AIController.OnWarEnd(UI.GetAI(UI.PlayerCountry), UI.GetAI(opponent));
 						AddConsoleResponse($"Ending war with {opponent.name}.");
 					} else {
-						AddConsoleResponse($"Command 'peace_with' failed. No country has the name '{words[1]}'.");
+						AddConsoleResponse($"Command 'peace_with' failed. No country has the name '{opponentName}'.");
 					}
 					return;
 				case "own":
