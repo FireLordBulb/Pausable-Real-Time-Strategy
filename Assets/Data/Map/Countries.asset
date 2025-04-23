@@ -50,6 +50,12 @@ MonoBehaviour:
       rgba: 4278448843
     - serializedVersion: 2
       rgba: 4281246173
+    - serializedVersion: 2
+      rgba: 4292692694
+    - serializedVersion: 2
+      rgba: 4285396716
+    - serializedVersion: 2
+      rgba: 4287726136
   - name: Faltihamen
     mapColor: {r: 0.74509805, g: 0.7111312, b: 0, a: 1}
     provinces:
@@ -101,8 +107,6 @@ MonoBehaviour:
     - serializedVersion: 2
       rgba: 4285179704
     - serializedVersion: 2
-      rgba: 4287726136
-    - serializedVersion: 2
       rgba: 4292095860
     - serializedVersion: 2
       rgba: 4293360696
@@ -112,10 +116,6 @@ MonoBehaviour:
       rgba: 4281109816
     - serializedVersion: 2
       rgba: 4290670763
-    - serializedVersion: 2
-      rgba: 4292692694
-    - serializedVersion: 2
-      rgba: 4285396716
     - serializedVersion: 2
       rgba: 4290537327
     - serializedVersion: 2
@@ -325,10 +325,6 @@ MonoBehaviour:
     - serializedVersion: 2
       rgba: 4290882188
     - serializedVersion: 2
-      rgba: 4280915530
-    - serializedVersion: 2
-      rgba: 4283203197
-    - serializedVersion: 2
       rgba: 4288856626
     - serializedVersion: 2
       rgba: 4283527498
@@ -451,6 +447,10 @@ MonoBehaviour:
       rgba: 4282601340
     - serializedVersion: 2
       rgba: 4292527787
+    - serializedVersion: 2
+      rgba: 4283203197
+    - serializedVersion: 2
+      rgba: 4280915530
   - name: Selus
     mapColor: {r: 0.63828987, g: 0.6157885, b: 0.6981132, a: 1}
     provinces:
