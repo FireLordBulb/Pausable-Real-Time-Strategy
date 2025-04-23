@@ -10,6 +10,8 @@ namespace Simulation {
 		public int SegmentIndex {get;}
 		public Vector3 WorldPosition {get; private set;}
 		
+		public ProvinceLink Reverse => Target[Source.ColorKey];
+		
 		protected ProvinceLink(Province source, Province target, int segmentIndex){
 			Source = source;
 			Target = target;
