@@ -67,6 +67,9 @@ namespace Player {
 			if (!isRightClick){
 				return LayerBelow.OnSelectableClicked(clickedSelectable, false);
 			}
+			if (DoBypassDefaultBehaviour(clickedSelectable)){
+				return Selected;
+			}
 			switch(clickedSelectable){
 				case Province province:
 					MoveTo(province);
@@ -77,6 +80,9 @@ namespace Player {
 				default:
 					return null;
 			}
+		}
+		protected virtual bool DoBypassDefaultBehaviour(ISelectable clickedSelectable){
+			return false;
 		}
 		private void MoveTo(Province province){
 			if (Player == null){

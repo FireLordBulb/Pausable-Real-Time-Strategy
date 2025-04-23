@@ -116,6 +116,16 @@ namespace Simulation {
 			}
 			return regiment.MoveTo(province.Land.ArmyLocation);
 		}
+		// TODO: Consolidate below and above into single method.
+		public Military.MoveOrderResult MoveRegimentTo(Military.Regiment regiment, Military.TransportDeck location){
+			if (regiment.Owner != this){
+				return Military.MoveOrderResult.NotOwner;
+			}
+			if (location == null){
+				return Military.MoveOrderResult.InvalidTarget;
+			}
+			return regiment.MoveTo(location);
+		}
 		public bool TryStartConstructingFleet(Military.ShipType type, Military.Harbor location){
 			if (!shipTypes.Contains(type) || location == null || location.Land.Controller != this){
 				return false;

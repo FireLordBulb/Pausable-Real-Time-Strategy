@@ -35,10 +35,13 @@ namespace Simulation.Military {
 		}
 		
 		protected override Location<Regiment> GetLocation(ProvinceLink link){
+			if (link is ShallowsLink shallowsLink){
+				return ((Transport)shallowsLink.Harbor.Units.Single(ship => ship.Owner == Owner && ship is Transport)).Deck;
+			}
 			return link.Target.Land.ArmyLocation;
 		}
 		protected override Vector3 WorldPositionBetweenLocations(){
-			return PathToTarget[PathIndex].WorldPosition;
+			return PathToTarget[PathIndex] is ShallowsLink ? GetLocation(PathToTarget[PathIndex]).WorldPosition : PathToTarget[PathIndex].WorldPosition;
 		}
 		protected override (Location<Regiment>, int) CalculatePathLocation(){
 			ProvinceLink link = PathToTarget[PathIndex];
