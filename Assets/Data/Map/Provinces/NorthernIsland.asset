@@ -32,7 +32,7 @@ MonoBehaviour:
   - color:
       serializedVersion: 2
       rgba: 4290614210
-    terrain: {fileID: 11400000, guid: db49aab6b8124e749b02e9349db891bd, type: 2}
+    terrain: {fileID: 11400000, guid: f29cc320d5217ff499a79b848eb75aac, type: 2}
   - color:
       serializedVersion: 2
       rgba: 4286556501
