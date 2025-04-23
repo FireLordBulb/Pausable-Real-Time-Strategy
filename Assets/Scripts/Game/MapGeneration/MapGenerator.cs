@@ -127,7 +127,7 @@ namespace MapGeneration {
                 }
                 steps++;
             } while ((outlinePixels[^1] != startPosition || outlinePixels.Count <= 1) && steps < MaxOutlineSteps);
-
+            
             // Remove the last pixel if it's a duplicate of the first.
             if (outlinePixels[^1] == outlinePixels[0]){
                 outlinePixels.RemoveAt(outlinePixels.Count-1);
@@ -144,24 +144,11 @@ namespace MapGeneration {
             province.TriPointIndices.AddRange(triPointIndices);
             return province;
         }
-
+        
         private void SyncOutlineSegmentVertices(){
-            int count = 0;
             foreach ((Color32 color, ProvinceGenerator provinceGenerator) in provinceGenerators){
-                count++;
-                if (count != 114){
-                    continue;
-                }
-                if (color.r == 217 && color.g == 148 && color.b == 67){
-                    print(count);
-                }
                 for (int segmentIndex = 0; segmentIndex < provinceGenerator.Neighbors.Count; segmentIndex++){
                     Color32 neighborColor = provinceGenerator.Neighbors[segmentIndex];
-                    // When going through every neighbor of every province, each pair of provinces will be hit twice.
-                    // So skip each pair in one of the cases using an arbitrary but consistent criteria.
-                    if (ColorInt(neighborColor) < ColorInt(color)){
-                        //continue;
-                    }
                     provinceGenerators.TryGetValue(neighborColor, out ProvinceGenerator neighbor);
                     if (neighbor == null){
                         continue;
@@ -169,54 +156,22 @@ namespace MapGeneration {
                     (int startIndex, int endIndex, int length) oldSegment = GetSegment(provinceGenerator, segmentIndex);
                     int neighborSegmentIndex = neighbor.Neighbors.FindIndex(color32 => color32.Equals(color));
                     (int startIndex, int endIndex, int length) newSegment = GetSegment(neighbor, neighborSegmentIndex);
-                    print($"oldSegmentLength: {oldSegment.length}");
-                    print($"newSegmentLength: {newSegment.length}");
-                    print($"oldSegment.startIndex: {oldSegment.startIndex}");
-                    print($"oldSegmentStart: {oldSegment.startIndex}, {provinceGenerator.Vertices[oldSegment.startIndex]}");
-                    print($"oldSegmentEnd: {provinceGenerator.Vertices[oldSegment.endIndex]}");
-                    print($"newSegmentStart: {(newSegment.startIndex < neighbor.Vertices.Count ? neighbor.Vertices[newSegment.startIndex] : new Vector2(-1, -1))}");
-                    print($"newSegmentEnd: {newSegment.endIndex}, {neighbor.Vertices[newSegment.endIndex]}");
-                    //print(neighborColor);
-                    print("before");
-                    for (int i = 0; i < provinceGenerator.Vertices.Count; i++){
-                        Vector2 vector = provinceGenerator.Vertices[i];
-                        print(i+" "+vector);
-                    }
-                    foreach (int index in provinceGenerator.TriPointIndices){
-                        print(index);
-                    }
                     int longerLength = Mathf.Max(oldSegment.length, newSegment.length);
                     for (int i = 0; i < longerLength; i++){
                         int vertexIndex = Mod(oldSegment.startIndex+i, provinceGenerator.Vertices);
-                        Vector2 saved = provinceGenerator.Vertices[vertexIndex];
                         int neighborVertexIndex = Mod(newSegment.endIndex-i, neighbor.Vertices);
                         if (i < oldSegment.length && i < newSegment.length){
                             provinceGenerator.Vertices[vertexIndex] = neighbor.Vertices[neighborVertexIndex];
-                            //print(saved-provinceGenerator.Vertices[vertexIndex]);
                         } else if (i < newSegment.length){
-                            //print("longer! "+oldSegment.startIndex+" "+vertexIndex+" "+provinceGenerator.Vertices);
                             provinceGenerator.Vertices.Insert(vertexIndex, neighbor.Vertices[neighborVertexIndex]);
                         } else {
-                            //print("shorter!");
                             provinceGenerator.Vertices.RemoveAt(vertexIndex);
                         }
                     }
-                    print("after");
-                    for (int i = 0; i < provinceGenerator.Vertices.Count; i++){
-                        Vector2 vector = provinceGenerator.Vertices[i];
-                        print(i+" "+vector);
-                    }
-                    foreach (int index in provinceGenerator.TriPointIndices){
-                        print(index);
-                    }
-                    print("\n\n");
                     if (oldSegment.length != newSegment.length){
                         int change = newSegment.length-oldSegment.length;
                         for (int i = segmentIndex; i < provinceGenerator.TriPointIndices.Count; i++){
                             provinceGenerator.TriPointIndices[i] += change;
-                            /*if (provinceGenerator.TriPointIndices[i] >= provinceGenerator.Vertices.Count){
-                                provinceGenerator.TriPointIndices[i] -= provinceGenerator.Vertices.Count;
-                            }*/
                             while (provinceGenerator.TriPointIndices[i] < 0){
                                 provinceGenerator.Vertices.Insert(0, provinceGenerator.Vertices[^1]);
                                 provinceGenerator.Vertices.RemoveAt(provinceGenerator.Vertices.Count-1);
@@ -230,9 +185,7 @@ namespace MapGeneration {
                     //FixCorner(segmentIndex-1, -1, provinceGenerator, color, neighbor.Vertices[newSegment.endIndex]);
                     //FixCorner(segmentIndex+1, +0, provinceGenerator, color, neighbor.Vertices[newSegment.startIndex]);
                 }
-                if (count > 10){
-                    //break;
-                }
+                provinceGenerator.RemoveDuplicateVertices();
             }
         }
         private void FixCorner(int neighborIndex, int indexOffset, ProvinceGenerator provinceGenerator, Color32 color, Vector2 vertex){
@@ -267,9 +220,6 @@ namespace MapGeneration {
         }
         private static int Mod(int n, int modulus){
             return (n+modulus)%modulus;
-        }
-        private static int ColorInt(Color32 color){
-            return color.r+(color.g << 8)+(color.b << 16)+(color.a << 24);
         }
         
         private void PutSerializedProvinceDataInDictionary(){

@@ -60,6 +60,18 @@ namespace MapGeneration {
 			GenerateVertexList();
 			CleanupVertexList();
 		}
+		public void RemoveDuplicateVertices(){
+			for (int i = Vertices.Count-1; i >= 1; i--){
+				if (Vertices[i] == Vertices[i-1]){
+					Vertices.RemoveAt(i);
+					for (int j = 0; j < TriPointIndices.Count; j++){
+						if (i <= TriPointIndices[j]){
+							TriPointIndices[j]--;
+						}
+					}
+				}
+			}
+		}
 		public void GenerateData(){
 			CalculateBounds();
 			CalculateCenter();
@@ -91,7 +103,6 @@ namespace MapGeneration {
 				
 				previousPixel = currentPixel;
 				currentPixel = nextPixel;
-			}
 			}
 		}
 		private void AddEdgeVertex(Vector2Int pixel, Vector2Int directionFromPrevious, Vector2Int directionToNext){
