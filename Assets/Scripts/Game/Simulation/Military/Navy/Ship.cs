@@ -55,7 +55,7 @@ namespace Simulation.Military {
 			return (GetLocation(link), Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)));
 		}
 		protected override bool LinkEvaluator(ProvinceLink link){
-			return link is SeaLink or CoastLink or ShallowsLink;
+			return link is SeaLink;
 		}
 
 		private void Repair(){
