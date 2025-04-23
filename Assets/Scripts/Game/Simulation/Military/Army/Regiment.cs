@@ -37,6 +37,9 @@ namespace Simulation.Military {
 		protected override Location<Regiment> GetLocation(ProvinceLink link){
 			return link.Target.Land.ArmyLocation;
 		}
+		protected override Vector3 WorldPositionBetweenLocations(){
+			return PathToTarget[PathIndex].WorldPosition;
+		}
 		protected override (Location<Regiment>, int) CalculatePathLocation(){
 			ProvinceLink link = PathToTarget[PathIndex];
 			return (GetLocation(link), GetTravelDays(link));
