@@ -136,6 +136,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8854755774e6f3e4b8ebb01f65ec371b, type: 2}
   shipTypes:
   - {fileID: 11400000, guid: 7060571e4dda1394da16eea7beaf8c95, type: 2}
+  - {fileID: 11400000, guid: 6d87743efaa199d48a40371f0c6469df, type: 2}
   truceData: {fileID: 11400000, guid: 3c90bdb3963f7f5419ec3c2b5a876e21, type: 2}
   borderMeshFilter: {fileID: 4317057714546016801}
   borderMeshRenderer: {fileID: 8783975994422403568}

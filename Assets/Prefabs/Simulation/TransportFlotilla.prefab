@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &2151558187751354673
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1127252714560757654, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: selectable
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1895422388006975492, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: selectable
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2737693871947633417, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: selectable
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4490614254813268668, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: selectable
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6372061799994669380, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      propertyPath: m_Name
+      value: TransportFlotilla
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8767289471516083093, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6372061799994669380, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+      insertIndex: 1
+      addedObject: {fileID: -9133819096690185401}
+  m_SourcePrefab: {fileID: 100100000, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+--- !u!1 &5023135054881359989 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6372061799994669380, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+  m_PrefabInstance: {fileID: 2151558187751354673}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-9133819096690185401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5023135054881359989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cea0f32981d64413909a03fa1c52ed28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 20
+  worldSpaceSpeed: 20
+  worldSpaceMoveDirectionOffset: 1.5
+  worldSpaceMaxOffsetProportion: 0.35
+  maxDamageBoost: 0
+  minRerollDays: 999
+  maxRerollDays: 999
+  doAllowInstantiate: 0
+  monthlyReparationRate: 0.1
+  reparationCostFraction: 0.5
+  orderedRetreatDamageMultiplier: 0
+  sinkingProbability:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.499
+      value: 0.03
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 1
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.5
+      value: 0
+      inSlope: -30.000385
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 69
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  manpowerCapacity: 1000
