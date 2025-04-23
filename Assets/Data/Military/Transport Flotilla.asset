@@ -19,3 +19,4 @@ MonoBehaviour:
   attackPower: 5
   hull: 1000
   size: 1
+  manpowerCapacity: 1000
