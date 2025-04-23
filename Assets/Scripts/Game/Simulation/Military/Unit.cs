@@ -83,8 +83,10 @@ namespace Simulation.Military {
 				if (Vector3.Distance(transform.position, target) < Vector3.kEpsilon){
 					worldPositionsOnPath.Dequeue();
 				}
+				OnWorldPositionChanged();
 			}
 		}
+		protected virtual void OnWorldPositionChanged(){}
 		
 		private void StartBuilding(){
 			BuildDaysLeft = Type.DaysToBuild;

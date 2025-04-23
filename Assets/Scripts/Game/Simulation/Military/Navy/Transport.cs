@@ -10,5 +10,10 @@ namespace Simulation.Military {
 			Deck = new TransportDeck(this);
 			ManpowerCapacity = manpowerCapacity;
 		}
+		protected override void OnWorldPositionChanged(){
+			foreach (Regiment regiment in Deck.Units){
+				regiment.transform.position = transform.position;
+			}
+		}
 	}
 }
