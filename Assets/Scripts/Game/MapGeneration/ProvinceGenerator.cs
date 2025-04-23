@@ -92,12 +92,6 @@ namespace MapGeneration {
 				previousPixel = currentPixel;
 				currentPixel = nextPixel;
 			}
-			// Extremely strange edge case.
-			if (TriPointIndices[0] == 0){
-				TriPointIndices.RemoveAt(0);
-				TriPointIndices.Add(Vertices.Count-1);
-				Neighbors.Add(Neighbors[0]);
-				Neighbors.RemoveAt(0);
 			}
 		}
 		private void AddEdgeVertex(Vector2Int pixel, Vector2Int directionFromPrevious, Vector2Int directionToNext){

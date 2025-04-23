@@ -87,7 +87,7 @@ namespace MapGeneration {
             List<int> triPointIndices = new();
             List<Color32> neighbors = new();
             outlinePixels.Add(startPosition);
-            Vector2Int position = startPosition;
+            Vector2Int position = startPosition-CardinalDirections[0];
             // You're moving right during the full mapImage iteration, so the up direction (with index 0) is a turn to the left.
             int leftTurnIndex = 0;
             Color32? previousNeighborColor = null;
@@ -126,7 +126,7 @@ namespace MapGeneration {
                     break;
                 }
                 steps++;
-            } while (outlinePixels[^1] != startPosition && steps < MaxOutlineSteps);
+            } while ((outlinePixels[^1] != startPosition || outlinePixels.Count <= 1) && steps < MaxOutlineSteps);
 
             // Remove the last pixel if it's a duplicate of the first.
             if (outlinePixels[^1] == outlinePixels[0]){
