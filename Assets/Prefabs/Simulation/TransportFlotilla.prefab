@@ -11,19 +11,19 @@ PrefabInstance:
     - target: {fileID: 1127252714560757654, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
       propertyPath: selectable
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -9133819096690185401}
     - target: {fileID: 1895422388006975492, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
       propertyPath: selectable
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -9133819096690185401}
     - target: {fileID: 2737693871947633417, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
       propertyPath: selectable
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -9133819096690185401}
     - target: {fileID: 4490614254813268668, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
       propertyPath: selectable
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: -9133819096690185401}
     - target: {fileID: 5329449309241042523, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

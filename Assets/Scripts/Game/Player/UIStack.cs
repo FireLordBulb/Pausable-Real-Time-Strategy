@@ -286,7 +286,14 @@ namespace Player {
 				return;
 			}
 			Selected = selectable;
-			activeSelectionWindow = Selected != null ? selectionWindowMap[Selected.GetType()] : null;
+			if (Selected != null){
+				Type type = Selected.GetType();
+				while (type != null && !selectionWindowMap.TryGetValue(type, out activeSelectionWindow)){
+					type = type.BaseType;
+				}
+			} else {
+				activeSelectionWindow = null;
+			}
 		}
 		public void Deselect(ISelectable selectable){
 			if (Selected != selectable){
