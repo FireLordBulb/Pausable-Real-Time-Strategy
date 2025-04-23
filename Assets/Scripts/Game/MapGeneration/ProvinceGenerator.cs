@@ -60,24 +60,6 @@ namespace MapGeneration {
 			GenerateVertexList();
 			CleanupVertexList();
 		}
-		public void RemoveDuplicateVertices(){
-			for (int i = Vertices.Count-1; i >= 1; i--){
-				if (Vertices[i] == Vertices[i-1]){
-					Vertices.RemoveAt(i);
-					for (int j = 0; j < TriPointIndices.Count; j++){
-						if (i <= TriPointIndices[j]){
-							TriPointIndices[j]--;
-						}
-					}
-				}
-			}
-		}
-		public void GenerateData(){
-			CalculateBounds();
-			CalculateCenter();
-			GenerateOutlineMesh();
-			GenerateShapeMesh();
-		}
 		
 		private void GenerateVertexList(){
 			Vector2Int previousPixel = OutlinePixels[^1];
@@ -134,7 +116,6 @@ namespace MapGeneration {
 			CombineAdjacentVertices(Vector2.one, VectorGeometry.DoTurnSameDirection, VectorGeometry.MiddlePoint);
 		}
 		private static bool IsNotRightTurn(Vector2 before, Vector2 _, Vector2 after) => !VectorGeometry.IsRightTurn(before, after);
-
 		private void CombineAdjacentVertices(Vector2 maxDistance, SkipPredicate skipPredicate, PositionCombiner positionCombiner){
 			float maxDistanceSqr = maxDistance.sqrMagnitude+Vector2.kEpsilon;
 			int triPointIndexIndex = TriPointIndices.Count-1;
@@ -172,6 +153,26 @@ namespace MapGeneration {
 		}
 		private delegate bool SkipPredicate(Vector2 before, Vector2 between, Vector2 after);
 		private delegate Vector2 PositionCombiner(Vector2 point, Vector2 otherPoint);
+		
+		public void RemoveDuplicateVertices(){
+			for (int i = Vertices.Count-1; i >= 1; i--){
+				if (Vertices[i] == Vertices[i-1]){
+					Vertices.RemoveAt(i);
+					for (int j = 0; j < TriPointIndices.Count; j++){
+						if (i <= TriPointIndices[j]){
+							TriPointIndices[j]--;
+						}
+					}
+				}
+			}
+		}
+		
+		public void GenerateData(){
+			CalculateBounds();
+			CalculateCenter();
+			GenerateOutlineMesh();
+			GenerateShapeMesh();
+		}
 		
 		private void CalculateBounds(){
 			min = Vector2.positiveInfinity;
