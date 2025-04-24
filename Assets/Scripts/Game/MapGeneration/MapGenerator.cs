@@ -243,7 +243,6 @@ namespace MapGeneration {
                 for (int i = 0; i < neighborColors.Count; i++){
                     province.AddNeighbor(mapGraph[neighborColors[i]], triPointIndices[Mod(i-1, triPointIndices)], triPointIndices[i], ConvertToWorldSpace);
                 }
-                province.CompleteSegmentLoop(ConvertToWorldSpace);
             }
         }
         

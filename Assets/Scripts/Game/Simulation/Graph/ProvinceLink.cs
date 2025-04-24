@@ -3,7 +3,7 @@ using Graphs;
 using UnityEngine;
 
 namespace Simulation {
-	public abstract class ProvinceLink : IDistanceLink<Province, ProvinceLink> {
+	public class ProvinceLink : IDistanceLink<Province, ProvinceLink> {
 		public float Distance {get;}
 		public Province Source {get;}
 		public Province Target {get;}
@@ -13,6 +13,9 @@ namespace Simulation {
 		public ProvinceLink Reverse => Target[Source.ColorKey];
 		
 		internal static ProvinceLink Create(Province source, Province target, int segmentIndex){
+			if (target == null){
+				return new ProvinceLink(source, segmentIndex);
+			}
 			if (source.IsSea){
 				if (target.IsSea){
 					return new SeaLink(source, target, segmentIndex);
@@ -23,6 +26,10 @@ namespace Simulation {
 				return new ShallowsLink(source, target, segmentIndex);
 			}
 			return new LandLink(source, target, segmentIndex);
+		}
+		private ProvinceLink(Province source, int segmentIndex){
+			Source = source;
+			SegmentIndex = segmentIndex;
 		}
 		protected ProvinceLink(Province source, Province target, int segmentIndex){
 			Source = source;

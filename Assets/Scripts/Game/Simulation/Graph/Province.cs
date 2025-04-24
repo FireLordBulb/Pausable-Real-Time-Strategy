@@ -84,23 +84,15 @@ namespace Simulation {
             vertexList.AddRange(vertices);
         }
         public void AddNeighbor(Province neighbor, int startIndex, int endIndex, Func<Vector2, Vector3> worldSpaceConverter){
-            ProvinceLink newLink;
+            if (type == Type.LandLocked && neighbor != null && neighbor.type == Type.Sea){
+                type = Type.Coast;
+            }
+            ProvinceLink newLink = ProvinceLink.Create(this, neighbor, OutlineSegments.Count);
             if (neighbor != null){
-                if (type == Type.LandLocked && neighbor.type == Type.Sea){
-                    type = Type.Coast;
-                }
-                newLink = ProvinceLink.Create(this, neighbor, OutlineSegments.Count);
                 links.Add(neighbor.ColorKey, newLink);
-            } else {
-                newLink = null;
             }
             outlineSegments.Add((startIndex, endIndex, newLink));
-            newLink?.Init(worldSpaceConverter);
-        }
-        public void CompleteSegmentLoop(Func<Vector2, Vector3> worldSpaceConverter){
-            (int _, int endIndex, ProvinceLink link) = OutlineSegments[0];
-            outlineSegments[0] = (OutlineSegments[^1].endIndex, endIndex, link);
-            link?.Init(worldSpaceConverter);
+            newLink.Init(worldSpaceConverter);
         }
         
         private void UpdateColors(){

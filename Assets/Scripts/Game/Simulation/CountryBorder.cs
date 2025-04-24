@@ -46,7 +46,7 @@ namespace Simulation {
 					}
 					break;
 				}
-				if (link == null || link.Target.IsSea || link.Target.Land.Owner != country){
+				if (link.Target == null || link.Target.IsSea || link.Target.Land.Owner != country){
 					continue;
 				}
 				segmentIndex = link.Reverse.SegmentIndex;
