@@ -3,11 +3,11 @@ using UnityEngine;
 namespace Simulation.Military {
 	[CreateAssetMenu(fileName = "ShipType", menuName = "ScriptableObjects/Military/ShipType")]
 	public class ShipType : UnitType<Ship> {
-		[SerializeField] protected int sailors;
+		[SerializeField] private int sailors;
 		[Header("Combat")]
-		[SerializeField] protected float attackPower;
-		[SerializeField] protected int hull;
-		[SerializeField] protected int size;
+		[SerializeField] private float attackPower;
+		[SerializeField] private int hull;
+		[SerializeField] private int size;
 		
 		public override bool CanBeBuiltBy(Country owner){
 			return sailors <= owner.Sailors && goldCost <= owner.Gold;
