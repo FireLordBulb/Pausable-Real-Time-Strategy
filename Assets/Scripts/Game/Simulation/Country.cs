@@ -163,6 +163,9 @@ namespace Simulation {
 		}
 		private void RetreatHome(){
 			foreach (Military.Regiment regiment in regiments){
+				if (regiment.Location is Military.TransportDeck){
+					continue;
+				}
 				Country owner = regiment.Location.Province.Land.Owner;
 				if (owner != this && !GetDiplomaticStatus(owner).IsAtWar){
 					regiment.RetreatHome();

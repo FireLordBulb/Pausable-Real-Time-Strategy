@@ -207,7 +207,10 @@ namespace Simulation.Military {
 			}
 			// If the entire owner country is on a different landmass, retreat to a random bordering province instead.
 			if (shortestPath == null){
-				SetDestination(Location.Province.Links.ElementAt(Random.Range(0, Location.Province.Links.Count())).Target.Land.ArmyLocation);		
+				Land[] borderingLands = Location.Province.Links.Where(link => link is LandLink).Select(link => link.Target.Land).ToArray();
+				if (borderingLands.Length != 0){
+					SetDestination(borderingLands[Random.Range(0, borderingLands.Length)].ArmyLocation);
+				}
 				return;
 			}
 			SetDestination(shortestPath[^1].Target.Land.ArmyLocation);
