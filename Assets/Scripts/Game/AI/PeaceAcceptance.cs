@@ -135,7 +135,7 @@ namespace AI {
 			       AreRegimentsFullyDefeated(decider, other);
 		}
 		private static bool AreRegimentsFullyDefeated(Country decider, Country other){
-			return decider.Regiments.All(regiment => regiment.Province.Land.Owner != other && regiment.Province.Land.Owner != decider);
+			return decider.Regiments.All(regiment => regiment.Province.IsSea || regiment.Province.Land.Owner != other && regiment.Province.Land.Owner != decider);
 		}
 		private static bool IsFullAnnexationDemanded(PeaceTreaty treaty){
 			return treaty.Loser.ProvinceCount == treaty.AnnexedLands.Count(land => land.Owner == treaty.Loser);
