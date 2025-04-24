@@ -6,7 +6,7 @@ namespace Player {
 			if (clickedSelectable is not Transport transport){
 				return false;
 			}
-			if (transport.IsMoving || transport.Owner != Selected.Owner || transport.Location.IsBattleOngoing || transport.Location is not Harbor){
+			if (Player == null || transport.IsMoving || transport.Owner != Selected.Owner || transport.Location.IsBattleOngoing || transport.Location is not Harbor){
 				SetMessage("Cannot move army to that Transport Flotilla!");
 				return true;
 			}

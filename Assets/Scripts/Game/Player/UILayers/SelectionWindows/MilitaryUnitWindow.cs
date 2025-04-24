@@ -68,6 +68,7 @@ namespace Player {
 				return LayerBelow.OnSelectableClicked(clickedSelectable, false);
 			}
 			if (DoBypassDefaultBehaviour(clickedSelectable)){
+				Refresh();
 				return Selected;
 			}
 			switch(clickedSelectable){
