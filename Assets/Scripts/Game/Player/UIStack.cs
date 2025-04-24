@@ -273,7 +273,9 @@ namespace Player {
 				return;
 			}
 			if (mouseDownSelectable == hoveredSelectable){
-				Select(CurrentAction.OnSelectableClicked(mouseDownSelectable, isRightClick));
+				if (CurrentAction != null){
+					Select(CurrentAction.OnSelectableClicked(mouseDownSelectable, isRightClick));
+				}
 			}
 			mouseDownSelectable = null;
 		}
