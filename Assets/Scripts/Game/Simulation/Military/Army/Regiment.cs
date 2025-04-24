@@ -62,8 +62,16 @@ namespace Simulation.Military {
 			return GetTravelDays(link, MovementSpeed);
 		}
 		public static int GetTravelDays(ProvinceLink link, float movementSpeed){
-			float terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
-			return Mathf.CeilToInt(link.Distance/(movementSpeed*terrainSpeedMultiplier));
+			float distance;
+			float terrainSpeedMultiplier;
+			if (link is HarborLink harborLink){
+				distance = Vector3.Distance(harborLink.Land.Province.WorldPosition, harborLink.WorldPosition);
+				terrainSpeedMultiplier = 1+harborLink.Land.Terrain.MoveSpeedModifier;
+			} else {
+				distance = link.Distance;
+				terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
+			}
+			return Mathf.CeilToInt(distance/(movementSpeed*terrainSpeedMultiplier));
 		}
 		protected override bool LinkEvaluator(ProvinceLink link){
 			return LinkEvaluator(link, IsRetreating, Owner);
