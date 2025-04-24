@@ -168,6 +168,19 @@ namespace Simulation {
 					regiment.RetreatHome();
 				}
 			}
+			foreach (Military.Ship ship in ships.ToArray()){
+				if (ship.Location is not Military.Harbor harbor){
+					continue;
+				}
+				Country owner = harbor.Land.Owner;
+				if (owner != this && !GetDiplomaticStatus(owner).IsAtWar){
+					if (ship.IsBuilt){
+						ship.MoveTo(harbor.Sea.NavyLocation);
+					} else {
+						ship.StackWipe();
+					}
+				}
+			}
 		}
 		#endregion
 		
