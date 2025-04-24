@@ -6,18 +6,18 @@ using UnityEngine;
 namespace Simulation {
 	public static class CountryBorder {
 		public static void Generate(MeshData meshData, Country country, HashSet<Province> unsearchedProvinces, float borderHalfWidth){
-			HashSet<List<Province>> borderProvinceLoops = new();
+			HashSet<List<ProvinceLink>> provinceLoops = new();
 			while (unsearchedProvinces.Count > 0){
-				SearchForProvinceLoop(country, unsearchedProvinces, borderProvinceLoops);
+				SearchForProvinceLoop(country, unsearchedProvinces, provinceLoops);
 			}
-			foreach (List<Province> provinceLoop in borderProvinceLoops){
+			foreach (List<ProvinceLink> provinceLoop in provinceLoops){
 				List<Vector2> vertexLoop = ConvertToVertexLoop(provinceLoop);
 				PolygonOutline.GenerateMeshData(meshData, vertexLoop, borderHalfWidth, true);
 			}
 		}
 		
-		// Finds what loop(s) of provinces constitute the outer border of the country.
-		private static void SearchForProvinceLoop(Country country, HashSet<Province> unsearchedProvinces, HashSet<List<Province>> borderProvinceLoops){
+		// Finds what loop(s) of provinceLinks constitute the outer border of the country.
+		private static void SearchForProvinceLoop(Country country, HashSet<Province> unsearchedProvinces, HashSet<List<ProvinceLink>> provinceLoops){
 			Province borderProvince = unsearchedProvinces.First();
 			unsearchedProvinces.Remove(borderProvince);
 			for (int segmentIndex = 0; segmentIndex < borderProvince.OutlineSegments.Count; segmentIndex++){
@@ -25,67 +25,65 @@ namespace Simulation {
 				if (link != null && link.Target.IsLand && link.Target.Land.Owner == country){
 					continue;
 				}
-				AddLoopStartingAt(borderProvince, segmentIndex, country, unsearchedProvinces, borderProvinceLoops);
+				AddLoopStartingAt(link, segmentIndex, country, unsearchedProvinces, provinceLoops);
 				break;
 			}
 		}
-		private static void AddLoopStartingAt(Province borderProvince, int segmentIndex, Country country, HashSet<Province> unsearchedProvinces, HashSet<List<Province>> borderProvinceLoops){
-			List<Province> provinceLoop = new(){borderProvince};
-			ProvinceLink firstLink = null;
+		private static void AddLoopStartingAt(ProvinceLink firstLink, int segmentIndex, Country country, HashSet<Province> unsearchedProvinces, HashSet<List<ProvinceLink>> provinceLoops){
+			List<ProvinceLink> provinceLoop = new();
+			Province borderProvince = firstLink.Source;
 			while (true){
 				segmentIndex = (segmentIndex+1)%borderProvince.OutlineSegments.Count;
 				(_, _, ProvinceLink link) = borderProvince.OutlineSegments[segmentIndex];
 				if (link == firstLink){
-					if (provinceLoop.Count > 1){
-						// Remove the last province because it's a duplicate of loopStartProvince.
-						provinceLoop.RemoveAt(provinceLoop.Count-1);
+					if (provinceLoop.Count == 0){
+						provinceLoop.Add(firstLink);
 					}
 					break;
 				}
-				firstLink ??= link;
 				if (link == null || link.Target.IsSea || link.Target.Land.Owner != country){
 					continue;
 				}
 				segmentIndex = link.Reverse.SegmentIndex;
 				borderProvince = link.Target;
 				unsearchedProvinces.Remove(borderProvince);
-				provinceLoop.Add(borderProvince);
+				provinceLoop.Add(link);
 			}
-			borderProvinceLoops.Add(provinceLoop);
+			provinceLoops.Add(provinceLoop);
 		}
 
-		// Converts loops of provinces to loops of vertex positions.
-		private static List<Vector2> ConvertToVertexLoop(List<Province> provinceLoop){
+		// Converts loops of provinceLinks to loops of vertex positions.
+		private static List<Vector2> ConvertToVertexLoop(List<ProvinceLink> provinceLoop){
 			List<Vector2> vertexLoop;
+			Debug.Log(provinceLoop.Count);
 			if (provinceLoop.Count == 1){
-				vertexLoop = new List<Vector2>(provinceLoop[0].Vertices);
+				Province onlyProvince = provinceLoop[0].Source;
+				vertexLoop = new List<Vector2>(onlyProvince.Vertices);
 				for (int i = 0; i < vertexLoop.Count; i++){
-					vertexLoop[i] += provinceLoop[0].MapPosition;
+					vertexLoop[i] += onlyProvince.MapPosition;
 				}
 				return vertexLoop;
 			}
 			vertexLoop = new List<Vector2>();
-			Province previousProvince = provinceLoop[^1];
-			Province currentProvince = provinceLoop[0];
-			for (int provinceIndex = 0; provinceIndex < provinceLoop.Count; provinceIndex++){
-				Province nextProvince = provinceLoop[(provinceIndex+1)%provinceLoop.Count];
-				int segmentIndex = (currentProvince[previousProvince.ColorKey].SegmentIndex+1)%currentProvince.OutlineSegments.Count;
-				AddVerticesFromProvince(currentProvince, segmentIndex, nextProvince, vertexLoop);
-				previousProvince = currentProvince;
-				currentProvince = nextProvince;
+			ProvinceLink linkFromPrevious = provinceLoop[^1];
+			foreach (ProvinceLink linkToNext in provinceLoop){
+				AddVerticesFromProvince(linkFromPrevious, linkToNext, vertexLoop);
+				linkFromPrevious = linkToNext;
 			}
 			return vertexLoop;
 		}
-		private static void AddVerticesFromProvince(Province currentProvince, int segmentIndex, Province nextProvince, List<Vector2> vertexLoop){
+		private static void AddVerticesFromProvince(ProvinceLink linkFromPrevious, ProvinceLink linkToNext, List<Vector2> vertexLoop){
+			Province currentProvince = linkFromPrevious.Target;
+			int segmentIndex = linkFromPrevious.Reverse.SegmentIndex;
 			while (true){
+				segmentIndex = (segmentIndex+1)%currentProvince.OutlineSegments.Count;
 				(int vertexIndex, int endIndex, ProvinceLink link) = currentProvince.OutlineSegments[segmentIndex];
-				if (link != null && link.Target == nextProvince){
+				if (link == linkToNext){
 					break;
 				}
 				for (; vertexIndex != endIndex; vertexIndex = (vertexIndex+1)%currentProvince.Vertices.Count){
 					vertexLoop.Add(currentProvince.MapPosition+currentProvince.Vertices[vertexIndex]);
 				}
-				segmentIndex = (segmentIndex+1)%currentProvince.OutlineSegments.Count;
 			}
 		}
 	}
