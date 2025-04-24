@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Simulation.Military {
 	public class Transport : Ship {
 		public TransportDeck Deck {get; private set;}
@@ -17,6 +19,10 @@ namespace Simulation.Military {
 			foreach (Regiment regiment in Deck.Units){
 				regiment.transform.position = transform.position;
 			}
+		}
+		
+		internal bool CanRegimentBoard(Regiment regiment){
+			return !Location.IsBattleOngoing && regiment.CurrentManpower <= ManpowerCapacity-Deck.Units.Sum(unit => unit.CurrentManpower);
 		}
 	}
 }

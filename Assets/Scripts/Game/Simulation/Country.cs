@@ -104,25 +104,18 @@ namespace Simulation {
 			regiments.Add(newRegiment);
 			return true;
 		}
-		public Military.MoveOrderResult MoveRegimentTo(Military.Regiment regiment, Province province){
-			if (regiment.Owner != this){
-				return Military.MoveOrderResult.NotOwner;
-			}
-			if (province == null || province.IsSea){
-				return Military.MoveOrderResult.InvalidTarget;
-			}
-			if (province.Land.Owner != this && !GetDiplomaticStatus(province.Land.Owner).IsAtWar){
-				return Military.MoveOrderResult.NoAccess;
-			}
-			return regiment.MoveTo(province.Land.ArmyLocation);
-		}
-		// TODO: Consolidate below and above into single method.
-		public Military.MoveOrderResult MoveRegimentTo(Military.Regiment regiment, Military.TransportDeck location){
+		public Military.MoveOrderResult MoveRegimentTo(Military.Regiment regiment, Military.Location<Military.Regiment> location){
 			if (regiment.Owner != this){
 				return Military.MoveOrderResult.NotOwner;
 			}
 			if (location == null){
 				return Military.MoveOrderResult.InvalidTarget;
+			}
+			if (location.Province.IsLand && location.Province.Land.Owner != this && !GetDiplomaticStatus(location.Province.Land.Owner).IsAtWar){
+				return Military.MoveOrderResult.NoAccess;
+			}
+			if (location is Military.TransportDeck deck && deck.Transport.Owner != this){
+				return Military.MoveOrderResult.NotDestinationOwner;
 			}
 			return regiment.MoveTo(location);
 		}

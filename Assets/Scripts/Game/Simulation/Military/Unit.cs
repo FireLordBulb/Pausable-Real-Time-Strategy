@@ -113,6 +113,9 @@ namespace Simulation.Military {
 			if (0 < DaysToNextLocation){
 				return;
 			}
+			if (!TryValidateNextLocation()){
+				return;
+			}
 			Location.Remove(self);
 			worldPositionsOnPath.Enqueue(WorldPositionBetweenLocations());
 			Location = NextLocation;
@@ -182,7 +185,10 @@ namespace Simulation.Military {
 		}
 		private void NextPathLocation(){
 			PathIndex++;
-			(NextLocation, DaysToNextLocation) = CalculatePathLocation();
+			if (!TryValidateNextLocation()){
+				return;
+			}
+			DaysToNextLocation = CalculateTravelDays();
 
 			Vector3 nextWorldPosition = WorldPositionBetweenLocations(); 
 			float worldSpaceDistance = Vector3.Distance(Location.WorldPosition, nextWorldPosition);
@@ -190,8 +196,16 @@ namespace Simulation.Military {
 			Vector3 offsetPosition = Vector3.MoveTowards(Location.WorldPosition, nextWorldPosition, offset);
 			worldPositionsOnPath.Enqueue(offsetPosition);
 		}
+		private bool TryValidateNextLocation(){
+			NextLocation = GetLocation(PathToTarget[PathIndex]);
+			if (NextLocation != null){
+				return true;
+			}
+			StopMoving();
+			return false;
+		}
 		protected abstract Vector3 WorldPositionBetweenLocations();
-		protected abstract (Location<TUnit>, int) CalculatePathLocation();
+		protected abstract int CalculateTravelDays();
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
 		protected abstract bool LinkEvaluator(ProvinceLink link);
 		

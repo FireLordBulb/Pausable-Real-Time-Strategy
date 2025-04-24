@@ -67,6 +67,9 @@ namespace Player {
 			if (!isRightClick){
 				return LayerBelow.OnSelectableClicked(clickedSelectable, false);
 			}
+			if (Player == null){
+				return Selected;
+			}
 			if (DoBypassDefaultBehaviour(clickedSelectable)){
 				Refresh();
 				return Selected;
@@ -86,9 +89,6 @@ namespace Player {
 			return false;
 		}
 		private void MoveTo(Province province){
-			if (Player == null){
-				return;
-			}
 			OrderMove(province);
 			Refresh();
 		}

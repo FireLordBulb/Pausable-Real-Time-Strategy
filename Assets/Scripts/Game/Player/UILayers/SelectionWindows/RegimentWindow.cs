@@ -6,10 +6,6 @@ namespace Player {
 			if (clickedSelectable is not Transport transport){
 				return false;
 			}
-			if (Player == null || transport.IsMoving || transport.Owner != Selected.Owner || transport.Location.IsBattleOngoing || transport.Location is not Harbor){
-				SetMessage("Cannot move army to that Transport Flotilla!");
-				return true;
-			}
 			TransportDeck deck = transport.Deck;
 			MoveOrderResult result = Player.MoveRegimentTo(Selected, deck);
 			SetMessageFromResult(result, deck.Name);
@@ -24,14 +20,15 @@ namespace Player {
 			return true;
 		}
 		protected override void OrderMove(Province province){
-			MoveOrderResult result = Player.MoveRegimentTo(Selected, province);
+			Location<Regiment> location = province.IsLand ? province.Land.ArmyLocation : null;
+			MoveOrderResult result = Player.MoveRegimentTo(Selected, location);
 			SetMessageFromResult(result, province.Name);
 			if (!UI.IsShiftHeld){
 				return;
 			}
 			foreach (Regiment regiment in Selected.Location.Units){
 				if (regiment != Selected && regiment.Owner == Player){
-					Player.MoveRegimentTo(regiment, province);
+					Player.MoveRegimentTo(regiment, location);
 				}
 			}
 		}

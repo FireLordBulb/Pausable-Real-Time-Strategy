@@ -45,14 +45,14 @@ namespace Simulation.Military {
 		protected override Vector3 WorldPositionBetweenLocations(){
 			return PathToTarget[PathIndex] is ShallowsLink ? NextLocation.WorldPosition : PathToTarget[PathIndex].WorldPosition;
 		}
-		protected override (Location<Ship>, int) CalculatePathLocation(){
+		protected override int CalculateTravelDays(){
 			ProvinceLink link = PathToTarget[PathIndex];
 			float terrainSpeedMultiplier = 1 + link switch {
 				CoastLink coastLink => coastLink.Sea.Province.Terrain.MoveSpeedModifier,
 				ShallowsLink shallowsLink => shallowsLink.Sea.Province.Terrain.MoveSpeedModifier,
 				_ => 0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier)
 			};
-			return (GetLocation(link), Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)));
+			return Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier));
 		}
 		protected override bool LinkEvaluator(ProvinceLink link){
 			return link is SeaLink;

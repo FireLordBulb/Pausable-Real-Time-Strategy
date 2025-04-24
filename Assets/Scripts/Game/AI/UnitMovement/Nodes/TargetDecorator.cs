@@ -15,7 +15,7 @@ namespace AI.Nodes {
 			if (IsTargetValid(targetProvince)){
 				CurrentState = base.OnUpdate();
 			} else {
-				Brain.Controller.Country.MoveRegimentTo(Brain.Unit, Brain.Unit.Province);
+				Brain.Controller.Country.MoveRegimentTo(Brain.Unit, Brain.Unit.Location);
 				CurrentState = State.Failure;
 			}
 			return CurrentState;

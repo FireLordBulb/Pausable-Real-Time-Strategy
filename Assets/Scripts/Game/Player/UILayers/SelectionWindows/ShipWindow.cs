@@ -11,7 +11,7 @@ namespace Player {
 			} else {
 				location = null;
 			}
-			MoveOrderResult result = location == null ? MoveOrderResult.InvalidTarget : Player.MoveFleetTo(Selected, location);
+			MoveOrderResult result = Player.MoveFleetTo(Selected, location);
 			SetMessage(result switch {
 				MoveOrderResult.BusyRetreating => "Cannot interrupt retreat movement!",
 				MoveOrderResult.NotBuilt => "Cannot move a navy before it has finished constructing!",
@@ -21,7 +21,7 @@ namespace Player {
 				MoveOrderResult.NotOwner => "You cannot move another country's units!",
 				_ => ""
 			});
-			if (!UI.IsShiftHeld || location == null){
+			if (!UI.IsShiftHeld){
 				return;
 			}
 			foreach (Ship ship in Selected.Location.Units){

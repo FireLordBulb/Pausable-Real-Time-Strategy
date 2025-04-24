@@ -7,6 +7,7 @@ namespace Simulation.Military {
 		NoPath,
 		NoAccess,
 		InvalidTarget,
-		NotOwner
+		NotOwner,
+		NotDestinationOwner
 	}
 }

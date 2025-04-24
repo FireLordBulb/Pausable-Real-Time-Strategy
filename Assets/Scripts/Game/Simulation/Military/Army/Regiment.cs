@@ -36,16 +36,27 @@ namespace Simulation.Military {
 		
 		protected override Location<Regiment> GetLocation(ProvinceLink link){
 			if (link is ShallowsLink shallowsLink){
-				return ((Transport)shallowsLink.Harbor.Units.Single(ship => ship.Owner == Owner && ship is Transport)).Deck;
+				if (!IsLocationInHarbor(TargetLocation, shallowsLink.Harbor)){
+					return null;
+				}
+				TransportDeck deck = (TransportDeck)TargetLocation;
+				return deck.Transport.CanRegimentBoard(this) ? deck : null;
+			}
+			if (link is CoastLink coastLink){
+				if (!IsLocationInHarbor(Location, coastLink.Harbor)){
+					return null;
+				}
 			}
 			return link.Target.Land.ArmyLocation;
+		}
+		private static bool IsLocationInHarbor(Location<Regiment> location, Harbor harbor){
+			return location is TransportDeck deck && !deck.Transport.IsMoving && deck.Transport.Location == harbor;
 		}
 		protected override Vector3 WorldPositionBetweenLocations(){
 			return PathToTarget[PathIndex] is ShallowsLink ? GetLocation(PathToTarget[PathIndex]).WorldPosition : PathToTarget[PathIndex].WorldPosition;
 		}
-		protected override (Location<Regiment>, int) CalculatePathLocation(){
-			ProvinceLink link = PathToTarget[PathIndex];
-			return (GetLocation(link), GetTravelDays(link));
+		protected override int CalculateTravelDays(){
+			return GetTravelDays(PathToTarget[PathIndex]);
 		}
 		private int GetTravelDays(ProvinceLink link){
 			return GetTravelDays(link, MovementSpeed);

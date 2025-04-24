@@ -9,7 +9,7 @@ namespace AI.Nodes {
 		protected override void OnStart(){
 			base.OnStart();
 			targetProvince = Tree.Blackboard.GetValue<Province>(Brain.Target, null);
-			MoveOrderResult result = Brain.Controller.Country.MoveRegimentTo(Brain.Unit, targetProvince);
+			MoveOrderResult result = targetProvince == null ? MoveOrderResult.InvalidTarget : Brain.Controller.Country.MoveRegimentTo(Brain.Unit, targetProvince.Land.ArmyLocation);
 			CurrentState = result == MoveOrderResult.Success ? State.Running : State.Failure;
 		}
 		protected override State OnUpdate(){
