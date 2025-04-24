@@ -11,6 +11,7 @@ namespace Simulation {
 		public Province Target {get;}
 		public int StartIndex {get;}
 		public int EndIndex {get;}
+		public Vector2 MapPosition {get; private set;}
 		public Vector3 WorldPosition {get; private set;}
 		
 		public ProvinceLink Reverse => Target[Source.ColorKey];
@@ -34,7 +35,7 @@ namespace Simulation {
 		}
 		protected ProvinceLink(Province source, Province target, int startIndex, int endIndex, Func<Vector2, Vector3> worldSpaceConverter) : this(source, startIndex, endIndex, worldSpaceConverter){
 			Target = target;
-			Distance = Vector2.Distance(source.MapPosition, target.MapPosition);
+			Distance = Vector2.Distance(source.MapPosition, MapPosition)+Vector2.Distance(MapPosition, target.MapPosition);
 		}
 		private ProvinceLink(Province source, int startIndex, int endIndex, Func<Vector2, Vector3> worldSpaceConverter){
 			segmentIndex = source.LinkList.Count;
@@ -61,8 +62,8 @@ namespace Simulation {
 				if (lengthUntilCenter > lineLength){
 					lengthUntilCenter -= lineLength;
 				} else {
-					Vector2 mapPosition = Source.MapPosition+Vector2.MoveTowards(startVertex, endVertex, lengthUntilCenter);
-					WorldPosition = worldSpaceConverter(mapPosition);
+					MapPosition = Source.MapPosition+Vector2.MoveTowards(startVertex, endVertex, lengthUntilCenter);
+					WorldPosition = worldSpaceConverter(MapPosition);
 					break;
 				}
 			}

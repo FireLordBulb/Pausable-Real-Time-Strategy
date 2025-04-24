@@ -52,7 +52,7 @@ namespace Simulation.Military {
 				ShallowsLink shallowsLink => shallowsLink.Sea.Province.Terrain.MoveSpeedModifier,
 				_ => 0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier)
 			};
-			return Mathf.CeilToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier));
+			return Mathf.Max(Mathf.RoundToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)), 1);
 		}
 		protected override bool LinkEvaluator(ProvinceLink link){
 			return link is SeaLink;

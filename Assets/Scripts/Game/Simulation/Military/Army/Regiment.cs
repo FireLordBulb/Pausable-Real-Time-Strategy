@@ -71,7 +71,7 @@ namespace Simulation.Military {
 				distance = link.Distance;
 				terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
 			}
-			return Mathf.CeilToInt(distance/(movementSpeed*terrainSpeedMultiplier));
+			return Mathf.Max(Mathf.RoundToInt(distance/(movementSpeed*terrainSpeedMultiplier)), 1);
 		}
 		protected override bool LinkEvaluator(ProvinceLink link){
 			return LinkEvaluator(link, IsRetreating, Owner);
