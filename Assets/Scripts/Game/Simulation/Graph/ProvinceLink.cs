@@ -12,6 +12,18 @@ namespace Simulation {
 		
 		public ProvinceLink Reverse => Target[Source.ColorKey];
 		
+		internal static ProvinceLink Create(Province source, Province target, int segmentIndex){
+			if (source.IsSea){
+				if (target.IsSea){
+					return new SeaLink(source, target, segmentIndex);
+				}
+				return new CoastLink(source, target, segmentIndex);
+			}
+			if (target.IsSea){
+				return new ShallowsLink(source, target, segmentIndex);
+			}
+			return new LandLink(source, target, segmentIndex);
+		}
 		protected ProvinceLink(Province source, Province target, int segmentIndex){
 			Source = source;
 			Target = target;

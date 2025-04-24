@@ -4,6 +4,6 @@ namespace Simulation {
 		public Land Land => Source.Land;
 		public Sea Sea => Target.Sea;
 		public Military.Harbor Harbor => ((CoastLink)Reverse).Harbor;
-		public ShallowsLink(Province source, Province target, int segmentIndex) : base(source, target, segmentIndex){}
+		internal ShallowsLink(Province source, Province target, int segmentIndex) : base(source, target, segmentIndex){}
 	}
 }

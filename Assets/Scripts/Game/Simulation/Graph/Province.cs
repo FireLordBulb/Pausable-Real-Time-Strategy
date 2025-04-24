@@ -83,35 +83,19 @@ namespace Simulation {
             shapeMeshFilter.sharedMesh = shapeMesh;
             vertexList.AddRange(vertices);
         }
-        public void AddNeighbor(Province neighbor, int triPointIndex, Func<Vector2, Vector3> worldSpaceConverter){
+        public void AddNeighbor(Province neighbor, int startIndex, int endIndex, Func<Vector2, Vector3> worldSpaceConverter){
             ProvinceLink newLink;
             if (neighbor != null){
                 if (type == Type.LandLocked && neighbor.type == Type.Sea){
                     type = Type.Coast;
                 }
-                if (type == Type.Sea){
-                    if (neighbor.type == Type.Sea){
-                        newLink = new SeaLink(this, neighbor, OutlineSegments.Count);
-                    } else {
-                        newLink = new CoastLink(this, neighbor, OutlineSegments.Count);
-                    }
-                } else {
-                    if (neighbor.type == Type.Sea){
-                        newLink = new ShallowsLink(this, neighbor, OutlineSegments.Count);
-                    } else {
-                        newLink = new LandLink(this, neighbor, OutlineSegments.Count);
-                    }
-                }
+                newLink = ProvinceLink.Create(this, neighbor, OutlineSegments.Count);
                 links.Add(neighbor.ColorKey, newLink);
             } else {
                 newLink = null;
             }
-            if (OutlineSegments.Count == 0){
-                outlineSegments.Add((-1, triPointIndex, newLink));
-            } else {
-                outlineSegments.Add((OutlineSegments[^1].endIndex, triPointIndex, newLink));
-                newLink?.Init(worldSpaceConverter);
-            }
+            outlineSegments.Add((startIndex, endIndex, newLink));
+            newLink?.Init(worldSpaceConverter);
         }
         public void CompleteSegmentLoop(Func<Vector2, Vector3> worldSpaceConverter){
             (int _, int endIndex, ProvinceLink link) = OutlineSegments[0];
