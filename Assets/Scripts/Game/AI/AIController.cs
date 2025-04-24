@@ -93,6 +93,7 @@ namespace AI {
 			if (!enabled){
 				return;
 			}
+			CalculateBorderProvinces();
 			foreach (WarEnemy warEnemy in warEnemies){
 				CalculateClosestProvinces(warEnemy);
 			}
@@ -168,10 +169,19 @@ namespace AI {
 			foreach (Land province in Country.Provinces){
 				bool isBorderProvince = false;
 				foreach (ProvinceLink link in province.Province.Links){
-					if (link.Target.IsSea || link.Target.Land.Owner == Country){
+					if (link is not LandLink landLink){
+						// Countries that are a single sea tile away count as bordering.
+						foreach (ProvinceLink seaLink in link.Target.Links){
+							if (seaLink is CoastLink coastLink && coastLink.Land.Owner != Country){
+								borderingCountries.Add(coastLink.Land.Owner);
+							}
+						}
 						continue;
 					}
-					borderingCountries.Add(link.Target.Land.Owner);
+					if (landLink.TargetLand.Owner == Country){
+						continue;
+					}
+					borderingCountries.Add(landLink.TargetLand.Owner);
 					if (isBorderProvince){
 						continue;
 					}
