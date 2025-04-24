@@ -12,9 +12,9 @@ namespace Simulation {
         [SerializeField] private MeshRenderer shapeMeshRenderer;
         
         private MeshCollider meshCollider;
-        private readonly Dictionary<Color32, ProvinceLink> links = new();
+        private readonly Dictionary<Color32, ProvinceLink> linkMap = new();
+        private readonly List<ProvinceLink> linkList = new();
         private readonly List<Vector2> vertexList = new();
-        private readonly List<(int startIndex, int endIndex, ProvinceLink link)> outlineSegments = new();
         private Type type;
         private Color baseColor;
         private Color hoverColor;
@@ -48,10 +48,10 @@ namespace Simulation {
         public bool IsCoast => type == Type.Coast;
         public bool IsLand => type is Type.LandLocked or Type.Coast;
         
-        public IEnumerable<ProvinceLink> Links => links.Values;
-        public ProvinceLink this[Color32 color] => links[color];
+        public ProvinceLink this[Color32 color] => linkMap[color];
+        public IEnumerable<ProvinceLink> Links => linkMap.Values;
         public IReadOnlyList<Vector2> Vertices => vertexList;
-        public IReadOnlyList<(int startIndex, int endIndex, ProvinceLink link)> OutlineSegments => outlineSegments;
+        internal IReadOnlyList<ProvinceLink> LinkList => linkList;
         private Color SolidMaterialColor {
             set => shapeMeshRenderer.sharedMaterials[1].color = value;
         }
@@ -87,12 +87,11 @@ namespace Simulation {
             if (type == Type.LandLocked && neighbor != null && neighbor.type == Type.Sea){
                 type = Type.Coast;
             }
-            ProvinceLink newLink = ProvinceLink.Create(this, neighbor, OutlineSegments.Count);
+            ProvinceLink newLink = ProvinceLink.Create(this, neighbor, startIndex, endIndex, worldSpaceConverter);
+            linkList.Add(newLink);
             if (neighbor != null){
-                links.Add(neighbor.ColorKey, newLink);
+                linkMap.Add(neighbor.ColorKey, newLink);
             }
-            outlineSegments.Add((startIndex, endIndex, newLink));
-            newLink.Init(worldSpaceConverter);
         }
         
         private void UpdateColors(){

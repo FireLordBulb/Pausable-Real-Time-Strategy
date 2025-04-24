@@ -23,36 +23,32 @@ namespace Simulation {
 		private static void SearchForProvinceLoop(Country country, HashSet<Province> unsearchedProvinces, HashSet<List<ProvinceLink>> provinceLoops, HashSet<Province> unconnectedProvinces){
 			Province borderProvince = unsearchedProvinces.First();
 			unsearchedProvinces.Remove(borderProvince);
-			for (int segmentIndex = 0; segmentIndex < borderProvince.OutlineSegments.Count; segmentIndex++){
-				(int _, int _, ProvinceLink link) = borderProvince.OutlineSegments[segmentIndex];
+			foreach (ProvinceLink link in borderProvince.Links){
 				if (link != null && link.Target.IsLand && link.Target.Land.Owner == country){
 					continue;
 				}
-				AddLoopStartingAt(link, segmentIndex, country, unsearchedProvinces, provinceLoops, unconnectedProvinces);
+				AddLoopStartingAt(link, country, unsearchedProvinces, provinceLoops, unconnectedProvinces);
 				break;
 			}
 		}
-		private static void AddLoopStartingAt(ProvinceLink firstLink, int segmentIndex, Country country, HashSet<Province> unsearchedProvinces, HashSet<List<ProvinceLink>> provinceLoops, HashSet<Province> unconnectedProvinces){
+		private static void AddLoopStartingAt(ProvinceLink firstLink, Country country, HashSet<Province> unsearchedProvinces, HashSet<List<ProvinceLink>> provinceLoops, HashSet<Province> unconnectedProvinces){
 			List<ProvinceLink> provinceLoop = new();
 			Province borderProvince = firstLink.Source;
-			while (true){
-				segmentIndex = (segmentIndex+1)%borderProvince.OutlineSegments.Count;
-				(_, _, ProvinceLink link) = borderProvince.OutlineSegments[segmentIndex];
-				if (link == firstLink){
-					if (provinceLoop.Count == 0){
-						unconnectedProvinces.Add(borderProvince);
-					} else {
-						provinceLoops.Add(provinceLoop);
-					}
-					break;
-				}
+			ProvinceLink link = firstLink.Next;
+			while (link != firstLink){
 				if (link.Target == null || link.Target.IsSea || link.Target.Land.Owner != country){
+					link = link.Next;
 					continue;
 				}
-				segmentIndex = link.Reverse.SegmentIndex;
-				borderProvince = link.Target;
 				unsearchedProvinces.Remove(borderProvince);
 				provinceLoop.Add(link);
+				borderProvince = link.Target;
+				link = link.Reverse.Next;
+			}
+			if (provinceLoop.Count == 0){
+				unconnectedProvinces.Add(borderProvince);
+			} else {
+				provinceLoops.Add(provinceLoop);
 			}
 		}
 
@@ -74,17 +70,11 @@ namespace Simulation {
 			return vertexLoop;
 		}
 		private static void AddVerticesFromProvince(ProvinceLink linkFromPrevious, ProvinceLink linkToNext, List<Vector2> vertexLoop){
-			Province currentProvince = linkFromPrevious.Target;
-			int segmentIndex = linkFromPrevious.Reverse.SegmentIndex;
-			while (true){
-				segmentIndex = (segmentIndex+1)%currentProvince.OutlineSegments.Count;
-				(int vertexIndex, int endIndex, ProvinceLink link) = currentProvince.OutlineSegments[segmentIndex];
-				if (link == linkToNext){
-					break;
-				}
-				for (; vertexIndex != endIndex; vertexIndex = (vertexIndex+1)%currentProvince.Vertices.Count){
-					vertexLoop.Add(currentProvince.MapPosition+currentProvince.Vertices[vertexIndex]);
-				}
+			IReadOnlyList<Vector2> vertices = linkFromPrevious.Target.Vertices;
+			Vector2 mapPosition = linkFromPrevious.Target.MapPosition;
+			int endIndex = linkToNext.StartIndex;
+			for (int vertexIndex = linkFromPrevious.Reverse.EndIndex; vertexIndex != endIndex; vertexIndex = (vertexIndex+1)%vertices.Count){
+				vertexLoop.Add(mapPosition+vertices[vertexIndex]);
 			}
 		}
 	}
