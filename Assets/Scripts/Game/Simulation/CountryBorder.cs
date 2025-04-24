@@ -46,7 +46,7 @@ namespace Simulation {
 				if (link == null || link.Target.IsSea || link.Target.Land.Owner != country){
 					continue;
 				}
-				segmentIndex = link.Target[borderProvince.ColorKey].SegmentIndex;
+				segmentIndex = link.Reverse.SegmentIndex;
 				borderProvince = link.Target;
 				unsearchedProvinces.Remove(borderProvince);
 				provinceLoop.Add(borderProvince);
