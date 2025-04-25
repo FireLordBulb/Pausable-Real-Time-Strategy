@@ -99,6 +99,10 @@ namespace Simulation.Military {
 			}
 		}
 		private void FinishBuilding(){
+			// Something is wrong with the listeners causing this to be called multiple times, guard clause used as a dirty fix.
+			if (IsBuilt){
+				return;
+			}
 			IsBuilt = true;
 			Province.Calendar.OnDayTick.RemoveListener(TickBuild);
 			OnFinishBuilding();
