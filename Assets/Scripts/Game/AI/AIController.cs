@@ -288,7 +288,7 @@ namespace AI {
 					if (borderProvinces.Count > 0){
 						brain.Tree.Blackboard.SetValue(brain.Target, borderProvinces[i%borderProvinces.Count].Province);
 					}
-				} else {
+				} else if (regiment.Location is not TransportDeck || IsNoLongerAtWar(brain)){
 					WarEnemy enemy = warEnemies[i*warEnemies.Count/Country.Regiments.Count];
 					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
 				}
@@ -306,11 +306,16 @@ namespace AI {
 					if (harbors.Count > 0){
 						brain.Tree.Blackboard.SetValue(brain.Target, harbors[i%harbors.Count]);
 					}
-				} else {
+					// Transports with armies are locked to keeping that enemy when the war still rages.
+				} else if (ship is not Transport transport || transport.Deck.Units.Count == 0 || IsNoLongerAtWar(brain)){
 					WarEnemy enemy = overseasWarEnemies[i*overseasWarEnemies.Count/Country.Ships.Count];
 					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
 				}
 			}
+		}
+		private bool IsNoLongerAtWar<TUnit>(MilitaryUnitBrain<TUnit> brain) where TUnit : Unit<TUnit>{
+			WarEnemy enemy = brain.Tree.Blackboard.GetValue<WarEnemy>(brain.EnemyCountry, null);
+			return enemy == null || !enemy.Country.GetDiplomaticStatus(Country).IsAtWar;
 		}
 		
 		public int EvaluatePeaceOffer(PeaceTreaty treaty){
