@@ -21,17 +21,19 @@ namespace AI {
 		private readonly Queue<(Task task, bool isAdded)> monthlyTaskChanges = new();
 		
 		private readonly List<WarEnemy> warEnemies = new();
+		private readonly List<WarEnemy> overseasWarEnemies = new();
 		private readonly List<Land> borderProvinces = new();
 		private readonly HashSet<Country> borderingCountries = new();
 		
-		public IReadOnlyList<WarEnemy> WarEnemies => warEnemies;
+		internal IReadOnlyList<WarEnemy> WarEnemies => warEnemies;
 		public IEnumerable<Country> BorderingCountries => borderingCountries;
 		
 		public Country Country {get; private set;}
+		public bool HasCoast {get; private set;}
 		
 		public void Init(){
 			Country = GetComponent<Country>();
-			Country.RegimentBuiltAddListener(_ => RegroupRegiments());
+			Country.RegimentBuiltAddListener(_ => RegroupUnits());
 			calendar = Country.Map.Calendar;
 			enabled = true;
 			CalculateBorderProvinces();
@@ -94,6 +96,7 @@ namespace AI {
 				return;
 			}
 			CalculateBorderProvinces();
+			overseasWarEnemies.Clear();
 			foreach (WarEnemy warEnemy in warEnemies){
 				CalculateClosestProvinces(warEnemy);
 			}
@@ -151,6 +154,7 @@ namespace AI {
 		}
 		public void OnWarEnd(AIController other){
 			warEnemies.RemoveAll(enemy => enemy.Country == other.Country);
+			overseasWarEnemies.RemoveAll(enemy => enemy.Country == other.Country);
 			Task peaceNegotiations = allTasks.Find(task => task is MakePeace peaceNegotiations && peaceNegotiations.PeaceTargetAI == other);
 			monthlyTaskChanges.Enqueue((peaceNegotiations, false));
 			if (!Country.enabled){
@@ -166,8 +170,10 @@ namespace AI {
 		private void CalculateBorderProvinces(){
 			borderProvinces.Clear();
 			borderingCountries.Clear();
+			HasCoast = false;
 			foreach (Land province in Country.Provinces){
 				bool isBorderProvince = false;
+				HasCoast |= province.Province.IsCoast;
 				foreach (ProvinceLink link in province.Province.Links){
 					if (link is not LandLink landLink){
 						// Countries that are a single sea tile away count as bordering.
@@ -207,23 +213,29 @@ namespace AI {
 		}
 		// Heavy calculation, don't do often.
 		private void CalculateClosestProvinces(WarEnemy enemy){
-			List<Land> closestProvinces = enemy.ClosestProvinces;
-			closestProvinces.Clear();
+			enemy.ClosestProvinces.Clear();
+			enemy.HasOverseasLand = false;
 			Dictionary<Land, int> distances = new();
-			AddLandDistances(enemy.Country.Provinces, closestProvinces, distances);
+			AddLandDistances(enemy.Country.Provinces, distances, enemy);
 			// Add the provinces of the own country so that armies will unoccupy provinces besieged by enemies. 
-			AddLandDistances(Country.Provinces, closestProvinces, distances);
+			AddLandDistances(Country.Provinces, distances, enemy);
 			
-			closestProvinces.Sort((left, right) => distances[left]-distances[right]);
+			enemy.ClosestProvinces.Sort((left, right) => distances[left]-distances[right]);
+			// Pretend that the enemy doesn't have any overseas land if the own country is landlocked.
+			enemy.HasOverseasLand &= HasCoast;
+			if (enemy.HasOverseasLand){
+				overseasWarEnemies.Add(enemy);
+			}
 		}
-		private void AddLandDistances(IEnumerable<Land> lands, List<Land> provinces, Dictionary<Land, int> distances){
+		private void AddLandDistances(IEnumerable<Land> lands, Dictionary<Land, int> distances, WarEnemy enemy){
 			const float speedIsIrrelevantForSorting = 1;
 			LandLocation capital = Country.Capital.ArmyLocation;
 			foreach (Land land in lands){
-				provinces.Add(land);
+				enemy.ClosestProvinces.Add(land);
 				List<ProvinceLink> path = Regiment.GetPath(capital, land.ArmyLocation, link => Regiment.LinkEvaluator(link, false, Country));
 				if (path == null){
 					distances[land] = int.MaxValue;
+					enemy.HasOverseasLand |= land.Province.IsCoast;
 					continue;
 				}
 				distances[land] = path.Sum(link => Regiment.GetTravelDays(link, speedIsIrrelevantForSorting));

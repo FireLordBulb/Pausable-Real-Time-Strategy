@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using Simulation;
 
 namespace AI {
-	public class WarEnemy {
+	internal class WarEnemy {
 		public readonly Country Country;
 		public readonly List<Land> ClosestProvinces;
+		public bool HasOverseasLand;
 		private int monthsOfWar;
 
 		public int MonthsOfWar => monthsOfWar;
