@@ -10,10 +10,10 @@ namespace AI.Nodes {
 		private WarEnemy warEnemy;
 		protected override void OnStart(){
 			base.OnStart();
-			regimentCountry = Brain.Unit.Owner;
-			warEnemy = Tree.Blackboard.GetValue<WarEnemy>(Brain.EnemyCountry, null);
+			regimentCountry = Unit.Owner;
+			warEnemy = Blackboard.GetValue<WarEnemy>(Brain.EnemyCountry, null);
 			
-			Land currentLand = Brain.Unit.Province.Land;
+			Land currentLand = Unit.Province.Land;
 			if (IsGoodSiegeTarget(currentLand, out _)){
 				SetTarget(currentLand.ArmyLocation);
 				return;
@@ -25,7 +25,7 @@ namespace AI.Nodes {
 					return;
 				}
 			}
-			Tree.Blackboard.RemoveValue(Brain.Target);
+			Blackboard.RemoveValue(Brain.Target);
 			CurrentState = State.Failure;
 		}
 		private bool IsGoodSiegeTarget(Land land, out List<ProvinceLink> path){
@@ -33,17 +33,17 @@ namespace AI.Nodes {
 			if (land.Controller == regimentCountry || land.Owner != warEnemy.Country && land.Owner != regimentCountry){
 				return false;
 			}
-			if (Brain.Controller.HasBesiegerAlready(land, Brain.Unit)){
+			if (Controller.HasBesiegerAlready(land, Unit)){
 				return false;
 			}
-			path = Brain.Unit.GetPathTo(land.ArmyLocation, link => {
+			path = Unit.GetPathTo(land.ArmyLocation, link => {
 				bool canEnter = Regiment.LinkEvaluator(link, false, regimentCountry);
-				return canEnter && !Brain.Controller.ShouldAvoidArmyAt(link.Target, Brain.Unit);
+				return canEnter && !Controller.ShouldAvoidArmyAt(link.Target, Unit);
 			});
 			return path != null;
 		}
 		private void SetTarget(Location<Regiment> location){
-			Tree.Blackboard.SetValue(Brain.Target, location);
+			Blackboard.SetValue(Brain.Target, location);
 			CurrentState = State.Success;
 		}
 		protected override State OnUpdate(){

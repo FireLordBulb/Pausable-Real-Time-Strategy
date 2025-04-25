@@ -8,7 +8,7 @@ namespace AI.Nodes {
 		private Province target;
 		protected override void OnStart(){
 			base.OnStart();
-			foreach (ProvinceLink link in Brain.Unit.Province.Links){
+			foreach (ProvinceLink link in Unit.Province.Links){
 				if (link.Target.IsSea){
 					continue;
 				}
@@ -16,7 +16,7 @@ namespace AI.Nodes {
 				if (!Brain.IsReinforceableBattleOngoing(armyLocation)){
 					continue;
 				}
-				Tree.Blackboard.SetValue(Brain.Target, link.Target);
+				Blackboard.SetValue(Brain.Target, link.Target);
 				CurrentState = State.Success;
 				return;
 			}

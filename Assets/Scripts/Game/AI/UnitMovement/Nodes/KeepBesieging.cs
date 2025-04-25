@@ -14,9 +14,7 @@ namespace AI.Nodes {
 			return CurrentState;
 		}
 		private bool CannotBesiege(){
-			return Brain.Unit.Location is not LandLocation{SiegeIsOngoing: true} landLocation ||
-			       landLocation.IsBattleOngoing ||
-			       Brain.Controller.HasBesiegerAlready(landLocation.Land, Brain.Unit);
+			return Unit.Location is not LandLocation{SiegeIsOngoing: true} landLocation || landLocation.IsBattleOngoing || Controller.HasBesiegerAlready(landLocation.Land, Unit);
 		}
 	}
 }
