@@ -25,8 +25,14 @@ namespace AI.Nodes {
 					return;
 				}
 			}
-			if (Controller.HasCoast && warEnemy.HasOverseasLand && Unit.Location is not TransportDeck){
-				foreach (Ship ship in Country.Ships){
+			if (Controller.HasCoast && warEnemy.HasOverseasLand){
+				if (Unit.Location is TransportDeck deck){
+					Province province = deck.Province;
+					if (province.IsLand && province.Land.Owner == warEnemy.Country){
+						SetTarget(province.Land.ArmyLocation);
+						return;
+					}
+				} else foreach (Ship ship in Country.Ships){
 					if (ship is not Transport transport || !transport.CanRegimentBoard(Unit) || ship.Location is not Harbor harbor || harbor.Land.Owner != Country){
 						continue;
 					}
