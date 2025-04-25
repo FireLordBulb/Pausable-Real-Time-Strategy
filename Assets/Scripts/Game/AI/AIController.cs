@@ -181,7 +181,7 @@ namespace AI {
 			target.OnWarStart(declarer);
 		}
 		private void OnWarStart(AIController other){
-			WarEnemy enemy = new(other.Country);
+			WarEnemy enemy = new(this, other.Country);
 			warEnemies.Add(enemy);
 			CalculateClosestProvinces(enemy);
 			RegroupUnits();
@@ -249,6 +249,7 @@ namespace AI {
 			AddLandDistances(Country.Provinces, distances, enemy);
 			
 			enemy.ClosestProvinces.Sort((left, right) => distances[left]-distances[right]);
+			enemy.GroupOverseasProvinces();
 		}
 		private void AddLandDistances(IEnumerable<Land> lands, Dictionary<Land, int> distances, WarEnemy enemy){
 			const float speedIsIrrelevantForSorting = 1;
@@ -256,16 +257,18 @@ namespace AI {
 				return;
 			}
 			LandLocation capital = Country.Capital.ArmyLocation;
+			bool hasOverseasProvinces = false;
 			foreach (Land land in lands){
 				enemy.ClosestProvinces.Add(land);
 				List<ProvinceLink> path = Regiment.GetPath(capital, land.ArmyLocation, link => Regiment.LinkEvaluator(link, false, Country));
 				if (path == null){
 					distances[land] = int.MaxValue;
 					if (land.Province.IsCoast){
-						if (enemy.OverseasProvinces.Count == 0){
+						if (!hasOverseasProvinces){
 							overseasWarEnemies.Add(enemy);
 						}
-						enemy.OverseasProvinces.Add(land);
+						enemy.AddOverseasProvince(land);
+						hasOverseasProvinces = true;
 					}
 					continue;
 				}

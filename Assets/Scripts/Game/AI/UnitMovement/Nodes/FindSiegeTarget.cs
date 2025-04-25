@@ -8,17 +8,20 @@ namespace AI.Nodes {
 	public class FindSiegeTarget : MilitaryUnitNode<Regiment> {
 		private Country regimentCountry;
 		private WarEnemy warEnemy;
+		private IReadOnlyList<Land> provinces;
 		protected override void OnStart(){
 			base.OnStart();
 			regimentCountry = Unit.Owner;
-			warEnemy = Blackboard.GetValue<WarEnemy>(Brain.EnemyCountry, null);
-			
+			WarEnemy newWarEnemy = Blackboard.GetValue<WarEnemy>(Brain.EnemyCountry, null);
+			if (warEnemy != newWarEnemy){
+				warEnemy = newWarEnemy;
+				provinces = warEnemy.ClosestProvinces;
+			}
 			Land currentLand = Unit.Province.Land;
 			if (IsGoodSiegeTarget(currentLand, out _)){
 				SetTarget(currentLand.ArmyLocation);
 				return;
 			}
-			IReadOnlyList<Land> provinces = warEnemy.ClosestProvinces;
 			foreach (Land land in provinces){
 				if (IsGoodSiegeTarget(land, out List<ProvinceLink> path)){
 					SetTarget(path[0].Target.Land.ArmyLocation);
@@ -30,6 +33,7 @@ namespace AI.Nodes {
 					Province province = deck.Province;
 					if (province.IsLand && province.Land.Owner == warEnemy.Country){
 						SetTarget(province.Land.ArmyLocation);
+						provinces = warEnemy.GetLandChunk(province.Land);
 						return;
 					}
 				} else foreach (Ship ship in Country.Ships){
