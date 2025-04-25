@@ -40,7 +40,7 @@ namespace Simulation.Military {
 
 		private void PossiblyStartBattle(TUnit unit){
 			TUnit firstUnit = units[0];
-			if (firstUnit.Owner == unit.Owner){
+			if (firstUnit.Owner == unit.Owner || !AreHostile(firstUnit.Owner, unit.Owner)){
 				return;
 			}
 			DefendingUnits = new List<TUnit>();
@@ -120,6 +120,11 @@ namespace Simulation.Military {
 			BattleWithThirdParty(winningCountry);
 		}
 
+		internal void RecheckIfBattleShouldStart(){
+			if (!IsBattleOngoing && units.Count > 0){
+				BattleWithThirdParty(units[0].Owner);
+			}
+		}
 		private void BattleWithThirdParty(Country winningCountry){
 			// Instantly start another battle if there is a third party present in the province.
 			DefendingUnits = new List<TUnit>();
@@ -138,10 +143,11 @@ namespace Simulation.Military {
 					AttackingUnits.Add(unit);
 				}
 			}
-			if (AttackingUnits.Count > 0 && DefendingUnits.Count > 0){
+			if (AttackingUnits.Count > 0 && DefendingUnits.Count > 0 && AreHostile(DefendingUnits[0].Owner, AttackingUnits[0].Owner)){
 				StartBattle();
 			}
 		}
+		protected abstract bool AreHostile(Country defender, Country attacker);
 		
 		private void StartBattle(){
 			SpecificStartupLogic();

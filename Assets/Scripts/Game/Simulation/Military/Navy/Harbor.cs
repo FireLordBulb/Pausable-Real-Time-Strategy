@@ -20,6 +20,10 @@ namespace Simulation.Military {
 			Name = $"Harbor in {Land.Province.Name}";
 		}
 		
+		// Navies only fight if their countries are officially at war.
+		protected override bool AreHostile(Country defender, Country attacker){
+			return defender.GetDiplomaticStatus(attacker).IsAtWar;
+		}
 		public override void AdjustPathStart(List<ProvinceLink> path){
 			path.Insert(0, Coast.Reverse);
 		}

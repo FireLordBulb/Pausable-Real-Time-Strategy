@@ -18,6 +18,10 @@ namespace Simulation.Military {
 			Land = land;
 		}
 		
+		// Armies of different countries in the same LandLocation are always hostile regardless of the actual DiplomaticStatus between them.
+		protected override bool AreHostile(Country defender, Country attacker){
+			return true;
+		}
 		protected override void SpecificStartupLogic(){
 			// If you control the land you will count as the defender regardless of who actually moved in the province last.
 			if (AttackingUnits[0].Owner == Land.Controller){

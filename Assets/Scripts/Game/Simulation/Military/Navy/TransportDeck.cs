@@ -13,6 +13,10 @@ namespace Simulation.Military {
 			Transport = transport;
 		}
 		
+		// Battles should never be able to happen on transports.
+		protected override bool AreHostile(Country defender, Country attacker){
+			return false;
+		}
 		public override void AdjustPathStart(List<ProvinceLink> path){
 			path.Insert(0, ((Harbor)Transport.Location).Coast);
 		}

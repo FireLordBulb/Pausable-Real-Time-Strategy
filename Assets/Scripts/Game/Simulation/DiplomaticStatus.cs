@@ -12,7 +12,7 @@ namespace Simulation {
 		public bool CanDeclareWar(Country target){
 			return !IsAtWar && TruceDaysLeft <= 0 && target.enabled;
 		}
-		public void DeclareWar(Country target){
+		internal void DeclareWar(Country target){
 			if (CanDeclareWar(target)){
 				IsAtWar = true;
 			}

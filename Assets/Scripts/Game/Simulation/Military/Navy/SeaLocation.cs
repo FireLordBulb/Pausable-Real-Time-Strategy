@@ -11,5 +11,10 @@ namespace Simulation.Military {
 		public SeaLocation(Sea sea){
 			Sea = sea;
 		}
+		
+		// Navies only fight if their countries are officially at war.
+		protected override bool AreHostile(Country defender, Country attacker){
+			return defender.GetDiplomaticStatus(attacker).IsAtWar;
+		}
 	}
 }

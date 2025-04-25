@@ -141,7 +141,13 @@ namespace Simulation {
 		}
 		#endregion
 		
-		#region Ending Wars
+		#region Starting and Ending Wars
+		public void DeclareWar(Country other){
+			GetDiplomaticStatus(other).DeclareWar(other);
+			foreach (Military.Ship ship in ships){
+				ship.Location.RecheckIfBattleShouldStart();
+			}
+		}
 		public void EndWar(Country opponent, PeaceTreaty treaty){
 			DiplomaticStatus diplomaticStatus = GetDiplomaticStatus(opponent);
 			if (!diplomaticStatus.IsAtWar){

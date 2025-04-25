@@ -49,7 +49,7 @@ namespace AI {
 			return warTarget != null && Country.GetDiplomaticStatus(warTarget).CanDeclareWar(warTarget);
 		}
 		internal override void Perform(){
-			Country.GetDiplomaticStatus(warTarget).DeclareWar(warTarget);
+			Country.DeclareWar(warTarget);
 			AIController.OnWarStart(Controller, warTargetAI);
 		}
 	}

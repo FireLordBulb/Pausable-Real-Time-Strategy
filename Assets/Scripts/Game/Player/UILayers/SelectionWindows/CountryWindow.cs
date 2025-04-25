@@ -63,7 +63,7 @@ namespace Player {
 			if (Player != null && Player != Selected){
 				diplomaticStatus = Player.GetDiplomaticStatus(Selected);
 				declareWar.onClick.AddListener(() => {
-					diplomaticStatus.DeclareWar(Selected);
+					Player.DeclareWar(Selected);
 					AIController.OnWarStart(UI.GetAI(Player), UI.GetAI(Selected));
 					RefreshDiplomacy();
 				});
