@@ -30,7 +30,10 @@ namespace AI.Nodes {
 					if (ship is not Transport transport || !transport.CanRegimentBoard(Unit) || ship.Location is not Harbor harbor || harbor.Land.Owner != Country){
 						continue;
 					}
-					// TODO: Check which war the transport belongs to.
+					WarEnemy shipEnemy = Controller.GetBrain(ship).Tree.Blackboard.GetValue<WarEnemy>(Brain.EnemyCountry, null);
+					if (shipEnemy != warEnemy){
+						continue;
+					}
 					List<ProvinceLink> path = GetPathTo(transport.Deck);
 					if (path == null){
 						continue;

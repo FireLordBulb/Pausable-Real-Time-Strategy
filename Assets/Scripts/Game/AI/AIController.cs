@@ -25,6 +25,9 @@ namespace AI {
 		private readonly List<Land> borderProvinces = new();
 		private readonly List<Harbor> harbors = new();
 		private readonly HashSet<Country> borderingCountries = new();
+
+		private readonly Dictionary<Regiment, RegimentBrain> regimentBrains = new();
+		private readonly Dictionary<Ship, ShipBrain> shipBrains = new();
 		
 		internal IReadOnlyList<WarEnemy> WarEnemies => warEnemies;
 		public IEnumerable<Country> BorderingCountries => borderingCountries;
@@ -34,7 +37,22 @@ namespace AI {
 		
 		public void Init(){
 			Country = GetComponent<Country>();
-			Country.RegimentBuiltAddListener(_ => RegroupUnits());
+			Country.RegimentBuiltAddListener(regiment => {
+				if (regiment == null){
+					return;
+				}
+				regimentBrains.Add(regiment, regiment.GetComponent<RegimentBrain>());
+				RegroupRegiments();
+				regiment.enabled = enabled;
+			});
+			Country.ShipBuiltAddListener(ship => {
+				if (ship == null){
+					return;
+				}
+				shipBrains.Add(ship, ship.GetComponent<ShipBrain>());
+				RegroupShips();
+				ship.enabled = enabled;
+			});
 			calendar = Country.Map.Calendar;
 			enabled = true;
 			CalculateBorderProvinces();
@@ -52,21 +70,31 @@ namespace AI {
 		private void OnEnable(){
 			calendar.OnMonthTick.AddListener(MonthTick);
 			calendar.OnYearTick.AddListener(YearTick);
+			RefreshBrainDictionaries();
 			foreach (Regiment regiment in Country.Regiments){
-				regiment.GetComponent<RegimentBrain>().enabled = true;
+				if (regiment.IsBuilt){
+					GetBrain(regiment).enabled = true;
+				}
 			}
 			foreach (Ship ship in Country.Ships){
-				ship.GetComponent<ShipBrain>().enabled = true;
+				if (ship.IsBuilt){
+					GetBrain(ship).enabled = true;
+				}
 			}
 		}
 		private void OnDisable(){
 			calendar.OnMonthTick.RemoveListener(MonthTick);
 			calendar.OnYearTick.RemoveListener(YearTick);
+			RefreshBrainDictionaries();
 			foreach (Regiment regiment in Country.Regiments){
-				regiment.GetComponent<RegimentBrain>().enabled = false;
+				if (regiment.IsBuilt){
+					GetBrain(regiment).enabled = false;
+				}
 			}
 			foreach (Ship ship in Country.Ships){
-				ship.GetComponent<ShipBrain>().enabled = false;
+				if (ship.IsBuilt){
+					GetBrain(ship).enabled = false;
+				}
 			}
 		}
 		
@@ -96,12 +124,25 @@ namespace AI {
 			if (!enabled){
 				return;
 			}
+			RefreshBrainDictionaries();
 			CalculateBorderProvinces();
 			overseasWarEnemies.Clear();
 			foreach (WarEnemy warEnemy in warEnemies){
 				CalculateClosestProvinces(warEnemy);
 			}
 			UpdateTasks(yearlyTaskList);
+		}
+		private void RefreshBrainDictionaries(){
+			foreach (Regiment key in regimentBrains.Keys.ToArray()){
+				if (key == null){
+					regimentBrains.Remove(key);
+				}
+			}
+			foreach (Ship key in shipBrains.Keys.ToArray()){
+				if (key == null){
+					shipBrains.Remove(key);
+				}
+			}
 		}
 		private static void UpdateTasks(List<Task> tasks){
 			foreach (Task task in tasks){
@@ -211,6 +252,9 @@ namespace AI {
 		}
 		private void AddLandDistances(IEnumerable<Land> lands, Dictionary<Land, int> distances, WarEnemy enemy){
 			const float speedIsIrrelevantForSorting = 1;
+			if (Country.ProvinceCount == 0){
+				return;
+			}
 			LandLocation capital = Country.Capital.ArmyLocation;
 			foreach (Land land in lands){
 				enemy.ClosestProvinces.Add(land);
@@ -218,6 +262,9 @@ namespace AI {
 				if (path == null){
 					distances[land] = int.MaxValue;
 					if (land.Province.IsCoast){
+						if (enemy.OverseasProvinces.Count == 0){
+							overseasWarEnemies.Add(enemy);
+						}
 						enemy.OverseasProvinces.Add(land);
 					}
 					continue;
@@ -226,9 +273,16 @@ namespace AI {
 			}
 		}
 		private void RegroupUnits(){
+			RegroupRegiments();
+			RegroupShips();
+		}
+		private void RegroupRegiments(){
 			for (int i = 0; i < Country.Regiments.Count; i++){
 				Regiment regiment = Country.Regiments[i];
-				RegimentBrain brain = regiment.GetComponent<RegimentBrain>();
+				if (!regiment.IsBuilt){
+					continue;
+				}
+				RegimentBrain brain = GetBrain(regiment);
 				if (warEnemies.Count == 0){
 					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
 					if (borderProvinces.Count > 0){
@@ -239,9 +293,14 @@ namespace AI {
 					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
 				}
 			}
+		}
+		private void RegroupShips(){
 			for (int i = 0; i < Country.Ships.Count; i++){
 				Ship ship = Country.Ships[i];
-				ShipBrain brain = ship.GetComponent<ShipBrain>();
+				if (!ship.IsBuilt){
+					continue;
+				}
+				ShipBrain brain = GetBrain(ship);
 				if (overseasWarEnemies.Count == 0){
 					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
 					if (harbors.Count > 0){
@@ -256,6 +315,13 @@ namespace AI {
 		
 		public int EvaluatePeaceOffer(PeaceTreaty treaty){
 			return peaceAcceptance.EvaluatePeaceOffer(treaty);
+		}
+
+		internal RegimentBrain GetBrain(Regiment regiment){
+			return regimentBrains[regiment];
+		}
+		internal ShipBrain GetBrain(Ship ship){
+			return shipBrains[ship];
 		}
 		
 		internal bool HasBesiegerAlready(Land land, Regiment regiment){
