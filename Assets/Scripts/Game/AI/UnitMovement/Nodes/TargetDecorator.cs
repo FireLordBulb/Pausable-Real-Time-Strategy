@@ -1,24 +1,19 @@
 using Simulation.Military;
 
 namespace AI.Nodes {
-	public abstract class TargetDecorator : BehaviourTree.Nodes.DecoratorNode {
-		protected MilitaryUnitBrain<Regiment> Brain;
+	public abstract class TargetDecorator : UnitDecorator<Regiment> {
 		private Location<Regiment> targetLocation;
 		
 		protected override void OnStart(){
-			Brain = (MilitaryUnitBrain<Regiment>)Tree.TargetBrain;
-			CurrentState = State.Running;
+			base.OnStart();
 			targetLocation = Tree.Blackboard.GetValue<Location<Regiment>>(Brain.Target, null);
 		}
-		protected override State OnUpdate(){
-			if (targetLocation != null && IsTargetValid(targetLocation)){
-				CurrentState = base.OnUpdate();
-			} else {
-				Brain.Controller.Country.MoveRegimentTo(Brain.Unit, Brain.Unit.Location);
-				CurrentState = State.Failure;
-			}
-			return CurrentState;
+		protected override bool Predicate(){
+			return targetLocation != null && IsTargetValid(targetLocation);
 		}
 		protected abstract bool IsTargetValid(Location<Regiment> targetLocation);
+		protected override void OnFailure(){
+			Brain.Controller.Country.MoveRegimentTo(Brain.Unit, Brain.Unit.Location);
+		}
 	}
 }

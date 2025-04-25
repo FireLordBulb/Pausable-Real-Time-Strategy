@@ -49,7 +49,22 @@ MonoBehaviour:
   m_Name: Repeat
   m_EditorClassIdentifier: 
   id: 36123351
-  position: {x: 825, y: 147}
+  position: {x: 825, y: 67.92}
+  child: {fileID: -7929151842967945640}
+--- !u!114 &-7929151842967945640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e9c4e104963464d8221d27dcc31282e, type: 3}
+  m_Name: CanMove
+  m_EditorClassIdentifier: 
+  id: -202177835
+  position: {x: 825, y: 164}
   child: {fileID: -8626318509899413655}
 --- !u!114 &-7810320611985856505
 MonoBehaviour:
@@ -101,7 +116,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a352d96a8f9844cbb4fbd5d5f2f5798c, type: 3}
   m_Name: MoveToTarget
   m_EditorClassIdentifier: 
-  id: 0
+  id: -1918529699
   position: {x: 924, y: 511}
 --- !u!114 &-6007488337768929752
 MonoBehaviour:
@@ -116,7 +131,7 @@ MonoBehaviour:
   m_Name: Root
   m_EditorClassIdentifier: 
   id: 786884963
-  position: {x: 825, y: 43}
+  position: {x: 825, y: -15.279999}
   child: {fileID: -8031824893725201951}
 --- !u!114 &-5699460448000968801
 MonoBehaviour:
@@ -233,6 +248,7 @@ MonoBehaviour:
   - {fileID: -2315195916751192561}
   - {fileID: 2481145487142478207}
   - {fileID: -6014542892888168241}
+  - {fileID: -7929151842967945640}
   root: {fileID: -6007488337768929752}
 --- !u!114 &1943787106600910695
 MonoBehaviour:
