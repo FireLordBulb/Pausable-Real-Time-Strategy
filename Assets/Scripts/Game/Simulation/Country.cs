@@ -115,7 +115,7 @@ namespace Simulation {
 				return Military.MoveOrderResult.NoAccess;
 			}
 			if (location is Military.TransportDeck deck && deck.Transport.Owner != this){
-				return Military.MoveOrderResult.NotDestinationOwner;
+				return Military.MoveOrderResult.DestinationUnusable;
 			}
 			return regiment.MoveTo(location);
 		}

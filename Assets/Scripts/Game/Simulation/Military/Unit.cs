@@ -155,14 +155,14 @@ namespace Simulation.Military {
 			}
 			PathToTarget = path;
 			TargetLocation = destination;
-			if (NextLocation == GetLocation(path[0])){
+			if (NextLocation != null && GetLocation(path[0]) == NextLocation){
 				PathIndex = 0;
 			} else {
 				PathIndex = -1;
 				NextPathLocation();
 			}
 			Location.UpdateListeners();
-			return MoveOrderResult.Success;
+			return IsMoving ? MoveOrderResult.Success : MoveOrderResult.DestinationUnusable;
 		}
 		public List<ProvinceLink> GetPathTo(Location<TUnit> end){
 			return GetPath(Location, end, LinkEvaluator);

@@ -40,6 +40,7 @@ namespace Player {
 				MoveOrderResult.NoAccess => "You cannot cross another country's borders when you're at peace with it!",
 				MoveOrderResult.InvalidTarget => "Armies cannot walk on water!",
 				MoveOrderResult.NotOwner => "You cannot move another country's units!",
+				MoveOrderResult.DestinationUnusable => "You can only use transports when they're your own and are done constructing!",
 				_ => ""
 			});
 		}

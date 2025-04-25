@@ -8,6 +8,6 @@ namespace Simulation.Military {
 		NoAccess,
 		InvalidTarget,
 		NotOwner,
-		NotDestinationOwner
+		DestinationUnusable
 	}
 }
