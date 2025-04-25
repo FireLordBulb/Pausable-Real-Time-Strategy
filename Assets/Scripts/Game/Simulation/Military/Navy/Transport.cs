@@ -24,5 +24,11 @@ namespace Simulation.Military {
 		internal bool CanRegimentBoard(Regiment regiment){
 			return !Location.IsBattleOngoing && regiment.CurrentManpower <= ManpowerCapacity-Deck.Units.Sum(unit => unit.CurrentManpower);
 		}
+		internal override void StackWipe(){
+			foreach (Regiment regiment in Deck.Units.ToArray()){
+				regiment.StackWipe();	
+			}
+			base.StackWipe();
+		}
 	}
 }
