@@ -26,5 +26,9 @@ namespace AI {
 			ClosestProvinces.Clear();
 			OverseasProvinces.Clear();
 		}
+		
+		public override string ToString(){
+			return Country.ToString();
+		}
 	}
 }
