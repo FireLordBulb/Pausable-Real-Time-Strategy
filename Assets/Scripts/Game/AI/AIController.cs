@@ -23,6 +23,7 @@ namespace AI {
 		private readonly List<WarEnemy> warEnemies = new();
 		private readonly List<WarEnemy> overseasWarEnemies = new();
 		private readonly List<Land> borderProvinces = new();
+		private readonly List<Harbor> harbors = new();
 		private readonly HashSet<Country> borderingCountries = new();
 		
 		internal IReadOnlyList<WarEnemy> WarEnemies => warEnemies;
@@ -142,7 +143,7 @@ namespace AI {
 			WarEnemy enemy = new(other.Country);
 			warEnemies.Add(enemy);
 			CalculateClosestProvinces(enemy);
-			RegroupRegiments();
+			RegroupUnits();
 			MakePeace peaceNegotiations = Instantiate(makePeace);
 			peaceNegotiations.Init(this);
 			peaceNegotiations.Init(this, enemy, other);
@@ -165,17 +166,19 @@ namespace AI {
 				return;
 			}
 			CalculateBorderProvinces();
-			RegroupRegiments();
+			RegroupUnits();
 		}
 		private void CalculateBorderProvinces(){
 			borderProvinces.Clear();
+			harbors.Clear();
 			borderingCountries.Clear();
 			HasCoast = false;
 			foreach (Land province in Country.Provinces){
 				bool isBorderProvince = false;
 				HasCoast |= province.Province.IsCoast;
 				foreach (ProvinceLink link in province.Province.Links){
-					if (link is not LandLink landLink){
+					if (link is ShallowsLink shallowsLink){
+						harbors.Add(shallowsLink.Harbor);
 						// Countries that are a single sea tile away count as bordering.
 						foreach (ProvinceLink seaLink in link.Target.Links){
 							if (seaLink is CoastLink coastLink && coastLink.Land.Owner != Country){
@@ -184,30 +187,15 @@ namespace AI {
 						}
 						continue;
 					}
-					if (landLink.TargetLand.Owner == Country){
+					if (link.Target.Land.Owner == Country){
 						continue;
 					}
-					borderingCountries.Add(landLink.TargetLand.Owner);
+					borderingCountries.Add(link.Target.Land.Owner);
 					if (isBorderProvince){
 						continue;
 					}
 					borderProvinces.Add(province);
 					isBorderProvince = true;
-				}
-			}
-		}
-		private void RegroupRegiments(){
-			for (int i = 0; i < Country.Regiments.Count; i++){
-				Regiment regiment = Country.Regiments[i];
-				RegimentBrain brain = regiment.GetComponent<RegimentBrain>();
-				if (warEnemies.Count == 0){
-					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
-					if (borderProvinces.Count > 0){
-						brain.Tree.Blackboard.SetValue(brain.Target, borderProvinces[i%borderProvinces.Count].Province);
-					}
-				} else {
-					WarEnemy enemy = warEnemies[i*warEnemies.Count/Country.Regiments.Count];
-					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
 				}
 			}
 		}
@@ -239,6 +227,34 @@ namespace AI {
 					continue;
 				}
 				distances[land] = path.Sum(link => Regiment.GetTravelDays(link, speedIsIrrelevantForSorting));
+			}
+		}
+		private void RegroupUnits(){
+			for (int i = 0; i < Country.Regiments.Count; i++){
+				Regiment regiment = Country.Regiments[i];
+				RegimentBrain brain = regiment.GetComponent<RegimentBrain>();
+				if (warEnemies.Count == 0){
+					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
+					if (borderProvinces.Count > 0){
+						brain.Tree.Blackboard.SetValue(brain.Target, borderProvinces[i%borderProvinces.Count].Province);
+					}
+				} else {
+					WarEnemy enemy = warEnemies[i*warEnemies.Count/Country.Regiments.Count];
+					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
+				}
+			}
+			for (int i = 0; i < Country.Ships.Count; i++){
+				Ship ship = Country.Ships[i];
+				ShipBrain brain = ship.GetComponent<ShipBrain>();
+				if (overseasWarEnemies.Count == 0){
+					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
+					if (harbors.Count > 0){
+						brain.Tree.Blackboard.SetValue(brain.Target, harbors[i%harbors.Count]);
+					}
+				} else {
+					WarEnemy enemy = overseasWarEnemies[i*overseasWarEnemies.Count/Country.Ships.Count];
+					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
+				}
 			}
 		}
 		
