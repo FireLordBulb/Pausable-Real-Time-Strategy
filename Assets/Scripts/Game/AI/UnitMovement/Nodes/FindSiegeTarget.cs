@@ -15,13 +15,13 @@ namespace AI.Nodes {
 			
 			Land currentLand = Brain.Unit.Province.Land;
 			if (IsGoodSiegeTarget(currentLand, out _)){
-				SetTarget(currentLand.Province);
+				SetTarget(currentLand.ArmyLocation);
 				return;
 			}
 			IReadOnlyList<Land> provinces = warEnemy.ClosestProvinces;
 			foreach (Land land in provinces){
 				if (IsGoodSiegeTarget(land, out List<ProvinceLink> path)){
-					SetTarget(path[0].Target);
+					SetTarget(path[0].Target.Land.ArmyLocation);
 					return;
 				}
 			}
@@ -42,8 +42,8 @@ namespace AI.Nodes {
 			});
 			return path != null;
 		}
-		private void SetTarget(Province province){
-			Tree.Blackboard.SetValue(Brain.Target, province);
+		private void SetTarget(Location<Regiment> location){
+			Tree.Blackboard.SetValue(Brain.Target, location);
 			CurrentState = State.Success;
 		}
 		protected override State OnUpdate(){

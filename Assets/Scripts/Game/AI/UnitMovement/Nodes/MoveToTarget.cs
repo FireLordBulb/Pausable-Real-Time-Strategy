@@ -1,20 +1,18 @@
-using Simulation;
 using Simulation.Military;
-using UnityEngine;
 
 namespace AI.Nodes {
-	[CreateAssetMenu(fileName = "MoveToTarget", menuName = "ScriptableObjects/AI/Nodes/MoveToTarget")]
-	public class MoveToTarget : MilitaryUnitNode<Regiment> {
-		private Province targetProvince;
+	public abstract class MoveToTarget<TUnit> : MilitaryUnitNode<TUnit> where TUnit : Unit<TUnit> {
+		private Location<TUnit> targetLocation;
 		protected override void OnStart(){
 			base.OnStart();
-			targetProvince = Tree.Blackboard.GetValue<Province>(Brain.Target, null);
-			MoveOrderResult result = targetProvince == null ? MoveOrderResult.InvalidTarget : Brain.Controller.Country.MoveRegimentTo(Brain.Unit, targetProvince.Land.ArmyLocation);
+			targetLocation = Tree.Blackboard.GetValue<Location<TUnit>>(Brain.Target, null);
+			MoveOrderResult result = targetLocation == null ? MoveOrderResult.InvalidTarget : OrderMove(targetLocation);
 			CurrentState = result == MoveOrderResult.Success ? State.Running : State.Failure;
 		}
+		protected abstract MoveOrderResult OrderMove(Location<TUnit> location);
 		protected override State OnUpdate(){
 			if (!Brain.Unit.IsMoving){
-				CurrentState = Brain.Unit.Province == targetProvince ? State.Success : State.Failure;
+				CurrentState = Brain.Unit.Location == targetLocation ? State.Success : State.Failure;
 			}
 			return CurrentState;
 		}
