@@ -25,6 +25,20 @@ namespace AI.Nodes {
 					return;
 				}
 			}
+			if (Controller.HasCoast && warEnemy.HasOverseasLand && Unit.Location is not TransportDeck){
+				foreach (Ship ship in Country.Ships){
+					if (ship is not Transport transport || !transport.CanRegimentBoard(Unit) || ship.Location is not Harbor harbor || harbor.Land.Owner != Country){
+						continue;
+					}
+					// TODO: Check which war the transport belongs to.
+					List<ProvinceLink> path = GetPathTo(transport.Deck);
+					if (path == null){
+						continue;
+					}
+					SetTarget(Unit.GetLocation(path[0], transport.Deck));
+					return;
+				}
+			}
 			Blackboard.RemoveValue(Brain.Target);
 			CurrentState = State.Failure;
 		}
@@ -36,11 +50,14 @@ namespace AI.Nodes {
 			if (Controller.HasBesiegerAlready(land, Unit)){
 				return false;
 			}
-			path = Unit.GetPathTo(land.ArmyLocation, link => {
+			path = GetPathTo(land.ArmyLocation);
+			return path != null;
+		}
+		private List<ProvinceLink> GetPathTo(Location<Regiment> location){
+			return Unit.GetPathTo(location, link => {
 				bool canEnter = Regiment.LinkEvaluator(link, false, regimentCountry);
 				return canEnter && !Controller.ShouldAvoidArmyAt(link.Target, Unit);
 			});
-			return path != null;
 		}
 		private void SetTarget(Location<Regiment> location){
 			Blackboard.SetValue(Brain.Target, location);

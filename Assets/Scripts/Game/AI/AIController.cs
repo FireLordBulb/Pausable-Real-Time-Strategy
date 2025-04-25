@@ -201,19 +201,13 @@ namespace AI {
 		}
 		// Heavy calculation, don't do often.
 		private void CalculateClosestProvinces(WarEnemy enemy){
-			enemy.ClosestProvinces.Clear();
-			enemy.HasOverseasLand = false;
+			enemy.ClearProvinceData();
 			Dictionary<Land, int> distances = new();
 			AddLandDistances(enemy.Country.Provinces, distances, enemy);
 			// Add the provinces of the own country so that armies will unoccupy provinces besieged by enemies. 
 			AddLandDistances(Country.Provinces, distances, enemy);
 			
 			enemy.ClosestProvinces.Sort((left, right) => distances[left]-distances[right]);
-			// Pretend that the enemy doesn't have any overseas land if the own country is landlocked.
-			enemy.HasOverseasLand &= HasCoast;
-			if (enemy.HasOverseasLand){
-				overseasWarEnemies.Add(enemy);
-			}
 		}
 		private void AddLandDistances(IEnumerable<Land> lands, Dictionary<Land, int> distances, WarEnemy enemy){
 			const float speedIsIrrelevantForSorting = 1;
@@ -223,7 +217,9 @@ namespace AI {
 				List<ProvinceLink> path = Regiment.GetPath(capital, land.ArmyLocation, link => Regiment.LinkEvaluator(link, false, Country));
 				if (path == null){
 					distances[land] = int.MaxValue;
-					enemy.HasOverseasLand |= land.Province.IsCoast;
+					if (land.Province.IsCoast){
+						enemy.OverseasProvinces.Add(land);
+					}
 					continue;
 				}
 				distances[land] = path.Sum(link => Regiment.GetTravelDays(link, speedIsIrrelevantForSorting));
