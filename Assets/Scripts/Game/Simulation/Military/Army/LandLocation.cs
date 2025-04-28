@@ -29,7 +29,8 @@ namespace Simulation.Military {
 			}
 		}
 		
-		internal override void UpdateListeners(){
+		internal override void Refresh(){
+			base.Refresh();
 			// New sieges aren't started during battles, and existing ones are paused.
 			if (IsBattleOngoing){
 				return;

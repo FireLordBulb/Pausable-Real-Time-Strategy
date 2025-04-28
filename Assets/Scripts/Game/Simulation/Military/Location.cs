@@ -35,9 +35,8 @@ namespace Simulation.Military {
 				PossiblyStartBattle(unit);
 			}
 			units.Add(unit);
-			UpdateListeners();
+			Refresh();
 		}
-
 		private void PossiblyStartBattle(TUnit unit){
 			TUnit firstUnit = units[0];
 			if (firstUnit.Owner == unit.Owner || !AreHostile(firstUnit.Owner, unit.Owner)){
@@ -73,7 +72,7 @@ namespace Simulation.Military {
 					CommandingAttackingUnit = AttackingUnits[0];
 				}
 			}
-			UpdateListeners();
+			Refresh();
 		}
 		private void RemoveFromSide(TUnit unit, List<TUnit> side, BattleResult result){
 			if (!IsBattleOngoing || side.Count == 0 || unit.Owner != side[0].Owner){
@@ -116,7 +115,7 @@ namespace Simulation.Military {
 			Country winningCountry = didDefenderWin ? CommandingDefendingUnit.Owner : CommandingAttackingUnit.Owner;
 			CommandingDefendingUnit = CommandingAttackingUnit = null;
 			DefendingUnits = AttackingUnits = null;
-			UpdateListeners();
+			Refresh();
 			BattleWithThirdParty(winningCountry);
 		}
 
@@ -165,7 +164,9 @@ namespace Simulation.Military {
 			Province.Calendar.OnDayTick.AddListener(BattleTick);
 		}
 		protected virtual void SpecificStartupLogic(){}
-		internal virtual void UpdateListeners(){}
+		internal virtual void Refresh(){
+			
+		}
 		
 		public virtual void AdjustPathStart(List<ProvinceLink> path){}
 		public virtual void AdjustPathEnd(List<ProvinceLink> path){}

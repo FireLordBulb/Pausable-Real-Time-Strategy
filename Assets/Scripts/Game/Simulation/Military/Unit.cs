@@ -174,7 +174,7 @@ namespace Simulation.Military {
 			}
 			if (Location == destination){
 				StopMoving();
-				Location.UpdateListeners();
+				Location.Refresh();
 				return MoveOrderResult.AlreadyAtDestination;
 			}
 			List<ProvinceLink> path = GetPathTo(destination);
@@ -189,7 +189,7 @@ namespace Simulation.Military {
 				PathIndex = -1;
 				NextPathLocation();
 			}
-			Location.UpdateListeners();
+			Location.Refresh();
 			return IsMoving ? MoveOrderResult.Success : MoveOrderResult.DestinationUnusable;
 		}
 		public List<ProvinceLink> GetPathTo(Location<TUnit> end){
