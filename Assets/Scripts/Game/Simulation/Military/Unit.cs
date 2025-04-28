@@ -23,6 +23,7 @@ namespace Simulation.Military {
 		private int daysUntilReroll;
 		private Vector3 locationWorldPostionOffset;
 		private int sharedPositionIndex;
+		private int visualizedPositionIndex;
 		
 		public UnitType<TUnit> Type {get; private set;}
 		public Country Owner {get; private set;}
@@ -87,10 +88,12 @@ namespace Simulation.Military {
 			UpdateWorldPosition(worldSpaceSpeed*Time.deltaTime);
 			if (beforePosition != transform.position){
 				OnWorldPositionChanged();
-				VisualizeSharedPositionIndex(0);
-			} else {
-				VisualizeSharedPositionIndex(sharedPositionIndex);
 			}
+			if (visualizedPositionIndex == sharedPositionIndex){
+				return;
+			}
+			VisualizeSharedPositionIndex(sharedPositionIndex);
+			visualizedPositionIndex = sharedPositionIndex;
 		}
 		private void UpdateWorldPosition(float maxDistanceDelta){
 			while (worldPositionsOnPath.Count > 0){
