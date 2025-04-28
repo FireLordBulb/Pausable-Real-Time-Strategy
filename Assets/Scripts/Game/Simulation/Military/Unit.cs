@@ -77,13 +77,23 @@ namespace Simulation.Military {
 		}
 		
 		private void Update(){
-			if (0 < worldPositionsOnPath.Count){
-				Vector3 target = worldPositionsOnPath.Peek();
-				transform.position = Vector3.MoveTowards(transform.position, target, worldSpaceSpeed*Time.deltaTime);
-				if (Vector3.Distance(transform.position, target) < Vector3.kEpsilon){
-					worldPositionsOnPath.Dequeue();
-				}
+			Vector3 beforePosition = transform.position;
+			UpdateWorldPosition(worldSpaceSpeed*Time.deltaTime);
+			if (beforePosition != transform.position){
 				OnWorldPositionChanged();
+			}
+		}
+		private void UpdateWorldPosition(float maxDistanceDelta){
+			while (worldPositionsOnPath.Count > 0){
+				Vector3 target = worldPositionsOnPath.Peek();
+				Vector3 previousPosition = transform.position;
+				transform.position = Vector3.MoveTowards(previousPosition, target, maxDistanceDelta);
+				if (Vector3.Distance(transform.position, target) > Vector3.kEpsilon){
+					return;
+				}
+				transform.position = target;
+				worldPositionsOnPath.Dequeue();
+				maxDistanceDelta -= Vector3.Distance(previousPosition, transform.position);
 			}
 		}
 		protected virtual void OnWorldPositionChanged(){}
