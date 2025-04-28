@@ -96,7 +96,7 @@ namespace Simulation.Military {
 			CurrentManpower += reinforcementAmount;
 		}
 		private bool IsUnsafe(Location<Regiment> location){
-			if (location.IsBattleOngoing){
+			if (location.IsBattleOngoing || location is TransportDeck){
 				return true;
 			}
 			Land land = location.Province.Land;
