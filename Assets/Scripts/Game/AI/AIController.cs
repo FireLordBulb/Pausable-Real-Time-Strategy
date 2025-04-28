@@ -31,6 +31,8 @@ namespace AI {
 		
 		internal IReadOnlyList<WarEnemy> WarEnemies => warEnemies;
 		public IEnumerable<Country> BorderingCountries => borderingCountries;
+		public IEnumerable<RegimentBrain> RegimentBrains => regimentBrains.Values;
+		public IEnumerable<ShipBrain> ShipBrains => shipBrains.Values;
 		
 		public Country Country {get; private set;}
 		public bool HasCoast {get; private set;}
