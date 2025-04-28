@@ -165,7 +165,9 @@ namespace Simulation.Military {
 		}
 		protected virtual void SpecificStartupLogic(){}
 		internal virtual void Refresh(){
-			
+			for (int i = 0; i < Units.Count; i++){
+				Units[i].SetSharedPositionIndex(i);
+			}
 		}
 		
 		public virtual void AdjustPathStart(List<ProvinceLink> path){}
