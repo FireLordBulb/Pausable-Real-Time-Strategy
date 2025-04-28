@@ -343,6 +343,9 @@ namespace AI {
 			return false;
 		}
 		internal bool ShouldAvoidArmyAt(Province province, Regiment regiment){
+			if (province.IsSea){
+				return false;
+			}
 			IReadOnlyList<Regiment> unitsAtLocation = province.Land.ArmyLocation.Units;
 			if (unitsAtLocation.All(unit => unit.Owner == Country)){
 				return false;
