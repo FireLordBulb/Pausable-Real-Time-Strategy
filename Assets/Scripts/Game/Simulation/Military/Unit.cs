@@ -22,6 +22,7 @@ namespace Simulation.Military {
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		private int daysUntilReroll;
 		private Vector3 locationWorldPostionOffset;
+		private int sharedPositionIndex;
 		
 		public UnitType<TUnit> Type {get; private set;}
 		public Country Owner {get; private set;}
@@ -86,6 +87,9 @@ namespace Simulation.Military {
 			UpdateWorldPosition(worldSpaceSpeed*Time.deltaTime);
 			if (beforePosition != transform.position){
 				OnWorldPositionChanged();
+				VisualizeSharedPositionIndex(0);
+			} else {
+				VisualizeSharedPositionIndex(sharedPositionIndex);
 			}
 		}
 		private void UpdateWorldPosition(float maxDistanceDelta){
@@ -102,6 +106,10 @@ namespace Simulation.Military {
 			}
 		}
 		protected virtual void OnWorldPositionChanged(){}
+		protected abstract void VisualizeSharedPositionIndex(int index);
+		internal void SetSharedPositionIndex(int index){
+			sharedPositionIndex = index;
+		}
 		
 		private void StartBuilding(){
 			BuildDaysLeft = Type.DaysToBuild;

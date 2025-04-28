@@ -216,6 +216,8 @@ MonoBehaviour:
   monthlyReinforcementRate: 0.2
   orderedRetreatDamageMultiplier: 0.5
   stackWipeThreshold: 0.35
+  flag: {fileID: 8883708364815889813}
+  flagHeightStep: 1
 --- !u!114 &1517114082226002071
 MonoBehaviour:
   m_ObjectHideFlags: 0

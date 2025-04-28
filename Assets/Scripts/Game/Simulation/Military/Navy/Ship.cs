@@ -9,10 +9,14 @@ namespace Simulation.Military {
 		[SerializeField] private float reparationCostFraction;
 		[SerializeField] private float orderedRetreatDamageMultiplier;
 		[SerializeField] private AnimationCurve sinkingProbability;
+		[Header("Flag")]
+		[SerializeField] private Transform flag;
+		[SerializeField] private float flagHeightStep;
 		
 		private int maxMonthlyReparation;
 		private float fullRepairGoldCost;
 		private int fullRepairSailorsCost;
+		private float defaultFlagHeight;
 		
 		public float AttackPower {get; private set;}
 		public int MaxHull {get; private set;}
@@ -29,7 +33,13 @@ namespace Simulation.Military {
 			maxMonthlyReparation = (int)(MaxHull*monthlyReparationRate);
 			fullRepairGoldCost = gold*reparationCostFraction;
 			fullRepairSailorsCost = (int)(sailors*reparationCostFraction);
+			defaultFlagHeight = flag.localPosition.y;
 			Province.Calendar.OnMonthTick.AddListener(Repair);
+		}
+		protected override void VisualizeSharedPositionIndex(int index){
+			Vector3 localPosition = flag.localPosition;
+			localPosition.y = defaultFlagHeight + flagHeightStep*index;
+			flag.localPosition = localPosition;
 		}
 		internal override void OnFinishBuilding(){
 			Owner.ShipBuilt.Invoke(this);

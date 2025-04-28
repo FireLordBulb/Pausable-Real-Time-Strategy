@@ -8,8 +8,12 @@ namespace Simulation.Military {
 		[SerializeField] private float monthlyReinforcementRate;
 		[SerializeField] private float orderedRetreatDamageMultiplier;
 		[SerializeField] private float stackWipeThreshold;
+		[Header("Flag")]
+		[SerializeField] private Transform flag;
+		[SerializeField] private float flagHeightStep;
 		
 		private int maxMonthlyReinforcement;
+		private float defaultFlagHeight;
 		
 		public float AttackPower {get; private set;}
 		public float Toughness {get; private set;}
@@ -28,7 +32,13 @@ namespace Simulation.Military {
 			CurrentManpower = MaxManpower = manpower;
 			DemoralizedManpower = 0;
 			maxMonthlyReinforcement = (int)(MaxManpower*monthlyReinforcementRate);
+			defaultFlagHeight = flag.localPosition.y;
 			Province.Calendar.OnMonthTick.AddListener(Reinforce);
+		}
+		protected override void VisualizeSharedPositionIndex(int index){
+			Vector3 localPosition = flag.localPosition;
+			localPosition.y = defaultFlagHeight + flagHeightStep*index;
+			flag.localPosition = localPosition;
 		}
 		internal override void OnFinishBuilding(){
 			Owner.RegimentBuilt.Invoke(this);

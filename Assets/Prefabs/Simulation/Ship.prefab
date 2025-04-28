@@ -381,6 +381,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  flag: {fileID: 8009194502341568593}
+  flagHeightStep: 0.6
 --- !u!114 &7012549270737798967
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -152,3 +152,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  flag: {fileID: 8285920943722994016}
+  flagHeightStep: 0.6
+--- !u!4 &8285920943722994016 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8009194502341568593, guid: 547cbbe66edc4334c823af92788d090b, type: 3}
+  m_PrefabInstance: {fileID: 2151558187751354673}
+  m_PrefabAsset: {fileID: 0}
