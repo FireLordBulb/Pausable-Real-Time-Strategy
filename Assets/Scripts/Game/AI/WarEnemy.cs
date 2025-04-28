@@ -73,16 +73,17 @@ namespace AI {
 			List<Land> landChunk = overseasLandChunks.FirstOrDefault(landChunk => landChunk.Any(land => land == exampleLand));
 			return landChunk ?? ClosestProvinces;
 		}
-		public List<Land> GetAnyBesiegableLandChunk(){
+		public Land GetBesiegableCoast(){
 			foreach (List<Land> landChunk in overseasLandChunks){
 				if (!landChunk[0].Province.IsCoast){
 					continue;
 				}
 				if (landChunk.Any(land => land.Controller != Controller.Country)){
-					return landChunk;
+					return landChunk[0];
 				}
 			}
-			return null;
+			// If no overseasLandChunk is besiegable then default to going to a harbor in ClosestProvinces.
+			return ClosestProvinces.FirstOrDefault(land => land.Province.IsCoast);
 		}
 		
 		public void ClearProvinceData(){

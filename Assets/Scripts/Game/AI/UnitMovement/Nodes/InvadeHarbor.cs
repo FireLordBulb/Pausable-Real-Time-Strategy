@@ -21,9 +21,9 @@ namespace AI.Nodes {
 				}
 				return;
 			}
-			List<Land> landChunk = warEnemy.GetAnyBesiegableLandChunk();
-			if (landChunk != null){
-				Province coastalProvince = landChunk[0].Province;
+			Land coastalLand = warEnemy.GetBesiegableCoast();
+			if (coastalLand != null){
+				Province coastalProvince = coastalLand.Province;
 				foreach (ProvinceLink link in coastalProvince.Links){
 					if (link is not ShallowsLink shallowsLink){
 						continue;
