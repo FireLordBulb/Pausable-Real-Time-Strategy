@@ -78,7 +78,7 @@ namespace AI {
 				if (!landChunk[0].Province.IsCoast){
 					continue;
 				}
-				if (landChunk.Any(land => land.Occupier != Controller.Country)){
+				if (landChunk.Any(land => land.Controller != Controller.Country)){
 					return landChunk;
 				}
 			}
