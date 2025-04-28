@@ -22,6 +22,11 @@ namespace AI.Nodes {
 				SetTarget(currentLand.ArmyLocation);
 				return;
 			}
+			// If a regiment has been pushed out of an overseas land chunk (because of pose-battle retreat or a peace treaty with a third party)
+			// it should default back to trying to occupy the warEnemy closest provinces connected by land to its owning country.
+			if (currentLand.Owner != warEnemy.Country){
+				provinces = warEnemy.ClosestProvinces;
+			}
 			foreach (Land land in provinces){
 				if (IsGoodSiegeTarget(land, out List<ProvinceLink> path)){
 					SetTarget(path[0].Target.Land.ArmyLocation);
