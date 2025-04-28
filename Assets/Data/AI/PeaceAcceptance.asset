@@ -19,6 +19,7 @@ MonoBehaviour:
   militaryStrength: 10
   militaryStrengthMax: 40
   minMilitaryStrengthValue: 5000
+  navyWeight: 0.05
   thirdPartyMultiplier: 0.5
   provinceHeld: 10
   developmentHeld: 30

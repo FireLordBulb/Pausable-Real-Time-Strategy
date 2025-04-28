@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using Simulation;
-using Simulation.Military;
 using UnityEngine;
 
 namespace AI {
@@ -16,6 +15,7 @@ namespace AI {
 		[SerializeField] private float militaryStrength;
 		[SerializeField] private float militaryStrengthMax;
 		[SerializeField] private float minMilitaryStrengthValue;
+		[SerializeField] private float navyWeight;
 		[SerializeField] private float thirdPartyMultiplier;
 		[SerializeField] private float provinceHeld;
 		[SerializeField] private float developmentHeld;
@@ -81,8 +81,6 @@ namespace AI {
 			fromResources = Math.Max(fromResources, resourcesMin);
 			acceptance += fromResources;
 			
-			// TODO: Factor in navy when navy combat is added.
-			
 			float deciderMilitaryStrength = GetSituationalMilitaryStrength(decider, other);
 			float otherMilitaryStrength = GetSituationalMilitaryStrength(other, decider);
 			acceptance += Mathf.Min((otherMilitaryStrength/deciderMilitaryStrength-1)*militaryStrength, militaryStrengthMax); 
@@ -103,7 +101,7 @@ namespace AI {
 			return borderingAI.WarEnemies.Sum(enemy => enemy.Country != secondParty ? GetMilitaryStrength(enemy.Country) : 0);
 		}
 		private float GetMilitaryStrength(Country country){
-			return country.Regiments.Sum(AIController.RegimentStrength);
+			return country.Regiments.Sum(AIController.RegimentStrength)+navyWeight*country.Ships.Sum(AIController.ShipStrength);
 		}
 		private float GetOccupationValue(Country occupier, Country target){
 			float value = 0;

@@ -372,5 +372,8 @@ namespace AI {
 		internal static float RegimentStrength(Regiment regiment){
 			return regiment.IsBuilt ? (regiment.CurrentManpower+regiment.DemoralizedManpower)*(regiment.AttackPower+regiment.Toughness) : 0;
 		}
+		internal static float ShipStrength(Ship ship){
+			return ship.IsBuilt ? ship.IntactHull*ship.AttackPower : 0;
+		}
 	}
 }
