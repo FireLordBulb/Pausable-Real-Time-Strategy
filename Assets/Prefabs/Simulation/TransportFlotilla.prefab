@@ -102,6 +102,7 @@ MonoBehaviour:
   worldSpaceSpeed: 20
   worldSpaceMoveDirectionOffset: 1.5
   worldSpaceMaxOffsetProportion: 0.35
+  worldSpaceBattleOffset: 0.5
   maxDamageBoost: 0
   minRerollDays: 999
   maxRerollDays: 999

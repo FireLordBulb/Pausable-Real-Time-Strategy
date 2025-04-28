@@ -9,6 +9,7 @@ namespace Simulation.Military {
 		[SerializeField] private float worldSpaceSpeed;
 		[SerializeField] private float worldSpaceMoveDirectionOffset;
 		[SerializeField] private float worldSpaceMaxOffsetProportion;
+		[SerializeField] private float worldSpaceBattleOffset;
 		[Header("Battle Randomness")]
 		[SerializeField] private float maxDamageBoost;
 		[SerializeField] private int minRerollDays;
@@ -20,6 +21,7 @@ namespace Simulation.Military {
 		private TUnit self;
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		private int daysUntilReroll;
+		private Vector3 locationWorldPostionOffset;
 		
 		public UnitType<TUnit> Type {get; private set;}
 		public Country Owner {get; private set;}
@@ -148,7 +150,7 @@ namespace Simulation.Military {
 			NextLocation = null;
 			TargetLocation = null;
 			IsRetreating = false;
-			worldPositionsOnPath.Enqueue(Location.WorldPosition);
+			worldPositionsOnPath.Enqueue(Location.WorldPosition+locationWorldPostionOffset);
 		}
 		
 		internal MoveOrderResult MoveTo(Location<TUnit> destination){
@@ -239,8 +241,17 @@ namespace Simulation.Military {
 		}
 		// Pass the location in since battles can end from a unit changing to a different location.
 		internal abstract void CommanderOnBattleEnd(bool didWin, Location<TUnit> location);
+		internal virtual void OnBattleStart(bool isDefending){
+			locationWorldPostionOffset = (isDefending ? Vector3.left : Vector3.right)*worldSpaceBattleOffset;
+			StopMoving();
+		} 
 		internal abstract BattleResult DoBattle(List<TUnit> defenders, List<TUnit> attackers);
-		internal abstract void OnBattleEnd(bool didWin);
+		internal virtual void OnBattleEnd(bool didWin){
+			locationWorldPostionOffset = Vector3.zero;
+			if (didWin && !IsMoving){
+				worldPositionsOnPath.Enqueue(Location.WorldPosition);
+			}
+		}
 		internal abstract void StackWipe();
 		
 		public void OnSelect(){}

@@ -172,6 +172,7 @@ namespace Simulation.Military {
 			Owner.LandBattleEnded.Invoke(location);
 		}
 		internal override void OnBattleEnd(bool didWin){
+			base.OnBattleEnd(didWin);
 			CurrentManpower += DemoralizedManpower;
 			DemoralizedManpower = 0;
 			if (didWin){

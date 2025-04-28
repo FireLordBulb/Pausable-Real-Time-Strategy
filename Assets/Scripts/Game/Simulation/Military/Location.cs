@@ -23,10 +23,10 @@ namespace Simulation.Military {
 				// Pass by the battle, nothing to see here.
 			} else if (IsBattleOngoing){
 				if (unit.Owner == CommandingDefendingUnit.Owner){
-					unit.StopMoving();
+					unit.OnBattleStart(true);
 					DefendingUnits.Add(unit);
 				} else if (unit.Owner == CommandingAttackingUnit.Owner){
-					unit.StopMoving();
+					unit.OnBattleStart(false);
 					AttackingUnits.Add(unit);
 				} else {
 					// Third parties can't join ongoing battles, and may pass through provinces where others are battling undisturbed.
@@ -156,10 +156,10 @@ namespace Simulation.Military {
 			CommandingDefendingUnit.CommanderBattleStartUp();
 			CommandingAttackingUnit.CommanderBattleStartUp();
 			foreach (TUnit unit in DefendingUnits){
-				unit.StopMoving();
+				unit.OnBattleStart(true);
 			}
 			foreach (TUnit unit in AttackingUnits){
-				unit.StopMoving();
+				unit.OnBattleStart(false);
 			}
 			IsBattleOngoing = true;
 			Province.Calendar.OnDayTick.AddListener(BattleTick);

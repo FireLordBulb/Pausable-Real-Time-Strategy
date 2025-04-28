@@ -113,7 +113,6 @@ namespace Simulation.Military {
 		internal override void CommanderOnBattleEnd(bool didWin, Location<Ship> location){
 			Owner.SeaBattleEnded.Invoke(location);
 		}
-		internal override void OnBattleEnd(bool didWin){}
 		internal override void StackWipe(){
 			Owner.RemoveShip(this);
 			Location.Remove(this);
