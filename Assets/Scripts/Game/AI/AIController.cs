@@ -43,17 +43,19 @@ namespace AI {
 				if (regiment == null){
 					return;
 				}
-				regimentBrains.Add(regiment, regiment.GetComponent<RegimentBrain>());
+				RegimentBrain brain = regiment.GetComponent<RegimentBrain>();
+				regimentBrains.Add(regiment, brain);
+				brain.enabled = enabled;
 				RegroupRegiments();
-				regiment.enabled = enabled;
 			});
 			Country.ShipBuiltAddListener(ship => {
 				if (ship == null){
 					return;
 				}
-				shipBrains.Add(ship, ship.GetComponent<ShipBrain>());
+				ShipBrain brain = ship.GetComponent<ShipBrain>();
+				shipBrains.Add(ship, brain);
+				brain.enabled = enabled;
 				RegroupShips();
-				ship.enabled = enabled;
 			});
 			calendar = Country.Map.Calendar;
 			enabled = true;
