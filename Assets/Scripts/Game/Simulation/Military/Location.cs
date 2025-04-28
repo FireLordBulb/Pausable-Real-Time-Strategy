@@ -106,12 +106,12 @@ namespace Simulation.Military {
 			bool didDefenderWin = result == BattleResult.DefenderWon;
 			CommandingDefendingUnit.CommanderOnBattleEnd(didDefenderWin, this);
 			foreach (TUnit unit in DefendingUnits){
-				unit.OnBattleEnd(didDefenderWin);
+				unit.BattleEnd(didDefenderWin);
 			}
 			bool didAttackerWin = result == BattleResult.AttackerWon;
 			CommandingAttackingUnit.CommanderOnBattleEnd(didAttackerWin, this);
 			foreach (TUnit unit in AttackingUnits){
-				unit.OnBattleEnd(didAttackerWin);
+				unit.BattleEnd(didAttackerWin);
 			}
 			Country winningCountry = didDefenderWin ? CommandingDefendingUnit.Owner : CommandingAttackingUnit.Owner;
 			CommandingDefendingUnit = CommandingAttackingUnit = null;

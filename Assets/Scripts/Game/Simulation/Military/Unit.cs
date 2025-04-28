@@ -39,6 +39,7 @@ namespace Simulation.Military {
 		public bool IsMoving => PathToTarget != null;
 		public Province Province => Location.Province;
 		protected float MovementSpeed => movementSpeed;
+		private Vector3 LocationWorldPosition => Location.WorldPosition+locationWorldPostionOffset;
 		public abstract string CreatingVerb {get;}
 
 		internal static TUnit StartCreating(UnitType<TUnit> type, Location<TUnit> buildLocation, Country owner){
@@ -150,7 +151,7 @@ namespace Simulation.Military {
 			NextLocation = null;
 			TargetLocation = null;
 			IsRetreating = false;
-			worldPositionsOnPath.Enqueue(Location.WorldPosition+locationWorldPostionOffset);
+			worldPositionsOnPath.Enqueue(LocationWorldPosition);
 		}
 		
 		internal MoveOrderResult MoveTo(Location<TUnit> destination){
@@ -210,9 +211,9 @@ namespace Simulation.Military {
 			DaysToNextLocation = CalculateTravelDays();
 
 			Vector3 nextWorldPosition = WorldPositionBetweenLocations(); 
-			float worldSpaceDistance = Vector3.Distance(Location.WorldPosition, nextWorldPosition);
+			float worldSpaceDistance = Vector3.Distance(LocationWorldPosition, nextWorldPosition);
 			float offset = Mathf.Min(worldSpaceMaxOffsetProportion*worldSpaceDistance, worldSpaceMoveDirectionOffset);
-			Vector3 offsetPosition = Vector3.MoveTowards(Location.WorldPosition, nextWorldPosition, offset);
+			Vector3 offsetPosition = Vector3.MoveTowards(LocationWorldPosition, nextWorldPosition, offset);
 			worldPositionsOnPath.Enqueue(offsetPosition);
 		}
 		private bool TryValidateNextLocation(){
@@ -246,12 +247,17 @@ namespace Simulation.Military {
 			StopMoving();
 		} 
 		internal abstract BattleResult DoBattle(List<TUnit> defenders, List<TUnit> attackers);
-		internal virtual void OnBattleEnd(bool didWin){
+		internal void BattleEnd(bool didWin){
+			OnBattleEnd(didWin);
+			if (this == null){
+				return;
+			}
 			locationWorldPostionOffset = Vector3.zero;
-			if (didWin && !IsMoving){
-				worldPositionsOnPath.Enqueue(Location.WorldPosition);
+			if (!IsMoving){
+				worldPositionsOnPath.Enqueue(LocationWorldPosition);
 			}
 		}
+		protected virtual void OnBattleEnd(bool didWin){}
 		internal abstract void StackWipe();
 		
 		public void OnSelect(){}
