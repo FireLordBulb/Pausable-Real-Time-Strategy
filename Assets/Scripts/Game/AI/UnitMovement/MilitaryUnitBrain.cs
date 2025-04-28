@@ -10,6 +10,7 @@ namespace AI {
 		
 		// String names for blackboard stored here to remove need for string literals in specific node implementations.
 		public string Target => "target";
+		public string Harbor => "harbor";
 		public string EnemyCountry => "enemyCountry";
 		
 		private void Awake(){

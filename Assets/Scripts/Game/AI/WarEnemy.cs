@@ -73,6 +73,17 @@ namespace AI {
 			List<Land> landChunk = overseasLandChunks.FirstOrDefault(landChunk => landChunk.Any(land => land == exampleLand));
 			return landChunk ?? ClosestProvinces;
 		}
+		public List<Land> GetAnyBesiegableLandChunk(){
+			foreach (List<Land> landChunk in overseasLandChunks){
+				if (!landChunk[0].Province.IsCoast){
+					continue;
+				}
+				if (landChunk.Any(land => land.Occupier != Controller.Country)){
+					return landChunk;
+				}
+			}
+			return null;
+		}
 		
 		public void ClearProvinceData(){
 			ClosestProvinces.Clear();

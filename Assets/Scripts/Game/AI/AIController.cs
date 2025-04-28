@@ -304,13 +304,13 @@ namespace AI {
 				ShipBrain brain = GetBrain(ship);
 				if (overseasWarEnemies.Count == 0){
 					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
-					if (harbors.Count > 0){
-						brain.Tree.Blackboard.SetValue(brain.Target, harbors[i%harbors.Count]);
-					}
 					// Transports with armies are locked to keeping that enemy when the war still rages.
 				} else if (ship is not Transport transport || transport.Deck.Units.Count == 0 || IsNoLongerAtWar(brain)){
 					WarEnemy enemy = overseasWarEnemies[i*overseasWarEnemies.Count/Country.Ships.Count];
 					brain.Tree.Blackboard.SetValue(brain.EnemyCountry, enemy);
+				}
+				if (harbors.Count > 0){
+					brain.Tree.Blackboard.SetValue(brain.Harbor, harbors[i%harbors.Count]);
 				}
 			}
 		}
