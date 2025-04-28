@@ -30,7 +30,7 @@ namespace Simulation.Military {
 			maxMonthlyReinforcement = (int)(MaxManpower*monthlyReinforcementRate);
 			Province.Calendar.OnMonthTick.AddListener(Reinforce);
 		}
-		protected override void OnFinishBuilding(){
+		internal override void OnFinishBuilding(){
 			Owner.RegimentBuilt.Invoke(this);
 		}
 		

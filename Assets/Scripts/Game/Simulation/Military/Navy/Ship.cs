@@ -31,7 +31,7 @@ namespace Simulation.Military {
 			fullRepairSailorsCost = (int)(sailors*reparationCostFraction);
 			Province.Calendar.OnMonthTick.AddListener(Repair);
 		}
-		protected override void OnFinishBuilding(){
+		internal override void OnFinishBuilding(){
 			Owner.ShipBuilt.Invoke(this);
 		}
 		

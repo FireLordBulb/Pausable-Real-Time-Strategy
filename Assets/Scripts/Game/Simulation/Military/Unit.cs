@@ -63,6 +63,8 @@ namespace Simulation.Military {
 			type.ConsumeBuildCostFrom(unit.Owner);
 			if (type.DaysToBuild == 0){
 				unit.FinishBuilding();
+				// OnFinishBuilding shouldn't be called in this factory method because then it's called before it gets added to the Country's list of units.
+				// Country will have to call OnFinishBuilding instead.
 				return unit;
 			}
 			unit.StartBuilding();
@@ -104,9 +106,11 @@ namespace Simulation.Military {
 		}
 		private void TickBuild(){
 			BuildDaysLeft--;
-			if (BuildDaysLeft <= 0){
-				FinishBuilding();
+			if (BuildDaysLeft > 0){
+				return;
 			}
+			FinishBuilding();
+			OnFinishBuilding();
 		}
 		private void FinishBuilding(){
 			// Something is wrong with the listeners causing this to be called multiple times, guard clause used as a dirty fix.
@@ -115,10 +119,9 @@ namespace Simulation.Military {
 			}
 			IsBuilt = true;
 			Province.Calendar.OnDayTick.RemoveListener(TickBuild);
-			OnFinishBuilding();
 			Province.Calendar.OnDayTick.AddListener(OnDayTick);
 		}
-		protected abstract void OnFinishBuilding();
+		internal abstract void OnFinishBuilding();
 		private void OnDayTick(){
 			if (!IsMoving){
 				return;

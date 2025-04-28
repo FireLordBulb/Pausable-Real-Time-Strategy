@@ -102,6 +102,9 @@ namespace Simulation {
 				return false;
 			}
 			regiments.Add(newRegiment);
+			if (newRegiment.IsBuilt){
+				newRegiment.OnFinishBuilding();
+			}
 			return true;
 		}
 		public Military.MoveOrderResult MoveRegimentTo(Military.Regiment regiment, Military.Location<Military.Regiment> location){
@@ -128,6 +131,9 @@ namespace Simulation {
 				return false;
 			}
 			ships.Add(newShip);
+			if (newShip.IsBuilt){
+				newShip.OnFinishBuilding();
+			}
 			return true;
 		}
 		public Military.MoveOrderResult MoveFleetTo(Military.Ship ship, Military.Location<Military.Ship> location){
