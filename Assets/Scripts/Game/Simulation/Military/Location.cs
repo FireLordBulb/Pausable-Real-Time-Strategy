@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -165,8 +166,24 @@ namespace Simulation.Military {
 		}
 		protected virtual void SpecificStartupLogic(){}
 		internal virtual void Refresh(){
-			for (int i = 0; i < Units.Count; i++){
-				Units[i].SetSharedPositionIndex(i);
+			Dictionary<(Location<TUnit>, BattleSide), int> sharedIndices = new();
+			Country defendingCountry = null, attackingCountry = null;
+			if (IsBattleOngoing){
+				defendingCountry = CommandingDefendingUnit.Owner;
+				attackingCountry = CommandingAttackingUnit.Owner;
+			}
+			foreach (TUnit unit in Units){
+				(Location<TUnit> nextLocation, BattleSide side) key = (unit.NextLocation, BattleSide.None);
+				if (unit.Owner == defendingCountry){
+					key.side = BattleSide.Defending;
+				} else if (unit.Owner == attackingCountry){
+					key.side = BattleSide.Attacking;
+				}
+				if (!sharedIndices.TryGetValue(key, out int index)){
+					index = 0;
+				}
+				unit.SetSharedPositionIndex(index);
+				sharedIndices[key] = index+1;
 			}
 		}
 		
@@ -175,5 +192,11 @@ namespace Simulation.Military {
 		public override string ToString(){
 			return Name;
 		}
+		
+		private enum BattleSide {
+			None,
+			Defending,
+			Attacking
+		} 
 	}
 }
