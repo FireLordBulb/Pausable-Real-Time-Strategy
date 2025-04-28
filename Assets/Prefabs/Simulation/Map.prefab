@@ -341,11 +341,11 @@ MonoBehaviour:
     day: 23
   callbackOrder:
   - Simulation.Land
-  - Simulation.Military.Regiment
-  - Simulation.Military.Ship
   - Simulation.Military.LandLocation
   - Simulation.Military.SeaLocation
   - Simulation.Military.Harbor
+  - Simulation.Military.Regiment
+  - Simulation.Military.Ship
   - Simulation.DiplomaticStatus
   - AI.AIController, AI
   - AI.RegimentBrain, AI
