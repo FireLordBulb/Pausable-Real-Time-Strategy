@@ -257,18 +257,16 @@ namespace AI {
 				return;
 			}
 			LandLocation capital = Country.Capital.ArmyLocation;
-			bool hasOverseasProvinces = false;
+			bool hasFoundOverseasProvince = false;
 			foreach (Land land in lands){
 				enemy.ClosestProvinces.Add(land);
 				List<ProvinceLink> path = Regiment.GetPath(capital, land.ArmyLocation, link => Regiment.LinkEvaluator(link, false, Country));
 				if (path == null){
 					distances[land] = int.MaxValue;
-					if (land.Province.IsCoast){
-						if (!hasOverseasProvinces){
-							overseasWarEnemies.Add(enemy);
-						}
-						enemy.AddOverseasProvince(land);
-						hasOverseasProvinces = true;
+					enemy.AddOverseasProvince(land);
+					if (!hasFoundOverseasProvince && land.Province.IsCoast){
+						overseasWarEnemies.Add(enemy);
+						hasFoundOverseasProvince = true;
 					}
 					continue;
 				}

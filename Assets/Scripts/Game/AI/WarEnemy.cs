@@ -8,8 +8,9 @@ namespace AI {
 		private readonly AIController Controller;
 		public readonly Country Country;
 		public readonly List<Land> ClosestProvinces;
-		private readonly List<Land> overseasProvinces;
-		private readonly List<List<Land>> overseasLandChunks;
+		private readonly List<Land> overseasLandLocked;
+		private readonly List<Land> overseasCoast;
+		private readonly HashSet<List<Land>> overseasLandChunks;
 		private int monthsOfWar;
 
 		public bool HasOverseasLand => overseasLandChunks.Count > 0;
@@ -19,8 +20,9 @@ namespace AI {
 			Controller = controller;
 			Country = country;
 			ClosestProvinces = new List<Land>();
-			overseasProvinces = new List<Land>();
-			overseasLandChunks = new List<List<Land>>();
+			overseasLandLocked = new List<Land>();
+			overseasCoast = new List<Land>();
+			overseasLandChunks = new HashSet<List<Land>>();
 			monthsOfWar = 0;
 		}
 
@@ -29,25 +31,39 @@ namespace AI {
 		}
 
 		public void AddOverseasProvince(Land province){
-			overseasProvinces.Add(province);
+			(province.Province.IsCoast ? overseasCoast : overseasLandLocked).Add(province);
 		}
 		
 		public void GroupOverseasProvinces(){
-			while (overseasProvinces.Count > 0){
+			AddLandChunks(overseasCoast);
+			AddLandChunks(overseasLandLocked);
+		}
+		private void AddLandChunks(List<Land> overseasLands){
+			while (overseasLands.Count > 0){
 				List<Land> landChunk = new();
-				Land firstProvince = overseasProvinces[^1];
-				overseasProvinces.RemoveAt(overseasProvinces.Count-1);
+				Dictionary<Land, int> distances = new();
+				Land firstProvince = overseasLands[^1];
+				overseasLands.RemoveAt(overseasLands.Count-1);
 				landChunk.Add(firstProvince);
-				for (int i = overseasProvinces.Count-1; i >= 0; i--){
-					Land province = overseasProvinces[i];
-					if (Regiment.GetPath(firstProvince.ArmyLocation, province.ArmyLocation, LinkEvaluator) != null){
-						overseasProvinces.RemoveAt(i);
-					}
-				}
-				
+				distances.Add(firstProvince, 0);
+				AddConnectedLand(firstProvince, overseasCoast, landChunk, distances);
+				AddConnectedLand(firstProvince, overseasLandLocked, landChunk, distances);
+				landChunk.Sort((left, right) => distances[left]-distances[right]);
 				overseasLandChunks.Add(landChunk);
 			}
-			// TODO: Sort chunks based on distance from a chosen closest port.
+		}
+		private void AddConnectedLand(Land firstProvince, List<Land> overseasLands, List<Land> landChunk, Dictionary<Land, int> distances){
+			const float speedIsIrrelevantForSorting = 1;
+			for (int i = overseasLands.Count-1; i >= 0; i--){
+				Land province = overseasLands[i];
+				List<ProvinceLink> path = Regiment.GetPath(firstProvince.ArmyLocation, province.ArmyLocation, LinkEvaluator);
+				if (path == null){
+					continue;
+				}
+				overseasLands.RemoveAt(i);
+				landChunk.Add(province);
+				distances[province] = path.Sum(link => Regiment.GetTravelDays(link, speedIsIrrelevantForSorting));
+			}
 		}
 		private bool LinkEvaluator(ProvinceLink link){
 			return Regiment.LinkEvaluator(link, false, Controller.Country);
@@ -60,7 +76,8 @@ namespace AI {
 		
 		public void ClearProvinceData(){
 			ClosestProvinces.Clear();
-			overseasProvinces.Clear();
+			overseasLandLocked.Clear();
+			overseasCoast.Clear();
 			overseasLandChunks.Clear();
 		}
 		
