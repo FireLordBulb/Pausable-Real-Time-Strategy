@@ -44,7 +44,7 @@ namespace AI {
 					return;
 				}
 				RegimentBrain brain = regiment.GetComponent<RegimentBrain>();
-				regimentBrains.Add(regiment, brain);
+				regimentBrains[regiment] = brain;
 				brain.enabled = enabled;
 				RegroupRegiments();
 			});
@@ -53,7 +53,7 @@ namespace AI {
 					return;
 				}
 				ShipBrain brain = ship.GetComponent<ShipBrain>();
-				shipBrains.Add(ship, brain);
+				shipBrains[ship] = brain;
 				brain.enabled = enabled;
 				RegroupShips();
 			});
