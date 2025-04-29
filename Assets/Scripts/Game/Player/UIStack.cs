@@ -181,7 +181,6 @@ namespace Player {
 			mouseWorldPosition = hit.point;
 			if (!hit.collider.TryGetComponent(out Province province)){
 				EndHover();
-				// TODO: hovering world-space UI elements.
 				if (hit.collider.TryGetComponent(out SelectableClickCollider clickCollider)){
 					hoveredSelectable = clickCollider.Selectable;
 				}
