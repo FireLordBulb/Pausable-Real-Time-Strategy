@@ -178,7 +178,7 @@ namespace Simulation.Military {
 				attackingCountry = CommandingAttackingUnit.Owner;
 			}
 			foreach (TUnit unit in Units){
-				(Location<TUnit> nextLocation, BattleSide side) key = (unit.NextLocation, BattleSide.None);
+				(Location<TUnit> nextLocation, BattleSide side) key = (HandleLocation(unit.NextLocation), BattleSide.None);
 				if (unit.Owner == defendingCountry){
 					key.side = BattleSide.Defending;
 				} else if (unit.Owner == attackingCountry){
@@ -191,6 +191,9 @@ namespace Simulation.Military {
 				sharedIndices[key] = index+1;
 				extraAction(unit, key);
 			}
+		}
+		protected virtual Location<TUnit> HandleLocation(Location<TUnit> location){
+			return location;
 		}
 		
 		public virtual void AdjustPathStart(List<ProvinceLink> path){}

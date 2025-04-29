@@ -29,6 +29,13 @@ namespace Simulation.Military {
 			}
 		}
 		
+		protected override Location<Regiment> HandleLocation(Location<Regiment> location){
+			if (location is TransportDeck deck){
+				return ((Transport)deck.Transport.Location.Units.First(ship => ship.Owner == deck.Transport.Owner && ship is Transport)).Deck;
+			}
+			
+			return base.HandleLocation(location);
+		}
 		internal override void Refresh(){
 			base.Refresh();
 			// New sieges aren't started during battles, and existing ones are paused.
