@@ -130,6 +130,7 @@ namespace AI {
 			}
 			RefreshBrainDictionaries();
 			CalculateBorderProvinces();
+			warEnemies.RemoveAll(enemy => !enemy.Country.enabled);
 			overseasWarEnemies.Clear();
 			foreach (WarEnemy warEnemy in warEnemies){
 				CalculateClosestProvinces(warEnemy);
@@ -291,7 +292,7 @@ namespace AI {
 				if (warEnemies.Count == 0){
 					brain.Tree.Blackboard.RemoveValue(brain.EnemyCountry);
 					if (borderProvinces.Count > 0){
-						brain.Tree.Blackboard.SetValue(brain.Target, borderProvinces[i%borderProvinces.Count].Province);
+						brain.Tree.Blackboard.SetValue(brain.Target, borderProvinces[i%borderProvinces.Count].Province.Land.ArmyLocation);
 					}
 				} else if (regiment.Location is not TransportDeck || IsNoLongerAtWar(brain)){
 					WarEnemy enemy = warEnemies[i*warEnemies.Count/Country.Regiments.Count];
@@ -354,16 +355,23 @@ namespace AI {
 			if (unitsAtLocation.All(unit => unit.Owner == Country)){
 				return false;
 			}
+			Regiment[] allyRegiments = regiment.Location.Units.Where(unit => unit.Owner == Country).ToArray();
 			Regiment[] enemyRegiments = unitsAtLocation.Where(unit => unit.Owner != Country).ToArray();
-			return maxStrengthMultiplier <= RelativeStrength(regiment, enemyRegiments);
+			return maxStrengthMultiplier <= RelativeStrength(allyRegiments, enemyRegiments);
 		}
-		internal static float RelativeStrength(Regiment attacker, params Regiment[] defenders){
+		internal static float RelativeStrength(IReadOnlyList<Regiment> attackers, IReadOnlyList<Regiment> defenders){
+			if (attackers.Count == 0){
+				return float.PositiveInfinity;
+			}
+			if (defenders.Count == 0){
+				return float.NegativeInfinity;
+			}
 			float defenderStrength = defenders.Sum(RegimentStrength);
-			float attackerStrength = RegimentStrength(attacker);
+			float attackerStrength = attackers.Sum(RegimentStrength);
 
 			Province battleProvince = defenders[0].Province;
 			// Attacker gets the defender advantage if they control the province the defender is in.
-			if (battleProvince.Land.Controller == attacker.Owner){
+			if (battleProvince.Land.Controller == attackers[0].Owner){
 				attackerStrength *= battleProvince.DefenderDamageMultiplier;
 			// Otherwise the defender gets the defender advantage as expected.
 			} else {

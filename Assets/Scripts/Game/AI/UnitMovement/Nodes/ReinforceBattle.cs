@@ -9,14 +9,15 @@ namespace AI.Nodes {
 		protected override void OnStart(){
 			base.OnStart();
 			foreach (ProvinceLink link in Unit.Province.Links){
-				if (link.Target.IsSea){
+				Province province = link.Target;
+				if (province.IsSea){
 					continue;
 				}
-				LandLocation armyLocation = link.Target.Land.ArmyLocation;
-				if (!Brain.IsReinforceableBattleOngoing(armyLocation)){
+				Location<Regiment> location = province.Land.ArmyLocation;
+				if(!Brain.IsReinforceableBattleOngoing(location)){
 					continue;
 				}
-				Blackboard.SetValue(Brain.Target, link.Target);
+				Blackboard.SetValue(Brain.Target, location);
 				CurrentState = State.Success;
 				return;
 			}
