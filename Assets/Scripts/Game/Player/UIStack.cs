@@ -72,7 +72,6 @@ namespace Player {
 			cameraInput.gameObject.name = "MainCamera";
 			cameraMovement = cameraInput.Movement;
 			cameraMovement.Map = map;
-			cameraMovement.SetMapExtent(new Vector2(100, 50));
 			mainCamera = cameraMovement.Camera;
 		}	
 		private void SpawnUI(){

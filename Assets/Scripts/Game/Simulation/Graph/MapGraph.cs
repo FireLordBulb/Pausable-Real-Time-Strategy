@@ -13,21 +13,21 @@ namespace Simulation {
 		private readonly List<Province> landProvinces = new();
 		private readonly Dictionary<string, Country> countries = new();
 		private readonly Dictionary<(Country, Country), DiplomaticStatus> diplomaticStatuses = new();
-
+		private Bounds bounds;
+		
 		public Calendar Calendar {get; private set;}
 		
 		public Transform ProvinceParent => provinceParent;
 		public Transform CountryParent => countryParent;
 		public Transform MilitaryUnitRoot => militaryUnitRoot;
-		public Province this[Color32 color]{
-			get {
-				provinces.TryGetValue(color, out Province value);
-				return value;
-			}
-		}
+		public Province this[Color32 color]{get {
+			provinces.TryGetValue(color, out Province value);
+			return value;
+		}}
 		public IEnumerable<Province> Nodes => provinces.Values;
 		public IEnumerable<Province> LandProvinces => landProvinces;
 		public IEnumerable<Country> Countries => countries.Values;
+		public Bounds Bounds => bounds;
 		
 		private void Awake(){
 			Calendar = GetComponent<Calendar>();
@@ -57,6 +57,7 @@ namespace Simulation {
 			if (province.IsLand){
 				landProvinces.Add(province);
 			}
+			bounds.Encapsulate(province.Bounds);
 		}
 		internal void Add(Country country){
 			countries.Add(country.Name, country);

@@ -22,7 +22,6 @@ namespace Player {
         private int targetZoom;
         private bool isDragging;
         private Vector3 mousePosition;
-        private Vector3 extent;
         
         private int previousZoom;
         // Well, smaller or equal.
@@ -31,7 +30,7 @@ namespace Player {
         private Vector3 lockedMousePoint;
         private Vector2 movementVelocity;
         private float currentAlpha;
-
+        
         public Camera Camera {get; private set;}
         public MapGraph Map {private get; set;}
         
@@ -56,8 +55,6 @@ namespace Player {
                 zoomStartMousePosition = Camera.ViewportToScreenPoint(Center);
                 break;
             }
-
-            extent = Vector3.positiveInfinity;
         }
 
         public void DirectionalMovement(Vector2 direction){
@@ -108,10 +105,6 @@ namespace Player {
             transform.position = position;
             targetZoom = nearestSmallerZoom = previousZoom = index;
             currentAlpha = zoomLevels[index].doUseTerrainMapMode ? terrainMapModeAlpha : Opaque;
-        }
-
-        public void SetMapExtent(Vector2 mapExtent){
-            extent = VectorGeometry.ToXZPlane(mapExtent);
         }
         
         private void Update(){
@@ -172,9 +165,9 @@ namespace Player {
             } else {
                 position += positionDelta;
             }
-            Vector3 maxExtent = Camera.ScreenToWorldPoint(Camera.WorldToScreenPoint(extent)+new Vector3(Screen.width, Screen.height)*maxScreensBeyondMap);
-            position.x = Mathf.Clamp(position.x, -maxExtent.x, maxExtent.x);
-            position.z = Mathf.Clamp(position.z, -maxExtent.z, maxExtent.z);
+            Vector3 maxExtents = Camera.ScreenToWorldPoint(Camera.WorldToScreenPoint(Map.Bounds.extents)+new Vector3(Screen.width, Screen.height)*maxScreensBeyondMap);
+            position.x = Mathf.Clamp(position.x, -maxExtents.x, maxExtents.x);
+            position.z = Mathf.Clamp(position.z, -maxExtents.z, maxExtents.z);
             transform.position = position;
             // Switching between political and terrain map modes by applying opacity to provinces. -----------------
             if (Mathf.Abs(currentAlpha-previousAlpha) < Vector2.kEpsilon){

@@ -44,6 +44,7 @@ namespace Simulation {
         public Calendar Calendar => Graph.Calendar;
         public MeshRenderer MeshRenderer => shapeMeshRenderer;
         public Vector3 WorldPosition => transform.position;
+        public Bounds Bounds => meshCollider.bounds;
         public bool IsSea => type == Type.Sea;
         public bool IsCoast => type == Type.Coast;
         public bool IsLand => type is Type.LandLocked or Type.Coast;
