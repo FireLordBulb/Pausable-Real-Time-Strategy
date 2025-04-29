@@ -15,6 +15,7 @@ namespace Player {
         [SerializeField] private float movementSpeed;
         [SerializeField] private float stoppingSeconds;
         [SerializeField] private float terrainMapModeAlpha;
+        [SerializeField] private LayerMask raycastMask;
         
         private Vector2 movementDirection;
         private int targetZoom;
@@ -66,7 +67,7 @@ namespace Player {
         }
         public void SetZoom(int zoom, Vector3 zoomCenter){
             zoomStartMousePosition = zoomCenter;
-            if (Physics.Raycast(Camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
+            if (Raycast(Camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
                 lockedMousePoint = hit.point;
             }
                 
@@ -83,7 +84,7 @@ namespace Player {
             }
         }
         public void StartDragging(){
-            if (!Physics.Raycast(MouseRay, out RaycastHit hit)){
+            if (!Raycast(MouseRay, out RaycastHit hit)){
                 return;
             }
             isDragging = true;
@@ -157,7 +158,7 @@ namespace Player {
             Vector3 positionDelta = VectorGeometry.ToXZPlane(Time.deltaTime*position.y*movementVelocity);
             if (IsMouseLocked){
                 lockedMousePoint += positionDelta;
-                if (Physics.Raycast(isDragging ? MouseRay : Camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
+                if (Raycast(isDragging ? MouseRay : Camera.ScreenPointToRay(zoomStartMousePosition), out RaycastHit hit)){
                     position += lockedMousePoint-hit.point;
                 }
             } else {
@@ -171,6 +172,10 @@ namespace Player {
             foreach (Province province in Map.LandProvinces){
                 province.Alpha = currentAlpha;
             }
+        }
+        private bool Raycast(Ray ray, out RaycastHit hit){
+            hit = new RaycastHit();
+            return Physics.Raycast(ray, out hit, float.MaxValue, raycastMask);
         }
         
         [Serializable]
