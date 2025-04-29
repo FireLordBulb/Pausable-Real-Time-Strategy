@@ -5,6 +5,8 @@ using UnityEngine;
 namespace Simulation {
 	[RequireComponent(typeof(Calendar))]
 	public class MapGraph : MonoBehaviour, ISearchableGraph<Province, ProvinceLink> {
+		[SerializeField] private Transform provinceParent;
+		[SerializeField] private Transform countryParent;
 		[SerializeField] private Transform militaryUnitRoot;
 
 		private readonly Dictionary<Color32, Province> provinces = new();
@@ -14,6 +16,8 @@ namespace Simulation {
 
 		public Calendar Calendar {get; private set;}
 		
+		public Transform ProvinceParent => provinceParent;
+		public Transform CountryParent => countryParent;
 		public Transform MilitaryUnitRoot => militaryUnitRoot;
 		public Province this[Color32 color]{
 			get {

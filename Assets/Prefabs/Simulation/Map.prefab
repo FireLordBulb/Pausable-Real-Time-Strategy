@@ -298,8 +298,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6576a70eac00d6749b85ac2112c12bbd, type: 2}
   countryData: {fileID: 11400000, guid: 8360e8b44c345d4489fce937849dd8b1, type: 2}
   doRandomizeCountries: 0
-  provinceParent: {fileID: 9147229521150883095}
-  countryParent: {fileID: 1756637957935687588}
   borderWidth: 0.6
   textureScale: 64
   mapWidth: 200
@@ -315,6 +313,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 188725f724624ee981f83e7305c86bbd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  provinceParent: {fileID: 9147229521150883095}
+  countryParent: {fileID: 1756637957935687588}
   militaryUnitRoot: {fileID: 43706573409180236}
 --- !u!114 &1589979489945114706
 MonoBehaviour:

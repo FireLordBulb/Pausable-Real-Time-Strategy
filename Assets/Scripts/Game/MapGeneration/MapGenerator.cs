@@ -21,8 +21,6 @@ namespace MapGeneration {
         [SerializeField] private Provinces[] provinceData;
         [SerializeField] private Countries countryData;
         [SerializeField] private bool doRandomizeCountries;
-        [SerializeField] private Transform provinceParent;
-        [SerializeField] private Transform countryParent;
         [SerializeField] private float borderWidth;
         [SerializeField] private float textureScale;
         [SerializeField] private float mapWidth;
@@ -225,11 +223,11 @@ namespace MapGeneration {
                 Vector3 worldPosition = ConvertToWorldSpace(provinceGenerator.Pivot);
                 Province province;
                 if (provinceDataDictionary.TryGetValue(color, out ProvinceData data)){
-                    Land land = Instantiate(landPrefab, worldPosition, Quaternion.identity, provinceParent);
+                    Land land = Instantiate(landPrefab, worldPosition, Quaternion.identity, mapGraph.ProvinceParent);
                     land.Init(color, mapGraph, data, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh, provinceGenerator.Vertices);
                     province = land.Province;
                 } else {
-                    Sea sea = Instantiate(seaPrefab, worldPosition, Quaternion.identity, provinceParent);
+                    Sea sea = Instantiate(seaPrefab, worldPosition, Quaternion.identity, mapGraph.ProvinceParent);
                     sea.Init(color, mapGraph, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh, provinceGenerator.Vertices);
                     province = sea.Province;
                 }
@@ -257,7 +255,7 @@ namespace MapGeneration {
         private void InitializeCountries(){
             Vector3 worldPosition = ConvertToWorldSpace(Vector2.zero);
             foreach (CountryData data in countryData.List){
-                Country country = Instantiate(countryPrefab, worldPosition, Quaternion.identity, countryParent);
+                Country country = Instantiate(countryPrefab, worldPosition, Quaternion.identity, mapGraph.CountryParent);
                 country.Init(data, mapGraph);
                 country.transform.localScale = provinceScale;
             }
@@ -270,7 +268,7 @@ namespace MapGeneration {
     #if UNITY_EDITOR
         
         private void RandomizeCountries(){
-            Country[] countries = countryParent.GetComponentsInChildren<Country>();
+            Country[] countries = mapGraph.CountryParent.GetComponentsInChildren<Country>();
             int maxProvinces = -1;
             foreach (Country country in countries){
                 int provinceCount = country.Provinces.Count();
