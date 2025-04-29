@@ -17,6 +17,10 @@ namespace Simulation.Military {
 		protected override bool AreHostile(Country defender, Country attacker){
 			return false;
 		}
+		internal override void Refresh(){
+			Transport.Location.Refresh();
+		}
+		
 		public override void AdjustPathStart(List<ProvinceLink> path){
 			path.Insert(0, ((Harbor)Transport.Location).Coast);
 		}

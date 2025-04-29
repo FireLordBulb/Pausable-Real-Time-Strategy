@@ -8,14 +8,14 @@ namespace Simulation.Military {
 		
 		protected List<TUnit> DefendingUnits;
 		protected List<TUnit> AttackingUnits;
-		protected TUnit CommandingDefendingUnit;
-		protected TUnit CommandingAttackingUnit;
 		
 		public abstract string Name {get;}
 		public virtual Province SearchProvince => Province;
 		public abstract Province Province {get;}
 		public abstract Vector3 WorldPosition {get;}
 		public bool IsBattleOngoing {get; private set;}
+		internal TUnit CommandingDefendingUnit {get; private set;}
+		internal TUnit CommandingAttackingUnit {get; private set;}
 		
 		public IReadOnlyList<TUnit> Units => units;
 		
@@ -168,6 +168,9 @@ namespace Simulation.Military {
 		}
 		protected virtual void SpecificStartupLogic(){}
 		internal virtual void Refresh(){
+			Refresh((_, _) => {});
+		}
+		internal void Refresh(Action<TUnit, (Location<TUnit>, BattleSide)> extraAction){
 			Dictionary<(Location<TUnit>, BattleSide), int> sharedIndices = new();
 			Country defendingCountry = null, attackingCountry = null;
 			if (IsBattleOngoing){
@@ -186,6 +189,7 @@ namespace Simulation.Military {
 				}
 				unit.SetSharedPositionIndex(index);
 				sharedIndices[key] = index+1;
+				extraAction(unit, key);
 			}
 		}
 		
@@ -195,7 +199,7 @@ namespace Simulation.Military {
 			return Name;
 		}
 		
-		private enum BattleSide {
+		internal enum BattleSide {
 			None,
 			Defending,
 			Attacking

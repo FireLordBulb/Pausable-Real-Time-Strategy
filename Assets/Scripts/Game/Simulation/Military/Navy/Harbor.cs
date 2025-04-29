@@ -22,8 +22,12 @@ namespace Simulation.Military {
 		
 		// Navies only fight if their countries are officially at war.
 		protected override bool AreHostile(Country defender, Country attacker){
-			return defender.GetDiplomaticStatus(attacker).IsAtWar;
+			return SeaLocation.AreAtWar(defender, attacker);
 		}
+		internal override void Refresh(){
+			SeaLocation.Refresh(this);
+		}
+		
 		public override void AdjustPathStart(List<ProvinceLink> path){
 			path.Insert(0, Coast.Reverse);
 		}
