@@ -80,10 +80,10 @@ namespace Simulation.Military {
 			float terrainSpeedMultiplier;
 			if (link is HarborLink harborLink){
 				distance = Vector3.Distance(harborLink.Land.Province.WorldPosition, harborLink.WorldPosition);
-				terrainSpeedMultiplier = 1+harborLink.Land.Terrain.MoveSpeedModifier;
+				terrainSpeedMultiplier = harborLink.Land.Terrain.MoveSpeedMultiplier;
 			} else {
 				distance = link.Distance;
-				terrainSpeedMultiplier = 1+0.5f*(link.Source.Terrain.MoveSpeedModifier+link.Target.Terrain.MoveSpeedModifier);
+				terrainSpeedMultiplier = 0.5f*(link.Source.Terrain.MoveSpeedMultiplier+link.Target.Terrain.MoveSpeedMultiplier);
 			}
 			return Mathf.Max(Mathf.RoundToInt(distance/(movementSpeed*terrainSpeedMultiplier)), 1);
 		}

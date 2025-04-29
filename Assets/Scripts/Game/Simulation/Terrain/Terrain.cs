@@ -11,8 +11,8 @@ namespace Simulation {
 		[SerializeField] private int combatWidth;
 		public string Name => name;
 		public Material Material => material;
-		public float DevelopmentModifier => developmentModifier;
-		public float MoveSpeedModifier => moveSpeedModifier;
+		public float DevelopmentMultiplier => 1+developmentModifier;
+		public float MoveSpeedMultiplier => 1+moveSpeedModifier;
 		public float DefenderAdvantage => defenderAdvantage;
 		public int CombatWidth => combatWidth;
 	}

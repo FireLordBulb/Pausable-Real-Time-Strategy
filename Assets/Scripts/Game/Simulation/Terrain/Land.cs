@@ -45,7 +45,7 @@ namespace Simulation {
 		public bool HasOwner => owner != null;
 		public bool IsOccupied => occupier != null;
 
-		public int SiegeDays => (int)(siegeDaysPerDevelopment*(1+Terrain.DevelopmentModifier));
+		public int SiegeDays => (int)(siegeDaysPerDevelopment*Terrain.MoveSpeedMultiplier);
 		
 		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
 			Province = GetComponent<Province>();
@@ -59,10 +59,9 @@ namespace Simulation {
 		}
 		
 		private void Start(){
-			float multiplier = 1+Terrain.DevelopmentModifier;
-			goldProduction = baseProduction.Gold*multiplier;
-			manpowerProduction = Mathf.RoundToInt(baseProduction.Manpower*multiplier);
-			sailorsProduction = Province.IsCoast ? Mathf.RoundToInt(baseProduction.Sailors*multiplier) : 0;
+			goldProduction = baseProduction.Gold*Terrain.DevelopmentMultiplier;
+			manpowerProduction = Mathf.RoundToInt(baseProduction.Manpower*Terrain.DevelopmentMultiplier);
+			sailorsProduction = Province.IsCoast ? Mathf.RoundToInt(baseProduction.Sailors*Terrain.DevelopmentMultiplier) : 0;
 			Province.Calendar.OnMonthTick.AddListener(() => {
 				if (!HasOwner){
 					return;

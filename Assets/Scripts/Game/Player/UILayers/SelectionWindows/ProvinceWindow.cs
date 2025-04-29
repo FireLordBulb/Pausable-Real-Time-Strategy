@@ -33,7 +33,7 @@ namespace Player {
 				return;
 			}
 			Terrain terrain = Selected.Terrain;
-			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentModifier, terrain.MoveSpeedModifier, terrain.DefenderAdvantage);
+			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentMultiplier-1, terrain.DevelopmentMultiplier-1, terrain.DefenderAdvantage);
 			countryPanel.SetCountry(Selected.Land.Owner, UI);
 		}
 	}
