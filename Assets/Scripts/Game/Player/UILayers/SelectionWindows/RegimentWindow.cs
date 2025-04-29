@@ -9,28 +9,14 @@ namespace Player {
 			TransportDeck deck = transport.Deck;
 			MoveOrderResult result = Player.MoveRegimentTo(Selected, deck);
 			SetMessageFromResult(result, deck.Name);
-			if (!UI.IsShiftHeld){
-				return true;
-			}
-			foreach (Regiment regiment in Selected.Location.Units){
-				if (regiment != Selected && regiment.Owner == Player){
-					Player.MoveRegimentTo(regiment, deck);
-				}
-			}
+			MoveOtherRegimentsTo(deck);
 			return true;
 		}
 		protected override void OrderMove(Province province){
 			Location<Regiment> location = province.IsLand ? province.Land.ArmyLocation : null;
 			MoveOrderResult result = Player.MoveRegimentTo(Selected, location);
 			SetMessageFromResult(result, province.Name);
-			if (!UI.IsShiftHeld){
-				return;
-			}
-			foreach (Regiment regiment in Selected.Location.Units){
-				if (regiment != Selected && regiment.Owner == Player){
-					Player.MoveRegimentTo(regiment, location);
-				}
-			}
+			MoveOtherRegimentsTo(location);
 		}
 		private void SetMessageFromResult(MoveOrderResult result, string targetName){
 			SetMessage(result switch {
@@ -40,9 +26,31 @@ namespace Player {
 				MoveOrderResult.NoAccess => "You cannot cross another country's borders when you're at peace with it!",
 				MoveOrderResult.InvalidTarget => "Armies cannot walk on water!",
 				MoveOrderResult.NotOwner => "You cannot move another country's units!",
-				MoveOrderResult.DestinationUnusable => "You can only use transports when they are your own and done constructing, and they have enough manpower capacity!",
+				MoveOrderResult.DestinationUnusable => "Cannot use that transport!",
 				_ => ""
 			});
+		}
+		private void MoveOtherRegimentsTo(Location<Regiment> location){
+			if (!UI.IsShiftHeld){
+				return;
+			}
+			if (Selected.Location is not TransportDeck deck){
+				MoveRegimentsInLocation(Selected.Location, location);
+				return;
+			}
+			foreach (Ship ship in deck.Transport.Location.Units){
+				if (ship.Owner != Player || ship is not Transport transport){
+					continue;
+				}
+				MoveRegimentsInLocation(transport.Deck, location);
+			}
+		}
+		private void MoveRegimentsInLocation(Location<Regiment> currentLocation, Location<Regiment> targetLocation){
+			foreach (Regiment regiment in currentLocation.Units){
+				if (regiment != Selected && regiment.Owner == Player){
+					Player.MoveRegimentTo(regiment, targetLocation);
+				}
+			}
 		}
 	}
 }
