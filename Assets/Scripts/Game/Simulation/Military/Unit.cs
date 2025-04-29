@@ -148,6 +148,7 @@ namespace Simulation.Military {
 				return;
 			}
 			Location.Remove(self);
+			locationWorldPostionOffset = Vector3.zero;
 			worldPositionsOnPath.Enqueue(WorldPositionBetweenLocations());
 			Location = NextLocation;
 			if (ReferenceEquals(Location, TargetLocation)){

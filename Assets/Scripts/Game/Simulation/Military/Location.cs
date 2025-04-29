@@ -82,6 +82,8 @@ namespace Simulation.Military {
 			side.Remove(unit);
 			if (side.Count == 0){
 				EndBattle(result);
+			} else {
+				unit.BattleEnd(true);
 			}
 		}
 		
