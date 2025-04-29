@@ -355,7 +355,17 @@ namespace AI {
 			if (unitsAtLocation.All(unit => unit.Owner == Country)){
 				return false;
 			}
-			Regiment[] allyRegiments = regiment.Location.Units.Where(unit => unit.Owner == Country).ToArray();
+			List<Regiment> allyRegiments = new();
+			if (regiment.Location is TransportDeck deck && deck.Transport.Location is Harbor harbor){
+				foreach (Ship ship in harbor.Units){
+					if (ship.Owner != Country || ship is not Transport transport){
+						continue;
+					}
+					allyRegiments.AddRange(transport.Deck.Units);
+				}
+			} else {
+				allyRegiments.AddRange(regiment.Location.Units.Where(unit => unit.Owner == Country));
+			}
 			Regiment[] enemyRegiments = unitsAtLocation.Where(unit => unit.Owner != Country).ToArray();
 			return maxStrengthMultiplier <= RelativeStrength(allyRegiments, enemyRegiments);
 		}
