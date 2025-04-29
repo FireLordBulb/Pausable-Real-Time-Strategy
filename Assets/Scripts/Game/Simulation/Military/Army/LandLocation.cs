@@ -66,7 +66,7 @@ namespace Simulation.Military {
 			}
 		}
 		private bool CannotBeSiegedBy(Regiment regiment){
-			return regiment.Owner == Land.Controller || regiment.IsMoving || !regiment.Owner.GetDiplomaticStatus(Land.Controller).IsAtWar;
+			return regiment.Owner == Land.Controller || regiment.IsMoving || (regiment.Owner != Land.Owner && !regiment.Owner.GetDiplomaticStatus(Land.Owner).IsAtWar);
 		}
 
 		private void TickSiege(){
