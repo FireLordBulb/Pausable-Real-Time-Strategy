@@ -6,6 +6,7 @@ namespace Simulation {
 	[RequireComponent(typeof(Province))]
 	public class Land : MonoBehaviour {
 		[SerializeField] private int occupationMaterialIndex;
+		[SerializeField] private BaseProduction baseProduction;
 		[SerializeField] private float siegeDaysPerDevelopment;
 		
 		private Country owner;
@@ -57,13 +58,11 @@ namespace Simulation {
 			ArmyLocation = new Military.LandLocation(this);
 		}
 		
-		// TODO: Refactor away and put values in an SO.
-		private const int BaseProduction = 10;
 		private void Start(){
 			float multiplier = 1+Terrain.DevelopmentModifier;
-			goldProduction = multiplier;
-			manpowerProduction = Mathf.RoundToInt(BaseProduction*multiplier);
-			sailorsProduction = Province.IsCoast ? Mathf.RoundToInt(BaseProduction*multiplier) : 0;
+			goldProduction = baseProduction.Gold*multiplier;
+			manpowerProduction = Mathf.RoundToInt(baseProduction.Manpower*multiplier);
+			sailorsProduction = Province.IsCoast ? Mathf.RoundToInt(baseProduction.Sailors*multiplier) : 0;
 			Province.Calendar.OnMonthTick.AddListener(() => {
 				if (!HasOwner){
 					return;

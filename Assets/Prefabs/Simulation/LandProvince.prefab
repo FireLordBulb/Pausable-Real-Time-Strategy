@@ -58,4 +58,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   occupationMaterialIndex: 2
+  baseProduction: {fileID: 11400000, guid: cff9f25fe366f4a4e9f6de7d76ee055c, type: 2}
   siegeDaysPerDevelopment: 50
