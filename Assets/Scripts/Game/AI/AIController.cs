@@ -178,7 +178,7 @@ namespace AI {
 		
 		public static void OnWarStart(AIController declarer, AIController target){
 			// If you declare war on a country at the tick it gets full annexed, ignore the declaration.
-			if (!target.enabled){
+			if (!target.Country.enabled){
 				return;
 			}
 			declarer.OnWarStart(target);
