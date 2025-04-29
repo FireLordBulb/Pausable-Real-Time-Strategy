@@ -361,13 +361,13 @@ namespace AI {
 			float defenderStrength = defenders.Sum(RegimentStrength);
 			float attackerStrength = RegimentStrength(attacker);
 
-			Land battleLand = defenders[0].Province.Land;
+			Province battleProvince = defenders[0].Province;
 			// Attacker gets the defender advantage if they control the province the defender is in.
-			if (battleLand.Controller == attacker.Owner){
-				attackerStrength *= 1+battleLand.Terrain.DefenderAdvantage;
+			if (battleProvince.Land.Controller == attacker.Owner){
+				attackerStrength *= battleProvince.DefenderDamageMultiplier;
 			// Otherwise the defender gets the defender advantage as expected.
 			} else {
-				defenderStrength *= 1+battleLand.Terrain.DefenderAdvantage;
+				defenderStrength *= battleProvince.DefenderDamageMultiplier;
 			}
 			return defenderStrength/attackerStrength;
 		}

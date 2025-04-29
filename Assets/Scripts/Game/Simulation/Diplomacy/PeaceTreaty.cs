@@ -20,7 +20,7 @@ namespace Simulation {
 				float days = truceData.BaseTruceDays;
 				days += truceData.DaysPerProvince*AnnexedLands.Count;
 				foreach (Land annexedLand in AnnexedLands){
-					days += truceData.DaysPerDevelopment*annexedLand.Terrain.DevelopmentMultiplier;
+					days += truceData.DaysPerDevelopment*annexedLand.Development;
 				}
 				days += truceData.DaysPerGold*GoldTransfer;
 				return Mathf.Clamp((int)days, truceData.MinTruceDays, truceData.MaxTruceDays);

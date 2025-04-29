@@ -13,7 +13,7 @@ namespace Simulation {
 		public Material Material => material;
 		public float DevelopmentMultiplier => 1+developmentModifier;
 		public float MoveSpeedMultiplier => 1+moveSpeedModifier;
-		public float DefenderAdvantage => defenderAdvantage;
+		public float DefenderDamageMultiplier => 1+defenderAdvantage;
 		public int CombatWidth => combatWidth;
 	}
 }

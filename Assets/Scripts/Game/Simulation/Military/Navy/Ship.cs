@@ -57,12 +57,16 @@ namespace Simulation.Military {
 		}
 		protected override int CalculateTravelDays(){
 			ProvinceLink link = PathToTarget[PathIndex];
-			float terrainSpeedMultiplier = link switch {
-				CoastLink coastLink => coastLink.Sea.Province.Terrain.MoveSpeedMultiplier,
-				ShallowsLink shallowsLink => shallowsLink.Sea.Province.Terrain.MoveSpeedMultiplier,
-				_ => 0.5f*(link.Source.Terrain.MoveSpeedMultiplier+link.Target.Terrain.MoveSpeedMultiplier)
-			};
-			return Mathf.Max(Mathf.RoundToInt(link.Distance/(MovementSpeed*terrainSpeedMultiplier)), 1);
+			float distance;
+			float terrainSpeedMultiplier;
+			if (link is HarborLink harborLink){
+				distance = Vector3.Distance(harborLink.Sea.Province.WorldPosition, harborLink.WorldPosition);
+				terrainSpeedMultiplier = harborLink.Sea.Province.MoveSpeedMultiplier;
+			} else {
+				distance = link.Distance;
+				terrainSpeedMultiplier = 0.5f*(link.Source.MoveSpeedMultiplier+link.Target.MoveSpeedMultiplier);
+			}
+			return Mathf.Max(Mathf.RoundToInt(distance/(MovementSpeed*terrainSpeedMultiplier)), 1);
 		}
 		protected override bool LinkEvaluator(ProvinceLink link){
 			return link is SeaLink;

@@ -19,7 +19,6 @@ namespace Simulation {
 		private Material occupationMaterial;
 		
 		public Province Province {get; private set;}
-		public Terrain Terrain {get; private set;}
 		public Military.LandLocation ArmyLocation {get; private set;}
 		public int Development {get; private set;}
 		
@@ -45,8 +44,8 @@ namespace Simulation {
 		public Country Controller => Occupier == null ? Owner : Occupier;
 		public bool HasOwner => owner != null;
 		public bool IsOccupied => occupier != null;
-
-		public int SiegeDays => (int)(siegeDaysPerDevelopment*Terrain.MoveSpeedMultiplier);
+		
+		public int SiegeDays => (int)(siegeDaysPerDevelopment*Province.MoveSpeedMultiplier);
 		
 		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
 			Province = GetComponent<Province>();
@@ -55,15 +54,15 @@ namespace Simulation {
 
 			occupationMaterial = Province.MeshRenderer.sharedMaterials[occupationMaterialIndex];
 			occupationMaterial.color = Color.clear;
-			Terrain = Province.Terrain;
-			Development = data.Development;
+			// In the data development values have a minimum of 0, but are shifted up by one for all the actual computations.
+			Development = 1+data.Development;
 			ArmyLocation = new Military.LandLocation(this);
 		}
 		
 		private void Start(){
-			goldProduction = baseProduction.Gold*Terrain.DevelopmentMultiplier;
-			manpowerProduction = Mathf.RoundToInt(baseProduction.Manpower*Terrain.DevelopmentMultiplier);
-			sailorsProduction = Province.IsCoast ? Mathf.RoundToInt(baseProduction.Sailors*Terrain.DevelopmentMultiplier) : 0;
+			goldProduction = baseProduction.Gold*Development*Province.DevelopmentMultiplier;
+			manpowerProduction = Mathf.RoundToInt(baseProduction.Manpower*Development*Province.DevelopmentMultiplier);
+			sailorsProduction = Province.IsCoast ? Mathf.RoundToInt(baseProduction.Sailors*Development*Province.DevelopmentMultiplier) : 0;
 			Province.Calendar.OnMonthTick.AddListener(() => {
 				if (!HasOwner){
 					return;

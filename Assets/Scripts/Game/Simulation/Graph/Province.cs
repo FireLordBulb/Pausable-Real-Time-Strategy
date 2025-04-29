@@ -12,6 +12,7 @@ namespace Simulation {
         [SerializeField] private MeshRenderer shapeMeshRenderer;
         
         private MeshCollider meshCollider;
+        private Terrain terrain;
         private readonly Dictionary<Color32, ProvinceLink> linkMap = new();
         private readonly List<ProvinceLink> linkList = new();
         private readonly List<Vector2> vertexList = new();
@@ -24,7 +25,6 @@ namespace Simulation {
         
         public Color32 ColorKey {get; private set;}
         public MapGraph Graph {get; private set;}
-        public Terrain Terrain {get; private set;}
         public string Name {get; private set;}
         public Vector2 MapPosition {get; private set;}
         public Land Land {get; private set;}
@@ -45,6 +45,11 @@ namespace Simulation {
         public MeshRenderer MeshRenderer => shapeMeshRenderer;
         public Vector3 WorldPosition => transform.position;
         public Bounds Bounds => meshCollider.bounds;
+        public Material TerrainMaterial => terrain.Material;
+        public float DevelopmentMultiplier => terrain.DevelopmentMultiplier;
+        public float MoveSpeedMultiplier => terrain.MoveSpeedMultiplier;
+        public float DefenderDamageMultiplier => terrain.DefenderDamageMultiplier;
+        public int CombatWidth => terrain.CombatWidth;
         public bool IsSea => type == Type.Sea;
         public bool IsCoast => type == Type.Coast;
         public bool IsLand => type is Type.LandLocked or Type.Coast;
@@ -64,12 +69,12 @@ namespace Simulation {
             Debug.Assert(Land == null ^ Sea == null, $"FATAL: Province {gameObject.name} is both land and sea, or neither!");
             type = Land == null ? Type.Sea : Type.LandLocked;
         }
-        public void Init(Color32 colorKey, MapGraph mapGraph, Terrain terrain, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
+        public void Init(Color32 colorKey, MapGraph mapGraph, Terrain terrainData, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
             ColorKey = colorKey;
             gameObject.name = $"R:{colorKey.r}, G:{colorKey.g}, B:{colorKey.b}";
             
-            Terrain = terrain;
-            Name = $"Rural {Terrain.Name}";
+            terrain = terrainData;
+            Name = $"Rural {terrain.Name}";
             baseColor = mapColor;
             
             shapeMeshRenderer.materials[1].color = baseColor;

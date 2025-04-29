@@ -18,7 +18,7 @@ namespace Player {
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
 			title.text = $"{Selected.Name}";
-			Texture2D texture = (Texture2D)Selected.Terrain.Material.mainTexture;
+			Texture2D texture = (Texture2D)Selected.TerrainMaterial.mainTexture;
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 			if (Selected.IsSea){
 				terrainValuesTable.SetActive(false);
@@ -32,8 +32,7 @@ namespace Player {
 			if (Selected.IsSea){
 				return;
 			}
-			Terrain terrain = Selected.Terrain;
-			valueTable.UpdateColumn(0, Format.SignedPercent, terrain.DevelopmentMultiplier-1, terrain.DevelopmentMultiplier-1, terrain.DefenderAdvantage);
+			valueTable.UpdateColumn(0, Format.SignedPercent, Selected.DevelopmentMultiplier-1, Selected.DevelopmentMultiplier-1, Selected.DefenderDamageMultiplier-1);
 			countryPanel.SetCountry(Selected.Land.Owner, UI);
 		}
 	}

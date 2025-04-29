@@ -32,6 +32,7 @@ namespace Simulation {
 		#region Auto-Properties
 		public Color MapColor {get; private set;}
 		public int ProvinceCount {get; private set;}
+		public int TotalDevelopment {get; private set;}
 		public float Gold {get; private set;}
 		public int Manpower {get; private set;}
 		public int Sailors {get; private set;}
@@ -213,13 +214,13 @@ namespace Simulation {
 			if (province.Occupier == this){
 				province.Unoccupy();
 			}
-			ChangeProvinceCount(provinces.Add(province), +1);
+			ChangeProvinceCount(provinces.Add(province), +1, province);
 			if (ProvinceCount > 0){
 				enabled = true;
 			}
 		}
 		internal void LoseProvince(Land province){
-			ChangeProvinceCount(provinces.Remove(province), -1);
+			ChangeProvinceCount(provinces.Remove(province), -1, province);
 			if (ProvinceCount > 0){
 				return;
 			}
@@ -235,11 +236,12 @@ namespace Simulation {
 			RegenerateBorder();
 			enabled = false;
 		}
-		private void ChangeProvinceCount(bool wasChanged, int change){
+		private void ChangeProvinceCount(bool wasChanged, int change, Land province){
 			if (!wasChanged){
 				return;
 			}
 			ProvinceCount += change;
+			TotalDevelopment += change*province.Development;
 			wasBorderChanged = true;
 		}
 		internal void GainOccupation(Land province){

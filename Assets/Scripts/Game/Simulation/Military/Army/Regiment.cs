@@ -80,10 +80,10 @@ namespace Simulation.Military {
 			float terrainSpeedMultiplier;
 			if (link is HarborLink harborLink){
 				distance = Vector3.Distance(harborLink.Land.Province.WorldPosition, harborLink.WorldPosition);
-				terrainSpeedMultiplier = harborLink.Land.Terrain.MoveSpeedMultiplier;
+				terrainSpeedMultiplier = harborLink.Land.Province.MoveSpeedMultiplier;
 			} else {
 				distance = link.Distance;
-				terrainSpeedMultiplier = 0.5f*(link.Source.Terrain.MoveSpeedMultiplier+link.Target.Terrain.MoveSpeedMultiplier);
+				terrainSpeedMultiplier = 0.5f*(link.Source.MoveSpeedMultiplier+link.Target.MoveSpeedMultiplier);
 			}
 			return Mathf.Max(Mathf.RoundToInt(distance/(movementSpeed*terrainSpeedMultiplier)), 1);
 		}
@@ -114,12 +114,12 @@ namespace Simulation.Military {
 		}
 		
 		internal override BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers){
-			return DoBattle(defenders, attackers, Location.Province.Land.Terrain);
+			return DoBattle(defenders, attackers, Location.Province);
 		}
-		private static BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers, Terrain terrain){
-			(List<Regiment> frontLineDefenders, float defenderProportionOnFrontLine) = GetFrontLine(defenders, terrain.CombatWidth);
-			(List<Regiment> frontLineAttackers, float attackerProportionOnFrontLine) = GetFrontLine(attackers, terrain.CombatWidth);
-			(float defenderDamage, float defenderKillRate) = CalculateDamage(frontLineDefenders, defenderProportionOnFrontLine*(1+terrain.DefenderAdvantage));
+		private static BattleResult DoBattle(List<Regiment> defenders, List<Regiment> attackers, Province province){
+			(List<Regiment> frontLineDefenders, float defenderProportionOnFrontLine) = GetFrontLine(defenders, province.CombatWidth);
+			(List<Regiment> frontLineAttackers, float attackerProportionOnFrontLine) = GetFrontLine(attackers, province.CombatWidth);
+			(float defenderDamage, float defenderKillRate) = CalculateDamage(frontLineDefenders, defenderProportionOnFrontLine*province.DefenderDamageMultiplier);
 			(float attackerDamage, float attackerKillRate) = CalculateDamage(frontLineAttackers, attackerProportionOnFrontLine);
 			ApplyDamage(frontLineAttackers, defenderDamage, defenderKillRate);
 			if (attackers.Sum(attacker => attacker.CurrentManpower) <= 0){

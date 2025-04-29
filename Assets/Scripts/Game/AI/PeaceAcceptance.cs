@@ -105,10 +105,9 @@ namespace AI {
 		}
 		private float GetOccupationValue(Country occupier, Country target){
 			float value = 0;
-			float totalDevelopment = TotalDevelopment(target);
 			foreach (Land occupation in occupier.Occupations.Where(occupation => occupation.Owner == target)){
-				float development = occupation.Terrain.DevelopmentMultiplier;
-				value += provinceHeld/occupier.ProvinceCount*development*developmentHeld/totalDevelopment;
+				float development = occupation.Development;
+				value += provinceHeld/occupier.ProvinceCount+developmentHeld*development/target.TotalDevelopment;
 			}
 			return value;
 		}
@@ -142,9 +141,9 @@ namespace AI {
 		private float WarGoalCost(PeaceTreaty treaty, float maxGoldAcceptanceDecrease){
 			float acceptance = 0;
 			
-			float totalLoserDevelopment = TotalDevelopment(treaty.Loser);
+			float totalLoserDevelopment = treaty.Loser.TotalDevelopment;
 			foreach (Land land in treaty.AnnexedLands.Where(annexedLand => annexedLand.Owner == treaty.Loser)){
-				float development = land.Terrain.DevelopmentMultiplier;
+				float development = land.Development;
 				float provinceCost = provincesDemanded/treaty.Loser.ProvinceCount+development*developmentDemanded/totalLoserDevelopment;
 				if (land.Occupier != treaty.Winner){
 					provinceCost *= unoccupiedMultiplier;
@@ -156,8 +155,5 @@ namespace AI {
 			
 			return acceptance;
 		}
-		
-		// TODO: Keep cached in Country after proper development values are added.
-		private static float TotalDevelopment(Country country) => country.Provinces.Sum(land => land.Terrain.DevelopmentMultiplier);
 	}
 }
