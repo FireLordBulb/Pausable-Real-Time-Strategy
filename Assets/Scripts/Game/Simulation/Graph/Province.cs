@@ -66,8 +66,6 @@ namespace Simulation {
         public void Init(Color32 colorKey, MapGraph mapGraph, Terrain terrain, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
             ColorKey = colorKey;
             gameObject.name = $"R:{colorKey.r}, G:{colorKey.g}, B:{colorKey.b}";
-            Graph = mapGraph;
-            mapGraph.Add(this);
             
             Terrain = terrain;
             Name = $"Rural {Terrain.Name}";
@@ -82,6 +80,9 @@ namespace Simulation {
             meshCollider.sharedMesh = shapeMesh;
             shapeMeshFilter.sharedMesh = shapeMesh;
             vertexList.AddRange(vertices);
+            
+            Graph = mapGraph;
+            mapGraph.Add(this);
         }
         public void AddNeighbor(Province neighbor, int startIndex, int endIndex, Func<Vector2, Vector3> worldSpaceConverter){
             if (type == Type.LandLocked && neighbor != null && neighbor.type == Type.Sea){

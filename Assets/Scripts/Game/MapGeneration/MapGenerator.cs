@@ -224,14 +224,15 @@ namespace MapGeneration {
                 Province province;
                 if (provinceDataDictionary.TryGetValue(color, out ProvinceData data)){
                     Land land = Instantiate(landPrefab, worldPosition, Quaternion.identity, mapGraph.ProvinceParent);
+                    land.transform.localScale = provinceScale;
                     land.Init(color, mapGraph, data, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh, provinceGenerator.Vertices);
                     province = land.Province;
                 } else {
                     Sea sea = Instantiate(seaPrefab, worldPosition, Quaternion.identity, mapGraph.ProvinceParent);
+                    sea.transform.localScale = provinceScale;
                     sea.Init(color, mapGraph, provinceGenerator.Pivot, provinceGenerator.OutlineMesh, provinceGenerator.ShapeMesh, provinceGenerator.Vertices);
                     province = sea.Province;
                 }
-                province.transform.localScale = provinceScale;
                 provinceNeighbors.Add((province, (provinceGenerator.Neighbors, provinceGenerator.TriPointIndices)));
             }
         }
