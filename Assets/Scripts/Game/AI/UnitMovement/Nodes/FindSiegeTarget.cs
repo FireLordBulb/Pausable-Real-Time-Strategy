@@ -53,7 +53,7 @@ namespace AI.Nodes {
 					if (path == null){
 						continue;
 					}
-					SetTarget(Unit.GetLocation(path[0], transport.Deck));
+					SetTarget(Unit.GetLocation(path[0], transport.Deck, false));
 					return;
 				}
 			}

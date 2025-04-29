@@ -21,6 +21,7 @@ namespace Simulation.Military {
 		private TUnit self;
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		private int daysUntilReroll;
+		private bool doOverrideTargetLocation;
 		private Vector3 locationWorldPostionOffset;
 		private int sharedPositionIndex;
 		private int visualizedPositionIndex;
@@ -231,10 +232,17 @@ namespace Simulation.Military {
 		private bool TryValidateNextLocation(){
 			NextLocation = GetLocation(PathToTarget[PathIndex]);
 			if (NextLocation != null){
+				if (doOverrideTargetLocation){
+					TargetLocation = NextLocation;
+					doOverrideTargetLocation = false;
+				}
 				return true;
 			}
 			StopMoving();
 			return false;
+		}
+		protected void OverrideTargetLocation(){
+			doOverrideTargetLocation = true;
 		}
 		protected abstract Vector3 WorldPositionBetweenLocations();
 		protected abstract int CalculateTravelDays();

@@ -118,9 +118,6 @@ namespace Simulation {
 			if (location.Province.IsLand && location.Province.Land.Owner != this && !GetDiplomaticStatus(location.Province.Land.Owner).IsAtWar){
 				return Military.MoveOrderResult.NoAccess;
 			}
-			if (location is Military.TransportDeck deck && deck.Transport.Owner != this){
-				return Military.MoveOrderResult.DestinationUnusable;
-			}
 			return regiment.MoveTo(location);
 		}
 		public bool TryStartConstructingFleet(Military.ShipType type, Military.Harbor location){

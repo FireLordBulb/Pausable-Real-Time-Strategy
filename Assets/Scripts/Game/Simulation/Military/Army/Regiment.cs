@@ -45,16 +45,30 @@ namespace Simulation.Military {
 		}
 		
 		protected override Location<Regiment> GetLocation(ProvinceLink link){
-			return GetLocation(link, TargetLocation);
+			return GetLocation(link, TargetLocation, true);
 		}
 		// Different transports in the same harbor are connected by the same link, so which transport is the target needs to be specified.
-		public Location<Regiment> GetLocation(ProvinceLink link, Location<Regiment> targetLocation){
+		public Location<Regiment> GetLocation(ProvinceLink link, Location<Regiment> targetLocation, bool doAllowDifferentTransport){
 			if (link is ShallowsLink shallowsLink){
 				if (!IsLocationInHarbor(targetLocation, shallowsLink.Harbor)){
 					return null;
 				}
 				TransportDeck deck = (TransportDeck)targetLocation;
-				return deck.Transport.CanRegimentBoard(this) ? deck : null;
+				bool canRegimentBoard = deck.Transport.CanRegimentBoard(this);
+				if (canRegimentBoard){
+					return deck;
+				}
+				if (!doAllowDifferentTransport){
+					return null;
+				}
+				foreach (Ship ship in deck.Transport.Location.Units){
+					if (ship == deck.Transport || ship is not Transport transport || !transport.CanRegimentBoard(this)){
+						continue;
+					}
+					OverrideTargetLocation();
+					return transport.Deck;
+				}
+				return null;
 			}
 			if (link is CoastLink coastLink){
 				if (!IsLocationInHarbor(Location, coastLink.Harbor)){
