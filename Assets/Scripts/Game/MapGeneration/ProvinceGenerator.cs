@@ -289,15 +289,7 @@ namespace MapGeneration {
 			}
 			return true;
 		}
-	/*
-	#if UNITY_EDITOR
-		public void GizmosPolygon(Func<Vector2, Vector3> worldSpaceConverter){
-			for (int i = 0; i < vertices.Count; i++){
-				Handles.DrawLine(worldSpaceConverter(Center+vertices[i]), worldSpaceConverter(Center+vertices[(i+1)%vertices.Count]));
-			}
-		}
-	#endif*/
-
+		
 		// Essentially a wrapper around Node that allows a node to keep track of its previous node in the LinkedLoopList.
 		// This allows the previous node to be accessed without having to make the entire LinkedLoopList bi-directional.
 		private struct NodePair {

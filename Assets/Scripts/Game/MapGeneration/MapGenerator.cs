@@ -10,9 +10,9 @@ namespace MapGeneration {
     [RequireComponent(typeof(MapGraph))]
     public class MapGenerator : MonoBehaviour {
         private const int MaxOutlineSteps = 10000;
+        private static readonly Color32 OffMapColorKey = new(0, 0, 0, 0);
         // In clockwise order, starting with because that direction should be checked first when iterating over the texture.
         public static readonly Vector2Int[] CardinalDirections = {Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left};
-        public static Color32 OffMapColorKey = new(0, 0, 0, 0);
         
         [SerializeField] private Texture2D mapImage;
         [SerializeField] private Land landPrefab;
@@ -316,16 +316,8 @@ namespace MapGeneration {
                     }
                 }
             }
-            // TODO: Prefer coast
             Land RandomUnownedProvince() => unownedLandProvinces.ElementAt(Random.Range(0, unownedLandProvinces.Count));
         }
-    /*
-        private void OnDrawGizmos(){
-            foreach ((Color color, ProvinceGenerator provinceGenerator) in provinceGenerators){
-                Handles.color = color;
-                provinceGenerator.GizmosPolygon(ConvertToWorldSpace);
-            }
-        }*/
     #endif
     }
 }
