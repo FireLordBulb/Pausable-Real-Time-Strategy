@@ -224,6 +224,9 @@ namespace Simulation.Military {
 				Land[] borderingLands = Location.Province.Links.Where(link => link is LandLink).Select(link => link.Target.Land).ToArray();
 				if (borderingLands.Length != 0){
 					SetDestination(borderingLands[Random.Range(0, borderingLands.Length)].ArmyLocation);
+				} else {
+					// If there's truly nowhere to retreat, just die.
+					StackWipe();
 				}
 				return;
 			}
