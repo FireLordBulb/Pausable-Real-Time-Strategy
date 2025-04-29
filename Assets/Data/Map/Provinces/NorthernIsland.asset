@@ -17,31 +17,39 @@ MonoBehaviour:
       serializedVersion: 2
       rgba: 4282371797
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
+    development: 0
   - color:
       serializedVersion: 2
       rgba: 4291605871
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
+    development: 0
   - color:
       serializedVersion: 2
       rgba: 4290993519
     terrain: {fileID: 11400000, guid: 36c09b1b712b8cf43979115b7bd98ef0, type: 2}
+    development: 0
   - color:
       serializedVersion: 2
       rgba: 4281576168
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
+    development: 0
   - color:
       serializedVersion: 2
       rgba: 4290614210
     terrain: {fileID: 11400000, guid: f29cc320d5217ff499a79b848eb75aac, type: 2}
+    development: 0
   - color:
       serializedVersion: 2
       rgba: 4286556501
     terrain: {fileID: 11400000, guid: 36c09b1b712b8cf43979115b7bd98ef0, type: 2}
+    development: 0
   - color:
       serializedVersion: 2
       rgba: 4280517465
     terrain: {fileID: 11400000, guid: 80d1720f80b396747b2e1d184d222e6f, type: 2}
+    development: 0
   - color:
       serializedVersion: 2
       rgba: 4284384294
     terrain: {fileID: 11400000, guid: 80d1720f80b396747b2e1d184d222e6f, type: 2}
+    development: 0

@@ -21,6 +21,7 @@ namespace Simulation {
 		public Province Province {get; private set;}
 		public Terrain Terrain {get; private set;}
 		public Military.LandLocation ArmyLocation {get; private set;}
+		public int Development {get; private set;}
 		
 		public Country Owner {
 			get => owner;
@@ -55,6 +56,7 @@ namespace Simulation {
 			occupationMaterial = Province.MeshRenderer.sharedMaterials[occupationMaterialIndex];
 			occupationMaterial.color = Color.clear;
 			Terrain = Province.Terrain;
+			Development = data.Development;
 			ArmyLocation = new Military.LandLocation(this);
 		}
 		
@@ -95,7 +97,9 @@ namespace Simulation {
 	public class ProvinceData {
 		[SerializeField] private Color32 color;
 		[SerializeField] private Terrain terrain;
+		[SerializeField] private int development;
 		public Color32 Color => color;
 		public Terrain Terrain => terrain;
+		public int Development => development;
 	}
 }
