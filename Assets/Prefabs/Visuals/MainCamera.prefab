@@ -266,6 +266,7 @@ MonoBehaviour:
   movementSpeed: 0.75
   stoppingSeconds: 0.15
   terrainMapModeAlpha: 0.2
+  maxScreensBeyondMap: 0.25
   raycastMask:
     serializedVersion: 2
     m_Bits: 8
