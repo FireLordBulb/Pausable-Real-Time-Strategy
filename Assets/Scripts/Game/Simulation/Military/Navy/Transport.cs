@@ -21,7 +21,8 @@ namespace Simulation.Military {
 		}
 		
 		public bool CanRegimentBoard(Regiment regiment){
-			return IsBuilt && regiment.Owner == Owner && !Location.IsBattleOngoing && regiment.CurrentManpower <= ManpowerCapacity-Deck.Units.Sum(unit => unit.CurrentManpower);
+			// Have to check if the transport has been destroyed by using Unity's overridden null equality.
+			return this != null && IsBuilt && regiment.Owner == Owner && !Location.IsBattleOngoing && regiment.CurrentManpower <= ManpowerCapacity-Deck.Units.Sum(unit => unit.CurrentManpower);
 		}
 		internal override void StackWipe(){
 			foreach (Regiment regiment in Deck.Units.ToArray()){
