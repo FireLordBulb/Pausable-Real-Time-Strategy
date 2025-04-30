@@ -68,7 +68,7 @@ namespace Simulation {
 		private void Start(){
 			goldProduction = baseProduction.Gold*Development*Province.GoldMultiplier;
 			manpowerProduction = Mathf.RoundToInt(baseProduction.Manpower*Development*Province.ManpowerMultiplier);
-			sailorsProduction = Province.IsCoast ? Mathf.RoundToInt(baseProduction.Sailors*Development*Province.SailorsMultiplier) : 0;
+			sailorsProduction = Mathf.RoundToInt(baseProduction.Sailors*Development*Province.SailorsMultiplier);
 			Province.Calendar.OnMonthTick.AddListener(() => {
 				if (!HasOwner){
 					return;

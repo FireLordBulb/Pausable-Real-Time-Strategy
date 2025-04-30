@@ -8,6 +8,7 @@ namespace Simulation {
 		[SerializeField] private float goldModifier;
 		[SerializeField] private float manpowerModifier;
 		[SerializeField] private float sailorsModifier;
+		[SerializeField] private float landLockedSailorsModifier;
 		[SerializeField] private float moveSpeedModifier;
 		[SerializeField] private float defenderAdvantage;
 		[SerializeField] private int combatWidth;
@@ -16,6 +17,7 @@ namespace Simulation {
 		public float GoldMultiplier => 1+goldModifier;
 		public float ManpowerMultiplier => 1+manpowerModifier;
 		public float SailorsMultiplier => 1+sailorsModifier;
+		public float LandLockedSailorsMultiplier => 1+landLockedSailorsModifier;
 		public float MoveSpeedMultiplier => 1+moveSpeedModifier;
 		public float DefenderDamageMultiplier => 1+defenderAdvantage;
 		public int CombatWidth => combatWidth;

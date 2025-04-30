@@ -17,6 +17,7 @@ MonoBehaviour:
   goldModifier: 0
   manpowerModifier: 0
   sailorsModifier: 0
+  landLockedSailorsModifier: -0.8
   moveSpeedModifier: 0
   defenderAdvantage: 0.15
   combatWidth: 5000

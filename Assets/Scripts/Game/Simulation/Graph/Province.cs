@@ -48,7 +48,7 @@ namespace Simulation {
         public Material TerrainMaterial => terrain.Material;
         public float GoldMultiplier => terrain.GoldMultiplier;
         public float ManpowerMultiplier => terrain.ManpowerMultiplier;
-        public float SailorsMultiplier => terrain.SailorsMultiplier;
+        public float SailorsMultiplier => IsCoast ? terrain.SailorsMultiplier : terrain.LandLockedSailorsMultiplier;
         public float MoveSpeedMultiplier => terrain.MoveSpeedMultiplier;
         public float DefenderDamageMultiplier => terrain.DefenderDamageMultiplier;
         public int CombatWidth => terrain.CombatWidth;
