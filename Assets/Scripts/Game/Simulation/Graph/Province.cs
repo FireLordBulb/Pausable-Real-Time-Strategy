@@ -91,8 +91,12 @@ namespace Simulation {
             mapGraph.Add(this);
         }
         public void AddNeighbor(Province neighbor, int startIndex, int endIndex, Func<Vector2, Vector3> worldSpaceConverter){
-            if (type == Type.LandLocked && neighbor != null && neighbor.type == Type.Sea){
-                type = Type.Coast;
+            if (neighbor != null){
+                if (type == Type.LandLocked && neighbor.type == Type.Sea){
+                    type = Type.Coast;
+                } else if (type == Type.Sea && neighbor.type != Type.Sea){
+                    Name = Sea.AnyCoastLinkName;
+                }
             }
             ProvinceLink newLink = ProvinceLink.Create(this, neighbor, startIndex, endIndex, worldSpaceConverter);
             linkList.Add(newLink);

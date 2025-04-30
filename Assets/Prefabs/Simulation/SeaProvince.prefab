@@ -51,3 +51,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   color: {r: 0.13333334, g: 0.3137255, b: 0.7019608, a: 0}
   terrain: {fileID: 11400000, guid: db49aab6b8124e749b02e9349db891bd, type: 2}
+  onlySeaLinksName: Open Sea
+  anyCoastLinkName: Coastal Sea
