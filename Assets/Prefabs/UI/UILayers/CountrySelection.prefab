@@ -458,8 +458,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   observe: {fileID: 2409385360199589662}
-  doAutoSelect: 1
-  isObserver: 1
+  doAutoSelect: 0
+  isObserver: 0
   autoSelectedCountryName: Etor
 --- !u!1 &4142178202629803031
 GameObject:

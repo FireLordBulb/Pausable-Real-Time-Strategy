@@ -673,7 +673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   consoleText: {fileID: 8264708232965290729}
   inputField: {fileID: 1131140191030279549}
-  doUseAutoCommands: 1
+  doUseAutoCommands: 0
   autoCommands:
   - play_as Olpeka
   - gold 100
