@@ -166,6 +166,9 @@ namespace Simulation.Military {
 			return (frontLine, proportionOnFrontLine);
 		}
 		private static (float, float) CalculateDamage(List<Regiment> dealer, float multiplier){
+			if (dealer.Count == 0){
+				return (0, 0);
+			}
 			float totalDamage = dealer.Sum(regiment => regiment.Damage);
 			float killRate = dealer.Sum(regiment => regiment.KillRate*regiment.Damage/totalDamage);
 			totalDamage *= multiplier;
