@@ -35,6 +35,8 @@ namespace Player {
 		[Header("Offer Peace Times")]
 		[SerializeField] private int responseDays;
 		[SerializeField] private int rejectedSendBlockDays;
+		[Space]
+		[SerializeField] private int goldMaxCharacters;
 		
 		private PeaceTreaty treaty;
 		private PeaceTreaty pendingTreaty;
@@ -185,7 +187,7 @@ namespace Player {
 			RefreshTreatyTerms();
 		}
 		private void RefreshGoldTransfer(){
-			availableGold.text = $"/{Format.FormatLargeNumber(treaty.Loser.Gold, Format.FiveDigits)}<color=yellow>G</color>";
+			availableGold.text = $"/{Format.FormatLargeNumber(treaty.Loser.Gold, goldMaxCharacters)}<color=yellow>G</color>";
 			if (treaty.GoldTransfer <= 0){
 				treaty.GoldTransfer = 0;
 				payLess.interactable = false;
@@ -198,7 +200,7 @@ namespace Player {
 			} else {
 				payMore.interactable = true;
 			}
-			goldTransfer.text = $"{Format.FormatLargeNumber(treaty.GoldTransfer, Format.FiveDigits)}<color=yellow>G</color>";
+			goldTransfer.text = $"{Format.FormatLargeNumber(treaty.GoldTransfer, goldMaxCharacters)}<color=yellow>G</color>";
 		}
 		private void SetSelectedButton(Button button){
 			makeDemands.interactable = true;
@@ -219,7 +221,7 @@ namespace Player {
 				builder.Append($"\n- {treaty.Winner} annexes {annexedProvinceCount} province{(annexedProvinceCount == 1 ? "" : 's')} from {treaty.Loser}");
 			}
 			if (0 < treaty.GoldTransfer){
-				builder.Append($"\n- {treaty.Loser} pays {Format.FormatLargeNumber(treaty.GoldTransfer, Format.FiveDigits)} gold in reparations to {treaty.Winner}");
+				builder.Append($"\n- {treaty.Loser} pays {Format.FormatLargeNumber(treaty.GoldTransfer, goldMaxCharacters)} gold in reparations to {treaty.Winner}");
 			}
 			SetTreatyTermsText(builder.ToString());
 			reparationsRow.SetActive(true);

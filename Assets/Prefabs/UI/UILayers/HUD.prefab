@@ -608,6 +608,7 @@ MonoBehaviour:
   warButton: {fileID: 2615223843036875942}
   economyButton: {fileID: 6236611923062367638}
   calendarPanel: {fileID: 1614260340479607437}
+  resourceMaxCharacters: 6
 --- !u!1 &3820630026898402977
 GameObject:
   m_ObjectHideFlags: 0

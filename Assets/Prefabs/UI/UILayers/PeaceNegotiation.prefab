@@ -1338,6 +1338,7 @@ MonoBehaviour:
   ctrlMultiplier: 10
   responseDays: 7
   rejectedSendBlockDays: 30
+  goldMaxCharacters: 6
 --- !u!223 &8791179991314321868
 Canvas:
   m_ObjectHideFlags: 0

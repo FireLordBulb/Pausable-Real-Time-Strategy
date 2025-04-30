@@ -19,6 +19,8 @@ namespace Player {
 		[SerializeField] private Button economyButton;
 		[Header("CalendarPanel")]
 		[SerializeField] private CalendarPanel calendarPanel;
+		[Space]
+		[SerializeField] private int resourceMaxCharacters;
 		
 		private SidePanelMenu sidePanelMenu;
 		
@@ -64,9 +66,9 @@ namespace Player {
 			if (Player == null){
 				return;
 			}
-			gold.text = Format.FormatLargeNumber(Player.Gold, Format.FiveDigits);
-			manpower.text = Format.FormatLargeNumber(Player.Manpower, Format.SevenDigits);
-			sailors.text = Format.FormatLargeNumber(Player.Sailors, Format.SevenDigits);
+			gold.text = Format.FormatLargeNumber(Player.Gold, resourceMaxCharacters);
+			manpower.text = Format.FormatLargeNumber(Player.Manpower, resourceMaxCharacters);
+			sailors.text = Format.FormatLargeNumber(Player.Sailors, resourceMaxCharacters);
 			if (sidePanelMenu != null){
 				sidePanelMenu.Refresh();
 			}

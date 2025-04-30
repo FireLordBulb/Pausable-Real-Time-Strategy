@@ -1,30 +1,49 @@
 using System.Globalization;
-using System.Text;
 using UnityEngine;
 
 namespace Player {
 	public static class Format {
-		public const float FiveDigits = 10000f;
-		public const float SevenDigits = 1000000f;
-		private const float InverseOneK = 0.001f;
-		private const int OneK = 1000;
+		private const int SuffixDigitStep = 3;
+		private static readonly (char, long)[] Suffixes ={
+			('k', 1000),
+			('M', 1000000),
+			('B', 1000000000),
+			('T', 1000000000000),
+			('P', 1000000000000000),
+			('E', 1000000000000000000)
+		};
 		private const float Cent = 100f;
-
-		public static string FormatLargeNumber(float number, float digitLimit){
-			if (number < digitLimit){
-				return number.ToString("0.0", CultureInfo.InvariantCulture);
-			} 
-			StringBuilder builder = new((number*InverseOneK).ToString("0.0", CultureInfo.InvariantCulture));
-			builder.Append('k');
-			return builder.ToString();
+		
+		public static string FormatLargeNumber(float number, int maxCharacters){
+			string untruncated = FloatToString(number);
+			int characterAmount = untruncated.Length;
+			if (characterAmount <= maxCharacters){
+				return untruncated;
+			}
+			(char character, long value) = GetSuffix(characterAmount, maxCharacters);
+			return $"{FloatToString(number/value)}{character}";
 		}
-		public static string FormatLargeNumber(int number, float digitLimit){
-			if (number < digitLimit){
-				return number.ToString();
-			} 
-			StringBuilder builder = new((number/OneK).ToString());
-			builder.Append('k');
-			return builder.ToString();
+		public static string FormatLargeNumber(int number, int maxCharacters){
+			string untruncated = number.ToString();
+			int characterAmount = untruncated.Length;
+			if (characterAmount <= maxCharacters){
+				return untruncated;
+			}
+			(char character, long value) = GetSuffix(characterAmount, maxCharacters);
+			return $"{(number/value).ToString()}{character}";
+		}
+		private static (char, long) GetSuffix(int characterAmount, int maxCharacters){
+			foreach ((char, long) suffix in Suffixes){
+				characterAmount -= SuffixDigitStep;
+				if (characterAmount < maxCharacters){
+					return suffix;
+				}
+			}
+			// In case no suffix works just use the largest one.
+			return Suffixes[^1];
+		}
+		private static string FloatToString(float number){
+			return number.ToString("0.0", CultureInfo.InvariantCulture);
 		}
 		
 		public static string SignedPercent(float value){

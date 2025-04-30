@@ -568,6 +568,7 @@ MonoBehaviour:
   declareWar: {fileID: 4773956076193225406}
   makePeace: {fileID: 4182173246170238704}
   select: {fileID: 3163394256738763880}
+  cellValueMaxCharacters: 6
 --- !u!1 &3463939548050612619
 GameObject:
   m_ObjectHideFlags: 0

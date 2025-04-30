@@ -17,6 +17,7 @@ namespace Player {
 		[SerializeField] private Button declareWar;
 		[SerializeField] private Button makePeace;
 		[SerializeField] private Button select;
+		[SerializeField] private int cellValueMaxCharacters;
 		
 		private DiplomaticStatus diplomaticStatus;
 		private PeaceNegotiation peaceNegotiation;
@@ -46,12 +47,12 @@ namespace Player {
 				SetupSelectButton();
 			}
 			valueTable.UpdateColumn(0, (
-				Format.FormatLargeNumber(Selected.ProvinceCount, Format.SevenDigits)),	
-				Format.FormatLargeNumber(Selected.Regiments.Count, Format.FiveDigits),	
-				Format.FormatLargeNumber(Selected.Ships.Count, Format.FiveDigits),	
-				Format.FormatLargeNumber(Selected.Gold, Format.FiveDigits),	
-				Format.FormatLargeNumber(Selected.Manpower, Format.SevenDigits),	
-				Format.FormatLargeNumber(Selected.Sailors, Format.SevenDigits)
+				Format.FormatLargeNumber(Selected.ProvinceCount, cellValueMaxCharacters)),	
+				Format.FormatLargeNumber(Selected.Regiments.Count, cellValueMaxCharacters),	
+				Format.FormatLargeNumber(Selected.Ships.Count, cellValueMaxCharacters),	
+				Format.FormatLargeNumber(Selected.Gold, cellValueMaxCharacters),	
+				Format.FormatLargeNumber(Selected.Manpower, cellValueMaxCharacters),	
+				Format.FormatLargeNumber(Selected.Sailors, cellValueMaxCharacters)
 			);
 			RefreshDiplomacy();
 			if (peaceNegotiation != null){
