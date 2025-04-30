@@ -2,13 +2,13 @@ using Simulation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Terrain = Simulation.Terrain;
 
 namespace Player {
 	public class ProvinceWindow : SelectionWindow<Province> {
 		[SerializeField] private TextMeshProUGUI title;
+		[SerializeField] private GameObject terrainTab;
+		[SerializeField] private TextMeshProUGUI terrainType;
 		[SerializeField] private Image terrainImage;
-		[SerializeField] private GameObject terrainValuesTable;
 		[SerializeField] private ValueTable valueTable;
 		[SerializeField] private string[] valueNames;
 		[SerializeField] private CountryPanel countryPanel;
@@ -21,9 +21,10 @@ namespace Player {
 			Texture2D texture = (Texture2D)Selected.TerrainMaterial.mainTexture;
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 			if (Selected.IsSea){
-				terrainValuesTable.SetActive(false);
+				terrainTab.SetActive(false);
 				countryPanel.gameObject.SetActive(false);
 			} else {
+				terrainType.text = $"<i>Terrain:</i> {Selected.TerrainType}";
 				valueTable.Generate(-1, valueNames);
 				Refresh();
 			}

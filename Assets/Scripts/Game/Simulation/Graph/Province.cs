@@ -45,6 +45,7 @@ namespace Simulation {
         public MeshRenderer MeshRenderer => shapeMeshRenderer;
         public Vector3 WorldPosition => transform.position;
         public Bounds Bounds => meshCollider.bounds;
+        public string TerrainType => $"{terrain.Name} {(IsCoast ? "(Coastal)" : "(Landlocked)")}";
         public Material TerrainMaterial => terrain.Material;
         public float GoldMultiplier => terrain.GoldMultiplier;
         public float ManpowerMultiplier => terrain.ManpowerMultiplier;
