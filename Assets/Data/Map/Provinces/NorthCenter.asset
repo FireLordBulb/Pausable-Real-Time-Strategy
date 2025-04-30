@@ -13,138 +13,165 @@ MonoBehaviour:
   m_Name: NorthCenter
   m_EditorClassIdentifier: 
   provinces:
-  - color:
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4282826143
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 3
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4279374484
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 4
+  - name: Goejak
+    color:
       serializedVersion: 2
       rgba: 4282486747
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 6
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4291316634
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 4
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4282299852
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 3
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4286634905
     terrain: {fileID: 11400000, guid: f29cc320d5217ff499a79b848eb75aac, type: 2}
-    development: 0
-  - color:
+    development: 2
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4289418899
     terrain: {fileID: 11400000, guid: f29cc320d5217ff499a79b848eb75aac, type: 2}
-    development: 0
-  - color:
+    development: 3
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4284321100
     terrain: {fileID: 11400000, guid: f29cc320d5217ff499a79b848eb75aac, type: 2}
-    development: 0
-  - color:
+    development: 2
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4291875190
     terrain: {fileID: 11400000, guid: f29cc320d5217ff499a79b848eb75aac, type: 2}
-    development: 0
-  - color:
+    development: 2
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4293199600
     terrain: {fileID: 11400000, guid: f29cc320d5217ff499a79b848eb75aac, type: 2}
-    development: 0
-  - color:
+    development: 3
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4290882188
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 4
+  - name: Ulem
+    color:
       serializedVersion: 2
       rgba: 4280915530
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 6
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4283203197
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 3
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4288856626
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 3
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4283527498
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 2
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4282810600
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 3
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4286949991
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 2
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4285244510
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
     development: 0
-  - color:
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4285579359
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 2
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4284053680
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
     development: 0
-  - color:
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4290944747
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 1
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4285830821
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 2
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4280776506
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 1
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4290278540
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 2
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4280506210
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 3
+  - name: Taralot
+    color:
       serializedVersion: 2
       rgba: 4288927457
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
-  - color:
+    development: 4
+  - name: 
+    color:
       serializedVersion: 2
       rgba: 4283934097
     terrain: {fileID: 11400000, guid: 3bbb3490a078ac844a38d6dabcb50423, type: 2}
-    development: 0
+    development: 2
