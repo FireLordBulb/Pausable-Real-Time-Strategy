@@ -13,7 +13,7 @@ namespace Simulation {
 		public void Init(Color32 colorKey, MapGraph mapGraph, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
 			NavyLocation = new Military.SeaLocation(this);
 			Province = GetComponent<Province>();
-			Province.Init(colorKey, mapGraph, terrain, color, mapPosition, outlineMesh, shapeMesh, vertices);
+			Province.Init("Sea", colorKey, mapGraph, terrain, color, mapPosition, outlineMesh, shapeMesh, vertices);
 		}
 	}
 }

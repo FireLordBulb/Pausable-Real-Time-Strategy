@@ -69,12 +69,12 @@ namespace Simulation {
             Debug.Assert(Land == null ^ Sea == null, $"FATAL: Province {gameObject.name} is both land and sea, or neither!");
             type = Land == null ? Type.Sea : Type.LandLocked;
         }
-        public void Init(Color32 colorKey, MapGraph mapGraph, Terrain terrainData, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
+        internal void Init(string provinceName, Color32 colorKey, MapGraph mapGraph, Terrain terrainData, Color mapColor, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
             ColorKey = colorKey;
             gameObject.name = $"R:{colorKey.r}, G:{colorKey.g}, B:{colorKey.b}";
             
             terrain = terrainData;
-            Name = $"Rural {terrain.Name}";
+            Name = provinceName;
             baseColor = mapColor;
             
             shapeMeshRenderer.materials[1].color = baseColor;

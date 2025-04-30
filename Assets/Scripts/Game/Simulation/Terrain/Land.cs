@@ -49,8 +49,12 @@ namespace Simulation {
 		
 		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
 			Province = GetComponent<Province>();
+			string provinceName = data.Name.Trim();
+			if (provinceName.Length == 0){
+				provinceName = $"Rural {data.Terrain.Name}";
+			}
 			// All land is assumed LandLocked by default, is updated to Coast if a Link to a sea tile is added.
-			Province.Init(colorKey, mapGraph, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh, vertices);
+			Province.Init(provinceName, colorKey, mapGraph, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh, vertices);
 
 			occupationMaterial = Province.MeshRenderer.sharedMaterials[occupationMaterialIndex];
 			occupationMaterial.color = Color.clear;
@@ -94,9 +98,11 @@ namespace Simulation {
 
 	[Serializable]
 	public class ProvinceData {
+		[SerializeField] private string name;
 		[SerializeField] private Color32 color;
 		[SerializeField] private Terrain terrain;
 		[SerializeField] private int development;
+		public string Name => name;
 		public Color32 Color => color;
 		public Terrain Terrain => terrain;
 		public int Development => development;
