@@ -172,7 +172,7 @@ namespace Simulation {
 			}
 		}
 		private void RetreatHome(){
-			foreach (Military.Regiment regiment in regiments){
+			foreach (Military.Regiment regiment in regiments.ToArray()){
 				if (regiment.Location is Military.TransportDeck){
 					continue;
 				}
