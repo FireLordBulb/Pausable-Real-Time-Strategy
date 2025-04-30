@@ -8,6 +8,8 @@ namespace Simulation {
 		[SerializeField] private int occupationMaterialIndex;
 		[SerializeField] private BaseProduction baseProduction;
 		[SerializeField] private float siegeDaysPerDevelopment;
+		[SerializeField] private int ruralThreshold;
+		[SerializeField] private int urbanThreshold;
 		
 		private Country owner;
 		private Country occupier;
@@ -51,7 +53,7 @@ namespace Simulation {
 			Province = GetComponent<Province>();
 			string provinceName = data.Name.Trim();
 			if (provinceName.Length == 0){
-				provinceName = $"Rural {data.Terrain.Name}";
+				provinceName = data.Development >= urbanThreshold ? $"Urban {data.Terrain.Name}" : data.Development >= ruralThreshold ? data.Terrain.Name : $"Rural {data.Terrain.Name}";
 			}
 			// All land is assumed LandLocked by default, is updated to Coast if a Link to a sea tile is added.
 			Province.Init(provinceName, colorKey, mapGraph, data.Terrain, data.Color, mapPosition, outlineMesh, shapeMesh, vertices);
