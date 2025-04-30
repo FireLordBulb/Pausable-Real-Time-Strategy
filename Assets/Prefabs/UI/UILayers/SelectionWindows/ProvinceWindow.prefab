@@ -178,13 +178,12 @@ MonoBehaviour:
   terrainValuesTable: {fileID: 354767777612258186}
   valueTable: {fileID: 1942703259564020409}
   valueNames:
-  - Development
+  - Tax
+  - Manpower
+  - Sailors
   - Movement Speed
   - Defender Advantage
   countryPanel: {fileID: 1431771819254937561}
-  ownerRow: {fileID: 0}
-  ownerName: {fileID: 0}
-  ownerFlag: {fileID: 0}
 --- !u!1 &5655059184591156618
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,7 +462,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3714350736415265827, guid: efd176573f5abde4fbad13ca4c0dce91, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -155
+      value: -200
       objectReference: {fileID: 0}
     - target: {fileID: 3714350736415265827, guid: efd176573f5abde4fbad13ca4c0dce91, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

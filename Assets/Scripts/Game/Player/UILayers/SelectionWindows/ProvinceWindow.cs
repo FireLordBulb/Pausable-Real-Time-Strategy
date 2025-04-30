@@ -32,7 +32,7 @@ namespace Player {
 			if (Selected.IsSea){
 				return;
 			}
-			valueTable.UpdateColumn(0, Format.SignedPercent, Selected.GoldMultiplier-1, Selected.MoveSpeedMultiplier-1, Selected.DefenderDamageMultiplier-1);
+			valueTable.UpdateColumn(0, Format.SignedPercent, Selected.GoldMultiplier-1, Selected.ManpowerMultiplier-1, Selected.SailorsMultiplier-1, Selected.MoveSpeedMultiplier-1, Selected.DefenderDamageMultiplier-1);
 			countryPanel.SetCountry(Selected.Land.Owner, UI);
 		}
 	}
