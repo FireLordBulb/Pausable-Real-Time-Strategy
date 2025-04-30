@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Jungle
   material: {fileID: 2100000, guid: 0208b5c2e1b393b47866d716cbc6488a, type: 2}
-  developmentModifier: -0.25
+  goldModifier: -0.2
+  manpowerModifier: -0.3
+  sailorsModifier: -0.4
   moveSpeedModifier: -0.3
   defenderAdvantage: 0.25
   combatWidth: 4000

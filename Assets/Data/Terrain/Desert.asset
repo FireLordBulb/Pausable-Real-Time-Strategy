@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Desert
   material: {fileID: 2100000, guid: 85256f3fa8c18d74caffe22319d1f87a, type: 2}
-  developmentModifier: -0.5
+  goldModifier: -0.5
+  manpowerModifier: -0.3
+  sailorsModifier: -0.5
   moveSpeedModifier: -0.2
   defenderAdvantage: 0
   combatWidth: 7000

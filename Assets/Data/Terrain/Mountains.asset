@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Mountains
   material: {fileID: 2100000, guid: 8c94c63417cd45c4ba9c92b234f8fe77, type: 2}
-  developmentModifier: -0.4
+  goldModifier: -0.2
+  manpowerModifier: -0.5
+  sailorsModifier: -0.3
   moveSpeedModifier: -0.6
   defenderAdvantage: 0.5
   combatWidth: 2000

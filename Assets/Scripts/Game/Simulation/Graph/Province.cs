@@ -46,7 +46,9 @@ namespace Simulation {
         public Vector3 WorldPosition => transform.position;
         public Bounds Bounds => meshCollider.bounds;
         public Material TerrainMaterial => terrain.Material;
-        public float DevelopmentMultiplier => terrain.DevelopmentMultiplier;
+        public float GoldMultiplier => terrain.GoldMultiplier;
+        public float ManpowerMultiplier => terrain.ManpowerMultiplier;
+        public float SailorsMultiplier => terrain.SailorsMultiplier;
         public float MoveSpeedMultiplier => terrain.MoveSpeedMultiplier;
         public float DefenderDamageMultiplier => terrain.DefenderDamageMultiplier;
         public int CombatWidth => terrain.CombatWidth;

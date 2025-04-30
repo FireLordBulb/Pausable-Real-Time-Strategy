@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Plateau
   material: {fileID: 2100000, guid: 2ee051019f7a7a64893ba2a3e8b5aaf6, type: 2}
-  developmentModifier: 0
+  goldModifier: 0
+  manpowerModifier: 0
+  sailorsModifier: 0
   moveSpeedModifier: 0
   defenderAdvantage: 0
   combatWidth: 9000

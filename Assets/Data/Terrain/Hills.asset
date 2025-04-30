@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Hills
   material: {fileID: 2100000, guid: d8b9a2399be9b0443b175694387c58c8, type: 2}
-  developmentModifier: 0
+  goldModifier: 0
+  manpowerModifier: 0
+  sailorsModifier: 0
   moveSpeedModifier: -0.2
   defenderAdvantage: 0.25
   combatWidth: 5000

@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Sea
   material: {fileID: 2100000, guid: 5f0d19956f55887469b795aecd6f463d, type: 2}
-  developmentModifier: 0
+  goldModifier: 0
+  manpowerModifier: 0
+  sailorsModifier: 0
   moveSpeedModifier: 0
   defenderAdvantage: 0
   combatWidth: 999999
