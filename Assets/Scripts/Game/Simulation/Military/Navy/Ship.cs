@@ -118,7 +118,10 @@ namespace Simulation.Military {
 		private static void ApplyDamage(List<Ship> taker, float totalDamage){
 			float totalTargetSize = taker.Sum(ship => ship.Size);
 			foreach (Ship ship in taker){
-				ship.IntactHull -= (int)(totalDamage*ship.Size/totalTargetSize);
+				int hullDamage = (int)(totalDamage*ship.Size/totalTargetSize);
+				// Hull must always go down (so the battle eventually ends), so even if damage is so low that hullDamage rounds to 0, set it to at minimum 1.
+				hullDamage = Mathf.Max(hullDamage, 1);
+				ship.IntactHull -= hullDamage;
 				if (ship.IntactHull <= 0 || Random.value < ship.sinkingProbability.Evaluate(ship.IntactHull/(float)ship.MaxHull)){
 					ship.StackWipe();
 				}

@@ -190,6 +190,8 @@ namespace Simulation.Military {
 				float demoralizedRate = 1-killRate;
 				foreach (Regiment regiment in taker){
 					int manpowerLoss = (int)(regiment.CurrentManpower*(maxManpowerLoss*regiment.Toughness)/(frontLineManpower*averageToughness));
+					// Manpower must always go down (so the battle eventually ends), so even if damage is so low that manpowerLoss rounds to 0, set it to at minimum 1.
+					manpowerLoss = Mathf.Max(manpowerLoss, 1);
 					regiment.DemoralizedManpower += (int)(manpowerLoss*demoralizedRate);
 					regiment.CurrentManpower -= manpowerLoss;
 				}
