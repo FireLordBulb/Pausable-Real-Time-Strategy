@@ -31,6 +31,7 @@ namespace Simulation {
 		#endregion
 		#region Auto-Properties
 		public Color MapColor {get; private set;}
+		public Land Capital {get; private set;}
 		public int ProvinceCount {get; private set;}
 		public int TotalDevelopment {get; private set;}
 		public float Gold {get; private set;}
@@ -58,8 +59,6 @@ namespace Simulation {
 				}
 			}
 		}
-		// TODO: Assign a specific province as capital from country data.
-		public Land Capital => provinces.First();
 		public string Name => gameObject.name;
 		#endregion
 		
@@ -69,8 +68,12 @@ namespace Simulation {
 			MapColor = data.MapColor;
 			Map = mapGraph;
 			Map.Add(this);
+			Capital = Map[data.Capital].Land;
 			foreach (Color32 province in data.Provinces){
 				Map[province].Land.Owner = this;
+			}
+			if (Capital.Owner != this){
+				NewCapital();
 			}
 			MilitaryUnitParent = new GameObject(gameObject.name){
 				transform = {
@@ -219,8 +222,12 @@ namespace Simulation {
 		internal void LoseProvince(Land province){
 			ChangeProvinceCount(provinces.Remove(province), -1, province);
 			if (ProvinceCount > 0){
+				if (province == Capital){
+					NewCapital();
+				}
 				return;
 			}
+			Capital = null;
 			foreach (Military.Regiment regiment in regiments.ToArray()){
 				regiment.StackWipe();
 			}
@@ -246,6 +253,14 @@ namespace Simulation {
 		}
 		internal void LoseOccupation(Land province){
 			occupations.Remove(province);
+		}
+		private void NewCapital(){
+			Capital = provinces.First();
+			foreach (Land province in provinces){
+				if (Capital.Development < province.Development){
+					Capital = province;
+				}
+			}
 		}
 		#endregion
 		
@@ -332,10 +347,12 @@ namespace Simulation {
 	public class CountryData {
 		[SerializeField] private string name;
 		[SerializeField] private Color mapColor;
+		[SerializeField] private Color32 capital;
 		[SerializeField] private Color32[] provinces;
 
 		public string Name => name;
 		public Color MapColor => mapColor;
+		public Color32 Capital => capital;
 		public IEnumerable<Color32> Provinces => provinces;
 	}
 }

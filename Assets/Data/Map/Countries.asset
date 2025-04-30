@@ -15,6 +15,9 @@ MonoBehaviour:
   countries:
   - name: Asotrum
     mapColor: {r: 0.064661965, g: 0.8207547, b: 0.042586334, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4280566123
     provinces:
     - serializedVersion: 2
       rgba: 4286656799
@@ -58,6 +61,9 @@ MonoBehaviour:
       rgba: 4287726136
   - name: Faltihamen
     mapColor: {r: 0.74509805, g: 0.7111312, b: 0, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4281916367
     provinces:
     - serializedVersion: 2
       rgba: 4286538982
@@ -71,6 +77,9 @@ MonoBehaviour:
       rgba: 4281916367
   - name: Dunrakia
     mapColor: {r: 1, g: 0.13679248, b: 0.3272808, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4280180506
     provinces:
     - serializedVersion: 2
       rgba: 4282682925
@@ -84,6 +93,9 @@ MonoBehaviour:
       rgba: 4289891617
   - name: Lakrata
     mapColor: {r: 0.1764706, g: 0.44705883, b: 0.5568628, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4284789846
     provinces:
     - serializedVersion: 2
       rgba: 4284010139
@@ -97,6 +109,9 @@ MonoBehaviour:
       rgba: 4279998408
   - name: Etor
     mapColor: {r: 0.23529412, g: 0.7411765, b: 0.8784314, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4288366377
     provinces:
     - serializedVersion: 2
       rgba: 4283397665
@@ -130,6 +145,9 @@ MonoBehaviour:
       rgba: 4290017615
   - name: Skalquia
     mapColor: {r: 0.38047257, g: 0.12967247, b: 0.8867924, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4284605611
     provinces:
     - serializedVersion: 2
       rgba: 4282211462
@@ -193,6 +211,9 @@ MonoBehaviour:
       rgba: 4291750268
   - name: Pultan
     mapColor: {r: 0.60784316, g: 0.8666667, b: 0.85882354, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4288927457
     provinces:
     - serializedVersion: 2
       rgba: 4281507138
@@ -226,6 +247,9 @@ MonoBehaviour:
       rgba: 4291531086
   - name: Morilum
     mapColor: {r: 0.028390888, g: 0.5471698, b: 0.4457419, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4286199853
     provinces:
     - serializedVersion: 2
       rgba: 4280582423
@@ -269,6 +293,9 @@ MonoBehaviour:
       rgba: 4291910067
   - name: Garkularen
     mapColor: {r: 0.21568628, g: 1, b: 0.61960787, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4283797442
     provinces:
     - serializedVersion: 2
       rgba: 4285598807
@@ -290,6 +317,9 @@ MonoBehaviour:
       rgba: 4285244510
   - name: Satar
     mapColor: {r: 0.53333336, g: 0, b: 0.105882354, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4292944799
     provinces:
     - serializedVersion: 2
       rgba: 4280776506
@@ -305,6 +335,9 @@ MonoBehaviour:
       rgba: 4282510580
   - name: Konjala
     mapColor: {r: 0.9056604, g: 0.5842922, b: 0.14097545, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4282486747
     provinces:
     - serializedVersion: 2
       rgba: 4282486747
@@ -342,6 +375,9 @@ MonoBehaviour:
       rgba: 4290278540
   - name: Ruby Isle
     mapColor: {r: 0.8490566, g: 0.11614456, b: 0.11614456, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4282371797
     provinces:
     - serializedVersion: 2
       rgba: 4282371797
@@ -361,6 +397,9 @@ MonoBehaviour:
       rgba: 4284384294
   - name: Zhasodum
     mapColor: {r: 0.7622455, g: 0.7924528, b: 0.22054112, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4286943525
     provinces:
     - serializedVersion: 2
       rgba: 4284952792
@@ -432,6 +471,9 @@ MonoBehaviour:
       rgba: 4286699670
   - name: Berula
     mapColor: {r: 0.72156864, g: 0.23921569, b: 0.7294118, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4282601340
     provinces:
     - serializedVersion: 2
       rgba: 4281216658
@@ -453,6 +495,9 @@ MonoBehaviour:
       rgba: 4280915530
   - name: Selus
     mapColor: {r: 0.63828987, g: 0.6157885, b: 0.6981132, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4280442236
     provinces:
     - serializedVersion: 2
       rgba: 4288175668
@@ -492,6 +537,9 @@ MonoBehaviour:
       rgba: 4283507684
   - name: Mezhura
     mapColor: {r: 0.80790526, g: 0.9056604, b: 0.61089355, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4282137771
     provinces:
     - serializedVersion: 2
       rgba: 4280961051
@@ -501,6 +549,9 @@ MonoBehaviour:
       rgba: 4290280019
   - name: Krakata
     mapColor: {r: 0.5764706, g: 0.47058824, b: 0.10980392, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4280768643
     provinces:
     - serializedVersion: 2
       rgba: 4285189712
@@ -510,6 +561,9 @@ MonoBehaviour:
       rgba: 4280768643
   - name: Olpeka
     mapColor: {r: 0.62352943, g: 0.3764706, b: 0.34117648, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4293314606
     provinces:
     - serializedVersion: 2
       rgba: 4281263810
@@ -521,6 +575,9 @@ MonoBehaviour:
       rgba: 4293314606
   - name: Zum
     mapColor: {r: 0, g: 0.433, b: 0, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4293610690
     provinces:
     - serializedVersion: 2
       rgba: 4278233087
@@ -534,6 +591,9 @@ MonoBehaviour:
       rgba: 4281753692
   - name: Aldynis
     mapColor: {r: 0.8111228, g: 0.6194375, b: 0.9056604, a: 1}
+    capital:
+      serializedVersion: 2
+      rgba: 4285613514
     provinces:
     - serializedVersion: 2
       rgba: 4285613514
