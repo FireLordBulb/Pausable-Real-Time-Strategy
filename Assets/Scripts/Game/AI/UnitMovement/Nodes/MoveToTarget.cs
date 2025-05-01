@@ -6,6 +6,10 @@ namespace AI.Nodes {
 		protected override void OnStart(){
 			base.OnStart();
 			targetLocation = Blackboard.GetValue<Location<TUnit>>(Brain.Target, null);
+			if (Unit.Location == targetLocation){
+				CurrentState = State.Success;
+				return;
+			}
 			MoveOrderResult result = targetLocation == null ? MoveOrderResult.InvalidTarget : OrderMove(targetLocation);
 			CurrentState = result == MoveOrderResult.Success ? State.Running : State.Failure;
 		}
