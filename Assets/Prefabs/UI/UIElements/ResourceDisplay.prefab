@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 883590096844018506}
   - component: {fileID: 1831358583076852783}
   - component: {fileID: 2544871580968173440}
+  - component: {fileID: 5035900419578395539}
   m_Layer: 5
   m_Name: ResourceDisplay
   m_TagString: Untagged
@@ -137,6 +138,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5035900419578395539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3452608029177778445}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba6adebd92c64384a3aa02a55477a51c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelPrefab: {fileID: 7904939887203189042, guid: 8893be440d9322941a94d99c6d994522, type: 3}
 --- !u!1 &7449244060458549200
 GameObject:
   m_ObjectHideFlags: 0
