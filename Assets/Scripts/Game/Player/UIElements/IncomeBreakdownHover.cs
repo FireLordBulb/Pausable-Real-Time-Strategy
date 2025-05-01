@@ -49,7 +49,7 @@ namespace Player {
             breakdown.UpdateColumn(Value, valueColumn.ToArray());
         }
         
-        private void AddRows<T>(T income, string nameOfTotal, IReadOnlyList<(T, string, Type)> monthlyChanges, Func<T, string> formatter, Func<T, T, T> adder) where T : struct {
+        private void AddRows<T>(T income, string nameOfTotal, IReadOnlyList<(T, string, Type)> monthlyChanges, Func<T, string> formatter, Func<T, T, T> adder) where T : new() {
             valueColumn.Add(Bold(formatter(income)));
             sourceColumn.Add(Bold($"Net Monthly {nameOfTotal}"));
             valueColumn.Add("-----------------------------------");
@@ -59,23 +59,39 @@ namespace Player {
             valueColumn.Add("[province_total]");
             sourceColumn.Add("From Provinces");
             int i = 0;
+            Dictionary<string, (T, int)> provinceDuplicates = new();
             for (; i < monthlyChanges.Count; i++){
                 (T value, string source, Type type) = monthlyChanges[i];
                 if (type != typeof(Land)){
                     break;
                 }
-                valueColumn.Add(Indent(formatter(value)));
-                sourceColumn.Add(source);
+                SumUpDuplicate(value, source, provinceDuplicates, adder);
                 provinceTotal = adder(provinceTotal, value);
             }
+            AddDuplicates(provinceDuplicates, n => Indent(formatter(n)));
+            
+            Dictionary<string, (T, int)> otherDuplicates = new();
             valueColumn[provinceTotalValueIndex] = formatter(provinceTotal);
             for (; i < monthlyChanges.Count; i++){
                 (T value, string source, _) = monthlyChanges[i];
-                valueColumn.Add(formatter(value));
-                sourceColumn.Add(source);
+                SumUpDuplicate(value, source, otherDuplicates, adder);
+            }
+            AddDuplicates(otherDuplicates, formatter);
+        }
+        private static void SumUpDuplicate<T>(T value, string source, Dictionary<string, (T, int)> duplicates, Func<T, T, T> adder){
+            if (duplicates.TryGetValue(source, out (T total, int count) duplicate)){
+                duplicates[source] = (adder(duplicate.total, value), duplicate.count+1);
+            } else{
+                duplicates[source] = (value, 1);
             }
         }
-
+        private void AddDuplicates<T>(Dictionary<string, (T, int)> duplicates, Func<T, string> formatter){
+            foreach ((string source, (T total, int count) duplicate) in duplicates){
+                valueColumn.Add(formatter(duplicate.total));
+                sourceColumn.Add($"{source}{(duplicate.count > 1 ? $" (\u00d7{duplicate.count})" : "")}");
+            }
+        }
+        
         private string Bold(string text){
             return $"<b>{text}</b>";
         }
