@@ -2,7 +2,7 @@ using System.Globalization;
 using System.Text;
 using UnityEngine;
 
-namespace Player {
+namespace Text {
 	public static class Format {
 		private const int SuffixDigitStep = 3;
 		private const int Base = 10;
