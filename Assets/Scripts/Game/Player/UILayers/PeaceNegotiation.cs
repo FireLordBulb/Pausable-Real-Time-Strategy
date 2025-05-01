@@ -260,6 +260,7 @@ namespace Player {
 			base.OnEnd();
 		}
 		public override bool IsDone(){
+			base.IsDone();
 			return isDone || Player != player || !ReferenceEquals(UI.Selected, enemy);
 		}
 		public void Close(){
