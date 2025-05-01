@@ -7,11 +7,12 @@ namespace Player {
     public class ValueTable : MonoBehaviour {
         [SerializeField] private TableRow rowPrefab;
         private TableRow[] rows;
-
+        
         public void Generate(int columnIndex, params string[] cellTexts){
             columnIndex = ColumnModulo(columnIndex);
             rows = new TableRow[cellTexts.Length];
-            float width = ((RectTransform)transform).rect.width;
+            RectTransform rectTransform = ((RectTransform)transform);
+            float width = rectTransform.rect.width;
 
             rows[0] = Instantiate(rowPrefab, transform);
             VectorGeometry.SetRectWidth(rows[0].RectTransform, width);
@@ -25,6 +26,10 @@ namespace Player {
                 rows[i].RectTransform.anchoredPosition = rowPosition;
                 VectorGeometry.SetRectWidth(rows[i].RectTransform, width);
                 rows[i].SetCell(columnIndex, cellTexts[i]);
+            }
+            float minHeight = -(rowPosition+positionOffset).y;
+            if (rectTransform.rect.height < minHeight){
+                VectorGeometry.SetRectHeight(rectTransform, minHeight);
             }
         }
         
