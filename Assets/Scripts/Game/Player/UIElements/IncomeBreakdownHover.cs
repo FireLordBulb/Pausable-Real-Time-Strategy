@@ -8,6 +8,7 @@ namespace Player {
     public class IncomeBreakdownHover : HoverPanel<ValueTable> {
         private const int Value = 0, Source = 1;
         
+        [SerializeField] private Resource resource;
         [SerializeField] private int maxNumberCharacters;
         
         private ValueTable breakdown;
