@@ -74,7 +74,7 @@ namespace Simulation {
 				if (!HasOwner){
 					return;
 				}               
-				Owner.ChangeResources(goldProduction, manpowerProduction, sailorsProduction);
+				Owner.InstantResourceChange(goldProduction, manpowerProduction, sailorsProduction);
 			});
 		}
 

@@ -16,7 +16,7 @@ namespace Simulation.Military {
 			unit.Init(attackPower, hull, size, goldCost, sailors);
 		}
 		public override void ConsumeBuildCostFrom(Country owner){
-			owner.ChangeResources(-goldCost, 0, -sailors);
+			owner.InstantResourceChange(-goldCost, 0, -sailors);
 		}
 		public override string GetCostAsString(){
 			return $"Gold: {goldCost} + Sailors : {sailors}";

@@ -89,7 +89,7 @@ namespace Simulation {
 		#endregion
 		
 		#region Changing Resource Amounts
-		public void ChangeResources(float gold, int manpower, int sailors){
+		public void InstantResourceChange(float gold, int manpower, int sailors){
 			Gold += gold;
 			Manpower += manpower;
 			Sailors += sailors;

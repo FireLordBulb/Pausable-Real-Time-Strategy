@@ -81,7 +81,7 @@ namespace Simulation.Military {
 			}
 			float hullToRepair = Mathf.Min(maxMonthlyReparation, MaxHull-IntactHull);
 			hullToRepair = Mathf.Min(hullToRepair, hullToRepair*Owner.Gold/fullRepairGoldCost, hullToRepair*Owner.Sailors/fullRepairSailorsCost);
-			Owner.ChangeResources(-fullRepairGoldCost*hullToRepair/MaxHull, 0, -(int)(fullRepairSailorsCost*hullToRepair/MaxHull));
+			Owner.InstantResourceChange(-fullRepairGoldCost*hullToRepair/MaxHull, 0, -(int)(fullRepairSailorsCost*hullToRepair/MaxHull));
 			IntactHull += (int)(hullToRepair);
 		}
 		
