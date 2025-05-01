@@ -11,10 +11,14 @@ namespace Simulation {
 		[SerializeField] private Military.RegimentType[] regimentTypes;
 		[SerializeField] private Military.ShipType[] shipTypes;
 		[SerializeField] private TruceData truceData;
+		[Space]
 		[SerializeField] private MeshFilter borderMeshFilter;
 		[SerializeField] private MeshRenderer borderMeshRenderer;
 		[SerializeField] private float borderHalfWidth;
 		[SerializeField] private float borderBrightnessFactor;
+		[Space]
+		[SerializeField] private float monthlyManpowerDecay;
+		[SerializeField] private float monthlySailorsDecay;
 		#endregion
 		#region Private Fields
 		private readonly HashSet<Land> provinces = new();
@@ -123,9 +127,11 @@ namespace Simulation {
 			foreach ((float goldChange, _, _) in monthlyGoldChanges){
 				GoldIncome += goldChange;
 			}
+			MonthlyManpowerChange((int)(Manpower*monthlyManpowerDecay), "Reserves Retiring", GetType());
 			foreach ((int manpowerChange, _, _) in monthlyManpowerChanges){
 				ManpowerIncome += manpowerChange;
 			}
+			MonthlySailorsChange((int)(Sailors*monthlySailorsDecay), "Reserves Retiring", GetType());
 			foreach ((int sailorsChange, _, _) in monthlySailorsChanges){
 				SailorsIncome += sailorsChange;
 			}

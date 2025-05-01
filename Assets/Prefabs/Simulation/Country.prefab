@@ -142,6 +142,8 @@ MonoBehaviour:
   borderMeshRenderer: {fileID: 8783975994422403568}
   borderHalfWidth: 1
   borderBrightnessFactor: 0.6
+  monthlyManpowerDecay: -0.03
+  monthlySailorsDecay: -0.05
 --- !u!114 &8200749541892731012
 MonoBehaviour:
   m_ObjectHideFlags: 0
