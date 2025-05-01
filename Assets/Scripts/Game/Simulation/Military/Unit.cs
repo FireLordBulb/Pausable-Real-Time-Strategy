@@ -22,7 +22,7 @@ namespace Simulation.Military {
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
 		private int daysUntilReroll;
 		private bool doOverrideTargetLocation;
-		private Vector3 locationWorldPostionOffset;
+		private Vector3 locationWorldPositionOffset;
 		private int sharedPositionIndex;
 		private int visualizedPositionIndex;
 		
@@ -42,7 +42,7 @@ namespace Simulation.Military {
 		public bool IsMoving => PathToTarget != null;
 		public Province Province => Location.Province;
 		protected float MovementSpeed => movementSpeed;
-		private Vector3 LocationWorldPosition => Location.WorldPosition+locationWorldPostionOffset;
+		private Vector3 LocationWorldPosition => Location.WorldPosition+locationWorldPositionOffset;
 		public abstract string CreatingVerb {get;}
 
 		internal static TUnit StartCreating(UnitType<TUnit> type, Location<TUnit> buildLocation, Country owner){
@@ -149,7 +149,7 @@ namespace Simulation.Military {
 				return;
 			}
 			Location.Remove(self);
-			locationWorldPostionOffset = Vector3.zero;
+			locationWorldPositionOffset = Vector3.zero;
 			worldPositionsOnPath.Enqueue(WorldPositionBetweenLocations());
 			Location = NextLocation;
 			if (ReferenceEquals(Location, TargetLocation)){
@@ -263,7 +263,7 @@ namespace Simulation.Military {
 		// Pass the location in since battles can end from a unit changing to a different location.
 		internal abstract void CommanderOnBattleEnd(bool didWin, Location<TUnit> location);
 		internal virtual void OnBattleStart(bool isDefending){
-			locationWorldPostionOffset = (isDefending ? Vector3.left : Vector3.right)*worldSpaceBattleOffset;
+			locationWorldPositionOffset = (isDefending ? Vector3.left : Vector3.right)*worldSpaceBattleOffset;
 			StopMoving();
 		} 
 		internal abstract BattleResult DoBattle(List<TUnit> defenders, List<TUnit> attackers);
@@ -272,7 +272,7 @@ namespace Simulation.Military {
 			if (this == null){
 				return;
 			}
-			locationWorldPostionOffset = Vector3.zero;
+			locationWorldPositionOffset = Vector3.zero;
 			if (!IsMoving){
 				worldPositionsOnPath.Enqueue(LocationWorldPosition);
 			}
