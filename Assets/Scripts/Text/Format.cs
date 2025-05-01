@@ -21,10 +21,10 @@ namespace Text {
 			return FormatLargeNumberWithSign((decimal)number, maxCharacters);
 		}
 		public static string FormatLargeNumberWithSign(decimal number, int maxCharacters){
-			return new StringBuilder(number < 0 ? "-" : "+").Append(FormatLargeNumber(number, maxCharacters)).ToString();
+			return new StringBuilder(number < 0 ? "" : "+").Append(FormatLargeNumber(number, maxCharacters)).ToString();
 		}
 		public static string FormatLargeNumberWithSign(long number, int maxCharacters){
-			return new StringBuilder(number < 0 ? "-" : "+").Append(FormatLargeNumber(number, maxCharacters)).ToString();
+			return new StringBuilder(number < 0 ? "" : "+").Append(FormatLargeNumber(number, maxCharacters)).ToString();
 		}
 
 		public static string FormatLargeNumber(double number, int maxCharacters){
