@@ -40,10 +40,11 @@ namespace Simulation {
 				} else {
 					Province.BaseColor = Color.black;
 				}
+				ArmyLocation.Refresh();
 			}
 		}
 		public Country Occupier => occupier;
-		public Country Controller => Occupier == null ? Owner : Occupier;
+		public Country Controller => occupier == null ? owner : occupier;
 		public bool HasOwner => owner != null;
 		public bool IsOccupied => occupier != null;
 		

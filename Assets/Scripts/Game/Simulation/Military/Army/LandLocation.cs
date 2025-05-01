@@ -46,11 +46,15 @@ namespace Simulation.Military {
 				if (Units.All(regiment => regiment.Owner == Land.Controller)){
 					EndSiege();
 				} else if (Units.Any(regiment => regiment.Owner == Sieger)){
-					SiegeIsPausedBecauseMovement = Units.All(regiment => regiment.IsMoving || regiment.Owner != Sieger);
+					if (CannotBeBesiegedBy(Sieger)){
+						EndSiege();
+					} else {
+						SiegeIsPausedBecauseMovement = Units.All(regiment => regiment.IsMoving || regiment.Owner != Sieger);
+					}
 				} else {
 					SiegeIsPausedBecauseMovement = false;
 					foreach (Regiment regiment in Units){
-						if (CannotBeSiegedBy(regiment)){
+						if (CannotBeBesiegedBy(regiment)){
 							continue;
 						}
 						Sieger = regiment.Owner;
@@ -60,7 +64,7 @@ namespace Simulation.Military {
 				}
 			} else {
 				foreach (Regiment regiment in Units){
-					if (CannotBeSiegedBy(regiment)){
+					if (CannotBeBesiegedBy(regiment)){
 						continue;
 					}
 					Sieger = regiment.Owner;
@@ -72,8 +76,11 @@ namespace Simulation.Military {
 				}
 			}
 		}
-		private bool CannotBeSiegedBy(Regiment regiment){
-			return regiment.Owner == Land.Controller || regiment.IsMoving || (regiment.Owner != Land.Owner && !regiment.Owner.GetDiplomaticStatus(Land.Owner).IsAtWar);
+		private bool CannotBeBesiegedBy(Regiment regiment){
+			return regiment.IsMoving || CannotBeBesiegedBy(regiment.Owner);
+		}
+		private bool CannotBeBesiegedBy(Country country){
+			return country == Land.Controller || (country != Land.Owner && !country.GetDiplomaticStatus(Land.Owner).IsAtWar);
 		}
 
 		private void TickSiege(){

@@ -151,8 +151,17 @@ namespace Simulation {
 		#region Starting and Ending Wars
 		public void DeclareWar(Country other){
 			GetDiplomaticStatus(other).DeclareWar(other);
+			// Only need to check for battles for one side, since a battle will always include both sides.
 			foreach (Military.Ship ship in ships){
 				ship.Location.RecheckIfBattleShouldStart();
+			}
+			this.RefreshSieges();
+			other.RefreshSieges();
+		}
+
+		private void RefreshSieges(){
+			foreach (Military.Regiment regiment in regiments){
+				regiment.Location.Refresh();
 			}
 		}
 		public void EndWar(Country opponent, PeaceTreaty treaty){
