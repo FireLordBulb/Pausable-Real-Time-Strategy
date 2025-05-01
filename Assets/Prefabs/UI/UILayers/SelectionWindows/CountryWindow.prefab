@@ -551,7 +551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc24b03359b14f92b425f9523e78d3a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  peaceNegociationPrefab: {fileID: 4738108876565792646, guid: 14174c7e5b492a7438364ee26db2227e, type: 3}
+  peaceNegotiationPrefab: {fileID: 4738108876565792646, guid: 14174c7e5b492a7438364ee26db2227e, type: 3}
   title: {fileID: 3736304348171977507}
   flag: {fileID: 3619646820553672083}
   valueTable: {fileID: 1942703259564020409}

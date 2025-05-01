@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Player {
 	public class CountryWindow : SelectionWindow<Country> {
-		[SerializeField] private PeaceNegotiation peaceNegociationPrefab;
+		[SerializeField] private PeaceNegotiation peaceNegotiationPrefab;
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Image flag;
 		[SerializeField] private ValueTable valueTable;
@@ -74,7 +74,7 @@ namespace Player {
 				});
 				makePeace.onClick.AddListener(() => {
 					if (peaceNegotiation == null){
-						peaceNegotiation = UI.Push(peaceNegociationPrefab);
+						peaceNegotiation = UI.Push(peaceNegotiationPrefab);
 					} else {
 						peaceNegotiation.Close();
 					}
