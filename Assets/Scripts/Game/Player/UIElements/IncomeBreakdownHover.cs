@@ -13,6 +13,8 @@ namespace Player {
         [SerializeField] private int maxNumberCharacters;
         
         private ValueTable breakdown;
+        private readonly List<string> valueColumn = new();
+        private readonly List<string> sourceColumn = new();
         
         public Country Player {private get; set;}
         
@@ -29,23 +31,17 @@ namespace Player {
                 breakdown.UpdateColumn(Source, "");
                 return;
             }
-            List<string> valueColumn = new();
-            List<string> sourceColumn = new();
+            valueColumn.Clear();
+            sourceColumn.Clear();
             switch (resource){
                 case Resource.Gold:
-                    valueColumn.Add(Bold(FormatNumber(Player.GoldIncome)));
-                    sourceColumn.Add(Bold("Net Monthly Income"));
-                    AddRows(valueColumn, sourceColumn, Player.MonthlyGoldChanges, FormatNumber, (a, b) => a+b);
+                    AddRows(Player.GoldIncome, "Income", Player.MonthlyGoldChanges, FormatNumber, Add);
                     break;
                 case Resource.Manpower:
-                    valueColumn.Add(Bold(FormatNumber(Player.ManpowerIncome)));
-                    sourceColumn.Add(Bold("Net Monthly Reserves"));
-                    AddRows(valueColumn, sourceColumn, Player.MonthlyManpowerChanges, FormatNumber, (a, b) => a+b);
+                    AddRows(Player.ManpowerIncome, "Reserves", Player.MonthlyManpowerChanges, FormatNumber, Add);
                     break;
                 case Resource.Sailors:
-                    valueColumn.Add(Bold(FormatNumber(Player.SailorsIncome)));
-                    sourceColumn.Add(Bold("Net Monthly Reserves"));
-                    AddRows(valueColumn, sourceColumn, Player.MonthlySailorsChanges, FormatNumber, (a, b) => a+b);
+                    AddRows(Player.SailorsIncome, "Reserves", Player.MonthlySailorsChanges, FormatNumber, Add);
                     break;
                 default: return;
             }
@@ -53,8 +49,10 @@ namespace Player {
             breakdown.UpdateColumn(Value, valueColumn.ToArray());
         }
         
-        private void AddRows<T>(List<string> valueColumn, List<string> sourceColumn, IReadOnlyList<(T, string, Type)> monthlyChanges, Func<T, string> formatter, Func<T, T, T> adder) where T : struct {
-            valueColumn.Add("-------------------------------");
+        private void AddRows<T>(T income, string nameOfTotal, IReadOnlyList<(T, string, Type)> monthlyChanges, Func<T, string> formatter, Func<T, T, T> adder) where T : struct {
+            valueColumn.Add(Bold(formatter(income)));
+            sourceColumn.Add(Bold($"Net Monthly {nameOfTotal}"));
+            valueColumn.Add("-----------------------------------");
             sourceColumn.Add("");
             int provinceTotalValueIndex = valueColumn.Count;
             T provinceTotal = new();
@@ -64,7 +62,6 @@ namespace Player {
             for (; i < monthlyChanges.Count; i++){
                 (T value, string source, Type type) = monthlyChanges[i];
                 if (type != typeof(Land)){
-                    i--;
                     break;
                 }
                 valueColumn.Add(Indent(formatter(value)));
@@ -83,7 +80,7 @@ namespace Player {
             return $"<b>{text}</b>";
         }
         private string Indent(string text){
-            return $"    {text}";
+            return $"  {text}";
         }
         private string FormatNumber(float value){
             return Format.FormatLargeNumberWithSign(value, maxNumberCharacters);
@@ -91,5 +88,7 @@ namespace Player {
         private string FormatNumber(int value){
             return Format.FormatLargeNumberWithSign(value, maxNumberCharacters);
         }
+        private static int Add(int a, int b) => a+b;
+        private static float Add(float a, float b) => a+b;
     }
 }
