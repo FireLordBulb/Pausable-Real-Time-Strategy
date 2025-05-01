@@ -122,6 +122,9 @@ namespace Simulation.Military {
 				return;
 			}
 			int reinforcementAmount = Mathf.Min(maxMonthlyReinforcement, Owner.Manpower, MaxManpower-CurrentManpower);
+			if (reinforcementAmount <= 0){
+				return;
+			}
 			Owner.MonthlyManpowerChange(-reinforcementAmount, $"Reinforcing {Type.name}", GetType());
 			CurrentManpower += reinforcementAmount;
 		}
