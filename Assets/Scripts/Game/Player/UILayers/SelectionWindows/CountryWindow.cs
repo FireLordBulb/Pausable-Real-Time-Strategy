@@ -46,14 +46,17 @@ namespace Player {
 				SetupDiplomacy();
 				SetupSelectButton();
 			}
-			valueTable.UpdateColumn(0, (
-				Format.FormatLargeNumber(Selected.ProvinceCount, cellValueMaxCharacters)),	
-				Format.FormatLargeNumber(Selected.Regiments.Count, cellValueMaxCharacters),	
-				Format.FormatLargeNumber(Selected.Ships.Count, cellValueMaxCharacters),	
-				Format.FormatLargeNumber(Selected.Gold, cellValueMaxCharacters),	
-				Format.FormatLargeNumber(Selected.Manpower, cellValueMaxCharacters),	
-				Format.FormatLargeNumber(Selected.Sailors, cellValueMaxCharacters)
+			valueTable.UpdateColumn<int>(0, n => Format.FormatLargeNumber(n, cellValueMaxCharacters), (
+				Selected.ProvinceCount),	
+				Selected.TotalDevelopment,	
+				Selected.Regiments.Count,	
+				Selected.Ships.Count,	
+				0,	
+				Selected.Manpower,	
+				Selected.Sailors
 			);
+			// Have to update the gold separately since it's the only float value so it's formatted with a different overload.
+			valueTable.UpdateCell(0, 4, Format.FormatLargeNumber(Selected.Gold, cellValueMaxCharacters));
 			RefreshDiplomacy();
 			if (peaceNegotiation != null){
 				peaceNegotiation.Refresh();

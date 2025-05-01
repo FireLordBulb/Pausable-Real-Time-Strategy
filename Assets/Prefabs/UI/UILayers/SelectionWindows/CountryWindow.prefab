@@ -557,6 +557,7 @@ MonoBehaviour:
   valueTable: {fileID: 1942703259564020409}
   valueNames:
   - Provinces
+  - Development
   - Regiments
   - Ships
   - Gold
@@ -877,7 +878,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -370}
+  m_AnchoredPosition: {x: 0, y: -395}
   m_SizeDelta: {x: 340, y: 7}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &7103665693612343542
@@ -1132,7 +1133,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -457}
+  m_AnchoredPosition: {x: 0, y: -482}
   m_SizeDelta: {x: 204, y: 74}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &4690273203429533691

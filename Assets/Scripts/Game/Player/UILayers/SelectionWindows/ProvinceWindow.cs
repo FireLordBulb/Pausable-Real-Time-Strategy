@@ -35,7 +35,8 @@ namespace Player {
 			if (Selected.IsSea){
 				return;
 			}
-			valueTable.UpdateColumn(0, Format.SignedPercent, Selected.MoveSpeedMultiplier-1,
+			valueTable.UpdateColumn<float>(0, Format.SignedPercent, (
+				Selected.MoveSpeedMultiplier-1),
 				Selected.DefenderDamageMultiplier-1,
 				0,
 				Selected.GoldMultiplier-1,
