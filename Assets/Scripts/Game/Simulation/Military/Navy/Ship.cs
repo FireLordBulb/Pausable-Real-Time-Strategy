@@ -135,6 +135,7 @@ namespace Simulation.Military {
 		internal override void StackWipe(){
 			Owner.RemoveShip(this);
 			Location.Remove(this);
+			Province.Calendar.OnMonthTick.RemoveListener(Repair);
 			if (this != null){
 				Destroy(gameObject);
 			}

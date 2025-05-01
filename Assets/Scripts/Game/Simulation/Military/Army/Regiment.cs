@@ -254,6 +254,7 @@ namespace Simulation.Military {
 		internal override void StackWipe(){
 			Owner.RemoveRegiment(this);
 			Location.Remove(this);
+			Province.Calendar.OnMonthTick.RemoveListener(Reinforce);
 			if (this != null){
 				Destroy(gameObject);
 			}
