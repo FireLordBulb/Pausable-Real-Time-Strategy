@@ -13,7 +13,7 @@ namespace Simulation.Military {
 			return manpower <= owner.Manpower && goldCost <= owner.Gold;
 		}
 		public override void ApplyValuesTo(Regiment unit){
-			unit.Init(attackPower, toughness, killRate, manpower);
+			unit.Init(attackPower, toughness, killRate, maintenanceCost, manpower);
 		}
 		public override void ConsumeBuildCostFrom(Country owner){
 			owner.InstantResourceChange(-goldCost, -manpower, 0);

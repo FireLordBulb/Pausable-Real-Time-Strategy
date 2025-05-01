@@ -12,6 +12,7 @@ namespace Simulation.Military {
 		[SerializeField] private Transform flag;
 		[SerializeField] private float flagHeightStep;
 		
+		private float maintenance;
 		private int maxMonthlyReinforcement;
 		private float defaultFlagHeight;
 		
@@ -25,15 +26,16 @@ namespace Simulation.Military {
 		private float Damage => IsMoving ? AttackPower*CurrentManpower*orderedRetreatDamageMultiplier : AttackPower*CurrentManpower;
 		public override string CreatingVerb => "Recruiting";
 		
-		internal void Init(float attackPower, float toughness, float killRate, int manpower){
+		internal void Init(float attackPower, float toughness, float killRate, float maintenanceCost, int manpower){
 			AttackPower = attackPower;
 			Toughness = toughness;
 			KillRate = killRate;
 			CurrentManpower = MaxManpower = manpower;
 			DemoralizedManpower = 0;
+			maintenance = maintenanceCost;
 			maxMonthlyReinforcement = (int)(MaxManpower*monthlyReinforcementRate);
 			defaultFlagHeight = flag.localPosition.y;
-			Province.Calendar.OnMonthTick.AddListener(Reinforce);
+			Province.Calendar.OnMonthTick.AddListener(PayMaintenance);
 		}
 		protected override void VisualizeSharedPositionIndex(int index){
 			Vector3 localPosition = flag.localPosition;
@@ -108,6 +110,10 @@ namespace Simulation.Military {
 			return link is LandLink landLink && (doIgnoreOwner || owner == landLink.TargetLand.Owner || owner.GetDiplomaticStatus(landLink.TargetLand.Owner).IsAtWar);
 		}
 		
+		private void PayMaintenance(){
+			Owner.MonthlyGoldChange(-maintenance, $"{Type.name} Upkeep", GetType());
+			Reinforce();
+		}
 		private void Reinforce(){
 			if (CurrentManpower == MaxManpower){
 				return;
@@ -254,7 +260,7 @@ namespace Simulation.Military {
 		internal override void StackWipe(){
 			Owner.RemoveRegiment(this);
 			Location.Remove(this);
-			Province.Calendar.OnMonthTick.RemoveListener(Reinforce);
+			Province.Calendar.OnMonthTick.RemoveListener(PayMaintenance);
 			if (this != null){
 				Destroy(gameObject);
 			}

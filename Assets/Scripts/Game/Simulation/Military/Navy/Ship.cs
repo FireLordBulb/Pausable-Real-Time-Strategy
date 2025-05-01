@@ -13,6 +13,7 @@ namespace Simulation.Military {
 		[SerializeField] private Transform flag;
 		[SerializeField] private float flagHeightStep;
 		
+		private float maintenance;
 		private int maxMonthlyReparation;
 		private float fullRepairGoldCost;
 		private int fullRepairSailorsCost;
@@ -26,15 +27,16 @@ namespace Simulation.Military {
 		public override string CreatingVerb => "Constructing";
 		protected virtual bool ShouldAvoidCombat => false;
 		
-		internal virtual void Init(float attackPower, int hull, float size, float gold, int sailors){
+		internal virtual void Init(float attackPower, int hull, float size, float maintenanceCost, float gold, int sailors){
 			AttackPower = attackPower;
 			IntactHull = MaxHull = hull;
 			Size = size;
+			maintenance = maintenanceCost;
 			maxMonthlyReparation = (int)(MaxHull*monthlyReparationRate);
 			fullRepairGoldCost = gold*reparationCostFraction;
 			fullRepairSailorsCost = (int)(sailors*reparationCostFraction);
 			defaultFlagHeight = flag.localPosition.y;
-			Province.Calendar.OnMonthTick.AddListener(Repair);
+			Province.Calendar.OnMonthTick.AddListener(PayMaintenance);
 		}
 		protected override void VisualizeSharedPositionIndex(int index){
 			Vector3 localPosition = flag.localPosition;
@@ -71,7 +73,11 @@ namespace Simulation.Military {
 		protected override bool LinkEvaluator(ProvinceLink link){
 			return link is SeaLink;
 		}
-
+		
+		private void PayMaintenance(){
+			Owner.MonthlyGoldChange(-maintenance, $"{Type.name} Upkeep", GetType());
+			Repair();
+		}
 		private void Repair(){
 			if (IntactHull == MaxHull){
 				return;
@@ -135,7 +141,7 @@ namespace Simulation.Military {
 		internal override void StackWipe(){
 			Owner.RemoveShip(this);
 			Location.Remove(this);
-			Province.Calendar.OnMonthTick.RemoveListener(Repair);
+			Province.Calendar.OnMonthTick.RemoveListener(PayMaintenance);
 			if (this != null){
 				Destroy(gameObject);
 			}

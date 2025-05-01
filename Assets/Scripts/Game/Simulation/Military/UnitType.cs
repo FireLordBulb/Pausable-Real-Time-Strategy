@@ -4,6 +4,7 @@ namespace Simulation.Military {
 	public abstract class UnitType<TUnit> : ScriptableObject where TUnit : Unit<TUnit> {
 		[SerializeField] private TUnit prefab;
 		[SerializeField] private int daysToBuild;
+		[SerializeField] protected float maintenanceCost;
 		[SerializeField] protected float goldCost;
 		
 		public TUnit Prefab => prefab;

@@ -13,7 +13,7 @@ namespace Simulation.Military {
 			return sailors <= owner.Sailors && goldCost <= owner.Gold;
 		}
 		public override void ApplyValuesTo(Ship unit){
-			unit.Init(attackPower, hull, size, goldCost, sailors);
+			unit.Init(attackPower, hull, size, maintenanceCost, goldCost, sailors);
 		}
 		public override void ConsumeBuildCostFrom(Country owner){
 			owner.InstantResourceChange(-goldCost, 0, -sailors);
