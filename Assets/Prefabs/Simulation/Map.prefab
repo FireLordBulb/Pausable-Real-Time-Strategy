@@ -254,6 +254,7 @@ MonoBehaviour:
     month: 4
     day: 23
   callbackOrder:
+  - Simulation.MapGraph
   - Simulation.Land
   - Simulation.Military.LandLocation
   - Simulation.Military.SeaLocation
@@ -261,6 +262,7 @@ MonoBehaviour:
   - Simulation.Military.Regiment
   - Simulation.Military.Ship
   - Simulation.DiplomaticStatus
+  - Simulation.Country
   - AI.AIController, AI
   - AI.RegimentBrain, AI
   - AI.ShipBrain, AI

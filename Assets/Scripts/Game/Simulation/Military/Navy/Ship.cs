@@ -81,8 +81,10 @@ namespace Simulation.Military {
 			}
 			float hullToRepair = Mathf.Min(maxMonthlyReparation, MaxHull-IntactHull);
 			hullToRepair = Mathf.Min(hullToRepair, hullToRepair*Owner.Gold/fullRepairGoldCost, hullToRepair*Owner.Sailors/fullRepairSailorsCost);
-			Owner.InstantResourceChange(-fullRepairGoldCost*hullToRepair/MaxHull, 0, -(int)(fullRepairSailorsCost*hullToRepair/MaxHull));
-			IntactHull += (int)(hullToRepair);
+			string sourceOfChange = $"Repairing {Type.name}";
+			Owner.MonthlyGoldChange(-fullRepairGoldCost*hullToRepair/MaxHull, sourceOfChange);
+			Owner.MonthlySailorsChange(-(int)(fullRepairSailorsCost*hullToRepair/MaxHull), sourceOfChange);
+			IntactHull += (int)hullToRepair;
 		}
 		
 		internal override BattleResult DoBattle(List<Ship> defenders, List<Ship> attackers){

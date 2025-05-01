@@ -21,6 +21,9 @@ namespace Simulation {
 		private readonly HashSet<Land> occupations = new();
 		private readonly List<Military.Regiment> regiments = new();
 		private readonly List<Military.Ship> ships = new();
+		private readonly List<(float, string)> monthlyGoldChanges = new();
+		private readonly List<(int, string)> monthlyManpowerChanges = new();
+		private readonly List<(int, string)> monthlySailorsChanges = new();
 		private bool wasBorderChanged;
 		
 		internal readonly UnityEvent<Military.Regiment> RegimentBuilt = new();
@@ -59,6 +62,9 @@ namespace Simulation {
 				}
 			}
 		}
+		public IReadOnlyList<(float, string)> MonthlyGoldChanges => monthlyGoldChanges;
+		public IReadOnlyList<(int, string)> MonthlyManpowerChanges => monthlyManpowerChanges;
+		public IReadOnlyList<(int, string)> MonthlySailorsChanges => monthlySailorsChanges;
 		public string Name => gameObject.name;
 		#endregion
 		
@@ -86,13 +92,50 @@ namespace Simulation {
 			borderMeshRenderer.material.color = borderColor;
 			RegenerateBorder();
 		}
+		private void Start(){
+			Map.Calendar.OnMonthTick.AddListener(AddUpMonthlyResourceChanges);
+		}
 		#endregion
 		
 		#region Changing Resource Amounts
+		internal void ClearResourceChanges(){
+			monthlyGoldChanges.Clear();
+			monthlyManpowerChanges.Clear();
+			monthlySailorsChanges.Clear();
+		}
+		internal void MonthlyGoldChange(float gold, string source){
+			monthlyGoldChanges.Add((gold, source));
+		}
+		internal void MonthlyManpowerChange(int manpower, string source){
+			monthlyManpowerChanges.Add((manpower, source));
+		}
+		internal void MonthlySailorsChange(int sailors, string source){
+			monthlySailorsChanges.Add((sailors, source));
+		}
+        
+
+		private void AddUpMonthlyResourceChanges(){
+			float gold = 0;
+			int manpower = 0;
+			int sailors = 0;
+			foreach ((float goldChange, _) in monthlyGoldChanges){
+				gold += goldChange;
+			}
+			foreach ((int manpowerChange, _) in monthlyManpowerChanges){
+				manpower += manpowerChange;
+			}
+			foreach ((int sailorsChange, _) in monthlySailorsChanges){
+				sailors += sailorsChange;
+			}
+			InstantResourceChange(gold, manpower, sailors);
+		}
 		public void InstantResourceChange(float gold, int manpower, int sailors){
 			Gold += gold;
 			Manpower += manpower;
 			Sailors += sailors;
+		}
+		private void OnDisable(){
+			Map.Calendar.OnMonthTick.RemoveListener(AddUpMonthlyResourceChanges);
 		}
 		#endregion
 		
@@ -351,7 +394,7 @@ namespace Simulation {
 		}
 		#endregion
 	}
-
+	
 	[Serializable]
 	public class CountryData {
 		[SerializeField] private string name;

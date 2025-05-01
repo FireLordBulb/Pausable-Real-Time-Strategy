@@ -33,6 +33,14 @@ namespace Simulation {
 			Calendar = GetComponent<Calendar>();
 		}
 		
+		private void Start(){
+			Calendar.OnMonthTick.AddListener(() => {
+				foreach (Country country in countries.Values){
+					country.ClearResourceChanges();
+				}
+			});
+		}
+		
 		public Country GetCountry(string countryName){
 			countries.TryGetValue(countryName, out Country country);
 			return country;
