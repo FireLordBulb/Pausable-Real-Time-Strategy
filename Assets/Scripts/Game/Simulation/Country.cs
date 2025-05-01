@@ -40,6 +40,9 @@ namespace Simulation {
 		public float Gold {get; private set;}
 		public int Manpower {get; private set;}
 		public int Sailors {get; private set;}
+		public float GoldIncome {get; private set;}
+		public int ManpowerIncome {get; private set;}
+		public int SailorsIncome {get; private set;}
 		public MapGraph Map {get; private set;}
 		public Transform MilitaryUnitParent {get; private set;}
 		#endregion
@@ -112,22 +115,21 @@ namespace Simulation {
 		internal void MonthlySailorsChange(int sailors, string source){
 			monthlySailorsChanges.Add((sailors, source));
 		}
-        
-
+		
 		private void AddUpMonthlyResourceChanges(){
-			float gold = 0;
-			int manpower = 0;
-			int sailors = 0;
+			GoldIncome = 0;
+			ManpowerIncome = 0;
+			SailorsIncome = 0;
 			foreach ((float goldChange, _) in monthlyGoldChanges){
-				gold += goldChange;
+				GoldIncome += goldChange;
 			}
 			foreach ((int manpowerChange, _) in monthlyManpowerChanges){
-				manpower += manpowerChange;
+				ManpowerIncome += manpowerChange;
 			}
 			foreach ((int sailorsChange, _) in monthlySailorsChanges){
-				sailors += sailorsChange;
+				SailorsIncome += sailorsChange;
 			}
-			InstantResourceChange(gold, manpower, sailors);
+			InstantResourceChange(GoldIncome, ManpowerIncome, SailorsIncome);
 		}
 		public void InstantResourceChange(float gold, int manpower, int sailors){
 			Gold += gold;
