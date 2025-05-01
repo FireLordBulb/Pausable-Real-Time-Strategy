@@ -74,9 +74,9 @@ namespace Simulation {
 				if (!HasOwner){
 					return;
 				}               
-				Owner.MonthlyGoldChange(goldProduction, Province.Name);
-				Owner.MonthlyManpowerChange(manpowerProduction, Province.Name);
-				Owner.MonthlySailorsChange(sailorsProduction, Province.Name);
+				Owner.MonthlyGoldChange(goldProduction, Province.Name, GetType());
+				Owner.MonthlyManpowerChange(manpowerProduction, Province.Name, GetType());
+				Owner.MonthlySailorsChange(sailorsProduction, Province.Name, GetType());
 			});
 		}
 

@@ -21,9 +21,9 @@ namespace Simulation {
 		private readonly HashSet<Land> occupations = new();
 		private readonly List<Military.Regiment> regiments = new();
 		private readonly List<Military.Ship> ships = new();
-		private readonly List<(float, string)> monthlyGoldChanges = new();
-		private readonly List<(int, string)> monthlyManpowerChanges = new();
-		private readonly List<(int, string)> monthlySailorsChanges = new();
+		private readonly List<(float, string, Type)> monthlyGoldChanges = new();
+		private readonly List<(int, string, Type)> monthlyManpowerChanges = new();
+		private readonly List<(int, string, Type)> monthlySailorsChanges = new();
 		private bool wasBorderChanged;
 		
 		internal readonly UnityEvent<Military.Regiment> RegimentBuilt = new();
@@ -65,9 +65,9 @@ namespace Simulation {
 				}
 			}
 		}
-		public IReadOnlyList<(float, string)> MonthlyGoldChanges => monthlyGoldChanges;
-		public IReadOnlyList<(int, string)> MonthlyManpowerChanges => monthlyManpowerChanges;
-		public IReadOnlyList<(int, string)> MonthlySailorsChanges => monthlySailorsChanges;
+		public IReadOnlyList<(float, string, Type)> MonthlyGoldChanges => monthlyGoldChanges;
+		public IReadOnlyList<(int, string, Type)> MonthlyManpowerChanges => monthlyManpowerChanges;
+		public IReadOnlyList<(int, string, Type)> MonthlySailorsChanges => monthlySailorsChanges;
 		public string Name => gameObject.name;
 		#endregion
 		
@@ -106,27 +106,27 @@ namespace Simulation {
 			monthlyManpowerChanges.Clear();
 			monthlySailorsChanges.Clear();
 		}
-		internal void MonthlyGoldChange(float gold, string source){
-			monthlyGoldChanges.Add((gold, source));
+		internal void MonthlyGoldChange(float gold, string source, Type sourceType){
+			monthlyGoldChanges.Add((gold, source, sourceType));
 		}
-		internal void MonthlyManpowerChange(int manpower, string source){
-			monthlyManpowerChanges.Add((manpower, source));
+		internal void MonthlyManpowerChange(int manpower, string source, Type sourceType){
+			monthlyManpowerChanges.Add((manpower, source, sourceType));
 		}
-		internal void MonthlySailorsChange(int sailors, string source){
-			monthlySailorsChanges.Add((sailors, source));
+		internal void MonthlySailorsChange(int sailors, string source, Type sourceType){
+			monthlySailorsChanges.Add((sailors, source, sourceType));
 		}
 		
 		private void AddUpMonthlyResourceChanges(){
 			GoldIncome = 0;
 			ManpowerIncome = 0;
 			SailorsIncome = 0;
-			foreach ((float goldChange, _) in monthlyGoldChanges){
+			foreach ((float goldChange, _, _) in monthlyGoldChanges){
 				GoldIncome += goldChange;
 			}
-			foreach ((int manpowerChange, _) in monthlyManpowerChanges){
+			foreach ((int manpowerChange, _, _) in monthlyManpowerChanges){
 				ManpowerIncome += manpowerChange;
 			}
-			foreach ((int sailorsChange, _) in monthlySailorsChanges){
+			foreach ((int sailorsChange, _, _) in monthlySailorsChanges){
 				SailorsIncome += sailorsChange;
 			}
 			InstantResourceChange(GoldIncome, ManpowerIncome, SailorsIncome);
