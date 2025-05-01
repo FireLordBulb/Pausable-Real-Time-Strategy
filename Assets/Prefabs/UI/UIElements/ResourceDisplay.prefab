@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panelPrefab: {fileID: 7904939887203189042, guid: 8893be440d9322941a94d99c6d994522, type: 3}
+  maxNumberCharacters: 6
 --- !u!1 &7449244060458549200
 GameObject:
   m_ObjectHideFlags: 0

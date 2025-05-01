@@ -13,6 +13,7 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI gold;
 		[SerializeField] private TextMeshProUGUI manpower;
 		[SerializeField] private TextMeshProUGUI sailors;
+		[SerializeField] private IncomeBreakdownHover[] breakdowns;
 		[Header("SidePanel")]
 		[SerializeField] private SidePanelMenu warMenu;
 		[SerializeField] private SidePanelMenu economyMenu;
@@ -49,6 +50,9 @@ namespace Player {
 		}
 		
 		public void RefreshCountry(){
+			foreach (IncomeBreakdownHover breakdown in breakdowns){
+				breakdown.Player = Player;
+			}
 			if (Player == null){
 				countryFlag.material = new Material(countryFlag.material){
 					color = Color.magenta
@@ -70,6 +74,9 @@ namespace Player {
 			gold.text = Format.FormatLargeNumber(Player.Gold, resourceMaxCharacters);
 			manpower.text = Format.FormatLargeNumber(Player.Manpower, resourceMaxCharacters);
 			sailors.text = Format.FormatLargeNumber(Player.Sailors, resourceMaxCharacters);
+			foreach (IncomeBreakdownHover breakdown in breakdowns){
+				breakdown.Refresh();
+			}
 			if (sidePanelMenu != null){
 				sidePanelMenu.Refresh();
 			}

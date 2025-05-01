@@ -6,12 +6,25 @@ namespace Player {
     [RequireComponent(typeof(RectTransform))]
     public class ValueTable : MonoBehaviour {
         [SerializeField] private TableRow rowPrefab;
-        private TableRow[] rows;
         
+        private RectTransform rectTransform;
+        private float defaultHeight;
+        private TableRow[] rows = {};
+        
+        private void Awake(){
+            rectTransform = ((RectTransform)transform);
+            defaultHeight = rectTransform.rect.height;
+        }
+
         public void Generate(int columnIndex, params string[] cellTexts){
-            columnIndex = ColumnModulo(columnIndex);
+            foreach (TableRow row in rows){
+                DestroyImmediate(row.gameObject);
+            }
             rows = new TableRow[cellTexts.Length];
-            RectTransform rectTransform = ((RectTransform)transform);
+            if (cellTexts.Length == 0){
+                return;
+            }
+            columnIndex = ColumnModulo(columnIndex);
             float width = rectTransform.rect.width;
 
             rows[0] = Instantiate(rowPrefab, transform);
@@ -28,9 +41,7 @@ namespace Player {
                 rows[i].SetCell(columnIndex, cellTexts[i]);
             }
             float minHeight = -(rowPosition+positionOffset).y;
-            if (rectTransform.rect.height < minHeight){
-                VectorGeometry.SetRectHeight(rectTransform, minHeight);
-            }
+            VectorGeometry.SetRectHeight(rectTransform, Mathf.Max(minHeight, defaultHeight));
         }
         
         public void UpdateColumn<T>(int columnIndex, Func<T, string> formatter, params T[] cellTexts){
