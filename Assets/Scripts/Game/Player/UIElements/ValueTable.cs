@@ -41,6 +41,11 @@ namespace Player {
             }
         }
 
+        public void UpdateCell(int columnIndex, int rowIndex, string text){
+            columnIndex = ColumnModulo(columnIndex);
+            rows[rowIndex].SetCell(columnIndex, text);
+        }
+
         private int ColumnModulo(int index) => (index+rowPrefab.ColumnCount)%rowPrefab.ColumnCount;
     }
 }
