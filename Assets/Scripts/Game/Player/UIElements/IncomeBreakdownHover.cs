@@ -12,6 +12,7 @@ namespace Player {
         
         [SerializeField] private Resource resource;
         [SerializeField] private int maxNumberCharacters;
+        [SerializeField] private bool doSkipSummaryRows;
         
         private ValueTable breakdown;
         private readonly List<string> valueColumn = new();
@@ -51,10 +52,12 @@ namespace Player {
         }
         
         private void AddRows<T>(T income, string nameOfTotal, IReadOnlyList<(T, string, Type)> monthlyChanges, Func<T, string> format, Func<T, T, T> add, Func<T, T, int> compare) where T : new() {
-            valueColumn.Add(Bold(format(income)));
-            sourceColumn.Add(Bold($"Net Monthly {nameOfTotal}"));
-            valueColumn.Add("-----------------------------------");
-            sourceColumn.Add("");
+            if (!doSkipSummaryRows){
+                valueColumn.Add(Bold(format(income)));
+                sourceColumn.Add(Bold($"Net Monthly {nameOfTotal}"));
+                valueColumn.Add("-----------------------------------");
+                sourceColumn.Add("");
+            }
             int provinceTotalValueIndex = valueColumn.Count;
             T provinceTotal = new();
             valueColumn.Add("[province_total]");
@@ -101,7 +104,7 @@ namespace Player {
         private static string Indent(string text){
             return $"  {text}";
         }
-        private string FormatAndColor(float value){
+        public string FormatAndColor(float value){
             string formattedNumber = Format.FormatLargeNumberWithSign(value, maxNumberCharacters);
             if (value > 0){
                 return $"<color=green>{formattedNumber}</color>";
@@ -111,7 +114,7 @@ namespace Player {
             }
             return formattedNumber;
         }
-        private string FormatAndColor(int value){
+        public string FormatAndColor(int value){
             string formattedNumber = Format.FormatLargeNumberWithSign(value, maxNumberCharacters);
             if (value > 0){
                 return $"<color=green>{formattedNumber}</color>";
