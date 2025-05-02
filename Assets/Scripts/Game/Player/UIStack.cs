@@ -56,6 +56,7 @@ namespace Player {
 		#endregion
 		#region Getter Properties
 		public MapGraph Map => map;
+		public CameraInput CameraInput => cameraInput;
 		private Vector3 MousePosition => input.MousePosition.ReadValue<Vector2>();
 		#endregion
 

@@ -17,8 +17,9 @@ namespace Player {
 		[SerializeField] private IncomeBreakdownHover[] breakdowns;
 		[Header("SidePanel")]
 		[SerializeField] private SidePanelButton[] sidePanelButtons;
-		[Header("CalendarPanel")]
+		[Header("OtherPanels")]
 		[SerializeField] private CalendarPanel calendarPanel;
+		[SerializeField] private MapModeSelect mapModeSelect;
 		[Space]
 		[SerializeField] private int resourceMaxCharacters;
 		
@@ -33,6 +34,7 @@ namespace Player {
 		}
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
+			mapModeSelect.CameraInput = UI.CameraInput;
 			RefreshCountry();
 			SetButtonsInteractable();
 		}
