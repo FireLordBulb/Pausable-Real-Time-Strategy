@@ -261,11 +261,13 @@ MonoBehaviour:
   - Simulation.Military.Harbor
   - Simulation.Military.Regiment
   - Simulation.Military.Ship
+  - Simulation.Military.Transport
   - Simulation.DiplomaticStatus
   - Simulation.Country
   - AI.AIController, AI
   - AI.RegimentBrain, AI
   - AI.ShipBrain, AI
+  - Player.UIStack, Player
   - Player.HUD, Player
   - Player.CalendarPanel, Player
   - Player.WarMenu, Player
