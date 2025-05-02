@@ -43,5 +43,13 @@ namespace Player {
 			);
 			existingLinks.Add(linkComponent.gameObject, (link, selectable));
 		}
+
+		public void Remove(Component linkComponent){
+			if (!existingLinks.TryGetValue(linkComponent.gameObject, out (UILink link, ISelectable) tuple)){
+				return;
+			}
+			existingLinks.Remove(linkComponent.gameObject);
+			Object.DestroyImmediate(tuple.link);
+		}
 	}
 }

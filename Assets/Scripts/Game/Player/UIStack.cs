@@ -75,7 +75,13 @@ namespace Player {
 			mainCamera = cameraMovement.Camera;
 		}	
 		private void SpawnUI(){
-			Links = new Links(Select);
+			Links = new Links(selectable => {
+				if (Selected != selectable){
+					Select(selectable);
+				} else {
+					Deselect(selectable);
+				}
+			});
 			hud = Instantiate(hud, transform);
 			hud.CalendarPanel.Calendar = map.Calendar;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD

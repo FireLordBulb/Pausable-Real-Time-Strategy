@@ -57,6 +57,7 @@ namespace Player {
 				countryFlag.material = new Material(countryFlag.material){
 					color = Color.magenta
 				};
+				UI.Links.Remove(countryFlag);
 				countryName.text = "<i>Observing</i>";
 				sailors.text = manpower.text = gold.text = "N/A";
 				return;
@@ -64,6 +65,7 @@ namespace Player {
 			countryFlag.material = new Material(countryFlag.material){
 				color = Player.MapColor
 			};
+			UI.Links.Add(countryFlag, Player);
 			countryName.text = Player.gameObject.name;
 			RefreshResources();
 		}
