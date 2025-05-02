@@ -29,6 +29,7 @@ namespace Simulation {
 		private readonly List<(int, string, Type)> monthlyManpowerChanges = new();
 		private readonly List<(int, string, Type)> monthlySailorsChanges = new();
 		private bool wasBorderChanged;
+		private bool isSelected;
 		
 		internal readonly UnityEvent<Military.Regiment> RegimentBuilt = new();
 		internal readonly UnityEvent<Military.Ship> ShipBuilt = new();
@@ -271,6 +272,9 @@ namespace Simulation {
 		
 		#region Annexing and Occupying Land
 		internal void GainProvince(Land province){
+			if (isSelected){
+				province.Province.OnSelect();
+			}
 			if (province.Occupier == this){
 				province.Unoccupy();
 			}
@@ -280,6 +284,9 @@ namespace Simulation {
 			}
 		}
 		internal void LoseProvince(Land province){
+			if (isSelected){
+				province.Province.OnDeselect();
+			}
 			ChangeProvinceCount(provinces.Remove(province), -1, province);
 			if (ProvinceCount > 0){
 				if (province == Capital){
@@ -379,11 +386,13 @@ namespace Simulation {
 		
 		#region Selection Interface for the UI
 		public void OnSelect(){
+			isSelected = true;
 			foreach (Land land in Provinces){
 				land.Province.OnSelect();
 			}
 		}
 		public void OnDeselect(){
+			isSelected = false;
 			foreach (Land land in Provinces){
 				land.Province.OnDeselect();
 			}
