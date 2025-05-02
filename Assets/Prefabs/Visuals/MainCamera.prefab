@@ -265,7 +265,7 @@ MonoBehaviour:
   zoomChangeSeconds: 0.6
   movementSpeed: 0.75
   stoppingSeconds: 0.15
-  terrainMapModeAlpha: 0.2
+  automaticMapModeMinAlpha: 0.2
   maxScreensBeyondMap: 0.25
   raycastMask:
     serializedVersion: 2

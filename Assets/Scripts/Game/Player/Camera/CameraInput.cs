@@ -43,6 +43,9 @@ namespace Player {
                 Movement.UpdateMousePosition(context.ReadValue<Vector2>());
             };
         }
+        public void SetMapMode(int index){
+            Movement.SetMapMode(index);
+        }
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         private void Update(){
             if (DebugConsole.IsKeyboardBusy){

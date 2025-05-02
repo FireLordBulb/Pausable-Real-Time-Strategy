@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +22,7 @@ namespace Player {
                     if (!buttons[mapModeIndex].interactable){
                         return;
                     }
-                    //CameraInput.SetMapMode(mapModeIndex);
+                    CameraInput.SetMapMode(mapModeIndex);
                     currentMapModeButton.interactable = true;
                     currentMapModeButton = buttons[mapModeIndex];
                     currentMapModeButton.interactable = false;

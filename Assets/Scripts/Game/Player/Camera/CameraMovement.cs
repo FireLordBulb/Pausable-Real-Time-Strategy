@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Player {
     [RequireComponent(typeof(Camera))]
     public class CameraMovement : MonoBehaviour {
-        private const float Opaque = 1;
+        private const float Opaque = 1, Transparent = 0;
         private static readonly Vector3 Center = new(0.5f, 0.5f);
         
         [Tooltip("In order of largest to smallest height above map.")]
@@ -14,7 +14,7 @@ namespace Player {
         [SerializeField] private float zoomChangeSeconds;
         [SerializeField] private float movementSpeed;
         [SerializeField] private float stoppingSeconds;
-        [SerializeField] private float terrainMapModeAlpha;
+        [SerializeField] private float automaticMapModeMinAlpha;
         [SerializeField] private float maxScreensBeyondMap;
         [SerializeField] private LayerMask raycastMask;
         
@@ -22,6 +22,7 @@ namespace Player {
         private int targetZoom;
         private bool isDragging;
         private Vector3 mousePosition;
+        private MapMode mapMode;
         
         private int previousZoom;
         // Well, smaller or equal.
@@ -40,7 +41,8 @@ namespace Player {
         
         private void Awake(){
             Camera = GetComponent<Camera>();
-
+            mapMode = MapMode.Automatic;
+            
             Vector3 position = transform.position;
             if (position.y < zoomLevels[^1].height){
                 SetZoomLevel(zoomLevels.Length-1);
@@ -104,7 +106,11 @@ namespace Player {
             position.y = zoomLevels[index].height;
             transform.position = position;
             targetZoom = nearestSmallerZoom = previousZoom = index;
-            currentAlpha = zoomLevels[index].doUseTerrainMapMode ? terrainMapModeAlpha : Opaque;
+            currentAlpha = zoomLevels[index].doUseTerrainMapMode ? automaticMapModeMinAlpha : Opaque;
+        }
+        
+        public void SetMapMode(int index){
+            mapMode = (MapMode)index;
         }
         
         private void Update(){
@@ -139,7 +145,7 @@ namespace Player {
                 transform.rotation = Quaternion.Slerp(smallerZoom.rotation, largerZoom.rotation, slerpParameter);
 
                 if (smallerZoom.doUseTerrainMapMode && !largerZoom.doUseTerrainMapMode){
-                    currentAlpha = Mathf.Lerp(terrainMapModeAlpha, Opaque, slerpParameter);
+                    currentAlpha = Mathf.Lerp(automaticMapModeMinAlpha, Opaque, slerpParameter);
                 } else {
                     currentAlpha = Opaque;
                 }
@@ -169,6 +175,18 @@ namespace Player {
             position.x = Mathf.Clamp(position.x, -maxExtents.x, maxExtents.x);
             position.z = Mathf.Clamp(position.z, -maxExtents.z, maxExtents.z);
             transform.position = position;
+            
+            switch (mapMode){
+                case MapMode.Political:
+                    currentAlpha = Opaque;
+                    break;
+                case MapMode.Terrain:
+                    currentAlpha = Transparent;
+                    break;
+                case MapMode.Automatic:
+                default:
+                    break;
+            }
             // Switching between political and terrain map modes by applying opacity to provinces. -----------------
             if (Mathf.Abs(currentAlpha-previousAlpha) < Vector2.kEpsilon){
                 return;
@@ -187,6 +205,12 @@ namespace Player {
             public float height;
             public Quaternion rotation;
             public bool doUseTerrainMapMode;
+        }
+
+        private enum MapMode {
+            Political,
+            Terrain,
+            Automatic
         }
     }
 }
