@@ -270,6 +270,7 @@ MonoBehaviour:
   - Player.UIStack, Player
   - Player.HUD, Player
   - Player.CalendarPanel, Player
+  - Player.PeaceNegotiation, Player
   - Player.WarMenu, Player
   - Player.CountryWindow, Player
   - Player.RegimentWindow, Player
