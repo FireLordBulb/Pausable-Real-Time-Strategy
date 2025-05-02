@@ -27,7 +27,7 @@ namespace Simulation.Military {
 		public override string CreatingVerb => "Constructing";
 		protected virtual bool ShouldAvoidCombat => false;
 		
-		internal virtual void Init(float attackPower, int hull, float size, float maintenanceCost, float gold, int sailors){
+		internal void Init(float attackPower, int hull, float size, float maintenanceCost, float gold, int sailors){
 			AttackPower = attackPower;
 			IntactHull = MaxHull = hull;
 			Size = size;

@@ -145,7 +145,6 @@ namespace Simulation.Military {
 			}
 			Location.Add(self);
 		}
-		internal void StopMoving(){
 		private void TickBuild(){
 			BuildDaysLeft--;
 			if (BuildDaysLeft > 0){
@@ -156,6 +155,7 @@ namespace Simulation.Military {
 		}
 		internal abstract void OnFinishBuilding();
 		
+		private void StopMoving(){
 			PathToTarget = null;
 			NextLocation = null;
 			TargetLocation = null;
