@@ -31,6 +31,7 @@ namespace Player {
 		#region Private Fields
 		private Input.UIActions input;
 		private readonly Dictionary<Type, SelectionWindow> selectionWindowMap = new();
+		private Canvas canvas;
 		private SelectionWindow activeSelectionWindow;
 		private CameraMovement cameraMovement;
 		private Camera mainCamera;
@@ -66,6 +67,7 @@ namespace Player {
 			EnableInput();
 		}
 		private void InitScene(){
+			canvas = GetComponent<Canvas>();
 			map = Instantiate(map);
 			map.gameObject.name = "Map";
 			cameraInput = Instantiate(cameraInput);
@@ -154,7 +156,13 @@ namespace Player {
 			input.F6.performed += _ => FunctionKey(5);
 			input.F7.performed += _ => FunctionKey(6);
 			input.F8.performed += _ => FunctionKey(7);
-			input.F9.performed += _ => FunctionKey(8);
+			input.F9.performed += _ => {
+				if (IsControlHeld){
+					canvas.targetDisplay = canvas.targetDisplay == -1 ? 0: -1;
+				} else {
+					FunctionKey(8);
+				}
+			};
 			input.F10.performed += _ => FunctionKey(9);
 			input.F11.performed += _ => FunctionKey(10);
 			input.F12.performed += _ => FunctionKey(11);
