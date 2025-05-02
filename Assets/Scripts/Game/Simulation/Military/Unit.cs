@@ -67,13 +67,7 @@ namespace Simulation.Military {
 			unit.Type.ApplyValuesTo(unit);
 			
 			type.ConsumeBuildCostFrom(unit.Owner);
-			if (type.DaysToBuild == 0){
-				unit.FinishBuilding();
-				// OnFinishBuilding shouldn't be called in this factory method because then it's called before it gets added to the Country's list of units.
-				// Country will have to call OnFinishBuilding instead.
-				return unit;
-			}
-			unit.StartBuilding();
+			unit.StartBuildCountdown();
 			return unit;
 		}
 		private void Awake(){
@@ -82,6 +76,16 @@ namespace Simulation.Military {
 			}
 			Debug.LogError("ERROR: Object.Instantiate was used to create Military Unit directly! This is not allowed. Use the Unit<TUnit>.StartCreating factory method instead.");
 			DestroyImmediate(gameObject);
+		}
+		private void StartBuildCountdown(){
+			if (Type.DaysToBuild == 0){
+				IsBuilt = true;
+				// OnFinishBuilding shouldn't be called in this factory method because then it's called before it gets added to the Country's list of units.
+				// Country will have to call OnFinishBuilding instead.
+			} else {
+				BuildDaysLeft = Type.DaysToBuild;
+			}
+			Province.Calendar.OnDayTick.AddListener(OnDayTick);
 		}
 		
 		private void Update(){
@@ -114,30 +118,12 @@ namespace Simulation.Military {
 		internal void SetSharedPositionIndex(int index){
 			sharedPositionIndex = index;
 		}
-		
-		private void StartBuilding(){
-			BuildDaysLeft = Type.DaysToBuild;
-			Province.Calendar.OnDayTick.AddListener(TickBuild);
-		}
-		private void TickBuild(){
-			BuildDaysLeft--;
-			if (BuildDaysLeft > 0){
-				return;
-			}
-			FinishBuilding();
-			OnFinishBuilding();
-		}
-		private void FinishBuilding(){
-			// Something is wrong with the listeners causing this to be called multiple times, guard clause used as a dirty fix.
-			if (IsBuilt){
-				return;
-			}
-			IsBuilt = true;
-			Province.Calendar.OnDayTick.RemoveListener(TickBuild);
-			Province.Calendar.OnDayTick.AddListener(OnDayTick);
-		}
-		internal abstract void OnFinishBuilding();
+
 		private void OnDayTick(){
+			if (!IsBuilt){
+				TickBuild();
+				return;
+			}
 			if (!IsMoving){
 				return;
 			}
@@ -160,6 +146,16 @@ namespace Simulation.Military {
 			Location.Add(self);
 		}
 		internal void StopMoving(){
+		private void TickBuild(){
+			BuildDaysLeft--;
+			if (BuildDaysLeft > 0){
+				return;
+			}
+			IsBuilt = true;
+			OnFinishBuilding();
+		}
+		internal abstract void OnFinishBuilding();
+		
 			PathToTarget = null;
 			NextLocation = null;
 			TargetLocation = null;
@@ -278,7 +274,11 @@ namespace Simulation.Military {
 			}
 		}
 		protected virtual void OnBattleEnd(bool didWin){}
-		internal abstract void StackWipe();
+
+		internal virtual void StackWipe(){
+			Location.Remove(self);
+			Province.Calendar.OnDayTick.RemoveListener(OnDayTick);
+		}
 		
 		public void OnSelect(){}
 		public void OnDeselect(){}

@@ -142,8 +142,8 @@ namespace Simulation.Military {
 			Owner.SeaBattleEnded.Invoke(location);
 		}
 		internal override void StackWipe(){
+			base.StackWipe();
 			Owner.RemoveShip(this);
-			Location.Remove(this);
 			Province.Calendar.OnMonthTick.RemoveListener(PayMaintenance);
 			if (this != null){
 				Destroy(gameObject);

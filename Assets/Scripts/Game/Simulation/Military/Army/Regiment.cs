@@ -261,8 +261,8 @@ namespace Simulation.Military {
 			SetDestination(shortestPath[^1].Target.Land.ArmyLocation);
 		}
 		internal override void StackWipe(){
+			base.StackWipe();
 			Owner.RemoveRegiment(this);
-			Location.Remove(this);
 			Province.Calendar.OnMonthTick.RemoveListener(PayMaintenance);
 			if (this != null){
 				Destroy(gameObject);
