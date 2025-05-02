@@ -44,9 +44,14 @@ namespace Simulation {
 		private bool DoesNotContainKey(Action action){
 			Type type = action.Target?.GetType();
 			if (type == null){
+				Debug.LogWarning($"Action with static function: {action.Method}");
 				return false;
 			}
-			return !priority.ContainsKey(type);
+			bool doesNotContain = !priority.ContainsKey(type);
+			if (doesNotContain){
+				Debug.LogWarning($"Action with target of type not in sort order: {type}");
+			}
+			return doesNotContain;
 		}
 		private int GetPriority(Action action) => priority[action.Target.GetType()];
 	}
