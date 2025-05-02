@@ -247,6 +247,33 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "MapMode0",
+                    "type": "Button",
+                    "id": "6d1cc42f-cd61-4ca3-8a62-bd725799dd51",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MapMode1",
+                    "type": "Button",
+                    "id": "a719ff34-55a8-4a45-a090-79c17095f9e2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MapMode2",
+                    "type": "Button",
+                    "id": "8b0694e6-d90e-4f88-9aed-f5e6b12ca9f2",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -863,6 +890,39 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "F12",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "029a7635-87bd-41ba-84f4-29219bb71598",
+                    "path": "<Keyboard>/t",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MapMode0",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7a9fcea4-963e-4b4c-aa45-fc9e5849c0a6",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MapMode1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1afb227a-c63d-441c-b7e0-190c0017c9a2",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "MapMode2",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

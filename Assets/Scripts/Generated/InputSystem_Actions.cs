@@ -333,6 +333,33 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MapMode0"",
+                    ""type"": ""Button"",
+                    ""id"": ""6d1cc42f-cd61-4ca3-8a62-bd725799dd51"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MapMode1"",
+                    ""type"": ""Button"",
+                    ""id"": ""a719ff34-55a8-4a45-a090-79c17095f9e2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MapMode2"",
+                    ""type"": ""Button"",
+                    ""id"": ""8b0694e6-d90e-4f88-9aed-f5e6b12ca9f2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -951,6 +978,39 @@ public partial class @Input: IInputActionCollection2, IDisposable
                     ""action"": ""F12"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""029a7635-87bd-41ba-84f4-29219bb71598"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MapMode0"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a9fcea4-963e-4b4c-aa45-fc9e5849c0a6"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MapMode1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1afb227a-c63d-441c-b7e0-190c0017c9a2"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""MapMode2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -1426,6 +1486,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
         m_UI_F10 = m_UI.FindAction("F10", throwIfNotFound: true);
         m_UI_F11 = m_UI.FindAction("F11", throwIfNotFound: true);
         m_UI_F12 = m_UI.FindAction("F12", throwIfNotFound: true);
+        m_UI_MapMode0 = m_UI.FindAction("MapMode0", throwIfNotFound: true);
+        m_UI_MapMode1 = m_UI.FindAction("MapMode1", throwIfNotFound: true);
+        m_UI_MapMode2 = m_UI.FindAction("MapMode2", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_ScrollWheel = m_Camera.FindAction("ScrollWheel", throwIfNotFound: true);
@@ -1550,6 +1613,9 @@ public partial class @Input: IInputActionCollection2, IDisposable
     private readonly InputAction m_UI_F10;
     private readonly InputAction m_UI_F11;
     private readonly InputAction m_UI_F12;
+    private readonly InputAction m_UI_MapMode0;
+    private readonly InputAction m_UI_MapMode1;
+    private readonly InputAction m_UI_MapMode2;
     /// <summary>
     /// Provides access to input actions defined in input action map "UI".
     /// </summary>
@@ -1670,6 +1736,18 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @F12 => m_Wrapper.m_UI_F12;
         /// <summary>
+        /// Provides access to the underlying input action "UI/MapMode0".
+        /// </summary>
+        public InputAction @MapMode0 => m_Wrapper.m_UI_MapMode0;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/MapMode1".
+        /// </summary>
+        public InputAction @MapMode1 => m_Wrapper.m_UI_MapMode1;
+        /// <summary>
+        /// Provides access to the underlying input action "UI/MapMode2".
+        /// </summary>
+        public InputAction @MapMode2 => m_Wrapper.m_UI_MapMode2;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_UI; }
@@ -1776,6 +1854,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @F12.started += instance.OnF12;
             @F12.performed += instance.OnF12;
             @F12.canceled += instance.OnF12;
+            @MapMode0.started += instance.OnMapMode0;
+            @MapMode0.performed += instance.OnMapMode0;
+            @MapMode0.canceled += instance.OnMapMode0;
+            @MapMode1.started += instance.OnMapMode1;
+            @MapMode1.performed += instance.OnMapMode1;
+            @MapMode1.canceled += instance.OnMapMode1;
+            @MapMode2.started += instance.OnMapMode2;
+            @MapMode2.performed += instance.OnMapMode2;
+            @MapMode2.canceled += instance.OnMapMode2;
         }
 
         /// <summary>
@@ -1868,6 +1955,15 @@ public partial class @Input: IInputActionCollection2, IDisposable
             @F12.started -= instance.OnF12;
             @F12.performed -= instance.OnF12;
             @F12.canceled -= instance.OnF12;
+            @MapMode0.started -= instance.OnMapMode0;
+            @MapMode0.performed -= instance.OnMapMode0;
+            @MapMode0.canceled -= instance.OnMapMode0;
+            @MapMode1.started -= instance.OnMapMode1;
+            @MapMode1.performed -= instance.OnMapMode1;
+            @MapMode1.canceled -= instance.OnMapMode1;
+            @MapMode2.started -= instance.OnMapMode2;
+            @MapMode2.performed -= instance.OnMapMode2;
+            @MapMode2.canceled -= instance.OnMapMode2;
         }
 
         /// <summary>
@@ -2453,6 +2549,27 @@ public partial class @Input: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnF12(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MapMode0" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMapMode0(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MapMode1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMapMode1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MapMode2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMapMode2(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Camera" which allows adding and removing callbacks.
