@@ -28,7 +28,7 @@ namespace Player {
 		
 		private void Awake(){
 			foreach (SidePanelButton sidePanelButton in sidePanelButtons){
-				sidePanelButton.button.onClick.AddListener(() => SidePanelButtonClick(sidePanelButton.button, sidePanelButton.menu));
+				sidePanelButton.button.onClick.AddListener(() => SidePanelButtonClick(sidePanelButton));
 			}
 		}
 		internal override void Init(UIStack uiStack){
@@ -39,13 +39,24 @@ namespace Player {
 		public override void OnBegin(bool isFirstTime){
 			gameObject.SetActive(true);
 		}
-		private void SidePanelButtonClick(Button clickedButton, SidePanelMenu menuPrefab){
+		private void SidePanelButtonClick(SidePanelButton sidePanelButton){
 			if (sidePanelMenu != null){
 				sidePanelMenu.Close();
 			}
 			SetButtonsInteractable();
-			clickedButton.interactable = false;
-			sidePanelMenu = UI.Push(menuPrefab);
+			sidePanelButton.button.interactable = false;
+			sidePanelMenu = UI.Push(sidePanelButton.menu);
+		}
+
+		public void OpenSidePanel(int index){
+			if (index < 0 || sidePanelButtons.Length <= index){
+				return;
+			}
+			if (sidePanelButtons[index].button.interactable){
+				SidePanelButtonClick(sidePanelButtons[index]);
+			} else if (sidePanelMenu != null){
+				sidePanelMenu.Close();
+			}
 		}
 		
 		public void RefreshCountry(){

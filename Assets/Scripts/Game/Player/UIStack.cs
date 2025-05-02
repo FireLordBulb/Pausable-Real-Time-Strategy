@@ -146,6 +146,18 @@ namespace Player {
 					closableWindow.Close();
 				}
 			};
+			input.F1.performed += _ => FunctionKey(0);
+			input.F2.performed += _ => FunctionKey(1);
+			input.F3.performed += _ => FunctionKey(2);
+			input.F4.performed += _ => FunctionKey(3);
+			input.F5.performed += _ => FunctionKey(4);
+			input.F6.performed += _ => FunctionKey(5);
+			input.F7.performed += _ => FunctionKey(6);
+			input.F8.performed += _ => FunctionKey(7);
+			input.F9.performed += _ => FunctionKey(8);
+			input.F10.performed += _ => FunctionKey(9);
+			input.F11.performed += _ => FunctionKey(10);
+			input.F12.performed += _ => FunctionKey(11);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			bool debugWasDeactivated = false;
 			input.Debug.canceled += _ => {
@@ -166,6 +178,13 @@ namespace Player {
 				debugConsole.Disable();
 			};
 #endif
+		}
+
+		private void FunctionKey(int index){
+			if (IsControlHeld){
+				return;
+			}
+			hud.OpenSidePanel(index);
 		}
 		#endregion
 		
