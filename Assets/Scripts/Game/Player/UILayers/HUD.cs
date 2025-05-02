@@ -26,6 +26,7 @@ namespace Player {
 		private SidePanelMenu sidePanelMenu;
 		
 		public CalendarPanel CalendarPanel => calendarPanel;
+		public MapModeSelect MapModeSelect => mapModeSelect;
 		
 		private void Awake(){
 			foreach (SidePanelButton sidePanelButton in sidePanelButtons){

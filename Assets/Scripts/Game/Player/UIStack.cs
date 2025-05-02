@@ -167,6 +167,10 @@ namespace Player {
 			input.F10.performed += _ => FunctionKey(9);
 			input.F11.performed += _ => FunctionKey(10);
 			input.F12.performed += _ => FunctionKey(11);
+
+			input.MapMode0.performed += _ => hud.MapModeSelect.Select(0);
+			input.MapMode1.performed += _ => hud.MapModeSelect.Select(1);
+			input.MapMode2.performed += _ => hud.MapModeSelect.Select(2);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			bool debugWasDeactivated = false;
 			input.Debug.canceled += _ => {
