@@ -133,6 +133,17 @@ namespace Player {
 			enemyPanel.SetCountry(enemy, UI, Close);
 			Refresh();
 			UI.Selected.OnDeselect();
+			
+			AddWarSituationChangedListeners(player);
+			AddWarSituationChangedListeners(enemy);
+		}
+		
+		private void AddWarSituationChangedListeners(Country country){
+			country.RegimentBuiltAddListener(_ => RefreshAcceptance());
+			country.ShipBuiltAddListener(_ => RefreshAcceptance());
+			country.LandBattleEndedAddListener(_ => RefreshAcceptance());
+			country.SeaBattleEndedAddListener(_ => RefreshAcceptance());
+			country.SiegeEndedAddListener(_ => RefreshAcceptance());
 		}
 		
 		public override ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
@@ -253,11 +264,21 @@ namespace Player {
 		public override void OnEnd(){
 			Calendar.OnDayTick.RemoveListener(AwaitAnswer);
 			Calendar.OnDayTick.RemoveListener(BlockedCountdown);
+			RemoveWarSituationChangedListeners(player);
+			RemoveWarSituationChangedListeners(enemy);
 			foreach (Land land in treaty.AnnexedLands){
 				land.Province.OnDeselect();
 			}
 			UI.Selected?.OnSelect();
 			base.OnEnd();
+		}
+		// ReSharper disable Unity.PerformanceAnalysis // Removing the listeners doesn't call then, so the methods being "performance-intensive" is fine.
+		private void RemoveWarSituationChangedListeners(Country country){
+			country.RegimentBuiltRemoveListener(_ => RefreshAcceptance());
+			country.ShipBuiltRemoveListener(_ => RefreshAcceptance());
+			country.LandBattleEndedRemoveListener(_ => RefreshAcceptance());
+			country.SeaBattleEndedRemoveListener(_ => RefreshAcceptance());
+			country.SiegeEndedRemoveListener(_ => RefreshAcceptance());
 		}
 		public override bool IsDone(){
 			base.IsDone();
