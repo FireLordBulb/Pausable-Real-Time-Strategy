@@ -13,9 +13,6 @@ MonoBehaviour:
   m_Name: PeaceAcceptance
   m_EditorClassIdentifier: 
   baseReluctance: -30
-  resourcesMin: -10
-  goldAvailable: -0.02
-  manpowerAvailable: -0.002
   militaryStrength: 10
   militaryStrengthMax: 40
   minMilitaryStrengthValue: 5000

@@ -8,9 +8,6 @@ namespace AI {
 	public class PeaceAcceptance : ScriptableObject {
 		[Header("Reluctance")]
 		[SerializeField] private float baseReluctance;
-		[SerializeField] private float resourcesMin;
-		[SerializeField] private float goldAvailable;
-		[SerializeField] private float manpowerAvailable;
 		[Header("War Situation")]
 		[SerializeField] private float militaryStrength;
 		[SerializeField] private float militaryStrengthMax;
@@ -76,10 +73,6 @@ namespace AI {
 		
 		private float Reluctance(Country decider, Country other){
 			float acceptance = baseReluctance;
-			
-			float fromResources = decider.Gold*goldAvailable+decider.Manpower*manpowerAvailable;
-			fromResources = Math.Max(fromResources, resourcesMin);
-			acceptance += fromResources;
 			
 			float deciderMilitaryStrength = GetSituationalMilitaryStrength(decider, other);
 			float otherMilitaryStrength = GetSituationalMilitaryStrength(other, decider);
