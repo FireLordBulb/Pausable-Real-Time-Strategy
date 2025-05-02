@@ -75,6 +75,9 @@ namespace Simulation.Military {
 		}
 		
 		private void PayMaintenance(){
+			if (this == null){
+				return;
+			}
 			Owner.MonthlyGoldChange(-maintenance, $"{Type.name} Upkeep", GetType());
 			Repair();
 		}

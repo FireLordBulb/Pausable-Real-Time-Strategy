@@ -38,10 +38,6 @@ namespace Simulation.Military {
 		}
 		internal override void Refresh(){
 			base.Refresh();
-			// New sieges aren't started during battles, and existing ones are paused.
-			if (IsBattleOngoing){
-				return;
-			}
 			if (SiegeIsOngoing){
 				if (Units.All(regiment => regiment.Owner == Land.Controller)){
 					EndSiege();
@@ -84,11 +80,7 @@ namespace Simulation.Military {
 		}
 
 		private void TickSiege(){
-			if (IsBattleOngoing){
-				return;
-			}
-			// Pause the siege if all sieging regiments are moving.
-			if (SiegeIsPausedBecauseMovement){
+			if (IsBattleOngoing || SiegeIsPausedBecauseMovement || !SiegeIsOngoing){
 				return;
 			}
 			SiegeDaysLeft--;

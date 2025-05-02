@@ -45,7 +45,7 @@ namespace Simulation.Military {
 			}
 			DefendingUnits = new List<TUnit>();
 			foreach (TUnit presentUnit in units){
-				if (!presentUnit.IsRetreating){
+				if (!presentUnit.IsRetreating && presentUnit.Owner == firstUnit.Owner){
 					DefendingUnits.Add(presentUnit);
 				}
 			}

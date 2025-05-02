@@ -32,7 +32,9 @@ namespace AI {
 		}
 		// Use the daily tick instead.
 		private void DayTick(){
-			base.Update();
+			if (this != null && enabled){
+				base.Update();
+			}
 		}
 		protected void OnEnable(){
 			if (calendar != null){
