@@ -607,10 +607,11 @@ MonoBehaviour:
   - {fileID: 299586603968398477}
   - {fileID: 2324631867501708709}
   - {fileID: 4097497956207920843}
-  warMenu: {fileID: 6336260556752774995, guid: ca14549e11386a340adb24124e5ede69, type: 3}
-  economyMenu: {fileID: 2027532383957485435, guid: 4676c381a36547f448cf1254823fa461, type: 3}
-  warButton: {fileID: 2615223843036875942}
-  economyButton: {fileID: 6236611923062367638}
+  sidePanelButtons:
+  - button: {fileID: 2615223843036875942}
+    menu: {fileID: 6336260556752774995, guid: ca14549e11386a340adb24124e5ede69, type: 3}
+  - button: {fileID: 6236611923062367638}
+    menu: {fileID: 2027532383957485435, guid: 4676c381a36547f448cf1254823fa461, type: 3}
   calendarPanel: {fileID: 1614260340479607437}
   resourceMaxCharacters: 6
 --- !u!1 &3820630026898402977

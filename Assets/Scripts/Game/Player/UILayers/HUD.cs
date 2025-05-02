@@ -1,3 +1,4 @@
+using System;
 using Simulation;
 using Text;
 using TMPro;
@@ -15,10 +16,7 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI sailors;
 		[SerializeField] private IncomeBreakdownHover[] breakdowns;
 		[Header("SidePanel")]
-		[SerializeField] private SidePanelMenu warMenu;
-		[SerializeField] private SidePanelMenu economyMenu;
-		[SerializeField] private Button warButton;
-		[SerializeField] private Button economyButton;
+		[SerializeField] private SidePanelButton[] sidePanelButtons;
 		[Header("CalendarPanel")]
 		[SerializeField] private CalendarPanel calendarPanel;
 		[Space]
@@ -29,8 +27,9 @@ namespace Player {
 		public CalendarPanel CalendarPanel => calendarPanel;
 		
 		private void Awake(){
-			warButton.onClick.AddListener(() => SidePanelButtonClick(warButton, warMenu));
-			economyButton.onClick.AddListener(() => SidePanelButtonClick(economyButton, economyMenu));
+			foreach (SidePanelButton sidePanelButton in sidePanelButtons){
+				sidePanelButton.button.onClick.AddListener(() => SidePanelButtonClick(sidePanelButton.button, sidePanelButton.menu));
+			}
 		}
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
@@ -85,8 +84,9 @@ namespace Player {
 		}
 		private void SetButtonsInteractable(){
 			bool mayInteract = Player != null;
-			warButton.interactable = mayInteract;
-			economyButton.interactable = mayInteract;
+			foreach (SidePanelButton sidePanelButton in sidePanelButtons){
+				sidePanelButton.button.interactable = mayInteract;
+			}
 		}
 		private void Start(){
 			Calendar.OnPauseToggle.AddListener(pauseLabel.SetActive);
@@ -108,6 +108,12 @@ namespace Player {
 		}
 		public override bool IsDone(){
 			return false;
+		}
+
+		[Serializable]
+		private struct SidePanelButton {
+			public Button button;
+			public SidePanelMenu menu;
 		}
 	}
 }
