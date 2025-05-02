@@ -44,7 +44,7 @@ namespace Simulation.Military {
 		protected float MovementSpeed => movementSpeed;
 		private Vector3 LocationWorldPosition => Location.WorldPosition+locationWorldPositionOffset;
 		public abstract string CreatingVerb {get;}
-
+		
 		internal static TUnit StartCreating(UnitType<TUnit> type, Location<TUnit> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
 				return null;
@@ -88,37 +88,6 @@ namespace Simulation.Military {
 			Province.Calendar.OnDayTick.AddListener(OnDayTick);
 		}
 		
-		private void Update(){
-			Vector3 beforePosition = transform.position;
-			UpdateWorldPosition(worldSpaceSpeed*Time.deltaTime);
-			if (beforePosition != transform.position){
-				OnWorldPositionChanged();
-			}
-			if (visualizedPositionIndex == sharedPositionIndex){
-				return;
-			}
-			VisualizeSharedPositionIndex(sharedPositionIndex);
-			visualizedPositionIndex = sharedPositionIndex;
-		}
-		private void UpdateWorldPosition(float maxDistanceDelta){
-			while (worldPositionsOnPath.Count > 0){
-				Vector3 target = worldPositionsOnPath.Peek();
-				Vector3 previousPosition = transform.position;
-				transform.position = Vector3.MoveTowards(previousPosition, target, maxDistanceDelta);
-				if (Vector3.Distance(transform.position, target) > Vector3.kEpsilon){
-					return;
-				}
-				transform.position = target;
-				worldPositionsOnPath.Dequeue();
-				maxDistanceDelta -= Vector3.Distance(previousPosition, transform.position);
-			}
-		}
-		protected virtual void OnWorldPositionChanged(){}
-		protected abstract void VisualizeSharedPositionIndex(int index);
-		internal void SetSharedPositionIndex(int index){
-			sharedPositionIndex = index;
-		}
-
 		private void OnDayTick(){
 			if (!IsBuilt){
 				TickBuild();
@@ -155,12 +124,35 @@ namespace Simulation.Military {
 		}
 		internal abstract void OnFinishBuilding();
 		
-		private void StopMoving(){
-			PathToTarget = null;
-			NextLocation = null;
-			TargetLocation = null;
-			IsRetreating = false;
-			worldPositionsOnPath.Enqueue(LocationWorldPosition);
+		private void Update(){
+			Vector3 beforePosition = transform.position;
+			UpdateWorldPosition(worldSpaceSpeed*Time.deltaTime);
+			if (beforePosition != transform.position){
+				OnWorldPositionChanged();
+			}
+			if (visualizedPositionIndex == sharedPositionIndex){
+				return;
+			}
+			VisualizeSharedPositionIndex(sharedPositionIndex);
+			visualizedPositionIndex = sharedPositionIndex;
+		}
+		private void UpdateWorldPosition(float maxDistanceDelta){
+			while (worldPositionsOnPath.Count > 0){
+				Vector3 target = worldPositionsOnPath.Peek();
+				Vector3 previousPosition = transform.position;
+				transform.position = Vector3.MoveTowards(previousPosition, target, maxDistanceDelta);
+				if (Vector3.Distance(transform.position, target) > Vector3.kEpsilon){
+					return;
+				}
+				transform.position = target;
+				worldPositionsOnPath.Dequeue();
+				maxDistanceDelta -= Vector3.Distance(previousPosition, transform.position);
+			}
+		}
+		protected virtual void OnWorldPositionChanged(){}
+		protected abstract void VisualizeSharedPositionIndex(int index);
+		internal void SetSharedPositionIndex(int index){
+			sharedPositionIndex = index;
 		}
 		
 		internal MoveOrderResult MoveTo(Location<TUnit> destination){
@@ -240,6 +232,13 @@ namespace Simulation.Military {
 		protected void OverrideTargetLocation(){
 			doOverrideTargetLocation = true;
 		}
+		private void StopMoving(){
+			PathToTarget = null;
+			NextLocation = null;
+			TargetLocation = null;
+			IsRetreating = false;
+			worldPositionsOnPath.Enqueue(LocationWorldPosition);
+		}
 		protected abstract Vector3 WorldPositionBetweenLocations();
 		protected abstract int CalculateTravelDays();
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
@@ -274,7 +273,7 @@ namespace Simulation.Military {
 			}
 		}
 		protected virtual void OnBattleEnd(bool didWin){}
-
+		
 		internal virtual void StackWipe(){
 			Location.Remove(self);
 			Province.Calendar.OnDayTick.RemoveListener(OnDayTick);
