@@ -36,13 +36,13 @@ namespace Player {
             sourceColumn.Clear();
             switch (resource){
                 case Resource.Gold:
-                    AddRows(Player.GoldIncome, "Income", Player.MonthlyGoldChanges, FormatNumber, Add, Compare);
+                    AddRows(Player.GoldIncome, "Income", Player.MonthlyGoldChanges, FormatAndColor, Add, Compare);
                     break;
                 case Resource.Manpower:
-                    AddRows(Player.ManpowerIncome, "Reserves", Player.MonthlyManpowerChanges, FormatNumber, Add, Compare);
+                    AddRows(Player.ManpowerIncome, "Reserves", Player.MonthlyManpowerChanges, FormatAndColor, Add, Compare);
                     break;
                 case Resource.Sailors:
-                    AddRows(Player.SailorsIncome, "Reserves", Player.MonthlySailorsChanges, FormatNumber, Add, Compare);
+                    AddRows(Player.SailorsIncome, "Reserves", Player.MonthlySailorsChanges, FormatAndColor, Add, Compare);
                     break;
                 default: return;
             }
@@ -101,11 +101,25 @@ namespace Player {
         private static string Indent(string text){
             return $"  {text}";
         }
-        private string FormatNumber(float value){
-            return Format.FormatLargeNumberWithSign(value, maxNumberCharacters);
+        private string FormatAndColor(float value){
+            string formattedNumber = Format.FormatLargeNumberWithSign(value, maxNumberCharacters);
+            if (value > 0){
+                return $"<color=green>{formattedNumber}</color>";
+            }
+            if (value < 0){
+                return $"<color=red>{formattedNumber}</color>";
+            }
+            return formattedNumber;
         }
-        private string FormatNumber(int value){
-            return Format.FormatLargeNumberWithSign(value, maxNumberCharacters);
+        private string FormatAndColor(int value){
+            string formattedNumber = Format.FormatLargeNumberWithSign(value, maxNumberCharacters);
+            if (value > 0){
+                return $"<color=green>{formattedNumber}</color>";
+            }
+            if (value < 0){
+                return $"<color=red>{formattedNumber}</color>";
+            }
+            return formattedNumber;
         }
         private static int Compare(float a, float b) => Mathf.CeilToInt(Mathf.Abs(b)-Mathf.Abs(a));
         private static int Compare(int a, int b) => Mathf.Abs(b)-Mathf.Abs(a);
