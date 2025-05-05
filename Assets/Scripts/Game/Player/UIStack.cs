@@ -194,7 +194,7 @@ namespace Player {
 		}
 
 		private void FunctionKey(int index){
-			if (IsControlHeld){
+			if (IsControlHeld || StackList[^1] is PeaceNegotiation){
 				return;
 			}
 			hud.OpenSidePanel(index);
