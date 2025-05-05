@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42815e385be14aa6b98ae3910809ff83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rowPrefab: {fileID: 5887921905526551316, guid: f54fca06501588749b8e168cd40f8656, type: 3}
+  rowPrefab: {fileID: 5887921905526551316, guid: 0139d942441f75e45834775eb5d1a281, type: 3}
 --- !u!223 &3711107446867903253
 Canvas:
   m_ObjectHideFlags: 0
