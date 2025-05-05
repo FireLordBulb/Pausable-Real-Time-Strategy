@@ -25,6 +25,7 @@ namespace Player {
 		[Header("Offer Peace UI Elements")]
 		[SerializeField] private Button sendOffer;
 		[SerializeField] private TextMeshProUGUI sendButtonText;
+		[SerializeField] private PeaceAcceptanceHover peaceAcceptanceHover;
 		[SerializeField] private TextMeshProUGUI acceptDescription;
 		[SerializeField] private TextMeshProUGUI acceptValue;
 		[SerializeField] private TextMeshProUGUI sendingBlocked;
@@ -131,6 +132,8 @@ namespace Player {
 			treaty = Player.NewPeaceTreaty(enemy);
 			playerPanel.SetCountry(player, UI, Close);
 			enemyPanel.SetCountry(enemy, UI, Close);
+			peaceAcceptanceHover.Player = player;
+			peaceAcceptanceHover.AI = enemyAI;
 			Refresh();
 			UI.Selected.OnDeselect();
 			
@@ -259,6 +262,7 @@ namespace Player {
 				acceptDescription.text = "Would Accept Treaty";
 				acceptDescription.color = acceptValue.color = Color.green;
 			}
+			peaceAcceptanceHover.Refresh();
 		}
 		
 		public override void OnEnd(){

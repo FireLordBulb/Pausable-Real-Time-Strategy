@@ -433,6 +433,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5123056561893784980}
+  - component: {fileID: 6139872885072265681}
   m_Layer: 5
   m_Name: Acceptance
   m_TagString: Untagged
@@ -461,6 +462,20 @@ RectTransform:
   m_AnchoredPosition: {x: -15, y: -20}
   m_SizeDelta: {x: 260, y: 25}
   m_Pivot: {x: 1, y: 1}
+--- !u!114 &6139872885072265681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1782346741739431067}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e376912d11cb4db4a4babc07c947c109, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelPrefab: {fileID: 7904939887203189042, guid: 85b40b26f92cc324bb7f69ef4309ab37, type: 3}
+  maxNumberCharacters: 6
 --- !u!1 &2180531933674236021
 GameObject:
   m_ObjectHideFlags: 0
@@ -1330,6 +1345,7 @@ MonoBehaviour:
   payMore: {fileID: 7928878882657891007}
   sendOffer: {fileID: 2160446813731652184}
   sendButtonText: {fileID: 8306232708772537715}
+  peaceAcceptanceHover: {fileID: 6139872885072265681}
   acceptDescription: {fileID: 4897129169654664152}
   acceptValue: {fileID: 8091404035988946459}
   sendingBlocked: {fileID: 6196396117909496332}
