@@ -144,7 +144,7 @@ namespace AI {
 				}
 				acceptanceFromLand += provinceCost;
 			}
-			AddReason(acceptanceFromLand*sign, "Proportion of Land demanded");
+			AddReason(acceptanceFromLand*sign, "Proportion of Land Value Given");
 			AddReason(Math.Max(goldDemanded*treaty.GoldTransfer, maxGoldAcceptanceDecrease)*sign, "Size of Gold Transfer");
 		}
 
