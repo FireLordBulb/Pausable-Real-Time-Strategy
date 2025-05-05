@@ -9,23 +9,23 @@ using Object = UnityEngine.Object;
 namespace Player {
 	public class Links {
 		private readonly Dictionary<GameObject, (UILink link, ISelectable selectable)> existingLinks = new();
-		private readonly Action<ISelectable> select;
+		private readonly Action<ISelectable, bool> select;
 		
-		public Links(Action<ISelectable> selectAction){
+		public Links(Action<ISelectable, bool> selectAction){
 			select = selectAction;
 		}
 		
-		public void Add(TextMeshProUGUI linkText, ISelectable selectable, Action action = null){
+		public void Add(TextMeshProUGUI linkText, ISelectable selectable, bool doDeselect = false, Action action = null){
 			if (existingLinks.TryGetValue(linkText.gameObject, out (UILink, ISelectable selectable) tuple) && tuple.selectable == selectable){
 				return;
 			}
 			linkText.ForceMeshUpdate();
 			RectTransform rectTransform = (RectTransform)linkText.transform;
 			VectorGeometry.SetRectWidth(rectTransform, linkText.textBounds.size.x);
-			Add(rectTransform, selectable, action);
+			Add(rectTransform, selectable, doDeselect, action);
 		}
 		// ReSharper disable Unity.PerformanceAnalysis // The expensive AddComponent won't be called every frame because existingLinks keeps track of it there already is a link.
-		public void Add(Component linkComponent, ISelectable selectable, Action action = null){
+		public void Add(Component linkComponent, ISelectable selectable, bool doDeselect = false, Action action = null){
 			if (existingLinks.TryGetValue(linkComponent.gameObject, out (UILink link, ISelectable selectable) tuple)){
 				if (tuple.selectable == selectable){
 					return;
@@ -35,9 +35,9 @@ namespace Player {
 			}
 			UILink link = linkComponent.gameObject.AddComponent<UILink>();
 			link.Link(action == null ? 
-				() => select(selectable) :
+				() => select(selectable, doDeselect) :
 				() => {
-					select(selectable);
+					select(selectable, doDeselect);
 					action();
 				}
 			);

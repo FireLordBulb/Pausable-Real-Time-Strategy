@@ -78,11 +78,11 @@ namespace Player {
 			mainCamera = cameraMovement.Camera;
 		}	
 		private void SpawnUI(){
-			Links = new Links(selectable => {
-				if (Selected != selectable){
-					Select(selectable);
-				} else {
+			Links = new Links((selectable, doDeselect) => {
+				if (doDeselect && Selected == selectable){
 					Deselect(selectable);
+				} else {
+					Select(selectable);
 				}
 			});
 			hud = Instantiate(hud, transform);

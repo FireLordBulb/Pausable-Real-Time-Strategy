@@ -17,11 +17,11 @@ namespace Player {
 			}
 			linkedCountry = country;
 			countryName.text = linkedCountry.Name;
-			ui.Links.Add(countryName, linkedCountry, action);
+			ui.Links.Add(countryName, linkedCountry, false, action);
 			flag.material = new Material(flag.material){
 				color = country.MapColor
 			};
-			ui.Links.Add(flag, linkedCountry, action);
+			ui.Links.Add(flag, linkedCountry, false, action);
 		}
 	}
 }

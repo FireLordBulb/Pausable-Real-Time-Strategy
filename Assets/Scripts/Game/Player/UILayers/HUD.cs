@@ -78,7 +78,7 @@ namespace Player {
 			countryFlag.material = new Material(countryFlag.material){
 				color = Player.MapColor
 			};
-			UI.Links.Add(countryFlag, Player);
+			UI.Links.Add(countryFlag, Player, true);
 			countryName.text = Player.gameObject.name;
 			RefreshResources();
 		}
