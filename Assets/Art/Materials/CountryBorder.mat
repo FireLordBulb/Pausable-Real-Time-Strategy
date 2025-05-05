@@ -28,13 +28,12 @@ Material:
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
-  - TransparentDepthPrepass
+  - DecalProjectorForwardEmissive
   - TransparentDepthPostpass
   - TransparentBackface
   - RayTracingPrepass
   - MOTIONVECTORS
   - DecalMeshForwardEmissive
-  - DecalProjectorForwardEmissive
   m_LockedProperties: _BaseColor _BaseColorMap
   m_SavedProperties:
     serializedVersion: 3
@@ -259,7 +258,7 @@ Material:
     - _TransparentBackfaceEnable: 0
     - _TransparentCullMode: 2
     - _TransparentDepthPostpassEnable: 0
-    - _TransparentDepthPrepassEnable: 0
+    - _TransparentDepthPrepassEnable: 1
     - _TransparentSortPriority: 50
     - _TransparentWritingMotionVec: 0
     - _TransparentZWrite: 0
@@ -269,9 +268,9 @@ Material:
     - _Unity_Identify_HDRP_Decal: 1
     - _UseEmissiveIntensity: 0
     - _UseShadowThreshold: 0
-    - _ZTestDepthEqualForOpaque: 8
+    - _ZTestDepthEqualForOpaque: 7
     - _ZTestGBuffer: 4
-    - _ZTestTransparent: 8
+    - _ZTestTransparent: 7
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
