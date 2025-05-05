@@ -211,5 +211,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMeshFilter: {fileID: 566674900097680830}
+  outlineMeshRenderer: {fileID: 7342290862036839815}
   shapeMeshFilter: {fileID: 7108387632059249651}
   shapeMeshRenderer: {fileID: 2668536342427610513}

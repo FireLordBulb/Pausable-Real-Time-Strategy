@@ -8,6 +8,7 @@ namespace Simulation {
     public class Province : MonoBehaviour, IPositionNode<ProvinceLink, Province>, ISelectable {
         private const float OneThird = 1/3f;
         [SerializeField] private MeshFilter outlineMeshFilter;
+        [SerializeField] private MeshRenderer outlineMeshRenderer;
         [SerializeField] private MeshFilter shapeMeshFilter;
         [SerializeField] private MeshRenderer shapeMeshRenderer;
         
@@ -64,6 +65,9 @@ namespace Simulation {
         private Color SolidMaterialColor {
             set => shapeMeshRenderer.sharedMaterials[1].color = value;
         }
+        private Color BorderColor {
+            set => outlineMeshRenderer.sharedMaterial.color = value;
+        }
 
         private void Awake(){
             meshCollider = GetComponent<MeshCollider>();
@@ -82,6 +86,7 @@ namespace Simulation {
             
             shapeMeshRenderer.materials[1].color = baseColor;
             shapeMeshRenderer.sharedMaterial = terrain.Material;
+            outlineMeshRenderer.material.color = baseColor; 
             UpdateColors();
 
             MapPosition = mapPosition;
@@ -113,6 +118,9 @@ namespace Simulation {
             selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
             hoverColor = 0.5f*(baseColor+Color.gray);
             SolidMaterialColor = isSelected ? selectedColor : isHovered ? hoverColor : baseColor;
+            Color opaque = baseColor;
+            opaque.a = 1;
+            BorderColor = opaque;
         }
         
         public void OnHoverEnter(){

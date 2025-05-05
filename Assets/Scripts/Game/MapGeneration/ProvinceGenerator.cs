@@ -208,7 +208,7 @@ namespace MapGeneration {
 		
 		private void GenerateOutlineMesh(){
 			outlineMeshData = new MeshData("ProvinceOutline");
-			PolygonOutline.GenerateMeshData(outlineMeshData, Vertices, borderHalfWidth);
+			PolygonOutline.GenerateMeshData(outlineMeshData, Vertices, borderHalfWidth, true);
 		}
 		
 		private void GenerateShapeMesh(){
