@@ -327,8 +327,9 @@ namespace AI {
 		}
 		
 		public int EvaluatePeaceOffer(PeaceTreaty treaty){
-			peaceAcceptanceReasons = new List<(int, string)>();
-			return peaceAcceptance.EvaluatePeaceOffer(treaty);
+			int acceptance;
+			(acceptance, peaceAcceptanceReasons) = peaceAcceptance.EvaluatePeaceOffer(treaty);
+			return acceptance;
 		}
 
 		internal RegimentBrain GetBrain(Regiment regiment){
