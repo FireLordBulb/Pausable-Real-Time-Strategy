@@ -21,6 +21,7 @@ namespace Simulation {
         private Color baseColor;
         private Color hoverColor;
         private Color selectedColor;
+        private Color hoverSelectedColor;
         private bool isHovered;
         private bool isSelected;
         
@@ -114,34 +115,36 @@ namespace Simulation {
         }
         
         private void UpdateColors(){
-            float increasedBrightness = OneThird*(baseColor.grayscale+2);
-            selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
-            hoverColor = 0.5f*(baseColor+Color.gray);
-            SolidMaterialColor = isSelected ? selectedColor : isHovered ? hoverColor : baseColor;
             Color opaque = baseColor;
             opaque.a = 1;
             BorderColor = opaque;
+            float increasedBrightness = OneThird*(baseColor.grayscale+2);
+            selectedColor = 0.5f*(baseColor+new Color(increasedBrightness, increasedBrightness, increasedBrightness));
+            hoverColor = 0.5f*(baseColor+Color.gray);
+            hoverSelectedColor = 0.25f*(3*selectedColor+Color.gray);
+            UpdateColorMaterialColor();
+        }
+        private void UpdateColorMaterialColor(){
+            SolidMaterialColor = isSelected ?
+                isHovered ? hoverSelectedColor : selectedColor :
+                isHovered ? hoverColor : baseColor;
         }
         
         public void OnHoverEnter(){
             isHovered = true;
-            if (!isSelected){
-                SolidMaterialColor = hoverColor;
-            }
+            UpdateColorMaterialColor();
         }
         public void OnHoverLeave(){
             isHovered = false;
-            if (!isSelected){
-                SolidMaterialColor = baseColor;
-            }
+            UpdateColorMaterialColor();
         }
         public void OnSelect(){
             isSelected = true;
-            SolidMaterialColor = selectedColor;
+            UpdateColorMaterialColor();
         }
         public void OnDeselect(){
             isSelected = false;
-            SolidMaterialColor = isHovered ? hoverColor : baseColor;
+            UpdateColorMaterialColor();
         }
         
         public override string ToString(){
