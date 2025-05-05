@@ -203,17 +203,23 @@ namespace Player {
 		}
 		private void RefreshGoldTransfer(){
 			availableGold.text = $"/{Format.FormatLargeNumber(treaty.Loser.Gold, goldMaxCharacters)}<color=yellow>G</color>";
-			if (treaty.GoldTransfer <= 0){
+			if (treaty.Loser.Gold < 0){
 				treaty.GoldTransfer = 0;
 				payLess.interactable = false;
-			} else {
-				payLess.interactable = true;
-			}
-			if (treaty.GoldTransfer >= treaty.Loser.Gold){
-				treaty.GoldTransfer = treaty.Loser.Gold;
 				payMore.interactable = false;
 			} else {
-				payMore.interactable = true;
+				if (treaty.GoldTransfer <= 0){
+					treaty.GoldTransfer = 0;
+					payLess.interactable = false;
+				} else {
+					payLess.interactable = true;
+				}
+				if (treaty.GoldTransfer >= treaty.Loser.Gold){
+					treaty.GoldTransfer = treaty.Loser.Gold;
+					payMore.interactable = false;
+				} else {
+					payMore.interactable = true;
+				}
 			}
 			goldTransfer.text = $"{Format.FormatLargeNumber(treaty.GoldTransfer, goldMaxCharacters)}<color=yellow>G</color>";
 		}
