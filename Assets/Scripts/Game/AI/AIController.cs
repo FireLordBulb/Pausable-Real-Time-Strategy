@@ -28,11 +28,13 @@ namespace AI {
 
 		private readonly Dictionary<Regiment, RegimentBrain> regimentBrains = new();
 		private readonly Dictionary<Ship, ShipBrain> shipBrains = new();
+		private List<(int, string)> peaceAcceptanceReasons;
 		
 		internal IReadOnlyList<WarEnemy> WarEnemies => warEnemies;
 		public IEnumerable<Country> BorderingCountries => borderingCountries;
 		public IEnumerable<RegimentBrain> RegimentBrains => regimentBrains.Values;
 		public IEnumerable<ShipBrain> ShipBrains => shipBrains.Values;
+		public IEnumerable<(int, string)> PeaceAcceptanceReasons => peaceAcceptanceReasons;
 		
 		public Country Country {get; private set;}
 		public bool HasCoast {get; private set;}
@@ -325,6 +327,7 @@ namespace AI {
 		}
 		
 		public int EvaluatePeaceOffer(PeaceTreaty treaty){
+			peaceAcceptanceReasons = new List<(int, string)>();
 			return peaceAcceptance.EvaluatePeaceOffer(treaty);
 		}
 
