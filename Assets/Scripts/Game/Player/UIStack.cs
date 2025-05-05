@@ -168,9 +168,9 @@ namespace Player {
 			input.F11.performed += _ => FunctionKey(10);
 			input.F12.performed += _ => FunctionKey(11);
 
-			input.MapMode0.performed += _ => hud.MapModeSelect.Select(0);
-			input.MapMode1.performed += _ => hud.MapModeSelect.Select(1);
-			input.MapMode2.performed += _ => hud.MapModeSelect.Select(2);
+			input.MapMode0.performed += _ => SelectMapMode(0);
+			input.MapMode1.performed += _ => SelectMapMode(1);
+			input.MapMode2.performed += _ => SelectMapMode(2);
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 			bool debugWasDeactivated = false;
 			input.Debug.canceled += _ => {
@@ -198,6 +198,14 @@ namespace Player {
 				return;
 			}
 			hud.OpenSidePanel(index);
+		}
+		private void SelectMapMode(int index){
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+			if (debugConsole.IsKeyboardBusy){
+				return;
+			}
+#endif
+			hud.MapModeSelect.Select(index);
 		}
 		#endregion
 		
