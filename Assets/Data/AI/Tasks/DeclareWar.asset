@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultPriority: 1
   neverDoPriority: -20
-  requiredRegimentsPerProvince: 0.5
+  requiredRegimentsPerProvince: 0.25
   maxRequiredRegiments: 8
-  maxRegimentProportion: 0.8
-  assumedMinRegimentsPerProvince: 0.5
-  enemyOfEnemyFactor: 0.6
+  maxRegimentProportion: 0.95
+  assumedMinRegiments: 1
+  enemyOfEnemyFactor: 0.8

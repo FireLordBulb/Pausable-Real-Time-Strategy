@@ -11,7 +11,7 @@ namespace AI {
 		[SerializeField] private float maxRequiredRegiments;
 		[Space]
 		[SerializeField] private float maxRegimentProportion;
-		[SerializeField] private float assumedMinRegimentsPerProvince;
+		[SerializeField] private float assumedMinRegiments;
 		[SerializeField] private float enemyOfEnemyFactor;
 		private Country warTarget;
 		private AIController warTargetAI;
@@ -32,7 +32,7 @@ namespace AI {
 				if (!Country.GetDiplomaticStatus(borderingCountry).CanDeclareWar(borderingCountry)){
 					continue;
 				}
-				float borderingCountryRegiments = Mathf.Max(borderingCountry.Regiments.Count, borderingCountry.ProvinceCount*assumedMinRegimentsPerProvince);
+				float borderingCountryRegiments = Mathf.Max(borderingCountry.Regiments.Count, assumedMinRegiments);
 				AIController borderingAI = borderingCountry.GetComponent<AIController>();
 				float borderingCountryEnemiesRegiments = borderingAI.WarEnemies.Sum(enemy => enemy.Country.Regiments.Count);
 				borderingCountryRegiments -= borderingCountryEnemiesRegiments*enemyOfEnemyFactor;
