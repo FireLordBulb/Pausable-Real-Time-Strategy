@@ -193,7 +193,10 @@ namespace Simulation {
 			if (ship.Owner != this){
 				return Military.MoveOrderResult.NotOwner;
 			}
-			if (location == null || location.Province.IsLand && location.Province.Land.Owner != this && !GetDiplomaticStatus(location.Province.Land.Owner).IsAtWar){
+			if (location == null){
+				return Military.MoveOrderResult.InvalidTarget;
+			}
+			if (location.Province.IsLand && location.Province.Land.Owner != this && !GetDiplomaticStatus(location.Province.Land.Owner).IsAtWar){
 				return Military.MoveOrderResult.NoAccess;
 			}
 			return ship.MoveTo(location);
