@@ -135,7 +135,7 @@ namespace Player {
 			Vector2 infoItemHeight = new(0, -militaryUnitInfo.RectTransform.rect.height);
 			foreach (IUnit unit in units){
 				MilitaryUnitInfo newUnitInfo = Instantiate(militaryUnitInfo, scrollViewContent);
-				newUnitInfo.Init(unit);
+				newUnitInfo.Init(unit, UI);
 				newUnitInfo.RectTransform.anchoredPosition = anchoredPosition;
 				anchoredPosition += infoItemHeight;
 			}

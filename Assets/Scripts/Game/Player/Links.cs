@@ -4,6 +4,7 @@ using Mathematics;
 using Simulation;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace Player {
@@ -50,6 +51,10 @@ namespace Player {
 			}
 			existingLinks.Remove(linkComponent.gameObject);
 			Object.DestroyImmediate(tuple.link);
+		}
+		
+		public void LinkButton(Button button, ISelectable selectable, bool doDeselect = false){
+			button.onClick.AddListener(() => select(selectable, doDeselect));
 		}
 	}
 }
