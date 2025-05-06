@@ -55,9 +55,6 @@ namespace Simulation.Military {
 				_ => link.Target.Sea.NavyLocation
 			};
 		}
-		protected override Vector3 WorldPositionBetweenLocations(){
-			return PathToTarget[PathIndex] is ShallowsLink ? NextLocation.WorldPosition : PathToTarget[PathIndex].WorldPosition;
-		}
 		protected override int CalculateTravelDays(){
 			ProvinceLink link = PathToTarget[PathIndex];
 			float distance;

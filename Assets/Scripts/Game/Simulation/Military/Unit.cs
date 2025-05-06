@@ -110,7 +110,7 @@ namespace Simulation.Military {
 			}
 			Location.Remove(self);
 			locationWorldPositionOffset = Vector3.zero;
-			EnqueueWorldPosition(WorldPositionBetweenLocations());
+			EnqueueWorldPosition(PathToTarget[PathIndex].WorldPosition);
 			Location = NextLocation;
 			if (ReferenceEquals(Location, TargetLocation)){
 				StopMoving();
@@ -236,7 +236,7 @@ namespace Simulation.Military {
 			}
 			DaysToNextLocation = CalculateTravelDays();
 
-			Vector3 nextWorldPosition = WorldPositionBetweenLocations(); 
+			Vector3 nextWorldPosition = PathToTarget[PathIndex].WorldPosition;
 			float worldSpaceDistance = Vector3.Distance(LocationWorldPosition, nextWorldPosition);
 			float offset = Mathf.Min(worldSpaceMaxOffsetProportion*worldSpaceDistance, worldSpaceMoveDirectionOffset);
 			Vector3 offsetPosition = Vector3.MoveTowards(LocationWorldPosition, nextWorldPosition, offset);
@@ -264,7 +264,6 @@ namespace Simulation.Military {
 			IsRetreating = false;
 			EnqueueWorldPosition(LocationWorldPosition);
 		}
-		protected abstract Vector3 WorldPositionBetweenLocations();
 		protected abstract int CalculateTravelDays();
 		protected abstract Location<TUnit> GetLocation(ProvinceLink link);
 		protected abstract bool LinkEvaluator(ProvinceLink link);

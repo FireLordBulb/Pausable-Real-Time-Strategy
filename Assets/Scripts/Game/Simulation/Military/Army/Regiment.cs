@@ -83,9 +83,6 @@ namespace Simulation.Military {
 		private static bool IsLocationInHarbor(Location<Regiment> location, Harbor harbor){
 			return location is TransportDeck deck && !deck.Transport.IsMoving && deck.Transport.Location == harbor;
 		}
-		protected override Vector3 WorldPositionBetweenLocations(){
-			return PathToTarget[PathIndex] is ShallowsLink ? GetLocation(PathToTarget[PathIndex]).WorldPosition : PathToTarget[PathIndex].WorldPosition;
-		}
 		protected override int CalculateTravelDays(){
 			return GetTravelDays(PathToTarget[PathIndex]);
 		}
