@@ -14,9 +14,9 @@ namespace Simulation {
 		private Country owner;
 		private Country occupier;
 		
-		private float goldProduction;
-		private int manpowerProduction;
-		private int sailorsProduction;
+		public float GoldProduction {get; private set;}
+		public int ManpowerProduction {get; private set;}
+		public int SailorsProduction {get; private set;}
 
 		private Material occupationMaterial;
 		
@@ -67,16 +67,16 @@ namespace Simulation {
 		}
 		
 		private void Start(){
-			goldProduction = baseProduction.Gold*Development*Province.GoldMultiplier;
-			manpowerProduction = Mathf.RoundToInt(baseProduction.Manpower*Development*Province.ManpowerMultiplier);
-			sailorsProduction = Mathf.RoundToInt(baseProduction.Sailors*Development*Province.SailorsMultiplier);
+			GoldProduction = baseProduction.Gold*Development*Province.GoldMultiplier;
+			ManpowerProduction = Mathf.RoundToInt(baseProduction.Manpower*Development*Province.ManpowerMultiplier);
+			SailorsProduction = Mathf.RoundToInt(baseProduction.Sailors*Development*Province.SailorsMultiplier);
 			Province.Calendar.OnMonthTick.AddListener(() => {
 				if (!HasOwner){
 					return;
 				}               
-				Owner.MonthlyGoldChange(goldProduction, Province.Name, GetType());
-				Owner.MonthlyManpowerChange(manpowerProduction, Province.Name, GetType());
-				Owner.MonthlySailorsChange(sailorsProduction, Province.Name, GetType());
+				Owner.MonthlyGoldChange(GoldProduction, Province.Name, GetType());
+				Owner.MonthlyManpowerChange(ManpowerProduction, Province.Name, GetType());
+				Owner.MonthlySailorsChange(SailorsProduction, Province.Name, GetType());
 			});
 		}
 
