@@ -1639,7 +1639,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5134387650285526330, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
       propertyPath: m_text
-      value: War
+      value: Warfare
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
