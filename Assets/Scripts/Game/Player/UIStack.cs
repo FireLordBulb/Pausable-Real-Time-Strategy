@@ -47,6 +47,7 @@ namespace Player {
 		#endregion
 		#region Auto-Properties
 		public bool CanSwitchCountry {get; internal set;}
+		public ProvinceWindow.TabType ProvinceTab {get; internal set;}
 		public Country PlayerCountry {get; private set;}
 		public bool HasPlayerCountryChanged {get; private set;}
 		public ISelectable Selected {get; private set;}
@@ -95,6 +96,7 @@ namespace Player {
 			cameraInput.DebugConsole = debugConsole;
 			hud.CalendarPanel.DebugConsole = debugConsole;
 #endif
+			ProvinceTab = ProvinceWindow.TabType.Terrain;
 			Push(hud);
 			Push(countrySelection);
 			foreach (SelectionWindow selectionWindow in selectionWindows){

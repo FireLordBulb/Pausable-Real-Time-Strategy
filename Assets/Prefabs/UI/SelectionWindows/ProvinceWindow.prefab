@@ -175,7 +175,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 3736304348171977507}
-  terrainTab: {fileID: 8172389112116778077}
+  tabs:
+  - panel: {fileID: 8172389112116778077}
+    button: {fileID: 5348828915106724065}
+  - panel: {fileID: 839256242196426490}
+    button: {fileID: 2350034254901572133}
+  - panel: {fileID: 5307725290058022843}
+    button: {fileID: 3984248463925521854}
+  tabButtons: {fileID: 8962576322070140592}
   terrainType: {fileID: 2323829918264172012}
   terrainImage: {fileID: 3619646820553672083}
   valueTable: {fileID: 1942703259564020409}
@@ -549,6 +556,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 70864783448190604, guid: 0de918684fafb294cbb8e89358d71c5a, type: 3}
   m_PrefabInstance: {fileID: 132025206806287350}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5348828915106724065 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5471829253128465175, guid: 0de918684fafb294cbb8e89358d71c5a, type: 3}
+  m_PrefabInstance: {fileID: 132025206806287350}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2139613484843563633
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -559,7 +577,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1591121125752558731, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
       propertyPath: m_Name
-      value: ProvinceTab
+      value: Production
       objectReference: {fileID: 0}
     - target: {fileID: 1591121125752558731, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
       propertyPath: m_IsActive
@@ -656,6 +674,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
+--- !u!1 &839256242196426490 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1591121125752558731, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
+  m_PrefabInstance: {fileID: 2139613484843563633}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3444834232038150649 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3638888000613591944, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
@@ -823,6 +846,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
+--- !u!1 &5307725290058022843 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1591121125752558731, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
+  m_PrefabInstance: {fileID: 6898415376415730480}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7909435193698222264 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3638888000613591944, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
@@ -842,7 +870,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1591121125752558731, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
       propertyPath: m_Name
-      value: ProvinceTab (1)
+      value: Terrain
       objectReference: {fileID: 0}
     - target: {fileID: 3638888000613591944, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
       propertyPath: m_Pivot.x
@@ -1017,6 +1045,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0de918684fafb294cbb8e89358d71c5a, type: 3}
+--- !u!114 &2350034254901572133 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5471829253128465175, guid: 0de918684fafb294cbb8e89358d71c5a, type: 3}
+  m_PrefabInstance: {fileID: 7742576177012300082}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &7748701715682817982 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 70864783448190604, guid: 0de918684fafb294cbb8e89358d71c5a, type: 3}
@@ -1087,6 +1126,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0de918684fafb294cbb8e89358d71c5a, type: 3}
+--- !u!114 &3984248463925521854 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5471829253128465175, guid: 0de918684fafb294cbb8e89358d71c5a, type: 3}
+  m_PrefabInstance: {fileID: 8981641556540589737}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8961864524332181541 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 70864783448190604, guid: 0de918684fafb294cbb8e89358d71c5a, type: 3}
