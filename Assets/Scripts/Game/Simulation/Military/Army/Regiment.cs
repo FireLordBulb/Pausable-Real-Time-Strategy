@@ -25,6 +25,7 @@ namespace Simulation.Military {
 		
 		private float Damage => IsMoving ? AttackPower*CurrentManpower*orderedRetreatDamageMultiplier : AttackPower*CurrentManpower;
 		public override string CreatingVerb => "Recruiting";
+		public override string HpText => $"{CurrentManpower}{(DemoralizedManpower == 0 ? "" : $"({CurrentManpower+DemoralizedManpower})")}/{MaxManpower} Manpower";
 		
 		internal void Init(float attackPower, float toughness, float killRate, float maintenanceCost, int manpower){
 			AttackPower = attackPower;

@@ -25,6 +25,7 @@ namespace Simulation.Military {
 		public float Size {get; private set;}
 		
 		public override string CreatingVerb => "Constructing";
+		public override string HpText => $"{IntactHull}/{MaxHull} Hull";
 		protected virtual bool ShouldAvoidCombat => false;
 		
 		internal void Init(float attackPower, int hull, float size, float maintenanceCost, float gold, int sailors){

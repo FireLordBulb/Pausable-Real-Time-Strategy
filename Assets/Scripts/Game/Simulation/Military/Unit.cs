@@ -44,6 +44,7 @@ namespace Simulation.Military {
 		protected float MovementSpeed => movementSpeed;
 		private Vector3 LocationWorldPosition => Location.WorldPosition+locationWorldPositionOffset;
 		public abstract string CreatingVerb {get;}
+		public abstract string HpText {get;}
 		
 		internal static TUnit StartCreating(UnitType<TUnit> type, Location<TUnit> buildLocation, Country owner){
 			if (!type.CanBeBuiltBy(owner)){
@@ -293,5 +294,6 @@ namespace Simulation.Military {
 		public bool IsMoving {get;}
 		public Province Province {get;}
 		public string CreatingVerb {get;}
+		public string HpText {get;}
 	}
 }
