@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Mathematics;
 using Simulation;
@@ -182,8 +183,7 @@ namespace Player {
 					Destroy(unitInfo.gameObject);
 				}
 				unitInfoItems = new MilitaryUnitInfo[units.Count];
-				// TODO: Fix by making it copy the array.
-				unitsYesterday = units;
+				unitsYesterday = units.ToList();
 			}
 			if (units.Count == 0){
 				fallbackText.gameObject.SetActive(true);
