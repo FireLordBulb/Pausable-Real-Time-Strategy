@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 namespace Player {
 	public class ProvinceWindow : SelectionWindow<Province> {
+		private static readonly int TabTypeCount = Enum.GetNames(typeof(TabType)).Length;
+		
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Tab[] tabs;
 		[SerializeField] private GameObject tabButtons;
@@ -60,6 +62,10 @@ namespace Player {
 			activeButton.colors = colorBlock;
 			
 			Refresh();
+		}
+		
+		public void NextTab(){
+			tabs[((int)activeTab.type+1)%TabTypeCount].button.onClick.Invoke();
 		}
 		
 		public override void Refresh(){

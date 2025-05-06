@@ -128,6 +128,16 @@ namespace Player {
 			input.Control.canceled += _ => {
 				IsControlHeld = false;
 			};
+			input.Tab.performed += _ => {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+				if (debugConsole.IsKeyboardBusy){
+					return;
+				}
+#endif
+				if (CurrentAction is ProvinceWindow provinceWindow){
+					provinceWindow.NextTab();
+				}
+			};
 			input.Back.canceled += _ => {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
 				if (debugConsole.IsKeyboardBusy){
