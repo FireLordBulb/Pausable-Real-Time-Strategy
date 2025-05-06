@@ -273,6 +273,7 @@ MonoBehaviour:
   - Player.PeaceNegotiation, Player
   - Player.WarMenu, Player
   - Player.CountryWindow, Player
+  - Player.ProvinceWindow, Player
   - Player.RegimentWindow, Player
   - Player.ShipWindow, Player
 --- !u!1001 &410596557772338304

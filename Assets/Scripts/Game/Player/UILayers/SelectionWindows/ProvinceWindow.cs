@@ -39,14 +39,19 @@ namespace Player {
 		private Country linkedCountry;
 		private Tab activeTab;
 		private Vector2 defaultScrollRectSizeDelta;
+		private IReadOnlyList<IUnit> unitsYesterday;
+		private MilitaryUnitInfo[] unitInfoItems;
 		
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
+			Calendar.OnDayTick.AddListener(RefreshDaily);
+			defaultScrollRectSizeDelta = scrollRect.sizeDelta;
+			unitsYesterday = new List<IUnit>();
+			unitInfoItems = Array.Empty<MilitaryUnitInfo>();
 			title.text = $"{Selected.Name}";
 			for (int i = 0; i < tabs.Length; i++){
 				tabs[i].type = (TabType)i;
 			}
-			defaultScrollRectSizeDelta = scrollRect.sizeDelta;
 			if (Selected.IsSea){
 				activeTab = tabs[(int)TabType.War];
 				activeTab.SetActive(true);
@@ -110,6 +115,11 @@ namespace Player {
 					throw new ArgumentOutOfRangeException(nameof(UI.ProvinceTab), UI.ProvinceTab, "Invalid int was cast to TabType enum!");
 			}
 		}
+		private void RefreshDaily(){
+			if (activeTab.type == TabType.War){
+				RefreshWar();
+			}
+		}
 		private void RefreshTerrain(){
 			terrainValueTable.UpdateColumn<float>(0, Format.SignedPercent, (
 				Selected.MoveSpeedMultiplier-1),
@@ -156,23 +166,50 @@ namespace Player {
 				occupationInfo.text = occupationText.ToString();
 			}
 			scrollRect.sizeDelta = scrollRectsizeDelta;
+			
+			bool haveUnitsChanged = unitsYesterday.Count != units.Count;
+			if (!haveUnitsChanged){
+				for (int i = 0; i < units.Count; i++){
+					if (unitsYesterday[i] == units[i]){
+						continue;
+					}
+					haveUnitsChanged = true;
+					break;
+				}
+			}
+			if (haveUnitsChanged){
+				foreach (MilitaryUnitInfo unitInfo in unitInfoItems){
+					Destroy(unitInfo.gameObject);
+				}
+				unitInfoItems = new MilitaryUnitInfo[units.Count];
+				// TODO: Fix by making it copy the array.
+				unitsYesterday = units;
+			}
 			if (units.Count == 0){
 				fallbackText.gameObject.SetActive(true);
 				VectorGeometry.SetRectHeight(scrollViewContent, fallbackText.rectTransform.rect.height);
-				return;
+			} else if (haveUnitsChanged){
+				Vector2 anchoredPosition = Vector2.zero;
+				Vector2 infoItemHeight = new(0, -militaryUnitInfo.RectTransform.rect.height);
+				for (int i = 0; i < units.Count; i++){
+					unitInfoItems[i] = Instantiate(militaryUnitInfo, scrollViewContent);
+					unitInfoItems[i].Init(units[i], UI);
+					unitInfoItems[i].RectTransform.anchoredPosition = anchoredPosition;
+					anchoredPosition += infoItemHeight;
+				}
+				fallbackText.gameObject.SetActive(false);
+				VectorGeometry.SetRectHeight(scrollViewContent, -anchoredPosition.y);
+			} else {
+				foreach (MilitaryUnitInfo unitInfo in unitInfoItems){
+					unitInfo.Refresh();
+				}
 			}
-			fallbackText.gameObject.SetActive(false);
-			Vector2 anchoredPosition = Vector2.zero;
-			Vector2 infoItemHeight = new(0, -militaryUnitInfo.RectTransform.rect.height);
-			foreach (IUnit unit in units){
-				MilitaryUnitInfo newUnitInfo = Instantiate(militaryUnitInfo, scrollViewContent);
-				newUnitInfo.Init(unit, UI);
-				newUnitInfo.RectTransform.anchoredPosition = anchoredPosition;
-				anchoredPosition += infoItemHeight;
-			}
-			VectorGeometry.SetRectHeight(scrollViewContent, -anchoredPosition.y);
 		}
-		
+		public override void OnEnd(){
+			Calendar.OnDayTick.RemoveListener(RefreshDaily);
+			base.OnEnd();
+		}
+
 		[Serializable]
 		private class Tab {
 			public GameObject panel;
