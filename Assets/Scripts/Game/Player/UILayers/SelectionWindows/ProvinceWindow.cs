@@ -34,6 +34,7 @@ namespace Player {
 		[SerializeField] private float occupationInfoLineHeight;
 		[SerializeField] private TextMeshProUGUI fallbackText;
 		[SerializeField] private RectTransform scrollViewContent;
+		[SerializeField] private float warPanelNoOwnerExtraHeight;
 		[Space]
 		[SerializeField] private CountryPanel countryPanel;
 		
@@ -59,6 +60,7 @@ namespace Player {
 				occupationInfo.text = "";
 				tabButtons.SetActive(false);
 				countryPanel.gameObject.SetActive(false);
+				VectorGeometry.SetRectHeight(activeTab.transform, activeTab.transform.rect.height+warPanelNoOwnerExtraHeight);
 				Refresh();
 				return;
 			}
@@ -145,11 +147,11 @@ namespace Player {
 		}
 		private void RefreshWar(){
 			IReadOnlyList<IUnit> units;
-			Vector2 scrollRectsizeDelta = defaultScrollRectSizeDelta;
+			Vector2 scrollRectSizeDelta = defaultScrollRectSizeDelta;
 			if (Selected.IsSea){
 				units = Selected.Sea.NavyLocation.Units;
 				occupationInfo.text = "";
-				scrollRectsizeDelta.y += occupationInfoLineHeight*2;
+				scrollRectSizeDelta.y += occupationInfoLineHeight*2;
 			} else {
 				LandLocation armyLocation = Selected.Land.ArmyLocation;
 				units = armyLocation.Units;
@@ -157,16 +159,16 @@ namespace Player {
 				if (Selected.Land.IsOccupied){
 					occupationText.Append($"Occupied by {Selected.Land.Occupier}\n");
 				} else {
-					scrollRectsizeDelta.y += occupationInfoLineHeight;
+					scrollRectSizeDelta.y += occupationInfoLineHeight;
 				}
 				if (armyLocation.SiegeIsOngoing){
 					occupationText.Append($"Under siege by {armyLocation.Sieger.Name} ({armyLocation.SiegeDaysLeft} days left)");
 				} else {
-					scrollRectsizeDelta.y += occupationInfoLineHeight;
+					scrollRectSizeDelta.y += occupationInfoLineHeight;
 				}
 				occupationInfo.text = occupationText.ToString();
 			}
-			scrollRect.sizeDelta = scrollRectsizeDelta;
+			scrollRect.sizeDelta = scrollRectSizeDelta;
 			
 			bool haveUnitsChanged = unitsYesterday.Count != units.Count;
 			if (!haveUnitsChanged){
@@ -212,12 +214,12 @@ namespace Player {
 
 		[Serializable]
 		private class Tab {
-			public GameObject panel;
+			public RectTransform transform;
 			public Button button;
 			[NonSerialized] public TabType type;
 
 			public void SetActive(bool isActive){
-				panel.SetActive(isActive);
+				transform.gameObject.SetActive(isActive);
 				button.interactable = !isActive;
 			}
 		}

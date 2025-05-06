@@ -410,11 +410,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: {fileID: 3736304348171977507}
   tabs:
-  - panel: {fileID: 8172389112116778077}
+  - transform: {fileID: 6125187935951481694}
     button: {fileID: 5348828915106724065}
-  - panel: {fileID: 839256242196426490}
+  - transform: {fileID: 3444834232038150649}
     button: {fileID: 2350034254901572133}
-  - panel: {fileID: 5307725290058022843}
+  - transform: {fileID: 7909435193698222264}
     button: {fileID: 3984248463925521854}
   tabButtons: {fileID: 8962576322070140592}
   terrainType: {fileID: 2323829918264172012}
@@ -440,6 +440,7 @@ MonoBehaviour:
   occupationInfoLineHeight: 18
   fallbackText: {fileID: 7012447205912333348}
   scrollViewContent: {fileID: 5418703517994273458}
+  warPanelNoOwnerExtraHeight: 80
   countryPanel: {fileID: 1431771819254937561}
 --- !u!1 &3472302684576212994
 GameObject:
@@ -1482,11 +1483,6 @@ PrefabInstance:
       addedObject: {fileID: 1285349472529417149}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
---- !u!1 &839256242196426490 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1591121125752558731, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
-  m_PrefabInstance: {fileID: 2139613484843563633}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3444834232038150649 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3638888000613591944, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
@@ -1660,11 +1656,6 @@ PrefabInstance:
       addedObject: {fileID: 4043144478889500712}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
---- !u!1 &5307725290058022843 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1591121125752558731, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
-  m_PrefabInstance: {fileID: 6898415376415730480}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7909435193698222264 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3638888000613591944, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
@@ -1795,11 +1786,6 @@ MonoBehaviour:
 --- !u!224 &6125187935951481694 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3638888000613591944, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
-  m_PrefabInstance: {fileID: 7457649421684326614}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8172389112116778077 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1591121125752558731, guid: b754bf26c1567154d8306cdd65894d66, type: 3}
   m_PrefabInstance: {fileID: 7457649421684326614}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7742576177012300082
