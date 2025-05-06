@@ -1,10 +1,13 @@
 using System;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 namespace Player {
     [RequireComponent(typeof(CameraMovement))]
     public class CameraInput : MonoBehaviour {
+        private static readonly Rect UnitRect = new(0, 0, 1, 1);
         private Input.CameraActions input;
 
         public CameraMovement Movement {get; private set;}
@@ -27,9 +30,13 @@ namespace Player {
             };
             input.DirectionalMovement.performed += directionalMovement;
             input.DirectionalMovement.canceled += directionalMovement;
-
-            input.ScrollWheel.performed += context => {
-                Movement.ChangeZoom(Mathf.RoundToInt(context.ReadValue<Vector2>().y));
+            
+            input.ScrollWheel.performed += async context => {
+                float value = context.ReadValue<Vector2>().y;
+                await Task.Yield();
+                if (!EventSystem.current.IsPointerOverGameObject() && UnitRect.Contains(Movement.Camera.ScreenToViewportPoint(input.MousePosition.ReadValue<Vector2>()))){
+                    Movement.ChangeZoom(Mathf.RoundToInt(value));
+                }
             };
             
             input.MiddleClick.performed += _ => {
@@ -38,7 +45,7 @@ namespace Player {
             input.MiddleClick.canceled += _ => {
                 Movement.ReleaseDragging();
             };
-
+            
             input.MousePosition.performed += context => {
                 Movement.UpdateMousePosition(context.ReadValue<Vector2>());
             };
