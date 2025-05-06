@@ -32,7 +32,7 @@ namespace Player {
 			VectorGeometry.SetRectHeight(RectTransform, RectTransform.rect.height+infoBox.rect.height);
 		}
 		public void HideInfoBox(){
-			buttonColorToggle.SetActiveColor(true);
+			buttonColorToggle.SetActiveColor(false);
 			infoBox.gameObject.SetActive(false);
 			RectTransform.sizeDelta = border.sizeDelta;
 		}
