@@ -39,7 +39,7 @@ namespace Player {
 					UI.Links.Add(destinationLocation, Selected.TargetLocation.Province);
 				}
 			} else if (Selected.IsBuilt && !Selected.IsMoving){
-				SetLeftOfLinkText("Located at ");
+				SetLeftOfLinkText(Selected.Location.IsBattleOngoing ? "In combat at " : "Located at ");
 				location.text = Selected.Location.Name;
 				UI.Links.Add(location, Selected.Location.Province);
 				days.text = "";
