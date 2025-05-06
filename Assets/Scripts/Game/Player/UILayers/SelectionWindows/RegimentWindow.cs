@@ -4,7 +4,7 @@ namespace Player {
 	public class RegimentWindow : MilitaryUnitWindow<Regiment> {
 		public override void Refresh(){
 			base.Refresh();
-			if (!Selected.IsBuilt || Selected.IsMoving || Selected.Location.IsBattleOngoing){
+			if (!Selected.IsBuilt || Selected.IsMoving || Selected.Location.IsBattleOngoing || Selected.Province.IsSea){
 				return;
 			}
 			LandLocation armyLocation = Selected.Province.Land.ArmyLocation;
