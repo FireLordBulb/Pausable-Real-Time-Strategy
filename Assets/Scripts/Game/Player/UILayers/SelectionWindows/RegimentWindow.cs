@@ -2,6 +2,20 @@ using Simulation;
 using Simulation.Military;
 namespace Player {
 	public class RegimentWindow : MilitaryUnitWindow<Regiment> {
+		public override void Refresh(){
+			base.Refresh();
+			if (!Selected.IsBuilt || Selected.IsMoving || Selected.Location.IsBattleOngoing){
+				return;
+			}
+			LandLocation armyLocation = Selected.Province.Land.ArmyLocation;
+			if (armyLocation.SiegeIsPausedBecauseMovement || !armyLocation.SiegeIsOngoing){
+				return;
+			}
+			SetLeftOfLinkText("Besieging ");
+			days.text = armyLocation.SiegeDaysLeft.ToString();
+			daysLeftText.SetActive(true);
+		}
+		
 		protected override bool DoBypassDefaultBehaviour(ISelectable clickedSelectable){
 			if (clickedSelectable is not Transport transport){
 				return false;

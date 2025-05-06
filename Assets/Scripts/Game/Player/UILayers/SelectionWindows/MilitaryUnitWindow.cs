@@ -8,8 +8,8 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private TextMeshProUGUI action;
 		[SerializeField] private TextMeshProUGUI location;
-		[SerializeField] private TextMeshProUGUI days;
-		[SerializeField] private GameObject daysLeftText;
+		[SerializeField] protected TextMeshProUGUI days;
+		[SerializeField] protected GameObject daysLeftText;
 		[SerializeField] private GameObject destination;
 		[SerializeField] private TextMeshProUGUI destinationLocation;
 		[SerializeField] private TextMeshProUGUI message;
@@ -26,7 +26,7 @@ namespace Player {
 		}
 		public override void Refresh(){
 			if (Selected.IsBuilt && Selected.IsMoving){
-				SetLeftOfLinkText("Moving to ", action, location);
+				SetLeftOfLinkText("Moving to ");
 				location.text = Selected.NextLocation.Name;
 				UI.Links.Add(location, Selected.NextLocation.Province);
 				days.text = Selected.DaysToNextLocation.ToString();
@@ -39,7 +39,7 @@ namespace Player {
 					UI.Links.Add(destinationLocation, Selected.TargetLocation.Province);
 				}
 			} else if (Selected.IsBuilt && !Selected.IsMoving){
-				SetLeftOfLinkText("Located at ", action, location);
+				SetLeftOfLinkText("Located at ");
 				location.text = Selected.Location.Name;
 				UI.Links.Add(location, Selected.Location.Province);
 				days.text = "";
@@ -54,14 +54,14 @@ namespace Player {
 			}
 			shiftTip.SetActive(Selected.Owner == Player);
 		}
-		private void SetLeftOfLinkText(string newText, TMP_Text textMesh, TMP_Text link){
-			if (textMesh.text == newText){
+		protected void SetLeftOfLinkText(string newText){
+			if (action.text == newText){
 				return;
 			}
-			textMesh.text = newText;
-			textMesh.ForceMeshUpdate();
-			float x = textMesh.textInfo.characterInfo[textMesh.textInfo.lineInfo[0].lastCharacterIndex].xAdvance;
-			((RectTransform)link.transform).anchoredPosition = new Vector2(x, 0);
+			action.text = newText;
+			action.ForceMeshUpdate();
+			float x = action.textInfo.characterInfo[action.textInfo.lineInfo[0].lastCharacterIndex].xAdvance;
+			((RectTransform)location.transform).anchoredPosition = new Vector2(x, 0);
 		}
 		public override ISelectable OnSelectableClicked(ISelectable clickedSelectable, bool isRightClick){
 			if (!isRightClick){

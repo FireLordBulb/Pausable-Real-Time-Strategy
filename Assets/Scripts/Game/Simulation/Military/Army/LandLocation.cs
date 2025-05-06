@@ -73,7 +73,7 @@ namespace Simulation.Military {
 			}
 		}
 		private bool CannotBeBesiegedBy(Regiment regiment){
-			return regiment.IsMoving || CannotBeBesiegedBy(regiment.Owner);
+			return !regiment.IsBuilt || regiment.IsMoving || CannotBeBesiegedBy(regiment.Owner);
 		}
 		private bool CannotBeBesiegedBy(Country country){
 			return country == Land.Controller || (country != Land.Owner && !country.GetDiplomaticStatus(Land.Owner).IsAtWar);
