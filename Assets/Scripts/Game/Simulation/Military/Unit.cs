@@ -41,6 +41,7 @@ namespace Simulation.Military {
 		
 		public bool IsMoving => PathToTarget != null;
 		public Province Province => Location.Province;
+		public BattleSide BattleSide => Owner == Location.DefendingCountry ? BattleSide.Defending : Owner == Location.AttackingCountry ? BattleSide.Attacking : BattleSide.None;
 		protected float MovementSpeed => movementSpeed;
 		private Vector3 LocationWorldPosition => Location.WorldPosition+locationWorldPositionOffset;
 		public abstract string CreatingVerb {get;}
@@ -293,6 +294,7 @@ namespace Simulation.Military {
 		public bool IsRetreating {get;}
 		public bool IsMoving {get;}
 		public Province Province {get;}
+		public BattleSide BattleSide {get;}
 		public string CreatingVerb {get;}
 		public string HpText {get;}
 	}

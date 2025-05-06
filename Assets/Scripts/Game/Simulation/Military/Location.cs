@@ -18,6 +18,8 @@ namespace Simulation.Military {
 		internal TUnit CommandingAttackingUnit {get; private set;}
 		
 		public IReadOnlyList<TUnit> Units => units;
+		public Country DefendingCountry => CommandingDefendingUnit == null ? null : CommandingDefendingUnit.Owner;
+		public Country AttackingCountry => CommandingAttackingUnit == null ? null : CommandingAttackingUnit.Owner;
 		
 		public void Add(TUnit unit){
 			if (unit.IsRetreating){
@@ -201,11 +203,10 @@ namespace Simulation.Military {
 		public override string ToString(){
 			return Name;
 		}
-		
-		internal enum BattleSide {
-			None,
-			Defending,
-			Attacking
-		} 
 	}
+	public enum BattleSide {
+		None,
+		Defending,
+		Attacking
+	} 
 }
