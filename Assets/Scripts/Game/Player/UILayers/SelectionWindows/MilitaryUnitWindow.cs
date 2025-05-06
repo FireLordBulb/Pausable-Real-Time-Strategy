@@ -26,7 +26,7 @@ namespace Player {
 		}
 		public override void Refresh(){
 			if (Selected.IsBuilt && Selected.IsMoving){
-				SetLeftOfLinkText("Moving to ");
+				SetLeftOfLinkText(Selected.IsRetreating ? "Retreating to " : "Moving to ");
 				location.text = Selected.NextLocation.Name;
 				UI.Links.Add(location, Selected.NextLocation.Province);
 				days.text = Selected.DaysToNextLocation.ToString();
