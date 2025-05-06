@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using Mathematics;
 using Simulation;
+using Simulation.Military;
 using Text;
 using TMPro;
 using UnityEngine;
@@ -21,6 +24,9 @@ namespace Player {
 		[SerializeField] private ValueTable productionValueTable;
 		[SerializeField] private string[] productionValueNames;
 		[Header("War")]
+		[SerializeField] private MilitaryUnitInfo militaryUnitInfo;
+		[SerializeField] private TextMeshProUGUI fallbackText;
+		[SerializeField] private RectTransform scrollViewContent;
 		[Space]
 		[SerializeField] private CountryPanel countryPanel;
 		
@@ -38,6 +44,7 @@ namespace Player {
 				activeTab.SetActive(true);
 				tabButtons.SetActive(false);
 				countryPanel.gameObject.SetActive(false);
+				Refresh();
 				return;
 			}
 			Texture2D texture = (Texture2D)Selected.TerrainMaterial.mainTexture;
@@ -77,7 +84,9 @@ namespace Player {
 		}
 		
 		public override void Refresh(){
-			countryPanel.SetCountry(Selected.Land.Owner, UI);
+			if (Selected.IsLand){
+				countryPanel.SetCountry(Selected.Land.Owner, UI);
+			}
 			switch(activeTab.type){
 				case TabType.Terrain:
 					RefreshTerrain();
@@ -115,7 +124,22 @@ namespace Player {
 			);
 		}
 		private void RefreshWar(){
-			
+			IReadOnlyList<IUnit> units = Selected.IsSea ? Selected.Sea.NavyLocation.Units : Selected.Land.ArmyLocation.Units;
+			if (units.Count == 0){
+				fallbackText.gameObject.SetActive(true);
+				VectorGeometry.SetRectHeight(scrollViewContent, fallbackText.rectTransform.rect.height);
+				return;
+			}
+			fallbackText.gameObject.SetActive(false);
+			Vector2 anchoredPosition = Vector2.zero;
+			Vector2 infoItemHeight = new(0, -militaryUnitInfo.RectTransform.rect.height);
+			foreach (IUnit unit in units){
+				MilitaryUnitInfo newUnitInfo = Instantiate(militaryUnitInfo, scrollViewContent);
+				newUnitInfo.Init(unit);
+				newUnitInfo.RectTransform.anchoredPosition = anchoredPosition;
+				anchoredPosition += infoItemHeight;
+			}
+			VectorGeometry.SetRectHeight(scrollViewContent, -anchoredPosition.y);
 		}
 		
 		[Serializable]
