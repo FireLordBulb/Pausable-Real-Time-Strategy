@@ -12,10 +12,16 @@ namespace Player {
 		[SerializeField] private TextMeshProUGUI title;
 		[SerializeField] private Tab[] tabs;
 		[SerializeField] private GameObject tabButtons;
+		[Header("Terrain")]
 		[SerializeField] private TextMeshProUGUI terrainType;
 		[SerializeField] private Image terrainImage;
-		[SerializeField] private ValueTable valueTable;
-		[SerializeField] private string[] valueNames;
+		[SerializeField] private ValueTable terrainValueTable;
+		[SerializeField] private string[] terrainValueNames;
+		[Header("Production")]
+		[SerializeField] private ValueTable productionValueTable;
+		[SerializeField] private string[] productionValueNames;
+		[Header("War")]
+		[Space]
 		[SerializeField] private CountryPanel countryPanel;
 		
 		private Country linkedCountry;
@@ -39,7 +45,9 @@ namespace Player {
 			terrainImage.pixelsPerUnitMultiplier = texture.width/terrainImage.rectTransform.rect.width;
 			terrainImage.overrideSprite = Sprite.Create(texture, new Rect(Vector2.zero, new Vector2(texture.width, texture.height)), Vector2.zero);
 			terrainType.text = $"<i>Terrain:</i> {Selected.TerrainType}";
-			valueTable.Generate(-1, valueNames);
+			terrainValueTable.Generate(-1, terrainValueNames);
+			
+			productionValueTable.Generate(0, productionValueNames);
 			
 			foreach (Tab tab in tabs){
 				tab.SetActive(false);
@@ -69,6 +77,7 @@ namespace Player {
 		}
 		
 		public override void Refresh(){
+			countryPanel.SetCountry(Selected.Land.Owner, UI);
 			switch(activeTab.type){
 				case TabType.Terrain:
 					RefreshTerrain();
@@ -84,7 +93,7 @@ namespace Player {
 			}
 		}
 		private void RefreshTerrain(){
-			valueTable.UpdateColumn<float>(0, Format.SignedPercent, (
+			terrainValueTable.UpdateColumn<float>(0, Format.SignedPercent, (
 				Selected.MoveSpeedMultiplier-1),
 				Selected.DefenderDamageMultiplier-1,
 				0,
@@ -93,11 +102,17 @@ namespace Player {
 				Selected.SailorsMultiplier-1
 			);
 			// Leading space before the number is intentional, to take up the same space that the +/- signs do for the SignedPercent values.
-			valueTable.UpdateCell(0, 2, $" {Selected.CombatWidth}");
-			countryPanel.SetCountry(Selected.Land.Owner, UI);
+			terrainValueTable.UpdateCell(0, 2, $" {Selected.CombatWidth}");
 		}
 		private void RefreshProduction(){
-			
+			Land land = Selected.Land;
+			productionValueTable.UpdateColumn(-1, (
+				land.GoldProduction.ToString("0.0")),
+				land.ManpowerProduction.ToString(),
+				land.SailorsProduction.ToString(),
+				"",
+				(land.Development-1).ToString()
+			);
 		}
 		private void RefreshWar(){
 			
