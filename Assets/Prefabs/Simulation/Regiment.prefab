@@ -206,6 +206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 4
   worldSpaceSpeed: 12
+  worldSpaceMaxDistanceBehind: 10
   worldSpaceMoveDirectionOffset: 0.8
   worldSpaceMaxOffsetProportion: 0.5
   worldSpaceBattleOffset: 0.4

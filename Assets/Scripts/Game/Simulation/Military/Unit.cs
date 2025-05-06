@@ -7,6 +7,7 @@ namespace Simulation.Military {
 		[Header("Movement")]
 		[SerializeField] private float movementSpeed;
 		[SerializeField] private float worldSpaceSpeed;
+		[SerializeField] private float worldSpaceMaxDistanceBehind;
 		[SerializeField] private float worldSpaceMoveDirectionOffset;
 		[SerializeField] private float worldSpaceMaxOffsetProportion;
 		[SerializeField] private float worldSpaceBattleOffset;
@@ -20,6 +21,8 @@ namespace Simulation.Military {
 		
 		private TUnit self;
 		private readonly Queue<Vector3> worldPositionsOnPath = new();
+		private float worldPositionPathLength;
+		private Vector3? finalWorldPosition;
 		private int daysUntilReroll;
 		private bool doOverrideTargetLocation;
 		private Vector3 locationWorldPositionOffset;
@@ -107,7 +110,7 @@ namespace Simulation.Military {
 			}
 			Location.Remove(self);
 			locationWorldPositionOffset = Vector3.zero;
-			worldPositionsOnPath.Enqueue(WorldPositionBetweenLocations());
+			EnqueueWorldPosition(WorldPositionBetweenLocations());
 			Location = NextLocation;
 			if (ReferenceEquals(Location, TargetLocation)){
 				StopMoving();
@@ -139,6 +142,13 @@ namespace Simulation.Military {
 			visualizedPositionIndex = sharedPositionIndex;
 		}
 		private void UpdateWorldPosition(float maxDistanceDelta){
+			if (worldPositionsOnPath.Count == 0){
+				return;
+			}
+			float distanceUntilQueueEmpty = Vector3.Distance(transform.position, worldPositionsOnPath.Peek())+worldPositionPathLength;
+			if (distanceUntilQueueEmpty > worldSpaceMaxDistanceBehind){
+				maxDistanceDelta *= distanceUntilQueueEmpty/worldSpaceMaxDistanceBehind;
+			}
 			while (worldPositionsOnPath.Count > 0){
 				Vector3 target = worldPositionsOnPath.Peek();
 				Vector3 previousPosition = transform.position;
@@ -148,13 +158,26 @@ namespace Simulation.Military {
 				}
 				transform.position = target;
 				worldPositionsOnPath.Dequeue();
-				maxDistanceDelta -= Vector3.Distance(previousPosition, transform.position);
+				if (worldPositionsOnPath.Count == 0){
+					finalWorldPosition = null;
+					worldPositionPathLength = 0;
+				} else {
+					worldPositionPathLength -= Vector3.Distance(target, worldPositionsOnPath.Peek());
+					maxDistanceDelta -= Vector3.Distance(previousPosition, transform.position);
+				}
 			}
 		}
 		protected virtual void OnWorldPositionChanged(){}
 		protected abstract void VisualizeSharedPositionIndex(int index);
 		internal void SetSharedPositionIndex(int index){
 			sharedPositionIndex = index;
+		}
+		private void EnqueueWorldPosition(Vector3 worldPosition){
+			worldPositionsOnPath.Enqueue(worldPosition);
+			if (finalWorldPosition != null){
+				worldPositionPathLength += Vector3.Distance(finalWorldPosition.Value, worldPosition);
+			}
+			finalWorldPosition = worldPosition;
 		}
 		
 		internal MoveOrderResult MoveTo(Location<TUnit> destination){
@@ -217,7 +240,7 @@ namespace Simulation.Military {
 			float worldSpaceDistance = Vector3.Distance(LocationWorldPosition, nextWorldPosition);
 			float offset = Mathf.Min(worldSpaceMaxOffsetProportion*worldSpaceDistance, worldSpaceMoveDirectionOffset);
 			Vector3 offsetPosition = Vector3.MoveTowards(LocationWorldPosition, nextWorldPosition, offset);
-			worldPositionsOnPath.Enqueue(offsetPosition);
+			EnqueueWorldPosition(offsetPosition);
 		}
 		private bool TryValidateNextLocation(){
 			NextLocation = GetLocation(PathToTarget[PathIndex]);
@@ -239,7 +262,7 @@ namespace Simulation.Military {
 			NextLocation = null;
 			TargetLocation = null;
 			IsRetreating = false;
-			worldPositionsOnPath.Enqueue(LocationWorldPosition);
+			EnqueueWorldPosition(LocationWorldPosition);
 		}
 		protected abstract Vector3 WorldPositionBetweenLocations();
 		protected abstract int CalculateTravelDays();
@@ -271,7 +294,7 @@ namespace Simulation.Military {
 			}
 			locationWorldPositionOffset = Vector3.zero;
 			if (!IsMoving){
-				worldPositionsOnPath.Enqueue(LocationWorldPosition);
+				EnqueueWorldPosition(LocationWorldPosition);
 			}
 		}
 		protected virtual void OnBattleEnd(bool didWin){}
