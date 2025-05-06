@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Mathematics;
 using Simulation;
 using Simulation.Military;
@@ -7,6 +8,8 @@ using Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Button = UnityEngine.UI.Button;
+using Image = UnityEngine.UI.Image;
 
 namespace Player {
 	public class ProvinceWindow : SelectionWindow<Province> {
@@ -25,6 +28,9 @@ namespace Player {
 		[SerializeField] private string[] productionValueNames;
 		[Header("War")]
 		[SerializeField] private MilitaryUnitInfo militaryUnitInfo;
+		[SerializeField] private RectTransform scrollRect;
+		[SerializeField] private TextMeshProUGUI occupationInfo;
+		[SerializeField] private float occupationInfoLineHeight;
 		[SerializeField] private TextMeshProUGUI fallbackText;
 		[SerializeField] private RectTransform scrollViewContent;
 		[Space]
@@ -32,6 +38,7 @@ namespace Player {
 		
 		private Country linkedCountry;
 		private Tab activeTab;
+		private Vector2 defaultScrollRectSizeDelta;
 		
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
@@ -39,9 +46,11 @@ namespace Player {
 			for (int i = 0; i < tabs.Length; i++){
 				tabs[i].type = (TabType)i;
 			}
+			defaultScrollRectSizeDelta = scrollRect.sizeDelta;
 			if (Selected.IsSea){
 				activeTab = tabs[(int)TabType.War];
 				activeTab.SetActive(true);
+				occupationInfo.text = "";
 				tabButtons.SetActive(false);
 				countryPanel.gameObject.SetActive(false);
 				Refresh();
@@ -124,7 +133,29 @@ namespace Player {
 			);
 		}
 		private void RefreshWar(){
-			IReadOnlyList<IUnit> units = Selected.IsSea ? Selected.Sea.NavyLocation.Units : Selected.Land.ArmyLocation.Units;
+			IReadOnlyList<IUnit> units;
+			Vector2 scrollRectsizeDelta = defaultScrollRectSizeDelta;
+			if (Selected.IsSea){
+				units = Selected.Sea.NavyLocation.Units;
+				occupationInfo.text = "";
+				scrollRectsizeDelta.y += occupationInfoLineHeight*2;
+			} else {
+				LandLocation armyLocation = Selected.Land.ArmyLocation;
+				units = armyLocation.Units;
+				StringBuilder occupationText = new();
+				if (Selected.Land.IsOccupied){
+					occupationText.Append($"Occupied by {Selected.Land.Occupier}\n");
+				} else {
+					scrollRectsizeDelta.y += occupationInfoLineHeight;
+				}
+				if (armyLocation.SiegeIsOngoing){
+					occupationText.Append($"Under siege by {armyLocation.Sieger.Name} ({armyLocation.SiegeDaysLeft} days left)");
+				} else {
+					scrollRectsizeDelta.y += occupationInfoLineHeight;
+				}
+				occupationInfo.text = occupationText.ToString();
+			}
+			scrollRect.sizeDelta = scrollRectsizeDelta;
 			if (units.Count == 0){
 				fallbackText.gameObject.SetActive(true);
 				VectorGeometry.SetRectHeight(scrollViewContent, fallbackText.rectTransform.rect.height);

@@ -86,9 +86,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -30}
+  m_AnchoredPosition: {x: 0, y: 10}
   m_SizeDelta: {x: -20, y: -80}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &6806922589335658789
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -435,6 +435,9 @@ MonoBehaviour:
   - 
   - Development
   militaryUnitInfo: {fileID: -8555225802612593271, guid: 577abe8ca5ffd064a95dc96749d711ce, type: 3}
+  scrollRect: {fileID: 4043144478889500712}
+  occupationInfo: {fileID: 2808589539346193973}
+  occupationInfoLineHeight: 18
   fallbackText: {fileID: 7012447205912333348}
   scrollViewContent: {fileID: 5418703517994273458}
   countryPanel: {fileID: 1431771819254937561}
