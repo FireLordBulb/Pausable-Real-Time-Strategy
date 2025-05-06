@@ -48,7 +48,7 @@ namespace Simulation {
 		public bool HasOwner => owner != null;
 		public bool IsOccupied => occupier != null;
 		
-		public int SiegeDays => (int)(siegeDaysPerDevelopment*Province.MoveSpeedMultiplier);
+		public int SiegeDays => (int)(siegeDaysPerDevelopment*Development);
 		
 		public void Init(Color32 colorKey, MapGraph mapGraph, ProvinceData data, Vector2 mapPosition, Mesh outlineMesh, Mesh shapeMesh, IEnumerable<Vector2> vertices){
 			Province = GetComponent<Province>();
