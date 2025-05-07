@@ -42,11 +42,15 @@ namespace Simulation.Military {
 		protected float RandomDamageMultiplier {get; private set;}
 		public bool IsRetreating {get; protected set;}
 		
+		public ILocation LocationInterface => Location;
+		public ILocation NextLocationInterface => NextLocation;
+		public ILocation TargetLocationInterface => TargetLocation;
 		public bool IsMoving => PathToTarget != null;
 		public Province Province => Location.Province;
 		public BattleSide BattleSide => Owner == Location.DefendingCountry ? BattleSide.Defending : Owner == Location.AttackingCountry ? BattleSide.Attacking : BattleSide.None;
 		protected float MovementSpeed => movementSpeed;
 		private Vector3 LocationWorldPosition => Location.WorldPosition+locationWorldPositionOffset;
+		public string TypeName => Type.name;
 		public abstract string CreatingVerb {get;}
 		public abstract string HpText {get;}
 		
@@ -312,11 +316,15 @@ namespace Simulation.Military {
 		public Country Owner {get;}
 		public int BuildDaysLeft {get;}
 		public bool IsBuilt {get;}
+		public ILocation LocationInterface {get; }
+		public ILocation NextLocationInterface {get;}
+		public ILocation TargetLocationInterface {get;}
 		public int DaysToNextLocation {get;}
 		public bool IsRetreating {get;}
 		public bool IsMoving {get;}
 		public Province Province {get;}
 		public BattleSide BattleSide {get;}
+		public string TypeName {get;}
 		public string CreatingVerb {get;}
 		public string HpText {get;}
 	}

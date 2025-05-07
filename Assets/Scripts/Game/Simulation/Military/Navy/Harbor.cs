@@ -9,7 +9,7 @@ namespace Simulation.Military {
 		
 		public override string Name {get;}
 		
-		public override Province SearchProvince => Sea.Province;
+		internal override Province SearchProvince => Sea.Province;
 		public override Province Province => Land.Province;
 		public override Vector3 WorldPosition => Coast.WorldPosition;
 		

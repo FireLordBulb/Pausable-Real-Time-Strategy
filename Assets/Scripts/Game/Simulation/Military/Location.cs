@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Simulation.Military {
-	public abstract class Location<TUnit> where TUnit : Unit<TUnit> {
+	public abstract class Location<TUnit> : ILocation where TUnit : Unit<TUnit> {
 		private readonly List<TUnit> units = new();
 		
 		protected List<TUnit> DefendingUnits;
 		protected List<TUnit> AttackingUnits;
 		
 		public abstract string Name {get;}
-		public virtual Province SearchProvince => Province;
+		internal virtual Province SearchProvince => Province;
 		public abstract Province Province {get;}
 		public abstract Vector3 WorldPosition {get;}
 		public bool IsBattleOngoing {get; private set;}
@@ -208,5 +208,11 @@ namespace Simulation.Military {
 		None,
 		Defending,
 		Attacking
-	} 
+	}
+	public interface ILocation {
+		public string Name {get;}
+		public Province Province {get;}
+		public Vector3 WorldPosition {get;}
+		public bool IsBattleOngoing {get;}
+	}
 }
