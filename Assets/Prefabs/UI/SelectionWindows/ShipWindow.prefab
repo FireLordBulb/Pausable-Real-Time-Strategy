@@ -13,36 +13,8 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_Pivot.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_Pivot.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 250
+      value: 330
       objectReference: {fileID: 0}
     - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -50,34 +22,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
-      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2376454583743424520, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
@@ -92,6 +36,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2580475668209206450, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -235
+      objectReference: {fileID: 0}
     - target: {fileID: 3382394670850141454, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
       propertyPath: m_Name
       value: ShipWindow
@@ -100,9 +48,21 @@ PrefabInstance:
       propertyPath: m_text
       value: Ship
       objectReference: {fileID: 0}
+    - target: {fileID: 7021426363592357679, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 75
+      objectReference: {fileID: 0}
     - target: {fileID: 8282914773381592739, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
       propertyPath: m_text
       value: Hold shift to move multiple ships at the same time!
+      objectReference: {fileID: 0}
+    - target: {fileID: 8519077514028736822, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8666543836247516920, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -130
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -153,6 +113,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3736574911225067968 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4930919174334528309, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
+  m_PrefabInstance: {fileID: 8625765238797222645}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42815e385be14aa6b98ae3910809ff83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4567801133924371671 stripped
@@ -211,6 +182,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   title: {fileID: 4931119206556107222}
+  combatValuesTable: {fileID: 3736574911225067968}
+  combatValueNames:
+  - Hull
+  - Damage
+  - Relative Size as Target
   action: {fileID: 4567801133924371671}
   location: {fileID: 6622856954083316553}
   days: {fileID: 3685917544539486366}

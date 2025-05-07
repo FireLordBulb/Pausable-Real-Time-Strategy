@@ -6,6 +6,10 @@ using UnityEngine;
 namespace Player {
 	public abstract class MilitaryUnitWindow<TUnit> : SelectionWindow<TUnit> where TUnit : Unit<TUnit> {
 		[SerializeField] private TextMeshProUGUI title;
+		[Header("Combat")]
+		[SerializeField] protected ValueTable combatValuesTable;
+		[SerializeField] private string[] combatValueNames;
+		[Header("Movement")]
 		[SerializeField] private TextMeshProUGUI action;
 		[SerializeField] private TextMeshProUGUI location;
 		[SerializeField] protected TextMeshProUGUI days;
@@ -13,11 +17,13 @@ namespace Player {
 		[SerializeField] private GameObject destination;
 		[SerializeField] private TextMeshProUGUI destinationLocation;
 		[SerializeField] private TextMeshProUGUI message;
+		[Space]
 		[SerializeField] private CountryPanel countryPanel;
 		[SerializeField] private GameObject shiftTip;
 		
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
+			combatValuesTable.Generate(0, combatValueNames);
 			title.text = $"{Selected.Type.name}";
 			countryPanel.SetCountry(Selected.Owner, UI);
 			Refresh();
@@ -25,6 +31,7 @@ namespace Player {
 			Calendar.OnDayTick.AddListener(Refresh);
 		}
 		public override void Refresh(){
+			RefreshCombatTable();
 			if (Selected.IsBuilt && Selected.IsMoving){
 				SetLeftOfLinkText(Selected.IsRetreating ? "Retreating to " : "Moving to ");
 				location.text = Selected.NextLocation.Name;
@@ -54,6 +61,7 @@ namespace Player {
 			}
 			shiftTip.SetActive(Selected.Owner == Player);
 		}
+		protected abstract void RefreshCombatTable();
 		protected void SetLeftOfLinkText(string newText){
 			if (action.text == newText){
 				return;

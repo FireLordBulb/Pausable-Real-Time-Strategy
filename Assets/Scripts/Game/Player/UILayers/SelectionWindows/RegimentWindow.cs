@@ -1,5 +1,8 @@
+using System.Globalization;
 using Simulation;
 using Simulation.Military;
+using Text;
+
 namespace Player {
 	public class RegimentWindow : MilitaryUnitWindow<Regiment> {
 		public override void Refresh(){
@@ -14,6 +17,14 @@ namespace Player {
 			SetLeftOfLinkText("Besieging ");
 			days.text = armyLocation.SiegeDaysLeft.ToString();
 			daysLeftText.SetActive(true);
+		}
+		protected override void RefreshCombatTable(){
+			combatValuesTable.UpdateColumn(-1, (
+				Selected.ManpowerText),
+				Selected.AttackPower.ToString("0.#", CultureInfo.InvariantCulture),
+				Selected.Toughness.ToString("0.#", CultureInfo.InvariantCulture),
+				Format.Percent(Selected.KillRate)
+			);
 		}
 		
 		protected override bool DoBypassDefaultBehaviour(ISelectable clickedSelectable){

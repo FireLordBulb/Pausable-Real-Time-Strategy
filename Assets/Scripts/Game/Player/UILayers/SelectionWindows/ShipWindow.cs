@@ -1,7 +1,18 @@
+using System.Globalization;
 using Simulation;
 using Simulation.Military;
+using Text;
+
 namespace Player {
 	public class ShipWindow : MilitaryUnitWindow<Ship> {
+		protected override void RefreshCombatTable(){
+			combatValuesTable.UpdateColumn(-1, (
+				Selected.HullText),
+				Selected.AttackPower.ToString("0.#", CultureInfo.InvariantCulture),
+				Format.Percent(Selected.Size)
+			);
+		}
+		
 		protected override void OrderMove(Province province){
 			Location<Ship> location;
 			if (province.IsSea){
