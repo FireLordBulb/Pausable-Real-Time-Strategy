@@ -82,10 +82,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1288604767028964867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 135, y: 20}
+  m_SizeDelta: {x: 135, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &5548831193804468773
 CanvasRenderer:
@@ -1084,10 +1084,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1288604767028964867}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 135, y: 0}
-  m_SizeDelta: {x: 48, y: 20}
+  m_SizeDelta: {x: 48, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &6433891237447756325
 CanvasRenderer:
@@ -1591,7 +1591,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 20, y: -35}
-  m_SizeDelta: {x: 135, y: 20}
+  m_SizeDelta: {x: 360, y: 21}
   m_Pivot: {x: 0, y: 1}
 --- !u!1001 &1171981136895152273
 PrefabInstance:
