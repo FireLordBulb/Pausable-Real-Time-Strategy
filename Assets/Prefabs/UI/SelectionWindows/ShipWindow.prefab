@@ -62,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8666543836247516920, guid: d56dce9e766a47642a5e666d5cfa7f2b, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -130
+      value: -125
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
