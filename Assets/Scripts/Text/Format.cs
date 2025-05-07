@@ -78,11 +78,17 @@ namespace Text {
 		}
 		
 		public static string SignedPercent(float value){
-			return $"{Signed(Mathf.RoundToInt(value*Cent))}%";
+			return $"{Signed(ToPercent(value))}%";
 		}
 		public static string Signed(int value){
 			char sign = value < 0 ? '-' : '+';
 			return $"{sign}{Mathf.Abs(value)}";
+		}
+		public static string Percent(float value){
+			return $"{ToPercent(value)}%";
+		}
+		private static int ToPercent(float value){
+			return Mathf.RoundToInt(value*Cent);
 		}
 	}
 }
