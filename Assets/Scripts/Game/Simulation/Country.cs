@@ -46,6 +46,7 @@ namespace Simulation {
 		public int Manpower {get; private set;}
 		public int Sailors {get; private set;}
 		public float GoldIncome {get; private set;}
+		public float GoldGrossIncome {get; private set;}
 		public int ManpowerIncome {get; private set;}
 		public int SailorsIncome {get; private set;}
 		public MapGraph Map {get; private set;}
@@ -123,10 +124,14 @@ namespace Simulation {
 		
 		private void AddUpMonthlyResourceChanges(){
 			GoldIncome = 0;
+			GoldGrossIncome = 0;
 			ManpowerIncome = 0;
 			SailorsIncome = 0;
 			foreach ((float goldChange, _, _) in monthlyGoldChanges){
 				GoldIncome += goldChange;
+				if (goldChange > 0){
+					GoldGrossIncome += goldChange;
+				}
 			}
 			if (Manpower > 0){
 				MonthlyManpowerChange((int)(Manpower*monthlyManpowerDecay), "Reserves Retiring", GetType());

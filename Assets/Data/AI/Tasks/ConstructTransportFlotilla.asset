@@ -19,3 +19,4 @@ MonoBehaviour:
   capType: {fileID: 0}
   enoughShipsPerCoast: 1
   maxShipsPerCoast: 2
+  maxBudgetProportion: 0.12

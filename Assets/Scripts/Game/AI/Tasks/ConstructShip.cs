@@ -13,7 +13,8 @@ namespace AI {
 		[SerializeField] private ShipType capType;
 		[SerializeField] private float enoughShipsPerCoast;
 		[SerializeField] private float maxShipsPerCoast;
-	
+		[SerializeField] private float maxBudgetProportion;
+		
 		private Harbor constructionHarbor;
 		
 		protected override int CurrentPriority(){
@@ -21,6 +22,11 @@ namespace AI {
 				return maxShipsPriority;
 			}
 			int shipCount = Country.Ships.Count(ship => ship.Type == shipType);
+			// The '+1' is because the MaintenanceCost of the ship that would be built by this task is included.
+			float budgetProportion = (shipCount+1)*shipType.MaintenanceCost/Country.GoldGrossIncome;
+			if (budgetProportion > maxBudgetProportion){
+				return maxShipsPriority;
+			}
 			int cap = Country.Ships.Count(ship => ship.Type == capType);
 			int coastCount = Country.Provinces.Count(land => land.Province.IsCoast);
 			if (coastCount*maxShipsPerCoast <= shipCount){
