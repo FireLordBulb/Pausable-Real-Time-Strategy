@@ -5,6 +5,7 @@ namespace Simulation.Military {
 		public TransportDeck Deck {get; private set;}
 		public int ManpowerCapacity {get; private set;}
 		
+		public string UsedManpowerCapacityText => $"{Deck.CurrentManpower}/{ManpowerCapacity}";
 		protected override bool ShouldAvoidCombat => true;
 		
 		private void Awake(){
@@ -22,7 +23,7 @@ namespace Simulation.Military {
 		
 		public bool CanRegimentBoard(Regiment regiment){
 			// Have to check if the transport has been destroyed by using Unity's overridden null equality.
-			return this != null && IsBuilt && regiment.Owner == Owner && !Location.IsBattleOngoing && regiment.CurrentManpower <= ManpowerCapacity-Deck.Units.Sum(unit => unit.CurrentManpower);
+			return this != null && IsBuilt && regiment.Owner == Owner && !Location.IsBattleOngoing && regiment.CurrentManpower <= ManpowerCapacity-Deck.CurrentManpower;
 		}
 		internal override void StackWipe(){
 			foreach (Regiment regiment in Deck.Units.ToArray()){

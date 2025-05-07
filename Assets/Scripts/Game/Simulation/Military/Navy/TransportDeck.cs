@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Simulation.Military {
@@ -8,6 +9,7 @@ namespace Simulation.Military {
 		public override string Name => $"{Transport.Type.name} at {Transport.Location.Name}";
 		public override Province Province => Transport.Province;
 		public override Vector3 WorldPosition => Transport.transform.position;
+		public int CurrentManpower => Units.Sum(unit => unit.CurrentManpower);
 		
 		public TransportDeck(Transport transport){
 			Transport = transport;

@@ -276,6 +276,7 @@ MonoBehaviour:
   - Player.ProvinceWindow, Player
   - Player.RegimentWindow, Player
   - Player.ShipWindow, Player
+  - Player.TransportWindow, Player
 --- !u!1001 &410596557772338304
 PrefabInstance:
   m_ObjectHideFlags: 0
