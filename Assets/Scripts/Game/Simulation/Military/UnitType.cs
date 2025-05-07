@@ -9,6 +9,7 @@ namespace Simulation.Military {
 		
 		public TUnit Prefab => prefab;
 		public int DaysToBuild => daysToBuild;
+		public float MaintenanceCost => maintenanceCost;
 		
 		public abstract bool CanBeBuiltBy(Country owner);
 		public abstract void ApplyValuesTo(TUnit unit);

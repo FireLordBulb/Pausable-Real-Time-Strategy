@@ -16,7 +16,7 @@ namespace AI {
 		private Land recruitmentProvince;
 		
 		protected override int CurrentPriority(){
-			if (Country.ProvinceCount*maxRegimentsPerProvince < Country.Regiments.Count){
+			if (Country.GoldIncome < regimentType.MaintenanceCost || Country.ProvinceCount*maxRegimentsPerProvince < Country.Regiments.Count){
 				return maxRegimentsPriority;
 			}
 			if (Country.ProvinceCount*enoughRegimentsPerProvince < Country.Regiments.Count){

@@ -17,6 +17,9 @@ namespace AI {
 		private Harbor constructionHarbor;
 		
 		protected override int CurrentPriority(){
+			if (Country.GoldIncome < shipType.MaintenanceCost){
+				return maxShipsPriority;
+			}
 			int shipCount = Country.Ships.Count(ship => ship.Type == shipType);
 			int cap = Country.Ships.Count(ship => ship.Type == capType);
 			int coastCount = Country.Provinces.Count(land => land.Province.IsCoast);
