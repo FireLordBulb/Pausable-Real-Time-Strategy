@@ -223,6 +223,11 @@ namespace Player {
 		
 		#region Update
 		protected override void Update(){
+			// Some mysterious issue causes the hud to disappear from the Stack, even though it should always be there.
+			// Manually re-pushing it should restore the UI to a functioning state if this happens.
+			if (StackList.Count == 0){
+				base.Push(hud);
+			}
 			UpdateHover();
 			base.Update();
 			PushUninstantiatedSelectionWindow();
