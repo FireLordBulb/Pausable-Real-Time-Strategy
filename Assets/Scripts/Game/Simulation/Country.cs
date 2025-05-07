@@ -128,11 +128,15 @@ namespace Simulation {
 			foreach ((float goldChange, _, _) in monthlyGoldChanges){
 				GoldIncome += goldChange;
 			}
-			MonthlyManpowerChange((int)(Manpower*monthlyManpowerDecay), "Reserves Retiring", GetType());
+			if (Manpower > 0){
+				MonthlyManpowerChange((int)(Manpower*monthlyManpowerDecay), "Reserves Retiring", GetType());
+			}
 			foreach ((int manpowerChange, _, _) in monthlyManpowerChanges){
 				ManpowerIncome += manpowerChange;
 			}
-			MonthlySailorsChange((int)(Sailors*monthlySailorsDecay), "Reserves Retiring", GetType());
+			if (Sailors > 0){
+				MonthlySailorsChange((int)(Sailors*monthlySailorsDecay), "Reserves Retiring", GetType());
+			}
 			foreach ((int sailorsChange, _, _) in monthlySailorsChanges){
 				SailorsIncome += sailorsChange;
 			}
