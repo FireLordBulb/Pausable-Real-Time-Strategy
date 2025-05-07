@@ -65,6 +65,7 @@ MonoBehaviour:
   - {fileID: 1305366892435417919}
   - {fileID: 3012513917161447949}
   - {fileID: 2685664536030845438}
+  - {fileID: 1612012639175679494}
   root: {fileID: -6007488337768929752}
 --- !u!114 &1305366892435417919
 MonoBehaviour:
@@ -80,6 +81,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: -1332169929
   position: {x: 825, y: 657}
+--- !u!114 &1612012639175679494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ec6ad6d4ecc44e6a86912b487e6b85c, type: 3}
+  m_Name: StayInSeaBattle
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {x: 211, y: 657}
 --- !u!114 &2685664536030845438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,7 +107,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bc58d4f73fb40e6a9eb08f79340b521, type: 3}
   m_Name: FollowTransport
   m_EditorClassIdentifier: 
-  id: 0
+  id: -485873566
   position: {x: 611, y: 774}
 --- !u!114 &2742075451516222097
 MonoBehaviour:
@@ -109,6 +124,7 @@ MonoBehaviour:
   id: -700499889
   position: {x: 736, y: 515.5}
   children:
+  - {fileID: 1612012639175679494}
   - {fileID: 7091938102699242069}
   - {fileID: 1305366892435417919}
   doCheckMultipleInSingleUpdate: 0
