@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 namespace Player {
-	public abstract class MilitaryUnitWindow<TUnit> : SelectionWindow<TUnit> where TUnit : Unit<TUnit> {
+	public abstract class MilitaryUnitWindow<TUnit> : SelectionWindow<TUnit> where TUnit : class, IUnit {
 		[SerializeField] private TextMeshProUGUI title;
 		[Header("Combat")]
 		[SerializeField] protected ValueTable combatValuesTable;
@@ -24,7 +24,7 @@ namespace Player {
 		internal override void Init(UIStack uiStack){
 			base.Init(uiStack);
 			combatValuesTable.Generate(0, combatValueNames);
-			title.text = $"{Selected.Type.name}";
+			title.text = $"{Selected.TypeName}";
 			countryPanel.SetCountry(Selected.Owner, UI);
 			Refresh();
 			message.text = "";
@@ -34,21 +34,21 @@ namespace Player {
 			RefreshCombatTable();
 			if (Selected.IsBuilt && Selected.IsMoving){
 				SetLeftOfLinkText(Selected.IsRetreating ? "Retreating to " : "Moving to ");
-				location.text = Selected.NextLocation.Name;
-				UI.Links.Add(location, Selected.NextLocation.Province);
+				location.text = Selected.NextLocationInterface.Name;
+				UI.Links.Add(location, Selected.NextLocationInterface.Province);
 				days.text = Selected.DaysToNextLocation.ToString();
 				daysLeftText.SetActive(true);
-				if (Selected.NextLocation == Selected.TargetLocation){
+				if (Selected.NextLocationInterface == Selected.TargetLocationInterface){
 					destination.SetActive(false);
 				} else {
 					destination.SetActive(true);
-					destinationLocation.text = Selected.TargetLocation.Name;
-					UI.Links.Add(destinationLocation, Selected.TargetLocation.Province);
+					destinationLocation.text = Selected.TargetLocationInterface.Name;
+					UI.Links.Add(destinationLocation, Selected.TargetLocationInterface.Province);
 				}
 			} else if (Selected.IsBuilt && !Selected.IsMoving){
-				SetLeftOfLinkText(Selected.Location.IsBattleOngoing ? "In combat at " : "Located at ");
-				location.text = Selected.Location.Name;
-				UI.Links.Add(location, Selected.Location.Province);
+				SetLeftOfLinkText(Selected.LocationInterface.IsBattleOngoing ? "In combat at " : "Located at ");
+				location.text = Selected.LocationInterface.Name;
+				UI.Links.Add(location, Selected.LocationInterface.Province);
 				days.text = "";
 				daysLeftText.SetActive(false);
 				destination.SetActive(false);
