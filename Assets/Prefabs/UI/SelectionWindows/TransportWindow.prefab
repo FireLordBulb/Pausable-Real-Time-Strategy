@@ -314,6 +314,9 @@ MonoBehaviour:
   - Manpower on Deck
   action: {fileID: 4567801133924371671}
   location: {fileID: 6622856954083316553}
+  locationMaxWidthMoving: 170
+  locationMaxWidthIdle: 270
+  destinationLocationMaxWidth: 225
   days: {fileID: 3685917544539486366}
   daysLeftText: {fileID: 3162860778560601837}
   destination: {fileID: 876105190027909099}

@@ -1,3 +1,4 @@
+using Mathematics;
 using Simulation;
 using Simulation.Military;
 using TMPro;
@@ -12,6 +13,9 @@ namespace Player {
 		[Header("Movement")]
 		[SerializeField] private TextMeshProUGUI action;
 		[SerializeField] private TextMeshProUGUI location;
+		[SerializeField] private float locationMaxWidthMoving;
+		[SerializeField] private float locationMaxWidthIdle;
+		[SerializeField] private float destinationLocationMaxWidth;
 		[SerializeField] protected TextMeshProUGUI days;
 		[SerializeField] protected GameObject daysLeftText;
 		[SerializeField] private GameObject destination;
@@ -32,6 +36,8 @@ namespace Player {
 		}
 		public override void Refresh(){
 			RefreshCombatTable();
+			location.fontSize = location.fontSizeMax;
+			destinationLocation.fontSize = destinationLocation.fontSizeMax;
 			if (Selected.IsBuilt && Selected.IsMoving){
 				SetLeftOfLinkText(Selected.IsRetreating ? "Retreating to " : "Moving to ");
 				location.text = Selected.NextLocationInterface.Name;
@@ -59,7 +65,18 @@ namespace Player {
 				daysLeftText.SetActive(true);
 				destination.SetActive(false);
 			}
+			CapWidth(location, Selected.IsMoving ? locationMaxWidthMoving : locationMaxWidthIdle);
+			CapWidth(destinationLocation, destinationLocationMaxWidth);
 			shiftTip.SetActive(Selected.Owner == Player);
+		}
+		// Manually resize because the built-in autoSize doesn't work properly together with UI.Links.Add().
+		private static void CapWidth(TMP_Text text, float maxWidth){
+			text.ForceMeshUpdate();
+			while (text.textBounds.size.x > maxWidth && text.fontSize > text.fontSizeMin){
+				text.fontSize--;
+				text.ForceMeshUpdate();
+			}
+			VectorGeometry.SetRectWidth(text.rectTransform, Mathf.Min(text.textBounds.size.x, maxWidth));
 		}
 		protected abstract void RefreshCombatTable();
 		protected void SetLeftOfLinkText(string newText){
