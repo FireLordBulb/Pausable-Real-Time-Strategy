@@ -40,10 +40,10 @@ namespace Simulation.Military {
 			base.Refresh();
 			if (SiegeIsOngoing){
 				if (Units.All(regiment => regiment.Owner == Land.Controller)){
-					EndSiege();
+					CancelSiege();
 				} else if (Units.Any(regiment => regiment.Owner == Sieger)){
 					if (CannotBeBesiegedBy(Sieger)){
-						EndSiege();
+						CancelSiege();
 					} else {
 						SiegeIsPausedBecauseMovement = Units.All(regiment => regiment.IsMoving || regiment.Owner != Sieger);
 					}
@@ -56,7 +56,7 @@ namespace Simulation.Military {
 						Sieger = regiment.Owner;
 						return;
 					}
-					EndSiege();
+					CancelSiege();
 				}
 			} else {
 				foreach (Regiment regiment in Units){
@@ -87,14 +87,19 @@ namespace Simulation.Military {
 			if (SiegeDaysLeft > 0){
 				return;
 			}
-			EndSiege();
+			Winsiege();
+			CancelSiege();
+		}
+		
+		private void Winsiege(){
 			Land.Controller.SiegeEnded.Invoke(Land);
 			Land.MakeOccupiedBy(Sieger);
 			Land.Controller.SiegeEnded.Invoke(Land);
 		}
-
-		private void EndSiege(){
+		private void CancelSiege(){
 			SiegeIsOngoing = false;
+			SiegeIsPausedBecauseMovement = false;
+			Sieger = null;
 			Province.Calendar.OnDayTick.RemoveListener(TickSiege);
 		}
 	}

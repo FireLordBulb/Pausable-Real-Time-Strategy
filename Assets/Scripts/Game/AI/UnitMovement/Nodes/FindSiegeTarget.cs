@@ -62,7 +62,7 @@ namespace AI.Nodes {
 		}
 		private bool IsGoodSiegeTarget(Land land, out List<ProvinceLink> path){
 			path = null;
-			if (land.Controller == regimentCountry || land.Owner != warEnemy.Country && land.Owner != regimentCountry){
+			if ((land.Controller == regimentCountry && land.ArmyLocation.Sieger != warEnemy.Country) || (land.Owner != warEnemy.Country && land.Owner != regimentCountry)){
 				return false;
 			}
 			if (Controller.HasBesiegerAlready(land, Unit)){
