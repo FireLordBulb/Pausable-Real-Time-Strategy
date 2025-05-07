@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SailToTarget
   m_EditorClassIdentifier: 
   id: -844459053
-  position: {x: 627, y: 1195}
+  position: {x: 750, y: 1218}
 --- !u!114 &-8392804438711538743
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,6 +61,20 @@ MonoBehaviour:
   key: enemyCountry
   doInvert: 1
   doCheckEveryFrame: 1
+--- !u!114 &-6149245566265486401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f64f8a3b635b41a0904f685f1213c51c, type: 3}
+  m_Name: SailToTarget
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {x: 496, y: 1027}
 --- !u!114 &-6007488337768929752
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +117,7 @@ MonoBehaviour:
   m_Name: InvadeHarbor
   m_EditorClassIdentifier: 
   id: -1902181950
-  position: {x: 440, y: 1195}
+  position: {x: 571, y: 1218}
 --- !u!114 &-2854097385971105478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116,8 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ec6ad6d4ecc44e6a86912b487e6b85c, type: 3}
   m_Name: StayInSeaBattle
   m_EditorClassIdentifier: 
-  id: 0
-  position: {x: 279, y: 803}
+  id: -1851916160
+  position: {x: 204, y: 803}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,6 +160,10 @@ MonoBehaviour:
   - {fileID: 2620108402757645235}
   - {fileID: 7830009043975600105}
   - {fileID: -2854097385971105478}
+  - {fileID: 9028743882041478182}
+  - {fileID: 4088758126755959878}
+  - {fileID: -6149245566265486401}
+  - {fileID: 3513837308129843754}
   root: {fileID: -6007488337768929752}
 --- !u!114 &478892910403442826
 MonoBehaviour:
@@ -175,7 +193,7 @@ MonoBehaviour:
   m_Name: Sequence
   m_EditorClassIdentifier: 
   id: -573154265
-  position: {x: 534, y: 1051}
+  position: {x: 666, y: 1067}
   children:
   - {fileID: -4596621717052177723}
   - {fileID: -9029974273741781591}
@@ -198,6 +216,35 @@ MonoBehaviour:
   - {fileID: 7091938102699242069}
   - {fileID: -6692181439581815146}
   doCheckMultipleInSingleUpdate: 0
+--- !u!114 &3513837308129843754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f50a6bd0827468c89f6c3549331d45b, type: 3}
+  m_Name: HelpSeaBattle
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {x: 326, y: 935}
+--- !u!114 &4088758126755959878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec708f683fb24f58a4678045dfede5a2, type: 3}
+  m_Name: SeaBattleIsGoing
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {x: 496, y: 935}
+  child: {fileID: -6149245566265486401}
 --- !u!114 &5529802633588300910
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,9 +260,10 @@ MonoBehaviour:
   id: 1543241409
   position: {x: 666, y: 620}
   children:
+  - {fileID: -2854097385971105478}
+  - {fileID: 9028743882041478182}
   - {fileID: 478892910403442826}
   - {fileID: 6100106901439924118}
-  - {fileID: -2854097385971105478}
   doCheckMultipleInSingleUpdate: 0
 --- !u!114 &6100106901439924118
 MonoBehaviour:
@@ -270,4 +318,22 @@ MonoBehaviour:
   children:
   - {fileID: 2620108402757645235}
   - {fileID: 6100106901439924118}
+  doCheckMultipleInSingleUpdate: 0
+--- !u!114 &9028743882041478182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db3c94e233df5bc489a27465e28af396, type: 3}
+  m_Name: Sequence
+  m_EditorClassIdentifier: 
+  id: 0
+  position: {x: 421, y: 803}
+  children:
+  - {fileID: 3513837308129843754}
+  - {fileID: 4088758126755959878}
   doCheckMultipleInSingleUpdate: 0

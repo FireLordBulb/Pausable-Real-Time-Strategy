@@ -66,7 +66,25 @@ MonoBehaviour:
   - {fileID: 3012513917161447949}
   - {fileID: 2685664536030845438}
   - {fileID: 1612012639175679494}
+  - {fileID: 8768330164937634326}
+  - {fileID: 2922374919447992629}
+  - {fileID: 342409044735561405}
+  - {fileID: 2115015984561552564}
   root: {fileID: -6007488337768929752}
+--- !u!114 &342409044735561405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f50a6bd0827468c89f6c3549331d45b, type: 3}
+  m_Name: HelpSeaBattle
+  m_EditorClassIdentifier: 
+  id: -2013523469
+  position: {x: 475, y: 798}
 --- !u!114 &1305366892435417919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,7 +98,7 @@ MonoBehaviour:
   m_Name: ReturnToHarbor
   m_EditorClassIdentifier: 
   id: -1332169929
-  position: {x: 825, y: 657}
+  position: {x: 1039, y: 666}
 --- !u!114 &1612012639175679494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -93,8 +111,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ec6ad6d4ecc44e6a86912b487e6b85c, type: 3}
   m_Name: StayInSeaBattle
   m_EditorClassIdentifier: 
-  id: 0
-  position: {x: 211, y: 657}
+  id: -382639850
+  position: {x: 350, y: 666}
+--- !u!114 &2115015984561552564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f64f8a3b635b41a0904f685f1213c51c, type: 3}
+  m_Name: SailToTarget
+  m_EditorClassIdentifier: 
+  id: -1021974907
+  position: {x: 650, y: 897}
 --- !u!114 &2685664536030845438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,7 +140,7 @@ MonoBehaviour:
   m_Name: FollowTransport
   m_EditorClassIdentifier: 
   id: -485873566
-  position: {x: 611, y: 774}
+  position: {x: 825, y: 798}
 --- !u!114 &2742075451516222097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -125,9 +157,25 @@ MonoBehaviour:
   position: {x: 736, y: 515.5}
   children:
   - {fileID: 1612012639175679494}
+  - {fileID: 8768330164937634326}
   - {fileID: 7091938102699242069}
   - {fileID: 1305366892435417919}
   doCheckMultipleInSingleUpdate: 0
+--- !u!114 &2922374919447992629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec708f683fb24f58a4678045dfede5a2, type: 3}
+  m_Name: SeaBattleIsGoing
+  m_EditorClassIdentifier: 
+  id: 1002160733
+  position: {x: 650, y: 798}
+  child: {fileID: 2115015984561552564}
 --- !u!114 &3012513917161447949
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,8 +207,26 @@ MonoBehaviour:
   m_Name: HasValue
   m_EditorClassIdentifier: 
   id: 556702861
-  position: {x: 611, y: 656.5}
+  position: {x: 825, y: 666}
   child: {fileID: 2685664536030845438}
   key: enemyCountry
   doInvert: 0
   doCheckEveryFrame: 1
+--- !u!114 &8768330164937634326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db3c94e233df5bc489a27465e28af396, type: 3}
+  m_Name: Sequence
+  m_EditorClassIdentifier: 
+  id: -2030699934
+  position: {x: 575, y: 666}
+  children:
+  - {fileID: 342409044735561405}
+  - {fileID: 2922374919447992629}
+  doCheckMultipleInSingleUpdate: 0

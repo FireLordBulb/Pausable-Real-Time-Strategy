@@ -3,16 +3,15 @@ using Simulation.Military;
 using UnityEngine;
 
 namespace AI.Nodes {
-	[CreateAssetMenu(fileName = "ReinforceBattle", menuName = "ScriptableObjects/AI/Nodes/ReinforceBattle")]
-	public class ReinforceBattle : MilitaryUnitNode<Regiment> {
+	[CreateAssetMenu(fileName = "HelpSeaBattle", menuName = "ScriptableObjects/AI/Nodes/HelpSeaBattle")]
+	public class HelpSeaBattle : MilitaryUnitNode<Ship> {
 		protected override void OnStart(){
 			base.OnStart();
 			foreach (ProvinceLink link in Unit.Province.Links){
-				Province province = link.Target;
-				if (province.IsSea){
+				if (link is LandLink){
 					continue;
 				}
-				Location<Regiment> location = province.Land.ArmyLocation;
+				Location<Ship> location = link is CoastLink coastLink ? coastLink.Harbor : link.Target.Sea.NavyLocation;
 				if(!Brain.IsReinforceableBattleOngoing(location)){
 					continue;
 				}
