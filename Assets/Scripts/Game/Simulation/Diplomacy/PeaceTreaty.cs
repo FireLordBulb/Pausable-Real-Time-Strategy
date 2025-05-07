@@ -51,7 +51,7 @@ namespace Simulation {
 				return;
 			}
 			(Country winner, Country loser) = DidTreatyInitiatorWin ? (initiator, recipient) : (recipient, initiator);
-			float actualGoldTransfer = Mathf.Min(GoldTransfer, loser.Gold);
+			float actualGoldTransfer = Mathf.Min(GoldTransfer, Mathf.Max(loser.Gold, 0));
 			loser.InstantResourceChange(-actualGoldTransfer, 0, 0);
 			winner.InstantResourceChange(+actualGoldTransfer, 0, 0);
 			foreach (Land annexedLand in AnnexedLands){
