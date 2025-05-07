@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Text;
 using UnityEngine;
@@ -21,16 +22,20 @@ namespace Text {
 			return FormatLargeNumberWithSign((decimal)number, maxCharacters);
 		}
 		public static string FormatLargeNumberWithSign(decimal number, int maxCharacters){
-			return new StringBuilder(number < 0 ? "" : "+").Append(FormatLargeNumber(number, maxCharacters)).ToString();
+			return new StringBuilder(number < 0 ? "-" : "+").Append(FormatLargeNumber(Math.Abs(number), maxCharacters)).ToString();
 		}
 		public static string FormatLargeNumberWithSign(long number, int maxCharacters){
-			return new StringBuilder(number < 0 ? "" : "+").Append(FormatLargeNumber(number, maxCharacters)).ToString();
+			return new StringBuilder(number < 0 ? "-" : "+").Append(FormatLargeNumber(Math.Abs(number), maxCharacters)).ToString();
 		}
 
 		public static string FormatLargeNumber(double number, int maxCharacters){
 			return FormatLargeNumber((decimal)number, maxCharacters);
 		}
 		public static string FormatLargeNumber(decimal number, int maxCharacters){
+			// Minus sign takes up a character.
+			if (number < 0){
+				return $"-{FormatLargeNumber(Math.Abs(number), maxCharacters-1)}";
+			}
 			// Removes the part of the number that is after the last visible digit. This is needed because Single.ToString rounds those values.
 			number -= number%InverseBase;
 			string untruncated = number.ToString("0.0", CultureInfo.InvariantCulture);
@@ -38,7 +43,7 @@ namespace Text {
 			if (characterAmount <= maxCharacters){
 				return untruncated;
 			}
-			((char character, long value), int emptyCharacterCount) = GetSuffix(characterAmount, maxCharacters);
+			((char character, long value), int emptyCharacterCount) = GetSuffix(characterAmount, maxCharacters, "0.0".Length);
 			StringBuilder format = new("0.");
 			// Display as many digits after the decimal as can fit.
 			decimal smallestSigFig = 1;
@@ -52,12 +57,16 @@ namespace Text {
 			return $"{numberSuffixScaled.ToString(format.ToString(), CultureInfo.InvariantCulture)}{character}";
 		}
 		public static string FormatLargeNumber(long number, int maxCharacters){
+			// Minus sign takes up a character.
+			if (number < 0){
+				return $"-{FormatLargeNumber(Math.Abs(number), maxCharacters-1)}";
+			}
 			string untruncated = number.ToString();
 			int characterAmount = untruncated.Length;
 			if (characterAmount <= maxCharacters){
 				return untruncated;
 			}
-			((char character, long value), int emptyCharacterCount) = GetSuffix(characterAmount, maxCharacters);
+			((char character, long value), int emptyCharacterCount) = GetSuffix(characterAmount, maxCharacters, 1);
 			StringBuilder formattedNumber = new((number/value).ToString());
 			// Sometimes it's possible to squeeze in one extra sig-fig.
 			if (emptyCharacterCount == SuffixDigitStep){
@@ -66,9 +75,10 @@ namespace Text {
 			formattedNumber.Append(character);
 			return formattedNumber.ToString();
 		}
-		private static ((char, long), int) GetSuffix(int characterAmount, int maxCharacters){
+		private static ((char, long), int) GetSuffix(int characterAmount, int maxCharacters, int minCharacters){
 			foreach ((char, long) suffix in Suffixes){
 				characterAmount -= SuffixDigitStep;
+				characterAmount = Mathf.Max(characterAmount, minCharacters);
 				if (characterAmount < maxCharacters){
 					return (suffix, maxCharacters-characterAmount);
 				}
