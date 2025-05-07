@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Mathematics;
 using Simulation;
@@ -28,12 +27,10 @@ namespace Player {
 		[SerializeField] private ValueTable productionValueTable;
 		[SerializeField] private string[] productionValueNames;
 		[Header("War")]
-		[SerializeField] private MilitaryUnitInfo militaryUnitInfo;
-		[SerializeField] private RectTransform scrollRect;
 		[SerializeField] private TextMeshProUGUI occupationInfo;
 		[SerializeField] private float occupationInfoLineHeight;
-		[SerializeField] private TextMeshProUGUI fallbackText;
-		[SerializeField] private RectTransform scrollViewContent;
+		[SerializeField] private RectTransform scrollRect;
+		[SerializeField] private UnitListScrollView unitListScrollView;
 		[SerializeField] private float warPanelNoOwnerExtraHeight;
 		[Space]
 		[SerializeField] private CountryPanel countryPanel;
@@ -48,8 +45,6 @@ namespace Player {
 			base.Init(uiStack);
 			Calendar.OnDayTick.AddListener(RefreshDaily);
 			defaultScrollRectSizeDelta = scrollRect.sizeDelta;
-			unitsYesterday = new List<IUnit>();
-			unitInfoItems = Array.Empty<MilitaryUnitInfo>();
 			title.text = $"{Selected.Name}";
 			for (int i = 0; i < tabs.Length; i++){
 				tabs[i].type = (TabType)i;
@@ -169,43 +164,7 @@ namespace Player {
 				occupationInfo.text = occupationText.ToString();
 			}
 			scrollRect.sizeDelta = scrollRectSizeDelta;
-			
-			bool haveUnitsChanged = unitsYesterday.Count != units.Count;
-			if (!haveUnitsChanged){
-				for (int i = 0; i < units.Count; i++){
-					if (unitsYesterday[i] == units[i]){
-						continue;
-					}
-					haveUnitsChanged = true;
-					break;
-				}
-			}
-			if (haveUnitsChanged){
-				foreach (MilitaryUnitInfo unitInfo in unitInfoItems){
-					Destroy(unitInfo.gameObject);
-				}
-				unitInfoItems = new MilitaryUnitInfo[units.Count];
-				unitsYesterday = units.ToList();
-			}
-			if (units.Count == 0){
-				fallbackText.gameObject.SetActive(true);
-				VectorGeometry.SetRectHeight(scrollViewContent, fallbackText.rectTransform.rect.height);
-			} else if (haveUnitsChanged){
-				Vector2 anchoredPosition = Vector2.zero;
-				Vector2 infoItemHeight = new(0, -militaryUnitInfo.RectTransform.rect.height);
-				for (int i = 0; i < units.Count; i++){
-					unitInfoItems[i] = Instantiate(militaryUnitInfo, scrollViewContent);
-					unitInfoItems[i].Init(units[i], UI);
-					unitInfoItems[i].RectTransform.anchoredPosition = anchoredPosition;
-					anchoredPosition += infoItemHeight;
-				}
-				fallbackText.gameObject.SetActive(false);
-				VectorGeometry.SetRectHeight(scrollViewContent, -anchoredPosition.y);
-			} else {
-				foreach (MilitaryUnitInfo unitInfo in unitInfoItems){
-					unitInfo.Refresh();
-				}
-			}
+			unitListScrollView.Refresh(units, UI);
 		}
 		public override void OnEnd(){
 			Calendar.OnDayTick.RemoveListener(RefreshDaily);

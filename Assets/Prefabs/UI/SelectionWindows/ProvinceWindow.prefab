@@ -61,6 +61,7 @@ GameObject:
   - component: {fileID: 6806922589335658789}
   - component: {fileID: 2286083108803851398}
   - component: {fileID: 5599947813945271367}
+  - component: {fileID: 7792369000918897587}
   m_Layer: 5
   m_Name: UnitListScrollView
   m_TagString: Untagged
@@ -157,6 +158,21 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7792369000918897587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1307579025651562186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7444c126a2d49e88e974a8adf9bac14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  militaryUnitInfo: {fileID: -8555225802612593271, guid: 577abe8ca5ffd064a95dc96749d711ce, type: 3}
+  scrollViewContent: {fileID: 5418703517994273458}
+  fallbackText: {fileID: 7012447205912333348}
 --- !u!1 &1371510584744683320
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,12 +450,10 @@ MonoBehaviour:
   - Sailors
   - 
   - Development
-  militaryUnitInfo: {fileID: -8555225802612593271, guid: 577abe8ca5ffd064a95dc96749d711ce, type: 3}
-  scrollRect: {fileID: 4043144478889500712}
   occupationInfo: {fileID: 2808589539346193973}
   occupationInfoLineHeight: 18
-  fallbackText: {fileID: 7012447205912333348}
-  scrollViewContent: {fileID: 5418703517994273458}
+  scrollRect: {fileID: 4043144478889500712}
+  unitListScrollView: {fileID: 7792369000918897587}
   warPanelNoOwnerExtraHeight: 80
   countryPanel: {fileID: 1431771819254937561}
 --- !u!1 &3472302684576212994
