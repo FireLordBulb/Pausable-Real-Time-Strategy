@@ -14,16 +14,19 @@ namespace Player {
 		}
 		
 		protected override void OrderMove(Province province){
+			OrderMove(this, Selected, UI, Player, province);
+		}
+		internal static void OrderMove<TShip>(MilitaryUnitWindow<TShip> window, TShip selectedShip, UIStack ui, Country player, Province province) where TShip : Ship {
 			Location<Ship> location;
 			if (province.IsSea){
 				location = province.Sea.NavyLocation;
 			} else if (province.IsCoast){
-				location = UI.GetHarbor(province);
+				location = ui.GetHarbor(province);
 			} else {
 				location = null;
 			}
-			MoveOrderResult result = Player.MoveFleetTo(Selected, location);
-			SetMessage(result switch {
+			MoveOrderResult result = player.MoveFleetTo(selectedShip, location);
+			window.SetMessage(result switch {
 				MoveOrderResult.BusyRetreating => "Cannot interrupt retreat movement!",
 				MoveOrderResult.NotBuilt => "Cannot move a navy before it has finished constructing!",
 				MoveOrderResult.NoPath => $"Cannot move to {province} because the path is blocked by landmass!",
@@ -32,12 +35,12 @@ namespace Player {
 				MoveOrderResult.NotOwner => "You cannot move another country's units!",
 				_ => ""
 			});
-			if (!UI.IsShiftHeld){
+			if (!ui.IsShiftHeld){
 				return;
 			}
-			foreach (Ship ship in Selected.Location.Units){
-				if (ship != Selected && ship.Owner == Player){
-					Player.MoveFleetTo(ship, location);
+			foreach (Ship ship in selectedShip.Location.Units){
+				if (ship != selectedShip && ship.Owner == player){
+					player.MoveFleetTo(ship, location);
 				}
 			}
 		}

@@ -101,7 +101,7 @@ namespace Player {
 			Refresh();
 		}
 		protected abstract void OrderMove(Province province);
-		protected void SetMessage(string text){
+		internal void SetMessage(string text){
 			message.text = text;
 		}
 		
