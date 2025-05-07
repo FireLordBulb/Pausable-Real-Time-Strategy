@@ -6,7 +6,7 @@ namespace Simulation.Military {
 	public class TransportDeck : Location<Regiment> {
 		public readonly Transport Transport;
 
-		public override string Name => $"{Transport.Type.name} at {Transport.Location.Name}";
+		public override string Name => Transport.Location is Harbor harbor ? $"{harbor.Name}" : $"{Transport.Type.name} at Sea";
 		public override Province Province => Transport.Province;
 		public override Vector3 WorldPosition => Transport.transform.position;
 		public int CurrentManpower => Units.Sum(unit => unit.CurrentManpower);
