@@ -1,7 +1,10 @@
 using System.Linq;
+using UnityEngine;
 
 namespace Simulation.Military {
 	public class Transport : Ship {
+		[SerializeField] private Transform regimentTransform;
+		
 		public TransportDeck Deck {get; private set;}
 		public int ManpowerCapacity {get; private set;}
 		
@@ -17,7 +20,7 @@ namespace Simulation.Military {
 		
 		protected override void OnWorldPositionChanged(){
 			foreach (Regiment regiment in Deck.Units){
-				regiment.transform.position = transform.position;
+				regiment.transform.position = regimentTransform.position;
 			}
 		}
 		
