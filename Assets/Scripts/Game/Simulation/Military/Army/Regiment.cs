@@ -8,6 +8,8 @@ namespace Simulation.Military {
 		[SerializeField] private float monthlyReinforcementRate;
 		[SerializeField] private float orderedRetreatDamageMultiplier;
 		[SerializeField] private float stackWipeThreshold;
+		[Header("Soldier")]
+		[SerializeField] private GameObject soldierModel;
 		[Header("Flag")]
 		[SerializeField] private Transform flag;
 		[SerializeField] private float flagHeightStep;
@@ -40,6 +42,8 @@ namespace Simulation.Military {
 			Province.Calendar.OnMonthTick.AddListener(PayMaintenance);
 		}
 		protected override void VisualizeSharedPositionIndex(int index){
+			// Only render one soldier model per shared position.
+			soldierModel.SetActive(index == 0);
 			Vector3 localPosition = flag.localPosition;
 			localPosition.y = defaultFlagHeight + flagHeightStep*index;
 			flag.localPosition = localPosition;

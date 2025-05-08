@@ -9,6 +9,8 @@ namespace Simulation.Military {
 		[SerializeField] private float reparationCostFraction;
 		[SerializeField] private float orderedRetreatDamageMultiplier;
 		[SerializeField] private AnimationCurve sinkingProbability;
+		[Header("ShipModel")]
+		[SerializeField] private GameObject shipModel;
 		[Header("Flag")]
 		[SerializeField] private Transform flag;
 		[SerializeField] private float flagHeightStep;
@@ -41,6 +43,8 @@ namespace Simulation.Military {
 			Province.Calendar.OnMonthTick.AddListener(PayMaintenance);
 		}
 		protected override void VisualizeSharedPositionIndex(int index){
+			// Only render one ship model per shared position.
+			shipModel.SetActive(index == 0);
 			Vector3 localPosition = flag.localPosition;
 			localPosition.y = defaultFlagHeight + flagHeightStep*index;
 			flag.localPosition = localPosition;
