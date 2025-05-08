@@ -3,11 +3,11 @@ using UnityEngine;
 namespace Player {
 	[RequireComponent(typeof(Simulation.Military.IUnit))]
 	public class MilitaryUnitVisuals : MonoBehaviour {
-		[SerializeField] private MeshRenderer[] renderers;
+		[SerializeField] private Renderer[] renderers;
 		private void Start(){
 			Color color = GetComponent<Simulation.Military.IUnit>().Owner.MapColor;
-			foreach (MeshRenderer meshRenderer in renderers){
-				meshRenderer.material.color = color;
+			foreach (Renderer recolorableRenderer in renderers){
+				recolorableRenderer.materials[^1].color = color;
 			}
 		}
 	}
