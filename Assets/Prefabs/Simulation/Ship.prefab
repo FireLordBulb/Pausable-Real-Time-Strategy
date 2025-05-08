@@ -385,6 +385,7 @@ MonoBehaviour:
   shipModel: {fileID: 4738607553538569589}
   flag: {fileID: 8009194502341568593}
   flagHeightStep: 0.36
+  flagHighlight: {fileID: 5138593761604856555}
 --- !u!114 &7012549270737798967
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -481,6 +482,11 @@ PrefabInstance:
 --- !u!23 &1613528629189608791 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 3824239384273238120, guid: 22cdc2a712513d346959a12fd40e29a1, type: 3}
+  m_PrefabInstance: {fileID: 2555241693132569919}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5138593761604856555 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7222077276917192660, guid: 22cdc2a712513d346959a12fd40e29a1, type: 3}
   m_PrefabInstance: {fileID: 2555241693132569919}
   m_PrefabAsset: {fileID: 0}
 --- !u!23 &6190342554588020488 stripped

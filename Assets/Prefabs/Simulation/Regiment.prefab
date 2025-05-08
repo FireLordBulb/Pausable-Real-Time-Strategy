@@ -207,6 +207,7 @@ MonoBehaviour:
   soldierModel: {fileID: 4254569136804708822}
   flag: {fileID: 8883708364815889813}
   flagHeightStep: 0.3
+  flagHighlight: {fileID: 5990044288710227759}
 --- !u!114 &1517114082226002071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,6 +387,11 @@ MeshRenderer:
 --- !u!23 &4721911538617885388 stripped
 MeshRenderer:
   m_CorrespondingSourceObject: {fileID: 8547419816529281591, guid: 22cdc2a712513d346959a12fd40e29a1, type: 3}
+  m_PrefabInstance: {fileID: 3970222755663569147}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5990044288710227759 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7222077276917192660, guid: 22cdc2a712513d346959a12fd40e29a1, type: 3}
   m_PrefabInstance: {fileID: 3970222755663569147}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8883708364815889813 stripped

@@ -307,8 +307,8 @@ namespace Simulation.Military {
 			Province.Calendar.OnDayTick.RemoveListener(OnDayTick);
 		}
 		
-		public void OnSelect(){}
-		public void OnDeselect(){}
+		public abstract void OnSelect();
+		public abstract void OnDeselect();
 	}
 
 	// Public interface of Unit for everything non-generic.

@@ -14,6 +14,7 @@ namespace Simulation.Military {
 		[Header("Flag")]
 		[SerializeField] private Transform flag;
 		[SerializeField] private float flagHeightStep;
+		[SerializeField] private GameObject flagHighlight;
 		
 		private float maintenance;
 		private int maxMonthlyReparation;
@@ -154,6 +155,13 @@ namespace Simulation.Military {
 			if (this != null){
 				Destroy(gameObject);
 			}
+		}
+		
+		public override void OnSelect(){
+			flagHighlight.SetActive(true);
+		}
+		public override void OnDeselect(){
+			flagHighlight.SetActive(false);
 		}
 	}
 }
