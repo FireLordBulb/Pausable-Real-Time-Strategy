@@ -91,6 +91,9 @@ namespace Player {
 				return;
 			}
 			Calendar.OnDayTick.RemoveListener(AwaitAnswer);
+			if (!player.GetDiplomaticStatus(enemy).IsAtWar){
+				return;
+			}
 			int responseValue = enemyAI.EvaluatePeaceOffer(pendingTreaty); 
 			if (responseValue < 0){
 				sendButtonText.text = "Offer Peace";
@@ -107,7 +110,10 @@ namespace Player {
 			AIController.OnWarEnd(UI.GetAI(Player), enemyAI);
 			isDone = true;
 			UI.Deselect(enemy);
-			LayerBelow.OnEnd();
+			// Close the country panel if this peace negotiation window is still open.
+			if (this != null){
+				LayerBelow.OnEnd();
+			}
 		}
 		private void BlockedCountdown(){
 			daysUntilSendingUnblocked--;
@@ -272,7 +278,6 @@ namespace Player {
 		}
 		
 		public override void OnEnd(){
-			Calendar.OnDayTick.RemoveListener(AwaitAnswer);
 			Calendar.OnDayTick.RemoveListener(BlockedCountdown);
 			RemoveWarSituationChangedListeners(player);
 			RemoveWarSituationChangedListeners(enemy);
