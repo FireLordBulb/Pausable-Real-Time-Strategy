@@ -252,24 +252,29 @@ namespace Simulation {
 				if (regiment.Location is Military.TransportDeck){
 					continue;
 				}
-				Country owner = regiment.Location.Province.Land.Owner;
-				if (owner != this && !GetDiplomaticStatus(owner).IsAtWar){
+				if (!CanMilitaryBeIn(regiment.Location.Province.Land)){
 					regiment.RetreatHome();
+				} else if (regiment.IsMoving && !CanMilitaryBeIn(regiment.NextLocation.Province.Land)){
+					regiment.MoveTo(regiment.Location);
 				}
 			}
 			foreach (Military.Ship ship in ships.ToArray()){
 				if (ship.Location is not Military.Harbor harbor){
 					continue;
 				}
-				Country owner = harbor.Land.Owner;
-				if (owner != this && !GetDiplomaticStatus(owner).IsAtWar){
+				if (!CanMilitaryBeIn(harbor.Land)){
 					if (ship.IsBuilt){
 						ship.MoveTo(harbor.Sea.NavyLocation);
 					} else {
 						ship.StackWipe();
 					}
+				} else if (ship.IsMoving && ship.NextLocation is Military.Harbor nextHarbor && !CanMilitaryBeIn(nextHarbor.Land)){
+					ship.MoveTo(ship.Location);
 				}
 			}
+		}
+		private bool CanMilitaryBeIn(Land land){
+			return land.Owner == this || GetDiplomaticStatus(land.Owner).IsAtWar;
 		}
 		#endregion
 		
