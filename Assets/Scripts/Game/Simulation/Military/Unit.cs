@@ -248,7 +248,7 @@ namespace Simulation.Military {
 		}
 		private bool TryValidateNextLocation(){
 			NextLocation = GetLocation(PathToTarget[PathIndex]);
-			if (NextLocation != null){
+			if (NextLocation != null && LinkEvaluator(PathToTarget[PathIndex])){
 				if (doOverrideTargetLocation){
 					TargetLocation = NextLocation;
 					doOverrideTargetLocation = false;
