@@ -48,12 +48,12 @@ namespace Player {
 				SetupSelectButton();
 			}
 			valueTable.UpdateColumn<int>(0, n => Format.FormatLargeNumber(n, cellValueMaxCharacters), (
-				Selected.ProvinceCount),	
-				Selected.TotalDevelopment,	
-				Selected.Regiments.Count,	
-				Selected.Ships.Count,	
-				0,	
-				Selected.Manpower,	
+				Selected.ProvinceCount),
+				Selected.TotalDevelopment-Selected.ProvinceCount,
+				Selected.Regiments.Count,
+				Selected.Ships.Count,
+				0,
+				Selected.Manpower,
 				Selected.Sailors
 			);
 			// Have to update the gold separately since it's the only float value so it's formatted with a different overload.
