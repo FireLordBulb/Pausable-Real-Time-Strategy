@@ -15,12 +15,14 @@ namespace Player {
 			Selected.OnSelect();
 		}
 		public override void OnEnd(){
-			Selected.OnDeselect();
+			if (Selected is not UnityEngine.Object unityObject || unityObject != null){
+				Selected.OnDeselect();
+			}
 			base.OnEnd();
 		}
 		public override bool IsDone(){
 			base.IsDone();
-			return !ReferenceEquals(UI.Selected, Selected);
+			return !ReferenceEquals(UI.Selected, Selected) || Selected is UnityEngine.Object unityObject && unityObject == null;
 		}
 		public override void Close(){
 			UI.Deselect(Selected);
